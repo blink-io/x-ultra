@@ -4,8 +4,6 @@ import (
 	"context"
 	"time"
 
-	"github.com/blink-io/x/localcache"
-
 	"github.com/jellydator/ttlcache/v3"
 )
 
@@ -16,7 +14,7 @@ type cache[K comparable, V any] struct {
 	ttl time.Duration
 }
 
-func New[K comparable, V any](ctx context.Context, ttl time.Duration) (localcache.Cache[K, V], error) {
+func New[K comparable, V any](ctx context.Context, ttl time.Duration) (lcache.Cache[K, V], error) {
 	c := ttlcache.New(ttlcache.WithTTL[K, V](ttl))
 	return &cache[K, V]{c, ttl}, nil
 }

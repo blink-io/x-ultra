@@ -4,8 +4,6 @@ import (
 	"context"
 	"time"
 
-	"github.com/blink-io/x/localcache"
-
 	"github.com/hashicorp/golang-lru/v2/expirable"
 )
 
@@ -20,7 +18,7 @@ type cache[K comparable, V any] struct {
 	ttl time.Duration
 }
 
-func New[K comparable, V any](ctx context.Context, ttl time.Duration) (localcache.Cache[K, V], error) {
+func New[K comparable, V any](ctx context.Context, ttl time.Duration) (lcache.Cache[K, V], error) {
 	c := expirable.NewLRU[K, V](1000, nil, ttl)
 	return &cache[K, V]{c, ttl}, nil
 }
