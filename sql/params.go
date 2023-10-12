@@ -19,8 +19,8 @@ var ConnParamsMySQL = []string{
 	"collation",
 }
 
-// ConnParamsSQLite3 doc ref: https://github.com/mattn/go-sqlite3
-var ConnParamsSQLite3 = []string{
+// ConnParamsSQLite doc ref: https://github.com/mattn/go-sqlite3
+var ConnParamsSQLite = []string{
 	"_auth_user",                // string
 	"_auth_pass",                // string
 	"_auth_crypt",               // SHA1 | SSHA1 | SHA256 | SSHA256 | SHA384 | SSHA384 | SHA512 | SSHA512

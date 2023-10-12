@@ -31,7 +31,6 @@ type Options struct {
 	ValidationSQL   string
 	SQLHooks        []hooks.Hooks
 	QueryHooks      []bun.QueryHook
-	UseOtel         bool
 	Loc             *time.Location
 	Debug           bool
 	dsn             string
@@ -39,7 +38,7 @@ type Options struct {
 
 func setupOptions(c *Options) (*Options, error) {
 	if c == nil {
-		return nil, errors.New("db config cannot be empty")
+		return nil, errors.New("idb config cannot be empty")
 	}
 	if len(c.Network) == 0 {
 		c.Network = "tcp"

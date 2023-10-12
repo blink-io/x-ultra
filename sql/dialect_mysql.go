@@ -13,11 +13,14 @@ const (
 )
 
 func init() {
-	fn := func() schema.Dialect {
+	dn := DialectMySQL
+	drivers[dn] = &mysql.MySQLDriver{}
+	dialectFuncs[dn] = func() schema.Dialect {
 		return mysqldialect.New()
 	}
-	SetDialectFn(DialectMySQL, fn)
-	SetDriverFn(DialectMySQL, GetMysqlDriver)
+	dsnFuncs[dn] = MySQLDSN
+
+	slog.Info("MySQL is enabled")
 }
 
 func MySQLDSN(o *Options) string {
@@ -56,9 +59,4 @@ func MySQLDSN(o *Options) string {
 		cc.TLSConfig = DialectMySQL
 	}
 	dsn := cc.FormatDSN()
-}
-
-func IsMySQLConstraintCodes(n uint16) bool {
-	const ER_DUP_UNIQUE = 1169
-	return n == ER_DUP_UNIQUE
 }

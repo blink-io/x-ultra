@@ -7,14 +7,10 @@ import (
 )
 
 type (
-	db = bun.DB
+	idb = bun.DB
 
 	DB struct {
-		*db
-	}
-
-	DBer interface {
-		DB() *DB
+		*idb
 	}
 )
 
@@ -29,27 +25,27 @@ func NewDB(o *Options) (*DB, error) {
 		return nil, err
 	}
 
-	db := bun.NewDB(sqlDB, sd, bun.WithDiscardUnknownColumns())
+	idb := bun.NewDB(sqlDB, sd, bun.WithDiscardUnknownColumns())
 	if queryHooks := o.QueryHooks; len(queryHooks) > 0 {
 		for _, h := range queryHooks {
-			db.AddQueryHook(h)
+			idb.AddQueryHook(h)
 		}
 	}
 
-	return &DB{db: db}, nil
+	return &DB{idb: idb}, nil
 }
 
 func (d *DB) RegisterModel(m any) {
-	d.db.RegisterModel(m)
+	d.idb.RegisterModel(m)
 }
 
 func (d *DB) Close() error {
-	if d.db != nil {
-		return d.db.Close()
+	if d.idb != nil {
+		return d.idb.Close()
 	}
 	return nil
 }
 
 func (d *DB) Raw() *sql.DB {
-	return d.db.DB
+	return d.idb.DB
 }

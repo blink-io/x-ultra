@@ -10,8 +10,6 @@ import (
 	"github.com/blink-io/x/sql/hooks"
 
 	"github.com/uptrace/bun/schema"
-	"github.com/uptrace/opentelemetry-go-extra/otelsql"
-	"go.opentelemetry.io/otel/attribute"
 )
 
 func GetDialect(o *Options) (schema.Dialect, *sql.DB, error) {
@@ -21,51 +19,42 @@ func GetDialect(o *Options) (schema.Dialect, *sql.DB, error) {
 	}
 
 	dialect := o.Dialect
-	name := o.Name
 
-	dltFn, err := GetDialectFn(dialect)
-	if err != nil {
-		return nil, nil, err
+	var dsn string
+
+	if dsnFunc, ok := dsnFuncs[dialect]; ok {
+		dsn = dsnFunc(o)
 	}
-	dlt := dltFn()
 
-	drvFn, err := GetDriverFn(dialect)
-	if err != nil {
-		return nil, nil, err
+	var sd schema.Dialect
+	if dlaFunc, ok := dialectFuncs[dialect]; ok {
+		sd = dlaFunc()
 	}
-	dsn, drv := drvFn(o)
 
-	driver.
-		sqlHooks := o.SQLHooks
+	drv := drivers[dialect]
+	sqlHooks := o.SQLHooks
 	if len(sqlHooks) > 0 {
 		drv = hooks.Wrap(drv, hooks.Compose(sqlHooks...))
 	}
-	var sqlDB *sql.DB
+
 	conn := &dsnConnector{dsn: dsn, driver: drv}
-	if o.UseOtel {
-		sqlDB = otelsql.OpenDB(conn,
-			otelsql.WithDBName(name),
-			otelsql.WithDBSystem(dialect),
-			otelsql.WithAttributes(attribute.String("ORM", "bun")),
-		)
-	} else {
-		sqlDB = sql.OpenDB(conn)
-	}
+	db := sql.OpenDB(conn)
+
 	// Ignore driver.ErrSkip when the Conn does not implement driver.Pinger interface
-	if err := sqlDB.Ping(); err != nil && !errors.Is(err, driver.ErrSkip) {
+	if err := db.Ping(); err != nil && !errors.Is(err, driver.ErrSkip) {
 		return nil, nil, err
 	}
 
 	connInitSQL := o.ConnInitSQL
 	validationSQL := o.ValidationSQL
 	if len(connInitSQL) > 0 {
-		if _, err := sqlDB.Exec(connInitSQL); err != nil {
+		if _, err := db.Exec(connInitSQL); err != nil {
 			return nil, nil, fmt.Errorf("unable to exec conn_init_sql: %s, reason: %s", connInitSQL, err)
 		}
 	}
 	// Execute validation SQL after bun.DB is initialized
 	if len(validationSQL) > 0 {
-		if _, err := sqlDB.Exec(validationSQL); err != nil {
+		if _, err := db.Exec(validationSQL); err != nil {
 			return nil, nil, fmt.Errorf("unable to exec validation_sql: %s, reason: %s", validationSQL, err)
 		}
 	}
@@ -76,23 +65,23 @@ func GetDialect(o *Options) (schema.Dialect, *sql.DB, error) {
 	connMaxLifetime := o.ConnMaxLifetime
 	connMaxIdleTime := o.ConnMaxIdleTime
 	if maxOpenConns > 0 {
-		sqlDB.SetMaxOpenConns(maxOpenConns)
+		db.SetMaxOpenConns(maxOpenConns)
 	} else {
 		// TODO In Docker how we should do?
 		maxOpenConns = 4 * runtime.GOMAXPROCS(0)
-		sqlDB.SetMaxOpenConns(maxOpenConns)
+		db.SetMaxOpenConns(maxOpenConns)
 	}
 	if maxIdleConns > 0 {
-		sqlDB.SetMaxIdleConns(maxIdleConns)
+		db.SetMaxIdleConns(maxIdleConns)
 	} else {
-		sqlDB.SetMaxIdleConns(maxOpenConns)
+		db.SetMaxIdleConns(maxOpenConns)
 	}
 	if connMaxIdleTime != nil {
-		sqlDB.SetConnMaxIdleTime(*connMaxIdleTime)
+		db.SetConnMaxIdleTime(*connMaxIdleTime)
 	}
 	if connMaxLifetime != nil {
-		sqlDB.SetConnMaxLifetime(*connMaxLifetime)
+		db.SetConnMaxLifetime(*connMaxLifetime)
 	}
 
-	return dlt, sqlDB, err
+	return sd, db, err
 }

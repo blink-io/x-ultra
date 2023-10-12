@@ -1,9 +1,6 @@
 package sql
 
 import (
-	"database/sql"
-	"database/sql/driver"
-
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/stdlib"
@@ -16,12 +13,12 @@ const (
 )
 
 func init() {
-	dfn := func() schema.Dialect {
+	dn := DialectPostgres
+	drivers[dn] = stdlib.GetDefaultDriver()
+	dialectFuncs[dn] = func() schema.Dialect {
 		return pgdialect.New()
 	}
-	sql.Register(DialectPostgres, stdlib.GetDefaultDriver())
-	SetDialectFn(DialectPostgres, dfn)
-	SetDriverFn(DialectPostgres, GetPostgresDriver)
+	dsnFuncs[dn] = PostgresDSN
 }
 
 func PostgresDSN(o *Options) string {
@@ -54,10 +51,4 @@ func PostgresDSN(o *Options) string {
 	}
 	dsn := stdlib.RegisterConnConfig(cc)
 	return dsn
-}
-
-func GetPostgresDriver(o *Options) (string, driver.Driver) {
-	dsn := PostgresDSN(o)
-	drv := stdlib.GetDefaultDriver()
-	return dsn, drv
 }
