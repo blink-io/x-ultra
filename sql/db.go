@@ -1,8 +1,6 @@
 package sql
 
 import (
-	"database/sql"
-
 	"github.com/uptrace/bun"
 )
 
@@ -44,8 +42,4 @@ func (d *DB) Close() error {
 		return d.idb.Close()
 	}
 	return nil
-}
-
-func (d *DB) Raw() *sql.DB {
-	return d.idb.DB
 }
