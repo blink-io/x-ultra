@@ -1,3 +1,5 @@
+//go:build sql_builder
+
 package sql
 
 import (
