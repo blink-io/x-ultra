@@ -34,3 +34,13 @@ func TestDB_SQLite_1(t *testing.T) {
 	_, err := db.NewCreateTable().IfNotExists().Model(m).Exec(ctx)
 	require.NoError(t, err)
 }
+
+func TestSQLite3_Select_Version(t *testing.T) {
+	ss := "select sqlite_version() as version"
+	db := getDB(t)
+	row := db.QueryRow(ss)
+	var v string
+	require.NoError(t, row.Scan(&v))
+
+	fmt.Println("SQLite version:  ", v)
+}
