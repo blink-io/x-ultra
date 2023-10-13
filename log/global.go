@@ -20,7 +20,7 @@ import (
 )
 
 // ZapEncodingName is the encoder name registered in zap
-var ZapEncodingName = "pingcap-log"
+var ZapEncodingName = "default-log"
 
 // Debug logs a message at DebugLevel. The message includes any fields passed
 // at the log site, as well as any fields accumulated on the logger.
