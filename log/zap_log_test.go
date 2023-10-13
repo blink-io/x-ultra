@@ -15,6 +15,7 @@
 package log
 
 import (
+	"errors"
 	"fmt"
 	"math"
 	"net"
@@ -24,7 +25,6 @@ import (
 	"time"
 	"unsafe"
 
-	"github.com/pingcap/errors"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
