@@ -5,7 +5,7 @@
       <option name="customFlags">
         <array>
           <option value="sqlite" />
-          <option value="sql_builder" />
+          <option value="misc" />
         </array>
       </option>
     </buildTags>

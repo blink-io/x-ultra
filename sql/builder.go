@@ -1,4 +1,4 @@
-//go:build sql_builder
+//go:build misc
 
 package sql
 

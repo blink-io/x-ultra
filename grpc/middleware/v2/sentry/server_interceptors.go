@@ -3,16 +3,14 @@ package sentry
 import (
 	"context"
 	"encoding/hex"
-	"github.com/blink-io/x/redis/extra/sentry"
 	"regexp"
 
-	grpc_tags "github.com/grpc-ecosystem/go-middleware/tags"
-	grpc_middleware "github.com/grpc-ecosystem/go-middleware/v2"
+	"github.com/blink-io/x/grpc/util"
+	"github.com/getsentry/sentry-go"
+	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
-
-	"google.golang.org/grpc"
 )
 
 func recoverWithSentry(hub *sentry.Hub, ctx context.Context, o *options) {
@@ -48,15 +46,13 @@ func UnaryServerInterceptor(opts ...Option) grpc.UnaryServerInterceptor {
 
 		// TODO: Perhaps makes sense to use SetRequestBody instead?
 		hub.Scope().SetExtra("requestBody", req)
+		// FIXME: https://github.com/getsentry/sentry-go/pull/605
+		//hub.Scope().SetTransaction(info.FullMethod)
+		span.Name = info.FullMethod
 		defer recoverWithSentry(hub, ctx, o)
 
 		resp, err := handler(ctx, req)
 		if err != nil && o.ReportOn(err) {
-			tags := grpc_tags.Extract(ctx)
-			for k, v := range tags.Values() {
-				hub.Scope().SetTag(k, v.(string))
-			}
-
 			hub.CaptureException(err)
 		}
 		span.Status = toSpanStatus(status.Code(err))
@@ -84,18 +80,16 @@ func StreamServerInterceptor(opts ...Option) grpc.StreamServerInterceptor {
 		ctx = span.Context()
 		defer span.Finish()
 
-		stream := grpc_middleware.WrapServerStream(ss)
+		stream := util.WrapServerStream(ss)
 		stream.WrappedContext = ctx
 
+		// FIXME: https://github.com/getsentry/sentry-go/pull/605
+		//hub.Scope().SetTransaction(info.FullMethod)
+		span.Name = info.FullMethod
 		defer recoverWithSentry(hub, ctx, o)
 
 		err := handler(srv, stream)
 		if err != nil && o.ReportOn(err) {
-			tags := grpc_tags.Extract(ctx)
-			for k, v := range tags.Values() {
-				hub.Scope().SetTag(k, v.(string))
-			}
-
 			hub.CaptureException(err)
 		}
 		span.Status = toSpanStatus(status.Code(err))

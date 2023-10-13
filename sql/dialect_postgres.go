@@ -1,11 +1,14 @@
 package sql
 
 import (
+	pgxzap "github.com/jackc/pgx-zap"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/stdlib"
+	"github.com/jackc/pgx/v5/tracelog"
 	"github.com/uptrace/bun/dialect/pgdialect"
 	"github.com/uptrace/bun/schema"
+	"go.uber.org/zap"
 )
 
 const (
@@ -30,6 +33,7 @@ func PostgresDSN(o *Options) string {
 	dialTimeout := o.DialTimeout
 	tlsConfig := o.TLSConfig
 	options := o.Options
+
 	//debug := o.Debug
 
 	cc := &pgx.ConnConfig{
@@ -43,12 +47,9 @@ func PostgresDSN(o *Options) string {
 			ConnectTimeout: dialTimeout,
 			// TODO Do we need to check them?
 			RuntimeParams: options,
-			//AfterConnect: func(ctx context.Context, conn *pgconn.PgConn) error {
-			//	log.Infof("PostgreSQL database is connected")
-			//	return nil
-			//},
 		},
 	}
+	cc.Tracer = &tracelog.TraceLog{Logger: pgxzap.NewLogger(zap.L()), LogLevel: tracelog.LogLevelInfo}
 	dsn := stdlib.RegisterConnConfig(cc)
 	return dsn
 }
