@@ -1,4 +1,4 @@
-package lcache
+package cache
 
 type Cache[K comparable, V any] interface {
 	Set(K, V)

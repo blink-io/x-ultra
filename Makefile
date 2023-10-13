@@ -1,9 +1,16 @@
 
-tidy:
-	go mod tidy
 .PHONY: tidy
+# Run go mod tidy
+tidy:
+	go mod tidy -v -e
 
+.PHONY: upgrade
+# Upgrade packages
 upgrade:
 	go get -u -v ./...
 	$(MAKE) tidy
-.PHONY: upgrade
+
+.PHONY: build
+# Build package
+build:
+	go build ./...
