@@ -21,17 +21,26 @@ func GetDialect(o *Options) (schema.Dialect, *sql.DB, error) {
 	dialect := o.Dialect
 
 	var dsn string
-
 	if dsnFunc, ok := dsnFuncs[dialect]; ok {
 		dsn = dsnFunc(o)
+	} else {
+		return nil, nil, fmt.Errorf("unsupoorted dsn for dialect: %s", dialect)
 	}
 
 	var sd schema.Dialect
 	if dlaFunc, ok := dialectFuncs[dialect]; ok {
 		sd = dlaFunc()
+	} else {
+		return nil, nil, fmt.Errorf("unsupoorted dialect: %s", dialect)
 	}
 
-	drv := drivers[dialect]
+	var drv driver.Driver
+	if dd, ok := drivers[dialect]; ok {
+		drv = dd
+	} else {
+		return nil, nil, fmt.Errorf("unsupoorted driver for dialect: %s", dialect)
+	}
+
 	sqlHooks := o.SQLHooks
 	if len(sqlHooks) > 0 {
 		drv = hooks.Wrap(drv, hooks.Compose(sqlHooks...))

@@ -1,4 +1,4 @@
-//go:build !google
+//go:build other
 
 package id
 
