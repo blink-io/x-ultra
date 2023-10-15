@@ -4,11 +4,14 @@ go 1.21.2
 
 require (
 	github.com/Masterminds/squirrel v1.5.4
+	github.com/Xuanwo/go-locale v1.1.0
 	github.com/cespare/xxhash/v2 v2.2.0
+	github.com/creasty/defaults v1.7.0
 	github.com/disgoorg/snowflake/v2 v2.0.1
 	github.com/getsentry/sentry-go v0.25.0
 	github.com/go-playground/validator/v10 v10.15.5
 	github.com/go-sql-driver/mysql v1.7.1
+	github.com/go-task/slim-sprig/v3 v3.0.0
 	github.com/gofrs/uuid/v5 v5.0.0
 	github.com/google/uuid v1.3.1
 	github.com/hashicorp/golang-lru/v2 v2.0.7
@@ -19,8 +22,10 @@ require (
 	github.com/jellydator/ttlcache/v3 v3.1.0
 	github.com/joho/godotenv v1.5.1
 	github.com/json-iterator/go v1.1.12
+	github.com/karrick/godirwalk v1.17.0
 	github.com/lithammer/shortuuid/v4 v4.0.0
 	github.com/natefinch/lumberjack/v3 v3.0.0-alpha
+	github.com/nicksnyder/go-i18n/v2 v2.2.1
 	github.com/pelletier/go-toml/v2 v2.1.0
 	github.com/qustavo/sqlhooks/v2 v2.1.0
 	github.com/redis/go-redis/extra/rediscmd/v9 v9.0.5
@@ -29,6 +34,7 @@ require (
 	github.com/segmentio/ksuid v1.0.4
 	github.com/stretchr/testify v1.8.4
 	github.com/twmb/murmur3 v1.1.8
+	github.com/unrolled/render v1.6.0
 	github.com/uptrace/bun v1.1.16
 	github.com/uptrace/bun/dialect/mysqldialect v1.1.16
 	github.com/uptrace/bun/dialect/pgdialect v1.1.16
@@ -36,7 +42,10 @@ require (
 	github.com/vmihailenco/msgpack/v5 v5.4.0
 	github.com/zeebo/xxh3 v1.0.2
 	go.uber.org/zap v1.26.0
+	golang.org/x/text v0.13.0
 	google.golang.org/grpc v1.58.3
+	google.golang.org/protobuf v1.31.0
+	gopkg.in/yaml.v3 v3.0.1
 	modernc.org/sqlite v1.26.0
 )
 
@@ -44,6 +53,7 @@ require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
+	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.3 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
@@ -70,11 +80,8 @@ require (
 	golang.org/x/net v0.17.0 // indirect
 	golang.org/x/sync v0.4.0 // indirect
 	golang.org/x/sys v0.13.0 // indirect
-	golang.org/x/text v0.13.0 // indirect
 	golang.org/x/tools v0.14.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20231012201019-e917dd12ba7a // indirect
-	google.golang.org/protobuf v1.31.0 // indirect
-	gopkg.in/yaml.v3 v3.0.1 // indirect
 	lukechampine.com/uint128 v1.3.0 // indirect
 	modernc.org/cc/v3 v3.41.0 // indirect
 	modernc.org/ccgo/v3 v3.16.15 // indirect

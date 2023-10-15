@@ -1,0 +1,5 @@
+language = "en-US(英语-美国)"
+
+[hello]
+one = "[From English]: Hello, {{.Name}} your have a phone"
+other = "[From English]: Hello, {{.Name}}, your have {{.PhoneCount}} phones"

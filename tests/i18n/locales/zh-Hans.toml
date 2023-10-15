@@ -1,0 +1,5 @@
+language = "zh-Hans(中文-简体)"
+
+[hello]
+one = "[From Simplified Chinese]: 你好呀, {{.Name}}"
+other = "[From Simplified Chinese]: 你好呀, {{.Name}}, 有 {{.PhoneCount}}部手机"
