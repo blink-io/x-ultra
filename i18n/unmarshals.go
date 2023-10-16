@@ -9,16 +9,10 @@ import (
 
 var unmarshalFns = make(map[string]i18n.UnmarshalFunc)
 
-var DefaultSuffixes = make([]string, 0)
-
 func init() {
 	json := jsoniter.ConfigCompatibleWithStandardLibrary
-	unmarshalFns["yaml"] = yaml.Unmarshal
-	unmarshalFns["yml"] = yaml.Unmarshal
-	unmarshalFns["json"] = json.Unmarshal
-	unmarshalFns["toml"] = toml.Unmarshal
-
-	for k := range unmarshalFns {
-		DefaultSuffixes = append(DefaultSuffixes, k)
-	}
+	unmarshalFns[".yaml"] = yaml.Unmarshal
+	unmarshalFns[".yml"] = yaml.Unmarshal
+	unmarshalFns[".json"] = json.Unmarshal
+	unmarshalFns[".toml"] = toml.Unmarshal
 }

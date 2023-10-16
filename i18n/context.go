@@ -6,7 +6,7 @@ import (
 
 type fnCtxKey struct{}
 
-func defaultT(messageID string, options ...LOption) string {
+func defaultT(messageID string, ops ...LOption) string {
 	log("Translation function is not found, use default for messageID: %s", messageID)
 	return messageID
 }

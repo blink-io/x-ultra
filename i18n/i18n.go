@@ -33,10 +33,17 @@ type (
 var (
 	globalMux sync.Mutex
 	// bundle is default bundle
-	bundle = New(DefaultOptions)
-	tc     = ttlcache.New[string, T]()
-	log    = stdlog.Printf
+	bundle          = New(DefaultOptions)
+	tc              = ttlcache.New[string, T]()
+	log             = stdlog.Printf
+	DefaultSuffixes = make([]string, 0)
 )
+
+func init() {
+	for k := range unmarshalFns {
+		DefaultSuffixes = append(DefaultSuffixes, k)
+	}
+}
 
 func New(o *Options) *Bundle {
 	o = setupOptions(o)

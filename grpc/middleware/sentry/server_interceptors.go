@@ -6,6 +6,7 @@ import (
 	"regexp"
 
 	"github.com/blink-io/x/grpc/util"
+
 	"github.com/getsentry/sentry-go"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
