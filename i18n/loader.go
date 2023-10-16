@@ -119,6 +119,24 @@ func (h *httpLoader) Load(b *Bundle) error {
 	return nil
 }
 
+type bytesLoader struct {
+	Path  string
+	Bytes []byte
+}
+
+func NewBytesLoader(path string, bytes []byte) Loader {
+	return &bytesLoader{path, bytes}
+}
+
+func (h *bytesLoader) Load(b *Bundle) error {
+	if len(h.Path) > 0 && len(h.Bytes) > 0 {
+		if _, err := b.ParseMessageFileBytes(h.Bytes, h.Path); err != nil {
+			log("unable to load message from bytes: %s", h.Path)
+		}
+	}
+	return nil
+}
+
 func supportedSuffixes(path string, suffixes ...string) bool {
 	for _, s := range suffixes {
 		if strings.HasSuffix(path, s) {
