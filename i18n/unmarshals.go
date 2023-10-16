@@ -7,12 +7,16 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-var unmarshalFns = make(map[string]i18n.UnmarshalFunc)
+var unmarshalFns = map[string]i18n.UnmarshalFunc{
+	"yaml": yaml.Unmarshal,
+	"yml":  yaml.Unmarshal,
+	"toml": toml.Unmarshal,
+	"json": jsoniter.ConfigCompatibleWithStandardLibrary.Unmarshal,
+}
 
-func init() {
-	json := jsoniter.ConfigCompatibleWithStandardLibrary
-	unmarshalFns[".yaml"] = yaml.Unmarshal
-	unmarshalFns[".yml"] = yaml.Unmarshal
-	unmarshalFns[".json"] = json.Unmarshal
-	unmarshalFns[".toml"] = toml.Unmarshal
+var DefaultSuffixes = []string{
+	".yaml",
+	".yml",
+	".toml",
+	".json",
 }

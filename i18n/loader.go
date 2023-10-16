@@ -1,6 +1,7 @@
 package i18n
 
 import (
+	"io"
 	"io/fs"
 	"net/http"
 	"path/filepath"
@@ -44,7 +45,7 @@ func (l *dirLoader) Load(b *Bundle) error {
 		}
 		// Ignore error?
 		if _, err := b.LoadMessageFile(path); err != nil {
-			log("unable to load message from file: %s", path)
+			log("unable to load message from file: %s, reason: %+v", path, err)
 		} else {
 			log("loaded from file: %s", path)
 		}
@@ -88,6 +89,7 @@ func (l *fsLoader) Load(b *Bundle) error {
 }
 
 // httpLoader loads by http GET requests
+// URL should be like: https://xxx.com/languages/zh_Hans.toml
 type httpLoader struct {
 	c   *http.Client
 	url string
@@ -99,19 +101,21 @@ func NewHTTPLoader(url string, timeout time.Duration) Loader {
 }
 
 func (h *httpLoader) Load(b *Bundle) error {
-	//res, err := h.c.Get(h.url)
-	//if err != nil {
-	//	return err
-	//}
-	//
-	//defer res.Body.Close()
-	//
-	//buf, err := io.ReadAll(res.Body)
-	//if err != nil {
-	//	return err
-	//}
-	//
-	//b.ParseMessageFileBytes()
+	res, err := h.c.Get(h.url)
+	if err != nil {
+		return err
+	}
+
+	defer res.Body.Close()
+
+	buf, err := io.ReadAll(res.Body)
+	if err != nil {
+		return err
+	}
+
+	if _, err := b.ParseMessageFileBytes(buf, h.url); err != nil {
+		log("unable to load message from URL: %s", h.url)
+	}
 	return nil
 }
 
