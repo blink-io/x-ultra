@@ -29,15 +29,31 @@ func Test_Loader_1(t *testing.T) {
 }
 
 func TestParsePath_1(t *testing.T) {
-	urlstr := "https://xxx.com/languages/zh_Hans.toml"
+	urlstr := "https://xxx.com/languages/zh-Hans.toml"
 	langTag, format := parsePath(urlstr)
-	assert.Equal(t, "zh_Hans", langTag)
+	assert.Equal(t, "zh-Hans", langTag)
 	assert.Equal(t, "toml", format)
 
-	urlstr2 := "https://xxx.com/languages/en_US.yaml"
+	urlstr2 := "https://xxx.com/languages/en-US.yaml"
 	langTag2, format2 := parsePath(urlstr2)
-	assert.Equal(t, "en_US", langTag2)
+	assert.Equal(t, "en-US", langTag2)
 	assert.Equal(t, "yaml", format2)
+}
+
+func TestBytesLoader_1(t *testing.T) {
+	bundle := i18n.Default()
+	apath, err := filepath.Abs(filepath.Join(".", "locales", "zh-Hans.toml"))
+	require.NoError(t, err)
+
+	bytes, err := os.ReadFile(apath)
+	require.NoError(t, err)
+
+	require.NoError(t,
+		i18n.NewBytesLoader(apath, bytes).Load(bundle),
+	)
+	tr := i18n.GetT("zh-Hans")
+	msg := tr("hello", i18n.MD{"Name": "兜兜", "PhoneCount": 18}.O())
+	fmt.Println("translated:  ", msg)
 }
 
 func parsePath(path string) (langTag, format string) {
