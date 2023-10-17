@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package log
+package zapx
 
 import (
 	"time"
@@ -31,10 +31,19 @@ type FileLogConfig struct {
 	Filename string `toml:"filename" json:"filename"`
 	// Max size for a single file, in MB.
 	MaxSize int64 `toml:"max-size" json:"max-size"`
-	// Max log keep days, default is never deleting.
-	MaxDays time.Duration `toml:"max-days" json:"max-days"`
+	// MaxAge is the maximum time to retain old log files based on the timestamp
+	// encoded in their filename. The default is not to remove old log files
+	// based on age.
+	MaxAge time.Duration `toml:"max-age" json:"max-age"`
 	// Maximum number of old log files to retain.
 	MaxBackups int `toml:"max-backups" json:"max-backups"`
+	// LocalTime determines if the time used for formatting the timestamps in
+	// backup files is the computer's local time. The default is to use UTC
+	// time.
+	LocalTime bool `toml:"local-time" json:"local-time"`
+	// Compress determines if the rotated log files should be compressed
+	// using gzip. The default is not to perform compression.
+	Compress bool `toml:"compress" json:"compress"`
 }
 
 // Config serializes log related config in toml/json.

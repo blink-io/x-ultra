@@ -1,84 +1,127 @@
-// Copyright 2019 PingCAP, Inc.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 package log
 
 import (
-	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
+	"context"
+	"fmt"
+	"os"
+	"sync"
 )
 
-// ZapEncodingName is the encoder name registered in zap
-var ZapEncodingName = "default-log"
+// globalLogger is designed as a global logger in current process.
+var global = &loggerAppliance{}
 
-// Debug logs a message at DebugLevel. The message includes any fields passed
-// at the log site, as well as any fields accumulated on the logger.
-func Debug(msg string, fields ...zap.Field) {
-	ll().Debug(msg, fields...)
+// loggerAppliance is the proxy of `Logger` to
+// make logger change will affect all sub-logger.
+type loggerAppliance struct {
+	lock sync.Mutex
+	Logger
 }
 
-// Info logs a message at InfoLevel. The message includes any fields passed
-// at the log site, as well as any fields accumulated on the logger.
-func Info(msg string, fields ...zap.Field) {
-	ll().Info(msg, fields...)
+func init() {
+	global.SetLogger(DefaultLogger)
 }
 
-// Warn logs a message at WarnLevel. The message includes any fields passed
-// at the log site, as well as any fields accumulated on the logger.
-func Warn(msg string, fields ...zap.Field) {
-	ll().Warn(msg, fields...)
+func (a *loggerAppliance) SetLogger(in Logger) {
+	a.lock.Lock()
+	defer a.lock.Unlock()
+	a.Logger = in
 }
 
-// Error logs a message at ErrorLevel. The message includes any fields passed
-// at the log site, as well as any fields accumulated on the logger.
-func Error(msg string, fields ...zap.Field) {
-	ll().Error(msg, fields...)
+// SetLogger should be called before any other log call.
+// And it is NOT THREAD SAFE.
+func SetLogger(logger Logger) {
+	global.SetLogger(logger)
 }
 
-// Panic logs a message at PanicLevel. The message includes any fields passed
-// at the log site, as well as any fields accumulated on the logger.
-//
-// The logger then panics, even if logging at PanicLevel is disabled.
-func Panic(msg string, fields ...zap.Field) {
-	ll().Panic(msg, fields...)
+// GetLogger returns global logger appliance as logger in current process.
+func GetLogger() Logger {
+	return global
 }
 
-// Fatal logs a message at FatalLevel. The message includes any fields passed
-// at the log site, as well as any fields accumulated on the logger.
-//
-// The logger then calls os.Exit(1), even if logging at FatalLevel is
-// disabled.
-func Fatal(msg string, fields ...zap.Field) {
-	ll().Fatal(msg, fields...)
+// Log Print log by level and keyvals.
+func Log(level Level, keyvals ...interface{}) {
+	_ = global.Log(level, keyvals...)
 }
 
-// With creates a child logger and adds structured context to it.
-// Fields added to the child don't affect the parent, and vice versa.
-//
-// Deprecated: With should not add caller skip, since it's not a logging function.
-// Please use log.L().With instead. With is kept for compatibility.
-// See https://github.com/pingcap/log/issues/32 for more details.
-func With(fields ...zap.Field) *zap.Logger {
-	return L().WithOptions(zap.AddCallerSkip(1)).With(fields...)
+// Context with context logger.
+func Context(ctx context.Context) *Helper {
+	return NewHelper(WithContext(ctx, global.Logger))
 }
 
-// SetLevel alters the logging level.
-func SetLevel(l zapcore.Level) {
-	globalProperties.Load().(*ZapProperties).Level.SetLevel(l)
+// Debug logs a message at debug level.
+func Debug(a ...interface{}) {
+	_ = global.Log(LevelDebug, DefaultMessageKey, fmt.Sprint(a...))
 }
 
-// GetLevel gets the logging level.
-func GetLevel() zapcore.Level {
-	return globalProperties.Load().(*ZapProperties).Level.Level()
+// Debugf logs a message at debug level.
+func Debugf(format string, a ...interface{}) {
+	_ = global.Log(LevelDebug, DefaultMessageKey, fmt.Sprintf(format, a...))
+}
+
+// Debugw logs a message at debug level.
+func Debugw(keyvals ...interface{}) {
+	_ = global.Log(LevelDebug, keyvals...)
+}
+
+// Info logs a message at info level.
+func Info(a ...interface{}) {
+	_ = global.Log(LevelInfo, DefaultMessageKey, fmt.Sprint(a...))
+}
+
+// Infof logs a message at info level.
+func Infof(format string, a ...interface{}) {
+	_ = global.Log(LevelInfo, DefaultMessageKey, fmt.Sprintf(format, a...))
+}
+
+// Infow logs a message at info level.
+func Infow(keyvals ...interface{}) {
+	_ = global.Log(LevelInfo, keyvals...)
+}
+
+// Warn logs a message at warn level.
+func Warn(a ...interface{}) {
+	_ = global.Log(LevelWarn, DefaultMessageKey, fmt.Sprint(a...))
+}
+
+// Warnf logs a message at warnf level.
+func Warnf(format string, a ...interface{}) {
+	_ = global.Log(LevelWarn, DefaultMessageKey, fmt.Sprintf(format, a...))
+}
+
+// Warnw logs a message at warnf level.
+func Warnw(keyvals ...interface{}) {
+	_ = global.Log(LevelWarn, keyvals...)
+}
+
+// Error logs a message at error level.
+func Error(a ...interface{}) {
+	_ = global.Log(LevelError, DefaultMessageKey, fmt.Sprint(a...))
+}
+
+// Errorf logs a message at error level.
+func Errorf(format string, a ...interface{}) {
+	_ = global.Log(LevelError, DefaultMessageKey, fmt.Sprintf(format, a...))
+}
+
+// Errorw logs a message at error level.
+func Errorw(keyvals ...interface{}) {
+	_ = global.Log(LevelError, keyvals...)
+}
+
+// Fatal logs a message at fatal level.
+func Fatal(a ...interface{}) {
+	_ = global.Log(LevelFatal, DefaultMessageKey, fmt.Sprint(a...))
+	os.Exit(1)
+}
+
+// Fatalf logs a message at fatal level.
+func Fatalf(format string, a ...interface{}) {
+	_ = global.Log(LevelFatal, DefaultMessageKey, fmt.Sprintf(format, a...))
+	os.Exit(1)
+}
+
+// Fatalw logs a message at fatal level.
+func Fatalw(keyvals ...interface{}) {
+	_ = global.Log(LevelFatal, keyvals...)
+	os.Exit(1)
 }
