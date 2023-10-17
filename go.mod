@@ -40,6 +40,7 @@ require (
 	github.com/uptrace/bun/dialect/mysqldialect v1.1.16
 	github.com/uptrace/bun/dialect/pgdialect v1.1.16
 	github.com/uptrace/bun/dialect/sqlitedialect v1.1.16
+	github.com/uptrace/bun/driver/pgdriver v1.1.16
 	github.com/vmihailenco/msgpack/v5 v5.4.0
 	github.com/zeebo/xxh3 v1.0.2
 	go.uber.org/zap v1.26.0
@@ -87,6 +88,7 @@ require (
 	golang.org/x/tools v0.14.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20231016165738-49dd2c1f3d0b // indirect
 	lukechampine.com/uint128 v1.3.0 // indirect
+	mellium.im/sasl v0.3.1 // indirect
 	modernc.org/cc/v3 v3.41.0 // indirect
 	modernc.org/ccgo/v3 v3.16.15 // indirect
 	modernc.org/libc v1.24.1 // indirect

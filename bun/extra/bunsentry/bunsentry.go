@@ -27,9 +27,14 @@ func NewQueryHook(options ...Option) *QueryHook {
 }
 
 func (q *QueryHook) BeforeQuery(ctx context.Context, event *bun.QueryEvent) context.Context {
+	if err := event.Err; err != nil {
+		sentry.CaptureException(err)
+	}
 	return ctx
 }
 
 func (q *QueryHook) AfterQuery(ctx context.Context, event *bun.QueryEvent) {
-
+	if err := event.Err; err != nil {
+		sentry.CaptureException(err)
+	}
 }

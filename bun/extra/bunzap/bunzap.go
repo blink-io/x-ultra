@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"database/sql"
+	"errors"
 	"strings"
 	"text/template"
 	"time"
@@ -79,8 +80,8 @@ func (h *QueryHook) AfterQuery(ctx context.Context, event *bun.QueryEvent) {
 	now := time.Now()
 	dur := now.Sub(event.StartTime)
 
-	switch event.Err {
-	case nil, sql.ErrNoRows:
+	switch {
+	case event.Err == nil, errors.Is(event.Err, sql.ErrNoRows):
 		isError = false
 		if h.opts.LogSlow > 0 && dur >= h.opts.LogSlow {
 			level = h.opts.SlowLevel
