@@ -41,9 +41,9 @@ func GetDialect(o *Options) (schema.Dialect, *sql.DB, error) {
 		return nil, nil, fmt.Errorf("unsupoorted driver for dialect: %s", dialect)
 	}
 
-	sqlHooks := o.SQLHooks
-	if len(sqlHooks) > 0 {
-		drv = hooks.Wrap(drv, hooks.Compose(sqlHooks...))
+	driverHooks := o.DriverHooks
+	if len(driverHooks) > 0 {
+		drv = hooks.Wrap(drv, hooks.Compose(driverHooks...))
 	}
 
 	conn := &dsnConnector{dsn: dsn, driver: drv}

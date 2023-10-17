@@ -29,7 +29,7 @@ type Options struct {
 	MaxOpenConns    int
 	MaxIdleConns    int
 	ValidationSQL   string
-	SQLHooks        []hooks.Hooks
+	DriverHooks     []hooks.Hooks
 	QueryHooks      []bun.QueryHook
 	Loc             *time.Location
 	Debug           bool
