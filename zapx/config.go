@@ -41,9 +41,6 @@ type FileLogConfig struct {
 	// backup files is the computer's local time. The default is to use UTC
 	// time.
 	LocalTime bool `toml:"local-time" json:"local-time"`
-	// Compress determines if the rotated log files should be compressed
-	// using gzip. The default is not to perform compression.
-	Compress bool `toml:"compress" json:"compress"`
 }
 
 // Config serializes log related config in toml/json.

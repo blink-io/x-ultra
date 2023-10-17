@@ -186,7 +186,6 @@ func initFileRoller(cfg *FileLogConfig) (*lumberjack.Roller, error) {
 		MaxAge:     cfg.MaxAge,
 		MaxBackups: cfg.MaxBackups,
 		LocalTime:  cfg.LocalTime,
-		Compress:   cfg.Compress,
 	}
 	return lumberjack.NewRoller(cfg.Filename, cfg.MaxSize, rops)
 }
