@@ -1,7 +1,7 @@
 package cache
 
-type Cache[K comparable, V any] interface {
-	Set(K, V)
-	Get(K) (V, bool)
-	Del(K)
+type Cache[V any] interface {
+	Set(string, V)
+	Get(string) (V, bool)
+	Del(string)
 }

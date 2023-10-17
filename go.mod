@@ -23,6 +23,7 @@ require (
 	github.com/jellydator/ttlcache/v3 v3.1.0
 	github.com/joho/godotenv v1.5.1
 	github.com/json-iterator/go v1.1.12
+	github.com/karlseguin/ccache v2.0.3+incompatible
 	github.com/karrick/godirwalk v1.17.0
 	github.com/lithammer/shortuuid/v4 v4.0.0
 	github.com/natefinch/lumberjack/v3 v3.0.0-alpha
@@ -66,6 +67,8 @@ require (
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
+	github.com/karlseguin/ccache/v3 v3.0.3 // indirect
+	github.com/karlseguin/expect v1.0.8 // indirect
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.5 // indirect
 	github.com/lann/builder v0.0.0-20180802200727-47ae307949d0 // indirect

@@ -11,34 +11,34 @@ import (
 
 const Name = "ttlcache"
 
-type icache[K comparable, V any] struct {
-	c   *ttlcache.Cache[K, V]
+type icache[V any] struct {
+	c   *ttlcache.Cache[string, V]
 	ttl time.Duration
 }
 
-func New[K comparable, V any](ctx context.Context, ttl time.Duration) (cache.Cache[K, V], error) {
-	c := ttlcache.New(ttlcache.WithTTL[K, V](ttl))
-	return &icache[K, V]{c, ttl}, nil
+func New[V any](ctx context.Context, ttl time.Duration) (cache.Cache[V], error) {
+	c := ttlcache.New(ttlcache.WithTTL[string, V](ttl))
+	return &icache[V]{c, ttl}, nil
 }
 
-func (l *icache[K, V]) Set(key K, data V) {
+func (l *icache[V]) Set(key string, data V) {
 	l.c.Set(key, data, 0)
 }
 
-func (l *icache[K, V]) Get(key K) (V, bool) {
+func (l *icache[V]) Get(key string) (V, bool) {
 	i := l.c.Get(key)
 	var v V
 	if i != nil {
-		return i.Value(), !i.IsExpired()
+		return i.Value(), i.IsExpired()
 
 	}
 	return v, false
 }
 
-func (l *icache[K, V]) Del(key K) {
+func (l *icache[V]) Del(key string) {
 	l.c.Delete(key)
 }
 
-func (l *icache[K, V]) Name() string {
+func (l *icache[V]) Name() string {
 	return Name
 }
