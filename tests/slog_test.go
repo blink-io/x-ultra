@@ -10,3 +10,6 @@ func TestSlog_1(t *testing.T) {
 	arg2 := slog.Int("version", 1234)
 	slog.Info("maa", arg1, arg2)
 }
+
+func TestErrors_1(t *testing.T) {
+}
