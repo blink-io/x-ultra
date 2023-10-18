@@ -10,6 +10,10 @@ import (
 	"github.com/uptrace/bun/schema"
 )
 
+const (
+	IDField = "id"
+)
+
 type (
 	// ID defines the generic type for ID in repository
 	ID = any
@@ -64,11 +68,11 @@ func (g *db[M, I]) Delete(ctx context.Context, ID I, ops ...DeleteOption) error 
 }
 
 func (g *db[M, I]) BulkDelete(ctx context.Context, IDs []I, ops ...DeleteOption) error {
-	return BulkDelete[M, I](ctx, g.rd, IDs, ops...)
+	return BulkDelete[M, I](ctx, g.rd, IDs, IDField, ops...)
 }
 
 func (g *db[M, I]) Get(ctx context.Context, ID I, ops ...SelectOption) (*M, error) {
-	return Get[M, I](ctx, g.rd, ID, ops...)
+	return Get[M, I](ctx, g.rd, ID, IDField, ops...)
 }
 
 func (g *db[M, I]) One(ctx context.Context, ops ...SelectOption) (*M, error) {

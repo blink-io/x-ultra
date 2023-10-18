@@ -14,3 +14,8 @@ upgrade:
 # Build package
 build:
 	go build ./...
+
+.PHONY: test
+# Run tests
+test:
+	@echo 'Testing'

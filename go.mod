@@ -5,6 +5,7 @@ go 1.21.2
 require (
 	github.com/Masterminds/squirrel v1.5.4
 	github.com/Xuanwo/go-locale v1.1.0
+	github.com/alexedwards/argon2id v0.0.0-20231016161201-27bf9713919b
 	github.com/cespare/xxhash/v2 v2.2.0
 	github.com/creasty/defaults v1.7.0
 	github.com/disgoorg/snowflake/v2 v2.0.1
@@ -23,9 +24,10 @@ require (
 	github.com/jellydator/ttlcache/v3 v3.1.0
 	github.com/joho/godotenv v1.5.1
 	github.com/json-iterator/go v1.1.12
-	github.com/karlseguin/ccache v2.0.3+incompatible
+	github.com/karlseguin/ccache/v3 v3.0.3
 	github.com/karrick/godirwalk v1.17.0
 	github.com/lithammer/shortuuid/v4 v4.0.0
+	github.com/matthewhartstonge/argon2 v0.3.4
 	github.com/natefinch/lumberjack/v3 v3.0.0-alpha
 	github.com/nicksnyder/go-i18n/v2 v2.2.1
 	github.com/pelletier/go-toml/v2 v2.1.0
@@ -36,7 +38,7 @@ require (
 	github.com/segmentio/ksuid v1.0.4
 	github.com/stretchr/testify v1.8.4
 	github.com/twmb/murmur3 v1.1.8
-	github.com/unrolled/render v1.6.0
+	github.com/unrolled/render v1.6.1
 	github.com/uptrace/bun v1.1.16
 	github.com/uptrace/bun/dialect/mysqldialect v1.1.16
 	github.com/uptrace/bun/dialect/pgdialect v1.1.16
@@ -46,7 +48,7 @@ require (
 	github.com/zeebo/xxh3 v1.0.2
 	go.uber.org/zap v1.26.0
 	golang.org/x/text v0.13.0
-	google.golang.org/grpc v1.58.3
+	google.golang.org/grpc v1.59.0
 	google.golang.org/protobuf v1.31.0
 	gopkg.in/yaml.v3 v3.0.1
 	modernc.org/sqlite v1.26.0
@@ -67,8 +69,6 @@ require (
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
-	github.com/karlseguin/ccache/v3 v3.0.3 // indirect
-	github.com/karlseguin/expect v1.0.8 // indirect
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.5 // indirect
 	github.com/lann/builder v0.0.0-20180802200727-47ae307949d0 // indirect

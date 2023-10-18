@@ -7,15 +7,23 @@ import (
 	"github.com/joho/godotenv"
 )
 
-// Multiple load multiple files based on the following order
+const (
+	EnvDevelopment = "development"
+	EnvTest        = "test"
+	EnvProduction  = "production"
+)
+
+// Flow load multiple files based on the following order
 // .env.development.local
 // .env.local
 // .env.development
 // .env
 // supported env: development|test|production
 // See https://github.com/bkeepers/dotenv#what-other-env-files-can-i-use
-func Multiple(env string, paths ...string) error {
-	if env == "development" || env == "test" || env == "production" {
+func Flow(env string, paths ...string) error {
+	if env == EnvDevelopment ||
+		env == EnvTest ||
+		env == EnvProduction {
 		if paths == nil {
 			paths = []string{""}
 		}

@@ -56,11 +56,11 @@ func (g *tx[M, I]) Delete(ctx context.Context, ID I, ops ...DeleteOption) error 
 }
 
 func (g *tx[M, I]) BulkDelete(ctx context.Context, IDs []I, ops ...DeleteOption) error {
-	return BulkDelete[M, I](ctx, g.rx, IDs, ops...)
+	return BulkDelete[M, I](ctx, g.rx, IDs, IDField, ops...)
 }
 
 func (g *tx[M, I]) Get(ctx context.Context, ID I, ops ...SelectOption) (*M, error) {
-	return Get[M, I](ctx, g.rx, ID, ops...)
+	return Get[M, I](ctx, g.rx, ID, IDField, ops...)
 }
 
 func (g *tx[M, I]) One(ctx context.Context, ops ...SelectOption) (*M, error) {

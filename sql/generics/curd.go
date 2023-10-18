@@ -48,20 +48,20 @@ func Delete[M Model, I ID](ctx context.Context, db bun.IDB, ID I, ops ...DeleteO
 	return err
 }
 
-func BulkDelete[M Model, I ID](ctx context.Context, db bun.IDB, IDs []I, ops ...DeleteOption) error {
+func BulkDelete[M Model, I ID](ctx context.Context, db bun.IDB, IDs []I, field string, ops ...DeleteOption) error {
 	q := db.NewDelete()
 	for _, o := range ops {
 		o(q)
 	}
 	_, err := q.
 		Model((*M)(nil)).
-		Where("? IN (?)", bun.Ident("id"), bun.In(IDs)).
+		Where("? IN (?)", bun.Ident(field), bun.In(IDs)).
 		WherePK().
 		Exec(ctx)
 	return err
 }
 
-func Get[M Model, I ID](ctx context.Context, db bun.IDB, ID I, ops ...SelectOption) (*M, error) {
+func Get[M Model, I ID](ctx context.Context, db bun.IDB, ID I, field string, ops ...SelectOption) (*M, error) {
 	var m = new(M)
 	q := db.NewSelect()
 	for _, o := range ops {
@@ -69,7 +69,7 @@ func Get[M Model, I ID](ctx context.Context, db bun.IDB, ID I, ops ...SelectOpti
 	}
 	err := q.
 		Model(m).
-		Where("?=?", bun.Ident("id"), ID).
+		Where("?=?", bun.Ident(field), ID).
 		Limit(1).
 		Scan(ctx, m)
 	return m, err
