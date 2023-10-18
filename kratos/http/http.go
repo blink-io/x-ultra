@@ -6,9 +6,9 @@ import (
 	khttp "github.com/go-kratos/kratos/v2/transport/http"
 )
 
-type HandlerFunc func(http.ResponseWriter, *http.Request)
+type StdHandlerFunc http.HandlerFunc
 
-func (h HandlerFunc) Handle(ctx khttp.Context) error {
+func (h StdHandlerFunc) Handle(ctx khttp.Context) error {
 	w := ctx.Response()
 	r := ctx.Request()
 	h(w, r)
