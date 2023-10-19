@@ -26,6 +26,7 @@ require (
 	github.com/joho/godotenv v1.5.1
 	github.com/karlseguin/ccache/v3 v3.0.3
 	github.com/karrick/godirwalk v1.17.0
+	github.com/keegancsmith/sqlf v1.1.2
 	github.com/lithammer/shortuuid/v4 v4.0.0
 	github.com/matthewhartstonge/argon2 v0.3.4
 	github.com/natefinch/lumberjack/v3 v3.0.0-alpha
