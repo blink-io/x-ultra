@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/blink-io/x/sql"
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 )
 
@@ -43,4 +44,16 @@ func TestSQLite3_Select_Version(t *testing.T) {
 	require.NoError(t, row.Scan(&v))
 
 	fmt.Println("SQLite version:  ", v)
+}
+
+func TestSQLite3_Insert_1(t *testing.T) {
+	db := getDB(t)
+	r1 := &Application{}
+	r1.ID = uuid.New().String()
+	r1.Name = "app1"
+	r1.Code = "code1"
+	r1.Type = "type1"
+	r1.Status = "status1"
+	_, err := db.NewInsert().Model(r1).Exec(context.Background())
+	require.NoError(t, err)
 }
