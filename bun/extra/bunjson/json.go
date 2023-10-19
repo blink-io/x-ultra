@@ -3,13 +3,10 @@ package bunjson
 import (
 	"io"
 
-	jsoniter "github.com/json-iterator/go"
+	"github.com/goccy/go-json"
 	"github.com/uptrace/bun/extra/bunjson"
 )
 
-var (
-	json = jsoniter.ConfigCompatibleWithStandardLibrary
-)
 var _ bunjson.Provider = (*provider)(nil)
 
 type provider struct{}

@@ -1,32 +1,38 @@
-package lru
+package ristretto
 
 import (
 	"context"
 	"time"
 
 	"github.com/blink-io/x/cache"
-
-	"github.com/hashicorp/golang-lru/v2/expirable"
+	"github.com/outcaste-io/ristretto"
 )
 
-const Name = "icache"
+const Name = "ristretto"
 
 func init() {
 	//local.SetProviderFn(ProviderLRU, NewLRULocal)
 }
 
 type icache[V any] struct {
-	c   *expirable.LRU[string, V]
+	c   *ristretto.Cache
 	ttl time.Duration
 }
 
 func New[V any](ctx context.Context, ttl time.Duration) (cache.Cache[V], error) {
-	c := expirable.NewLRU[string, V](1000, nil, ttl)
+	c, err := ristretto.NewCache(&ristretto.Config{
+		NumCounters: 1e7,     // number of keys to track frequency of (10M).
+		MaxCost:     1 << 30, // maximum cost of cache (1GB).
+		BufferItems: 64,      // number of keys per Get buffer.
+	})
+	if err != nil {
+		return nil, err
+	}
 	return &icache[V]{c, ttl}, nil
 }
 
 func (l *icache[V]) Set(key string, value V) {
-	l.c.Add(key, value)
+	l.c.SetWithTTL(key, value, 1, l.ttl)
 }
 
 func (l *icache[V]) Get(key string) (V, bool) {
@@ -34,7 +40,7 @@ func (l *icache[V]) Get(key string) (V, bool) {
 }
 
 func (l *icache[V]) Del(key string) {
-	l.c.Remove(key)
+	l.c.Del(key)
 }
 
 func (l *icache[V]) Name() string {

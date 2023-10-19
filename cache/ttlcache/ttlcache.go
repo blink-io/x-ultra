@@ -21,8 +21,8 @@ func New[V any](ctx context.Context, ttl time.Duration) (cache.Cache[V], error) 
 	return &icache[V]{c, ttl}, nil
 }
 
-func (l *icache[V]) Set(key string, data V) {
-	l.c.Set(key, data, 0)
+func (l *icache[V]) Set(key string, value V) {
+	l.c.Set(key, value, 0)
 }
 
 func (l *icache[V]) Get(key string) (V, bool) {

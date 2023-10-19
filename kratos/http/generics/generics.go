@@ -9,9 +9,9 @@ import (
 
 func Handle[Req any, Res any](
 	operation string,
-	handler func(context.Context, *Req) (*Res, error),
+	dlr func(context.Context, *Req) (*Res, error),
 	ops ...Option,
-) func(khttp.Context) error {
+) khttp.HandlerFunc {
 	return func(kctx khttp.Context) error {
 		opts := new(options)
 		for _, o := range ops {
@@ -32,10 +32,10 @@ func Handle[Req any, Res any](
 			return err
 		}
 		khttp.SetOperation(kctx, operation)
-		mhandler := kctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return handler(kctx, req.(*Req))
+		mdlr := kctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return dlr(kctx, req.(*Req))
 		})
-		out, err := mhandler(kctx, &in)
+		out, err := mdlr(kctx, &in)
 		if err != nil {
 			return err
 		}
