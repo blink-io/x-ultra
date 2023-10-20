@@ -5,5 +5,5 @@ import (
 )
 
 type Handler interface {
-	HandleGRPC(*kgrpc.Server) error
+	HandleGRPC(*kgrpc.Server)
 }

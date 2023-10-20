@@ -7,7 +7,7 @@ import (
 )
 
 type Handler interface {
-	HandleHTTP(*khttp.Server) error
+	HandleHTTP(*khttp.Server)
 }
 
 type StdHandlerFunc http.HandlerFunc
