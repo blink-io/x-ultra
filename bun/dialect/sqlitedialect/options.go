@@ -1,7 +1,7 @@
 package sqlitedialect
 
 type options struct {
-	local bool
+	utc bool
 }
 
 type Option func(o *options)
@@ -14,9 +14,9 @@ func applyOptions(ops ...Option) *options {
 	return opt
 }
 
-// Local uses local timezone
-func Local() Option {
+// UTC uses local timezone
+func UTC() Option {
 	return func(o *options) {
-		o.local = true
+		o.utc = true
 	}
 }

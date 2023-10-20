@@ -19,7 +19,7 @@ func init() {
 	dn := DialectSQLite
 	drivers[dn] = &sqlite.Driver{}
 	dialectFuncs[dn] = func() schema.Dialect {
-		return sqlitedialect.New(sqlitedialect.Local())
+		return sqlitedialect.New()
 	}
 	dsnFuncs[dn] = SQLiteDSN
 	slog.Info("SQLite is enabled")
