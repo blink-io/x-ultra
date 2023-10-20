@@ -20,8 +20,31 @@ type (
 	// Model defines the generic type for Model in repository
 	Model = any
 
+	base[M Model, I ID] interface {
+		// Insert a new record.
+		Insert(context.Context, *M, ...InsertOption) error
+		// BulkInsert inserts more than one record
+		BulkInsert(context.Context, []*M, ...InsertOption) error
+		// Update a record by ID
+		Update(context.Context, *M, ...UpdateOption) error
+		// Delete a record by ID
+		Delete(context.Context, I, ...DeleteOption) error
+		// BulkDelete deletes by IDs
+		BulkDelete(context.Context, []I, ...DeleteOption) error
+		// Get a record by ID
+		Get(context.Context, I, ...SelectOption) (*M, error)
+		// One get one record by criteria
+		One(context.Context, ...SelectOption) (*M, error)
+		// All fetch all data from repository
+		All(context.Context, ...SelectOption) ([]*M, error)
+		// Count rows
+		Count(context.Context, ...SelectOption) (int, error)
+		// Exists has record
+		Exists(context.Context, ...SelectOption) (bool, error)
+	}
+
 	DB[M Model, I ID] interface {
-		Tx[M, I]
+		base[M, I]
 		// DB .
 		DB() *sql.DB
 		// Model defines

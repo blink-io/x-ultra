@@ -4,10 +4,10 @@ type logging interface {
 	Printf(format string, v ...interface{})
 }
 
-var _ logging = (Fn)(nil)
+var _ logging = (Func)(nil)
 
-type Fn func(format string, v ...interface{})
+type Func func(format string, v ...interface{})
 
-func (f Fn) Printf(format string, v ...interface{}) {
+func (f Func) Printf(format string, v ...interface{}) {
 	f(format, v...)
 }
