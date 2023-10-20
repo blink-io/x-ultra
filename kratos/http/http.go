@@ -6,8 +6,8 @@ import (
 	khttp "github.com/go-kratos/kratos/v2/transport/http"
 )
 
-type Doer interface {
-	DoHTTP(*khttp.Server) error
+type Handler interface {
+	HandleHTTP(*khttp.Server) error
 }
 
 type StdHandlerFunc http.HandlerFunc
