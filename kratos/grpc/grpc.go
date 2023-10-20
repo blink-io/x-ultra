@@ -5,5 +5,5 @@ import (
 )
 
 type Doer interface {
-	DoGRPC(*kgrpc.Server)
+	DoGRPC(*kgrpc.Server) error
 }
