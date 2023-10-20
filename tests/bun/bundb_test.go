@@ -7,7 +7,7 @@ import (
 	"testing"
 
 	"github.com/blink-io/x/sql"
-	"github.com/google/uuid"
+	"github.com/blink-io/x/sql/generics"
 	"github.com/stretchr/testify/require"
 )
 
@@ -46,14 +46,34 @@ func TestSQLite3_Select_Version(t *testing.T) {
 	fmt.Println("SQLite version:  ", v)
 }
 
+func TestSQLite3_Delete_1(t *testing.T) {
+	db := getDB(t)
+	gdb := generics.NewDB[Application, string](db)
+	//err := gdb.Delete(ctx, "123456")
+	err := gdb.BulkDelete(ctx, []string{"123456", "888888"})
+	require.NoError(t, err)
+}
+
 func TestSQLite3_Insert_1(t *testing.T) {
 	db := getDB(t)
 	r1 := &Application{}
-	r1.ID = uuid.New().String()
-	r1.Name = "app1"
-	r1.Code = "code1"
-	r1.Type = "type1"
-	r1.Status = "status1"
-	_, err := db.NewInsert().Model(r1).Exec(context.Background())
+	r1.ID = "123456"
+	r1.Name = "app2"
+	r1.Code = "code2"
+	r1.Type = "type2"
+	r1.Status = "status2"
+
+	r3 := &Application{}
+	r3.ID = "888888"
+	r3.Name = "app3"
+	r3.Code = "code3"
+	r3.Type = "type3"
+	r3.Status = "status3"
+
+	tdb, err := generics.NewDB[Application, string](db).Tx()
 	require.NoError(t, err)
+
+	err1 := tdb.BulkInsert(ctx, []*Application{r1, r3})
+	require.NoError(t, tdb.Commit())
+	require.NoError(t, err1)
 }

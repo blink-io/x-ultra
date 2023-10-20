@@ -7,6 +7,8 @@ import (
 type (
 	idb = bun.DB
 
+	IDB = bun.IDB
+
 	DB struct {
 		*idb
 	}

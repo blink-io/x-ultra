@@ -12,7 +12,7 @@ type mxm = mixin.Model
 // Application represents iOS/Android/Windows/OSX/Linux application
 type Application struct {
 	bun.BaseModel `bun:"applications,alias:applications" db:"-" json:"-" toml:"-" yaml:"-" msgpack:"-"`
-	mxm
+	mixin.Model
 	Status      string         `bun:"status,notnull" db:"status" json:"status,omitempty" toml:"status,omitempty" yaml:"status,omitempty" msgpack:"status,omitempty"`
 	Type        string         `bun:"type,notnull" db:"type" json:"type,omitempty" toml:"type,omitempty" yaml:"type,omitempty" msgpack:"type,omitempty"`
 	Name        string         `bun:"name,notnull" db:"name" json:"name,omitempty" toml:"name,omitempty" yaml:"name,omitempty" msgpack:"name,omitempty"`

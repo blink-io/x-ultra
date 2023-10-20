@@ -35,15 +35,14 @@ func Update[M Model](ctx context.Context, db bun.IDB, m *M, ops ...UpdateOption)
 	return err
 }
 
-func Delete[M Model, I ID](ctx context.Context, db bun.IDB, ID I, ops ...DeleteOption) error {
+func Delete[M Model, I ID](ctx context.Context, db bun.IDB, ID I, field string, ops ...DeleteOption) error {
 	q := db.NewDelete()
 	for _, o := range ops {
 		o(q)
 	}
 	_, err := q.
 		Model((*M)(nil)).
-		Where("?=?", bun.Ident("id"), ID).
-		WherePK().
+		Where("?=?", bun.Ident(field), ID).
 		Exec(ctx)
 	return err
 }
@@ -56,7 +55,6 @@ func BulkDelete[M Model, I ID](ctx context.Context, db bun.IDB, IDs []I, field s
 	_, err := q.
 		Model((*M)(nil)).
 		Where("? IN (?)", bun.Ident(field), bun.In(IDs)).
-		WherePK().
 		Exec(ctx)
 	return err
 }
