@@ -36,7 +36,12 @@ func (l *icache[V]) Set(key string, value V) {
 }
 
 func (l *icache[V]) Get(key string) (V, bool) {
-	return l.c.Get(key)
+	var v V
+	i, ok := l.c.Get(key)
+	if ok {
+		v = i.(V)
+	}
+	return v, ok
 }
 
 func (l *icache[V]) Del(key string) {
