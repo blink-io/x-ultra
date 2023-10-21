@@ -19,7 +19,7 @@ type (
 		Rollback() error
 	}
 
-	tx[M Model, I comparable] struct {
+	tx[M Model, I ID] struct {
 		itx
 	}
 )
