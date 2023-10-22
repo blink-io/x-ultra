@@ -24,7 +24,7 @@ require (
 	github.com/jaevor/go-nanoid v1.3.0
 	github.com/jellydator/ttlcache/v3 v3.1.0
 	github.com/joho/godotenv v1.5.1
-	github.com/karlseguin/ccache/v3 v3.0.4
+	github.com/karlseguin/ccache/v3 v3.0.5
 	github.com/karrick/godirwalk v1.17.0
 	github.com/keegancsmith/sqlf v1.1.2
 	github.com/lithammer/shortuuid/v4 v4.0.0
@@ -51,6 +51,7 @@ require (
 	github.com/vmihailenco/go-tinylfu v0.2.2
 	github.com/vmihailenco/msgpack/v5 v5.4.0
 	github.com/zeebo/xxh3 v1.0.2
+	gitlab.com/greyxor/slogor v1.0.0
 	go.uber.org/zap v1.26.0
 	golang.org/x/crypto v0.14.0
 	golang.org/x/text v0.13.0
@@ -64,7 +65,7 @@ require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
-	github.com/fsnotify/fsnotify v1.6.0 // indirect
+	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.3 // indirect
 	github.com/go-kratos/aegis v0.2.0 // indirect
 	github.com/go-playground/form/v4 v4.2.1 // indirect
