@@ -1,4 +1,4 @@
-package crypt
+package crypto
 
 import (
 	"fmt"
@@ -7,6 +7,7 @@ import (
 	"github.com/alexedwards/argon2id"
 	"github.com/matthewhartstonge/argon2"
 	"github.com/stretchr/testify/require"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func TestArgon2id(t *testing.T) {
@@ -39,4 +40,15 @@ func TestArgon2(t *testing.T) {
 		matches = "yes 🔓"
 	}
 	fmt.Printf("Password Matches: %s\n", matches)
+}
+
+func TestBcrypt_1(t *testing.T) {
+	cost := bcrypt.DefaultCost
+
+	plain := []byte("password")
+	edata, err := bcrypt.GenerateFromPassword(plain, cost)
+	require.NoError(t, err)
+
+	verr := bcrypt.CompareHashAndPassword(edata, plain)
+	require.NoError(t, verr)
 }

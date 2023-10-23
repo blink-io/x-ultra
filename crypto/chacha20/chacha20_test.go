@@ -18,5 +18,5 @@ func TestChacha20_1(t *testing.T) {
 	ddata, err := Decrypt(sskey, edata)
 	require.NoError(t, err)
 
-	fmt.Println("Decypted:  ", string(ddata))
+	fmt.Println("Decrypted:  ", string(ddata))
 }

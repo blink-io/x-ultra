@@ -8,6 +8,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/lmittmann/tint"
 	"gitlab.com/greyxor/slogor"
 )
 
@@ -57,4 +58,20 @@ func TestErrors_1(t *testing.T) {
 	slog.Warn("Warn with args", slog.Int("the_answer", 42))
 	slog.Debug("Debug with args", slog.String("a_string", "🐛"))
 
+}
+
+func TestColorLog_1(t *testing.T) {
+	w := os.Stderr
+	//thdlr := tint.NewHandler(os.Stderr, nil)
+	// set global logger with custom options
+	slog.SetDefault(slog.New(
+		tint.NewHandler(w, &tint.Options{
+			Level:      slog.LevelDebug,
+			TimeFormat: time.Kitchen,
+		}),
+	))
+
+	slog.Error("Error with args", slogor.Err(errors.New("i'm an error")))
+	slog.Warn("Warn with args", slog.Int("the_answer", 42))
+	slog.Debug("Debug with args", slog.String("a_string", "🐛"))
 }

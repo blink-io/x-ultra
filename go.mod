@@ -28,6 +28,7 @@ require (
 	github.com/karrick/godirwalk v1.17.0
 	github.com/keegancsmith/sqlf v1.1.2
 	github.com/lithammer/shortuuid/v4 v4.0.0
+	github.com/lmittmann/tint v1.0.2
 	github.com/matthewhartstonge/argon2 v0.3.4
 	github.com/natefinch/lumberjack/v3 v3.0.0-alpha
 	github.com/nicksnyder/go-i18n/v2 v2.2.1
@@ -108,7 +109,7 @@ require (
 	mellium.im/sasl v0.3.1 // indirect
 	modernc.org/cc/v3 v3.41.0 // indirect
 	modernc.org/ccgo/v3 v3.16.15 // indirect
-	modernc.org/libc v1.27.0 // indirect
+	modernc.org/libc v1.28.0 // indirect
 	modernc.org/mathutil v1.6.0 // indirect
 	modernc.org/memory v1.7.2 // indirect
 	modernc.org/opt v0.1.3 // indirect
