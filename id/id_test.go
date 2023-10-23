@@ -13,6 +13,7 @@ func TestID_1(t *testing.T) {
 	id14 := Snowflake()
 	id12 := XID()
 	id13 := ShortID()
+	id18 := ULID()
 
 	fmt.Println("UUID(), ", " id: ", id1, ", len: ", len(id1))
 	fmt.Println("KSUID(), ", " id: ", id2, ", len: ", len(id2))
@@ -21,4 +22,5 @@ func TestID_1(t *testing.T) {
 	fmt.Println("ShortID(), ", " id: ", id13, ", len: ", len(id13))
 	fmt.Println("ShortUUID(), ", " id : ", id6, ", len: ", len(id6))
 	fmt.Println("XID(), ", " id: ", id12, ", len: ", len(id12))
+	fmt.Println("ULID(), ", " id: ", id18, ", len: ", len(id18))
 }
