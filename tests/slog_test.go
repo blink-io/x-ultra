@@ -1,6 +1,7 @@
 package tests
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"log/slog"
@@ -74,4 +75,13 @@ func TestColorLog_1(t *testing.T) {
 	slog.Error("Error with args", slogor.Err(errors.New("i'm an error")))
 	slog.Warn("Warn with args", slog.Int("the_answer", 42))
 	slog.Debug("Debug with args", slog.String("a_string", "🐛"))
+}
+
+func TestCtx_1(t *testing.T) {
+	type ctxKey struct{}
+	ctx := context.WithValue(context.Background(), ctxKey{}, time.Now())
+
+	if t, ok := ctx.Value(ctxKey{}).(time.Time); ok {
+		slog.Info("time.....  ", slog.Time("t", t))
+	}
 }

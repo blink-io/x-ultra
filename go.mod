@@ -18,7 +18,6 @@ require (
 	github.com/gofrs/uuid/v5 v5.0.0
 	github.com/google/uuid v1.3.1
 	github.com/hashicorp/golang-lru/v2 v2.0.7
-	github.com/jackc/pgerrcode v0.0.0-20220416144525-469b46aa5efa
 	github.com/jackc/pgx-zap v0.0.0-20221202020421-94b1cb2f889f
 	github.com/jackc/pgx/v5 v5.4.3
 	github.com/jaevor/go-nanoid v1.3.0
@@ -52,7 +51,7 @@ require (
 	github.com/vmihailenco/go-tinylfu v0.2.2
 	github.com/vmihailenco/msgpack/v5 v5.4.0
 	github.com/zeebo/xxh3 v1.0.2
-	gitlab.com/greyxor/slogor v1.0.0
+	gitlab.com/greyxor/slogor v1.1.0
 	go.uber.org/zap v1.26.0
 	golang.org/x/crypto v0.14.0
 	golang.org/x/text v0.13.0
