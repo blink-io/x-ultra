@@ -47,7 +47,7 @@ func GetDialect(o *Options) (schema.Dialect, *sql.DB, error) {
 	}
 
 	conn := &dsnConnector{dsn: dsn, driver: drv}
-	db := sql.OpenDB(conn)
+	db := openDB(conn)
 
 	// Ignore driver.ErrSkip when the Conn does not implement driver.Pinger interface
 	if err := db.Ping(); err != nil && !errors.Is(err, driver.ErrSkip) {
