@@ -15,6 +15,7 @@ require (
 	github.com/go-sql-driver/mysql v1.7.1
 	github.com/go-task/slim-sprig/v3 v3.0.0
 	github.com/goccy/go-json v0.10.2
+	github.com/goccy/go-reflect v1.2.0
 	github.com/gofrs/uuid/v5 v5.0.0
 	github.com/google/uuid v1.3.1
 	github.com/hashicorp/golang-lru/v2 v2.0.7
