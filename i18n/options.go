@@ -9,7 +9,7 @@ type (
 var (
 	DefaultHeader  = "X-Language"
 	DefaultDir     = "./locales"
-	DefaultLoader  = NewDirLoader(DefaultDir, DefaultSuffixes...)
+	DefaultLoader  = NewDirLoader(DefaultDir)
 	DefaultOptions = &Options{
 		Loaders: []Loader{
 			DefaultLoader,

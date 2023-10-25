@@ -5,28 +5,34 @@ import (
 	"io/fs"
 	"net/http"
 	"path/filepath"
-	"strings"
 	"time"
 )
 
 type (
+	Bundler interface {
+		LoadMessageFile(path string) (*MessageFile, error)
+		LoadMessageFileFS(fsys fs.FS, path string) (*MessageFile, error)
+		MustLoadMessageFile(path string)
+		ParseMessageFileBytes(buf []byte, path string) (*MessageFile, error)
+	}
 	Loader interface {
-		Load(*Bundle) error
+		Load(Bundler) error
 	}
 )
 
+var _ Bundler = (*Bundle)(nil)
+
 // dirLoader loads files from directory
 type dirLoader struct {
-	root     string
-	suffixes []string
+	root string
 }
 
-func NewDirLoader(root string, suffixes ...string) Loader {
-	l := &dirLoader{root: root, suffixes: suffixes}
+func NewDirLoader(root string) Loader {
+	l := &dirLoader{root: root}
 	return l
 }
 
-func (l *dirLoader) Load(b *Bundle) error {
+func (l *dirLoader) Load(b Bundler) error {
 	if len(l.root) == 0 {
 		return nil
 	}
@@ -38,16 +44,9 @@ func (l *dirLoader) Load(b *Bundle) error {
 			// We cannot return fs.SkipDir because it won't walk into dir next
 			return nil
 		}
-		// Ignore unsupported suffixes
-		if !supportedSuffixes(path, l.suffixes...) {
-			log("unsupported suffix for path %s", path)
-			return nil
-		}
 		// Ignore error?
 		if _, err := b.LoadMessageFile(path); err != nil {
-			log("unable to load message from file: %s, reason: %+v", path, err)
-		} else {
-			log("loaded from file: %s", path)
+			log("[WARN] unable to load message from file: %s, reason: %+v", path, err)
 		}
 		return nil
 	})
@@ -55,17 +54,16 @@ func (l *dirLoader) Load(b *Bundle) error {
 
 // fsLoader loads from embed.FS
 type fsLoader struct {
-	fs       fs.FS
-	root     string
-	suffixes []string
+	fs   fs.FS
+	root string
 }
 
-func NewFSLoader(fs fs.FS, root string, suffixes ...string) Loader {
-	l := &fsLoader{fs: fs, root: root, suffixes: suffixes}
+func NewFSLoader(fs fs.FS, root string) Loader {
+	l := &fsLoader{fs: fs, root: root}
 	return l
 }
 
-func (l *fsLoader) Load(b *Bundle) error {
+func (l *fsLoader) Load(b Bundler) error {
 	return fs.WalkDir(l.fs, l.root, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err
@@ -73,16 +71,9 @@ func (l *fsLoader) Load(b *Bundle) error {
 		if d.IsDir() {
 			return nil
 		}
-		// Ignore unsupported suffixes
-		if !supportedSuffixes(path, l.suffixes...) {
-			log("unsupported suffix for path %s", path)
-			return nil
-		}
 		// Ignore error?
 		if _, err := b.LoadMessageFileFS(l.fs, path); err != nil {
-			log("unable to load message from FS: %s", path)
-		} else {
-			log("loaded from file: %s", path)
+			log("[WARN] unable to load message from FS: %s", path)
 		}
 		return nil
 	})
@@ -100,7 +91,7 @@ func NewHTTPLoader(url string, timeout time.Duration) Loader {
 	return &httpLoader{c, url}
 }
 
-func (h *httpLoader) Load(b *Bundle) error {
+func (h *httpLoader) Load(b Bundler) error {
 	res, err := h.c.Get(h.url)
 	if err != nil {
 		return err
@@ -114,7 +105,7 @@ func (h *httpLoader) Load(b *Bundle) error {
 	}
 
 	if _, err := b.ParseMessageFileBytes(buf, h.url); err != nil {
-		log("unable to load message from URL: %s", h.url)
+		log("[WARN] unable to load message from URL: %s", h.url)
 	}
 	return nil
 }
@@ -128,20 +119,11 @@ func NewBytesLoader(path string, bytes []byte) Loader {
 	return &bytesLoader{path, bytes}
 }
 
-func (h *bytesLoader) Load(b *Bundle) error {
+func (h *bytesLoader) Load(b Bundler) error {
 	if len(h.Path) > 0 && len(h.Bytes) > 0 {
 		if _, err := b.ParseMessageFileBytes(h.Bytes, h.Path); err != nil {
-			log("unable to load message from bytes: %s", h.Path)
+			log("[WARN] unable to load message from bytes: %s", h.Path)
 		}
 	}
 	return nil
-}
-
-func supportedSuffixes(path string, suffixes ...string) bool {
-	for _, s := range suffixes {
-		if strings.HasSuffix(path, s) {
-			return true
-		}
-	}
-	return false
 }

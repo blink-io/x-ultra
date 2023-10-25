@@ -30,7 +30,7 @@ func (c *logger) Log(level Level, keyvals ...interface{}) error {
 	return c.logger.Log(level, kvs...)
 }
 
-// With with logger fields.
+// With has logger fields.
 func With(l Logger, kv ...interface{}) Logger {
 	c, ok := l.(*logger)
 	if !ok {

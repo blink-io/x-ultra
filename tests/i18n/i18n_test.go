@@ -18,7 +18,7 @@ func Test_Loader_1(t *testing.T) {
 	fmt.Println("abs path:  ", apath)
 
 	langs := []string{"zh-Hans", "en-US"}
-	require.NoError(t, i18n.NewDirLoader(apath, i18n.DefaultSuffixes...).Load(bundle))
+	require.NoError(t, i18n.NewDirLoader(apath).Load(bundle))
 
 	for _, lang := range langs {
 		tr := i18n.GetT(lang)

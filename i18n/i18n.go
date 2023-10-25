@@ -15,9 +15,12 @@ import (
 
 type (
 	// ib is short for i18n.Bundle
-	ib = i18n.Bundle
+	ib             = i18n.Bundle
+	MessageFile    = i18n.MessageFile
+	Localizer      = i18n.Localizer
+	LocalizeConfig = i18n.LocalizeConfig
 
-	LOption func(*i18n.LocalizeConfig)
+	LOption func(*LocalizeConfig)
 	// T is short for translation function
 	T func(string, ...LOption) string
 
@@ -34,8 +37,11 @@ var (
 	globalMux sync.Mutex
 	// bundle is default bundle
 	bundle = New(DefaultOptions)
-	tc     = ttlcache.New[string, T]()
-	log    = stdlog.Printf
+	cc     = ttlcache.New[string, T](
+		ttlcache.WithTTL[string, T](ttlcache.DefaultTTL),
+	)
+	fm  = sprig.TxtFuncMap()
+	log = stdlog.Printf
 )
 
 func New(o *Options) *Bundle {
@@ -89,13 +95,8 @@ func (b *Bundle) Languages() []string {
 }
 
 func GetT(lang string) T {
-	if t := tc.Get(lang); t != nil {
-		return t.Value()
-	} else {
-		nt := L(i18n.NewLocalizer(bundle.ib, lang))
-		tc.Set(lang, nt, ttlcache.DefaultTTL)
-		return nt
-	}
+	i, _ := cc.GetOrSet(lang, L(i18n.NewLocalizer(bundle.ib, lang)))
+	return i.Value()
 }
 
 func Languages() []string {
@@ -103,11 +104,11 @@ func Languages() []string {
 }
 
 func LoadFromDir(root string) error {
-	return NewDirLoader(root, DefaultSuffixes...).Load(bundle)
+	return NewDirLoader(root).Load(bundle)
 }
 
 func LoadFromFS(fs fs.FS, root string) error {
-	return NewFSLoader(fs, root, DefaultSuffixes...).Load(bundle)
+	return NewFSLoader(fs, root).Load(bundle)
 }
 
 func LoadFromHTTP(url string) error {
@@ -115,18 +116,18 @@ func LoadFromHTTP(url string) error {
 }
 
 func PluralCount(pluralCount interface{}) LOption {
-	return func(config *i18n.LocalizeConfig) {
+	return func(config *LocalizeConfig) {
 		config.PluralCount = pluralCount
 	}
 }
 
 // L defines Localizer wrapper function for translation
-func L(loc *i18n.Localizer) T {
+func L(loc *Localizer) T {
 	return func(messageID string, ops ...LOption) string {
 		if loc != nil {
-			conf := &i18n.LocalizeConfig{
+			conf := &LocalizeConfig{
 				MessageID: messageID,
-				Funcs:     sprig.TxtFuncMap(),
+				Funcs:     fm,
 			}
 			for _, o := range ops {
 				o(conf)
@@ -140,13 +141,13 @@ func L(loc *i18n.Localizer) T {
 }
 
 func (d MD) O() LOption {
-	return func(c *i18n.LocalizeConfig) {
+	return func(c *LocalizeConfig) {
 		c.TemplateData = d
 	}
 }
 
 func D(d map[string]any) LOption {
-	return func(c *i18n.LocalizeConfig) {
+	return func(c *LocalizeConfig) {
 		c.TemplateData = d
 	}
 }

@@ -1,0 +1,3 @@
+package dynmsg
+
+// Dynamic Messages
