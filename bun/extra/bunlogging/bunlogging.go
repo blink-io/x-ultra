@@ -23,7 +23,7 @@ func (q *hook) AfterQuery(ctx context.Context, event *bun.QueryEvent) {
 type Func func(string, ...any)
 
 func (f Func) BeforeQuery(ctx context.Context, event *bun.QueryEvent) context.Context {
-	f(event.Query, event.QueryArgs...)
+	f(event.Query, event.QueryArgs)
 	return ctx
 }
 

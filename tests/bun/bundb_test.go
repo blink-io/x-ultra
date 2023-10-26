@@ -3,9 +3,11 @@ package bun
 import (
 	"context"
 	"fmt"
+	"log"
 	"path/filepath"
 	"testing"
 
+	"github.com/blink-io/x/bun/extra/bunlogging"
 	"github.com/blink-io/x/sql"
 	"github.com/blink-io/x/sql/generics"
 	"github.com/stretchr/testify/require"
@@ -24,6 +26,7 @@ func getDB(t *testing.T) *sql.DB {
 		Dialect: sql.DialectSQLite,
 		Host:    dbPath,
 	})
+	db.AddQueryHook(bunlogging.Func(log.Printf))
 	require.NoError(t, err1)
 
 	return db

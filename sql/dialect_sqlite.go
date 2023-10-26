@@ -1,4 +1,4 @@
-//go:build sqlite
+//go:build !nosqlite
 
 package sql
 
