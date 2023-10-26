@@ -35,9 +35,9 @@ type (
 
 var (
 	globalMux sync.Mutex
-	// bundle is default bundle
-	bundle = New(DefaultOptions)
-	cc     = ttlcache.New[string, T](
+	// bb is default bb
+	bb = New(DefaultOptions)
+	cc = ttlcache.New[string, T](
 		ttlcache.WithTTL[string, T](ttlcache.DefaultTTL),
 	)
 	fm  = sprig.TxtFuncMap()
@@ -46,9 +46,13 @@ var (
 
 func New(o *Options) *Bundle {
 	o = setupOptions(o)
-	lang, err := locale.Detect()
-	if err != nil {
-		lang = language.English
+	lang := o.Language
+	if lang == language.Und {
+		if l, err := locale.Detect(); err != nil {
+			lang = language.English
+		} else {
+			lang = l
+		}
 	}
 
 	ib := i18n.NewBundle(lang)
@@ -64,15 +68,15 @@ func New(o *Options) *Bundle {
 	return b
 }
 
-// Default gets default bundle
+// Default gets default Bundle
 func Default() *Bundle {
-	return bundle
+	return bb
 }
 
-// Replace replaces default bundle
+// Replace replaces default Bundle
 func Replace(b *Bundle) {
 	globalMux.Lock()
-	bundle = b
+	bb = b
 	globalMux.Unlock()
 }
 
@@ -95,59 +99,26 @@ func (b *Bundle) Languages() []string {
 }
 
 func GetT(lang string) T {
-	i, _ := cc.GetOrSet(lang, L(i18n.NewLocalizer(bundle.ib, lang)))
+	i, _ := cc.GetOrSet(lang, L(i18n.NewLocalizer(bb.ib, lang)))
 	return i.Value()
 }
 
 func Languages() []string {
-	return bundle.Languages()
+	return bb.Languages()
 }
 
 func LoadFromDir(root string) error {
-	return NewDirLoader(root).Load(bundle)
+	return NewDirLoader(root).Load(bb)
 }
 
 func LoadFromFS(fs fs.FS, root string) error {
-	return NewFSLoader(fs, root).Load(bundle)
+	return NewFSLoader(fs, root).Load(bb)
 }
 
 func LoadFromHTTP(url string) error {
-	return NewHTTPLoader(url, 10*time.Second).Load(bundle)
+	return NewHTTPLoader(url, 10*time.Second).Load(bb)
 }
 
-func PluralCount(pluralCount interface{}) LOption {
-	return func(config *LocalizeConfig) {
-		config.PluralCount = pluralCount
-	}
-}
-
-// L defines Localizer wrapper function for translation
-func L(loc *Localizer) T {
-	return func(messageID string, ops ...LOption) string {
-		if loc != nil {
-			conf := &LocalizeConfig{
-				MessageID: messageID,
-				Funcs:     fm,
-			}
-			for _, o := range ops {
-				o(conf)
-			}
-			if s, err := loc.Localize(conf); err == nil {
-				return s
-			}
-		}
-		return messageID
-	}
-}
-
-func (d MD) O() LOption {
-	return func(c *LocalizeConfig) {
-		c.TemplateData = d
-	}
-}
-
-func D(d map[string]any) LOption {
-	return func(c *LocalizeConfig) {
-		c.TemplateData = d
-	}
+func LoadFromBytes(path string, data []byte) error {
+	return NewBytesLoader(path, data).Load(bb)
 }

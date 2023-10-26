@@ -1,10 +1,13 @@
 package i18n
 
-type (
-	Options struct {
-		Loaders []Loader
-	}
+import (
+	"golang.org/x/text/language"
 )
+
+type Options struct {
+	Language language.Tag
+	Loaders  []Loader
+}
 
 var (
 	DefaultHeader  = "X-Language"

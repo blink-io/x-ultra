@@ -52,8 +52,10 @@ type (
 		base[M, I]
 		// DB .
 		DB() *sql.DB
-		// Model defines
-		Model() *M
+		// ModelType defines
+		ModelType() *M
+		// TableType defines
+		TableType() *schema.Table
 		// Tx defines
 		Tx() (Tx[M, I], error)
 	}
@@ -63,7 +65,7 @@ type (
 	db[M Model, I ID] struct {
 		*idb
 		mm *M
-		tb *schema.Table
+		tt *schema.Table
 	}
 )
 
@@ -73,8 +75,8 @@ var _ DB[Model, IDType] = (*db[Model, IDType])(nil)
 func NewDB[M Model, I ID](idb *sql.DB) DB[M, I] {
 	mm := (*M)(nil)
 	idb.RegisterModel(mm)
-	tb := idb.Table(reflect.TypeOf(mm))
-	return &db[M, I]{idb: idb, mm: mm, tb: tb}
+	tt := idb.Table(reflect.TypeOf(mm))
+	return &db[M, I]{idb: idb, mm: mm, tt: tt}
 }
 
 func (g *db[M, I]) Insert(ctx context.Context, m *M, ops ...InsertOption) error {
@@ -125,6 +127,10 @@ func (g *db[M, I]) DB() *sql.DB {
 	return g.idb
 }
 
-func (g *db[M, I]) Model() *M {
+func (g *db[M, I]) ModelType() *M {
 	return g.mm
+}
+
+func (g *db[M, I]) TableType() *schema.Table {
+	return g.tt
 }

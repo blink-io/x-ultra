@@ -111,17 +111,17 @@ func (h *httpLoader) Load(b Bundler) error {
 }
 
 type bytesLoader struct {
-	Path  string
-	Bytes []byte
+	Path string
+	Data []byte
 }
 
-func NewBytesLoader(path string, bytes []byte) Loader {
-	return &bytesLoader{path, bytes}
+func NewBytesLoader(path string, data []byte) Loader {
+	return &bytesLoader{path, data}
 }
 
 func (h *bytesLoader) Load(b Bundler) error {
-	if len(h.Path) > 0 && len(h.Bytes) > 0 {
-		if _, err := b.ParseMessageFileBytes(h.Bytes, h.Path); err != nil {
+	if len(h.Path) > 0 && len(h.Data) > 0 {
+		if _, err := b.ParseMessageFileBytes(h.Data, h.Path); err != nil {
 			log("[WARN] unable to load message from bytes: %s", h.Path)
 		}
 	}
