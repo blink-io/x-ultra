@@ -25,8 +25,8 @@ type QueryHookOptions struct {
 	ErrorTemplate   string
 }
 
-// QueryHook wraps query hook
-type QueryHook struct {
+// hook wraps query hook
+type hook struct {
 	opts            QueryHookOptions
 	errorTemplate   *template.Template
 	messageTemplate *template.Template
@@ -41,9 +41,9 @@ type LogEntryVars struct {
 	Error     error
 }
 
-// NewQueryHook returns new instance
-func NewQueryHook(opts QueryHookOptions) *QueryHook {
-	h := new(QueryHook)
+// New returns new instance
+func New(opts QueryHookOptions) bun.QueryHook {
+	h := new(hook)
 
 	if opts.ErrorTemplate == "" {
 		opts.ErrorTemplate = "{{.Operation}}[{{.Duration}}]: {{.Query}}: {{.Error}}"
@@ -67,12 +67,12 @@ func NewQueryHook(opts QueryHookOptions) *QueryHook {
 }
 
 // BeforeQuery does nothing tbh
-func (h *QueryHook) BeforeQuery(ctx context.Context, event *bun.QueryEvent) context.Context {
+func (h *hook) BeforeQuery(ctx context.Context, event *bun.QueryEvent) context.Context {
 	return ctx
 }
 
 // AfterQuery convert a bun QueryEvent into a logrus message
-func (h *QueryHook) AfterQuery(ctx context.Context, event *bun.QueryEvent) {
+func (h *hook) AfterQuery(ctx context.Context, event *bun.QueryEvent) {
 	var level zapcore.Level
 	var isError bool
 	var msg bytes.Buffer
@@ -131,7 +131,6 @@ func (h *QueryHook) AfterQuery(ctx context.Context, event *bun.QueryEvent) {
 		//panic(fmt.Errorf("unsupported level: %v", level))
 		h.opts.Logger.Info(msg.String())
 	}
-
 }
 
 // taken from bun

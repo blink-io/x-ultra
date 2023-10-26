@@ -5,13 +5,13 @@ import (
 )
 
 type Logging interface {
-	Printf(ctx context.Context, format string, v ...interface{})
+	Printf(ctx context.Context, format string, v ...any)
 }
 
 var _ Logging = (Func)(nil)
 
-type Func func(string, ...interface{})
+type Func func(string, ...any)
 
-func (f Func) Printf(ctx context.Context, format string, v ...interface{}) {
+func (f Func) Printf(ctx context.Context, format string, v ...any) {
 	f(format, v...)
 }

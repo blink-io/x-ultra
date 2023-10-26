@@ -4,14 +4,14 @@ import (
 	"github.com/getsentry/sentry-go"
 )
 
-type Option func(h *QueryHook)
+type Option func(h *hook)
 
 func Hub(hub *sentry.Hub) Option {
-	return func(h *QueryHook) {
+	return func(h *hook) {
 		if hub == nil {
-			h.Hub = sentry.CurrentHub()
+			h.hub = sentry.CurrentHub()
 		} else {
-			h.Hub = hub
+			h.hub = hub
 		}
 	}
 }

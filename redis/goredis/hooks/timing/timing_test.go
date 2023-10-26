@@ -14,7 +14,6 @@ func TestHook_Timing_1(t *testing.T) {
 		Addrs: []string{"127.0.0.1:6379"},
 	})
 	c.AddHook(New())
-	//require.NoError(t, err)
 
 	ctx := context.Background()
 

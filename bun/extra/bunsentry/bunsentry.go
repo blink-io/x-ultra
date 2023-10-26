@@ -7,34 +7,30 @@ import (
 	"github.com/uptrace/bun"
 )
 
-const ctxKey = "bun-sentry"
-
-type QueryHook struct {
-	*sentry.Hub
+type hook struct {
+	hub *sentry.Hub
 }
 
-var _ bun.QueryHook = (*QueryHook)(nil)
-
-func NewQueryHook(options ...Option) *QueryHook {
-	h := &QueryHook{}
+func New(options ...Option) bun.QueryHook {
+	h := &hook{}
 	for _, o := range options {
 		o(h)
 	}
-	if h.Hub == nil {
-		h.Hub = sentry.CurrentHub()
+	if h.hub == nil {
+		h.hub = sentry.CurrentHub()
 	}
 	return h
 }
 
-func (q *QueryHook) BeforeQuery(ctx context.Context, event *bun.QueryEvent) context.Context {
+func (q *hook) BeforeQuery(ctx context.Context, event *bun.QueryEvent) context.Context {
 	if err := event.Err; err != nil {
-		sentry.CaptureException(err)
+		q.hub.CaptureException(err)
 	}
 	return ctx
 }
 
-func (q *QueryHook) AfterQuery(ctx context.Context, event *bun.QueryEvent) {
+func (q *hook) AfterQuery(ctx context.Context, event *bun.QueryEvent) {
 	if err := event.Err; err != nil {
-		sentry.CaptureException(err)
+		q.hub.CaptureException(err)
 	}
 }
