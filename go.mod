@@ -43,6 +43,7 @@ require (
 	github.com/qustavo/sqlhooks/v2 v2.1.0
 	github.com/redis/go-redis/extra/rediscmd/v9 v9.0.5
 	github.com/redis/go-redis/v9 v9.2.1
+	github.com/redis/rueidis v1.0.20
 	github.com/rs/xid v1.5.0
 	github.com/segmentio/ksuid v1.0.4
 	github.com/stretchr/testify v1.8.4
@@ -56,7 +57,7 @@ require (
 	github.com/uptrace/bun/driver/pgdriver v1.1.16
 	github.com/uptrace/opentelemetry-go-extra/otelsql v0.2.3
 	github.com/vmihailenco/go-tinylfu v0.2.2
-	github.com/vmihailenco/msgpack/v5 v5.4.0
+	github.com/vmihailenco/msgpack/v5 v5.4.1
 	github.com/zeebo/xxh3 v1.0.2
 	gitlab.com/greyxor/slogor v1.1.2
 	go.uber.org/zap v1.26.0

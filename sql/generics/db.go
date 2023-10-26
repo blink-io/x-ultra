@@ -24,6 +24,13 @@ type (
 
 	IDType = string
 
+	DBer interface {
+		DB() *sql.DB
+	}
+	Replacer interface {
+		Replace(*sql.DB)
+	}
+
 	base[M Model, I ID] interface {
 		// Insert a new record.
 		Insert(context.Context, *M, ...InsertOption) error

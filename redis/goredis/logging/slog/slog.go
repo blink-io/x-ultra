@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log/slog"
 
-	"github.com/blink-io/x/redis/logging"
+	"github.com/blink-io/x/redis/goredis/logging"
 )
 
 var _ logging.Logging = (*logz)(nil)
