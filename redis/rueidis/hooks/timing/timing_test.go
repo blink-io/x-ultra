@@ -47,6 +47,8 @@ func TestHook_Timing_DoMulti_1(t *testing.T) {
 		c.B().ClientSetname().ConnectionName("test-from-linux-ser6v").Build(),
 		c.B().ClientGetname().Build(),
 		c.B().ClientId().Build(),
+		c.B().Time().Build(),
+		c.B().ClientList().Build(),
 	}
 
 	ctx := context.Background()
@@ -58,4 +60,5 @@ func TestHook_Timing_DoMulti_1(t *testing.T) {
 		require.NoError(t, err)
 		fmt.Printf("res%d: ---> %+v\n", i, val)
 	}
+
 }

@@ -21,6 +21,9 @@ func TestHook_Timing_1(t *testing.T) {
 		c.Get(ctx, "env"),
 		c.ClientInfo(ctx),
 		c.ClientID(ctx),
+		c.Time(ctx),
+		c.ClientList(ctx),
+		c.DBSize(ctx),
 	}
 
 	for i, cmd := range cmds {
@@ -41,6 +44,10 @@ func TestHook_Timing_DoMulti_1(t *testing.T) {
 	pp.Get(ctx, "env")
 	pp.ClientInfo(ctx)
 	pp.ClientID(ctx)
+	pp.Time(ctx)
+	pp.ClientList(ctx)
+	pp.DBSize(ctx)
+	pp.FunctionStats(ctx)
 
 	cmds, err := pp.Exec(ctx)
 	require.NoError(t, err)
