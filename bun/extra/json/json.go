@@ -1,4 +1,4 @@
-package bunjson
+package json
 
 import (
 	"io"

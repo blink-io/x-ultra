@@ -8,17 +8,16 @@ import (
 	"github.com/blink-io/x/redis/goredis/logging"
 )
 
-var _ logging.Logging = (*logz)(nil)
+var _ logging.Logging = (*logger)(nil)
 
-type logz struct {
+type logger struct {
 	ll *slog.Logger
 }
 
 func New(ll *slog.Logger) logging.Logging {
-	return &logz{ll}
+	return &logger{ll}
 }
 
-func (s *logz) Printf(ctx context.Context, format string, v ...any) {
-	msg := fmt.Sprintf(format, v...)
-	s.ll.InfoContext(ctx, msg)
+func (s *logger) Printf(ctx context.Context, format string, v ...any) {
+	s.ll.InfoContext(ctx, fmt.Sprintf(format, v...))
 }

@@ -1,4 +1,4 @@
-package bunzap
+package zap
 
 import (
 	"bytes"

@@ -1,4 +1,4 @@
-package bunsentry
+package sentry
 
 import (
 	"github.com/getsentry/sentry-go"

@@ -1,4 +1,4 @@
-package buntiming
+package timing
 
 import (
 	"context"
@@ -12,7 +12,7 @@ import (
 func TestQueryHook_1(t *testing.T) {
 	ctx := context.Background()
 	event := &bun.QueryEvent{}
-	h := &QueryHook{}
+	h := &hook{}
 	ctx = h.BeforeQuery(ctx, event)
 	time.Sleep(3 * time.Second)
 	h.AfterQuery(ctx, event)

@@ -18,7 +18,7 @@ require (
 	github.com/goccy/go-json v0.10.2
 	github.com/goccy/go-reflect v1.2.0
 	github.com/gofrs/uuid/v5 v5.0.0
-	github.com/google/uuid v1.3.1
+	github.com/google/uuid v1.4.0
 	github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.0.1
 	github.com/hashicorp/golang-lru/v2 v2.0.7
 	github.com/jackc/pgx-zap v0.0.0-20221202020421-94b1cb2f889f

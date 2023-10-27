@@ -1,4 +1,4 @@
-package bunsentry
+package sentry
 
 import (
 	"context"
@@ -19,6 +19,7 @@ func New(options ...Option) bun.QueryHook {
 	if h.hub == nil {
 		h.hub = sentry.CurrentHub()
 	}
+
 	return h
 }
 
