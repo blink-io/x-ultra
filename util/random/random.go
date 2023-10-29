@@ -8,6 +8,7 @@ import (
 
 type (
 	Random struct {
+		src rand.Source
 	}
 )
 
@@ -27,8 +28,9 @@ var (
 )
 
 func New() *Random {
-	rand.Seed(time.Now().UnixNano())
-	return new(Random)
+	r := new(Random)
+	r.src = rand.NewSource(time.Now().UnixNano())
+	return r
 }
 
 func (r *Random) String(length uint8, charsets ...string) string {
@@ -38,7 +40,7 @@ func (r *Random) String(length uint8, charsets ...string) string {
 	}
 	b := make([]byte, length)
 	for i := range b {
-		b[i] = charset[rand.Int63()%int64(len(charset))]
+		b[i] = charset[r.src.Int63()%int64(len(charset))]
 	}
 	return string(b)
 }

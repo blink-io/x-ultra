@@ -5,6 +5,7 @@ import (
 )
 
 type Hooks = sqlhooks.Hooks
+type OnErrorer = sqlhooks.OnErrorer
 
 var (
 	Wrap    = sqlhooks.Wrap
