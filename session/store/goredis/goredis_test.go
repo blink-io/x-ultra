@@ -33,7 +33,7 @@ func TestFind(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	b, found, err := r.FindCtx(ctx, "session_token")
+	b, found, err := r.Find(ctx, "session_token")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -61,7 +61,7 @@ func TestSaveNew(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	err = r.CommitCtx(ctx, "session_token", []byte("encoded_data"), time.Now().Add(time.Minute))
+	err = r.Commit(ctx, "session_token", []byte("encoded_data"), time.Now().Add(time.Minute))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -92,7 +92,7 @@ func TestFindMissing(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, found, err := r.FindCtx(ctx, "missing_session_token")
+	_, found, err := r.Find(ctx, "missing_session_token")
 	if err != nil {
 		t.Fatalf("got %v: expected %v", err, nil)
 	}
@@ -122,7 +122,7 @@ func TestSaveUpdated(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	err = r.CommitCtx(ctx, "session_token", []byte("new_encoded_data"), time.Now().Add(time.Minute))
+	err = r.Commit(ctx, "session_token", []byte("new_encoded_data"), time.Now().Add(time.Minute))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -153,18 +153,18 @@ func TestExpiry(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	err = r.CommitCtx(ctx, "session_token", []byte("encoded_data"), time.Now().Add(100*time.Millisecond))
+	err = r.Commit(ctx, "session_token", []byte("encoded_data"), time.Now().Add(100*time.Millisecond))
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	_, found, _ := r.FindCtx(ctx, "session_token")
+	_, found, _ := r.Find(ctx, "session_token")
 	if found != true {
 		t.Fatalf("got %v: expected %v", found, true)
 	}
 
 	time.Sleep(200 * time.Millisecond)
-	_, found, _ = r.FindCtx(ctx, "session_token")
+	_, found, _ = r.Find(ctx, "session_token")
 	if found != false {
 		t.Fatalf("got %v: expected %v", found, false)
 	}
@@ -191,7 +191,7 @@ func TestDelete(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	err = r.DeleteCtx(ctx, "session_token")
+	err = r.Delete(ctx, "session_token")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -232,13 +232,13 @@ func TestAll(t *testing.T) {
 		sessions[key] = val
 	}
 
-	gotSessions, err := r.AllCtx(ctx)
+	gotSessions, err := r.All(ctx)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	for k := range sessions {
-		err = r.DeleteCtx(ctx, k)
+		err = r.Delete(ctx, k)
 		if err != nil {
 			t.Fatal(err)
 		}

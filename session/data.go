@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/rand"
 	"encoding/base64"
+	"errors"
 	"fmt"
 	"sort"
 	"sync"
@@ -627,45 +628,23 @@ func generateContextKey() ContextKey {
 }
 
 func (s *Manager) doStoreDelete(ctx context.Context, token string) (err error) {
-	c, ok := s.Store.(interface {
-		DeleteCtx(context.Context, string) error
-	})
-	if ok {
-		return c.DeleteCtx(ctx, token)
-	}
-	return s.Store.Delete(token)
+	return s.Store.Delete(ctx, token)
 }
 
 func (s *Manager) doStoreFind(ctx context.Context, token string) (b []byte, found bool, err error) {
-	c, ok := s.Store.(interface {
-		FindCtx(context.Context, string) ([]byte, bool, error)
-	})
-	if ok {
-		return c.FindCtx(ctx, token)
-	}
-	return s.Store.Find(token)
+	return s.Store.Find(ctx, token)
 }
 
 func (s *Manager) doStoreCommit(ctx context.Context, token string, b []byte, expiry time.Time) (err error) {
-	c, ok := s.Store.(interface {
-		CommitCtx(context.Context, string, []byte, time.Time) error
-	})
-	if ok {
-		return c.CommitCtx(ctx, token, b, expiry)
-	}
-	return s.Store.Commit(token, b, expiry)
+	return s.Store.Commit(ctx, token, b, expiry)
 }
 
 func (s *Manager) doStoreAll(ctx context.Context) (map[string][]byte, error) {
-	cs, ok := s.Store.(store.IterableCtxStore)
-	if ok {
-		return cs.AllCtx(ctx)
-	}
-
 	is, ok := s.Store.(store.IterableStore)
 	if ok {
-		return is.All()
+		return is.All(ctx)
 	}
 
-	panic(fmt.Sprintf("type %T does not support iteration", s.Store))
+	//panic(fmt.Sprintf("type %T does not support iteration", s.Store))
+	return nil, errors.New("store is not implemented store.IterableStore")
 }

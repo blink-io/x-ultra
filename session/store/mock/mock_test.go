@@ -2,6 +2,7 @@ package mock
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"reflect"
 	"testing"
@@ -9,17 +10,18 @@ import (
 )
 
 func TestMockStore_Delete(T *testing.T) {
+	ctx := context.Background()
 	T.Parallel()
 
 	T.Run("obligatory", func(t *testing.T) {
-		s := &mstore{}
+		s := &istore{}
 
 		exampleToken := "token"
 		expectedErr := errors.New("arbitrary")
 
 		s.ExpectDelete(exampleToken, expectedErr)
 
-		if err := s.Delete(exampleToken); !errors.Is(err, expectedErr) {
+		if err := s.Delete(ctx, exampleToken); !errors.Is(err, expectedErr) {
 			t.Error("expected error not returned")
 		}
 		if len(s.deleteExpectations) != 0 {
@@ -28,7 +30,7 @@ func TestMockStore_Delete(T *testing.T) {
 	})
 
 	T.Run("panics with not found expectation", func(t *testing.T) {
-		s := &mstore{}
+		s := &istore{}
 
 		exampleToken := "token"
 
@@ -38,17 +40,19 @@ func TestMockStore_Delete(T *testing.T) {
 			}
 		}()
 
-		if err := s.Delete(exampleToken); err != nil {
+		if err := s.Delete(ctx, exampleToken); err != nil {
 			t.Error("unexpected error returned")
 		}
 	})
 }
 
 func TestMockStore_Find(T *testing.T) {
+	ctx := context.Background()
+
 	T.Parallel()
 
 	T.Run("obligatory", func(t *testing.T) {
-		s := &mstore{}
+		s := &istore{}
 
 		exampleToken := "token"
 		expectedBytes := []byte("hello, world!")
@@ -56,7 +60,7 @@ func TestMockStore_Find(T *testing.T) {
 
 		s.ExpectFind(exampleToken, expectedBytes, expectedFound, nil)
 
-		actualBytes, actualFound, actualErr := s.Find(exampleToken)
+		actualBytes, actualFound, actualErr := s.Find(ctx, exampleToken)
 		if !bytes.Equal(actualBytes, expectedBytes) {
 			t.Error("returned bytes do not match expectation")
 		}
@@ -72,7 +76,7 @@ func TestMockStore_Find(T *testing.T) {
 	})
 
 	T.Run("panics with unfound expectation", func(t *testing.T) {
-		s := &mstore{}
+		s := &istore{}
 
 		exampleToken := "token"
 
@@ -82,7 +86,7 @@ func TestMockStore_Find(T *testing.T) {
 			}
 		}()
 
-		_, _, actualErr := s.Find(exampleToken)
+		_, _, actualErr := s.Find(ctx, exampleToken)
 		if actualErr != nil {
 			t.Error("unexpected error returned")
 		}
@@ -90,10 +94,12 @@ func TestMockStore_Find(T *testing.T) {
 }
 
 func TestMockStore_Commit(T *testing.T) {
+	ctx := context.Background()
+
 	T.Parallel()
 
 	T.Run("obligatory", func(t *testing.T) {
-		s := &mstore{}
+		s := &istore{}
 
 		exampleToken := "token"
 		exampleBytes := []byte("hello, world!")
@@ -102,7 +108,7 @@ func TestMockStore_Commit(T *testing.T) {
 
 		s.ExpectCommit(exampleToken, exampleBytes, exampleExpiry, expectedErr)
 
-		if err := s.Commit(exampleToken, exampleBytes, exampleExpiry); err != expectedErr {
+		if err := s.Commit(ctx, exampleToken, exampleBytes, exampleExpiry); err != expectedErr {
 			t.Error("expected error not returned")
 		}
 		if len(s.commitExpectations) != 0 {
@@ -111,7 +117,7 @@ func TestMockStore_Commit(T *testing.T) {
 	})
 
 	T.Run("panics with unfound expectation", func(t *testing.T) {
-		s := &mstore{}
+		s := &istore{}
 
 		exampleToken := "token"
 		exampleBytes := []byte("hello, world!")
@@ -123,23 +129,25 @@ func TestMockStore_Commit(T *testing.T) {
 			}
 		}()
 
-		if err := s.Commit(exampleToken, exampleBytes, exampleExpiry); err != nil {
+		if err := s.Commit(ctx, exampleToken, exampleBytes, exampleExpiry); err != nil {
 			t.Error("unexpected error returned")
 		}
 	})
 }
 
 func TestMockStore_All(T *testing.T) {
+	ctx := context.Background()
+
 	T.Parallel()
 
 	T.Run("obligatory", func(t *testing.T) {
-		s := &mstore{}
+		s := &istore{}
 
 		expectedMapBytes := map[string][]byte{"token1": []byte("hello, world 1!"), "token2": []byte("hello, world 2!"), "token3": []byte("hello, world 3!")}
 
 		s.ExpectAll(expectedMapBytes, nil)
 
-		actualMapBytes, actualErr := s.All()
+		actualMapBytes, actualErr := s.All(ctx)
 		if !reflect.DeepEqual(actualMapBytes, expectedMapBytes) {
 			t.Error("returned map bytes do not match expectation")
 		}
@@ -152,7 +160,7 @@ func TestMockStore_All(T *testing.T) {
 	})
 
 	T.Run("panics with unfound expectation", func(t *testing.T) {
-		s := &mstore{}
+		s := &istore{}
 
 		defer func() {
 			if r := recover(); r == nil {
@@ -160,7 +168,7 @@ func TestMockStore_All(T *testing.T) {
 			}
 		}()
 
-		_, actualErr := s.All()
+		_, actualErr := s.All(ctx)
 		if actualErr != nil {
 			t.Error("unexpected error returned")
 		}

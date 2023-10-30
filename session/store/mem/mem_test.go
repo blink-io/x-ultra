@@ -2,16 +2,18 @@ package mem
 
 import (
 	"bytes"
+	"context"
 	"reflect"
 	"testing"
 	"time"
 )
 
 func TestFind(t *testing.T) {
+	ctx := context.Background()
 	m := newRawWithCleanupInterval(0)
 	m.items["session_token"] = item{object: []byte("encoded_data"), expiration: time.Now().Add(time.Second).UnixNano()}
 
-	b, found, err := m.Find("session_token")
+	b, found, err := m.Find(ctx, "session_token")
 	if err != nil {
 		t.Fatalf("got %v: expected %v", err, nil)
 	}
@@ -24,9 +26,10 @@ func TestFind(t *testing.T) {
 }
 
 func TestFindMissing(t *testing.T) {
+	ctx := context.Background()
 	m := NewWithCleanupInterval(0)
 
-	_, found, err := m.Find("missing_session_token")
+	_, found, err := m.Find(ctx, "missing_session_token")
 	if err != nil {
 		t.Fatalf("got %v: expected %v", err, nil)
 	}
@@ -36,9 +39,11 @@ func TestFindMissing(t *testing.T) {
 }
 
 func TestCommitNew(t *testing.T) {
+	ctx := context.Background()
+
 	m := newRawWithCleanupInterval(0)
 
-	err := m.Commit("session_token", []byte("encoded_data"), time.Now().Add(time.Minute))
+	err := m.Commit(ctx, "session_token", []byte("encoded_data"), time.Now().Add(time.Minute))
 	if err != nil {
 		t.Fatalf("got %v: expected %v", err, nil)
 	}
@@ -54,14 +59,16 @@ func TestCommitNew(t *testing.T) {
 }
 
 func TestCommitUpdated(t *testing.T) {
+	ctx := context.Background()
+
 	m := newRawWithCleanupInterval(0)
 
-	err := m.Commit("session_token", []byte("encoded_data"), time.Now().Add(time.Minute))
+	err := m.Commit(ctx, "session_token", []byte("encoded_data"), time.Now().Add(time.Minute))
 	if err != nil {
 		t.Fatalf("got %v: expected %v", err, nil)
 	}
 
-	err = m.Commit("session_token", []byte("new_encoded_data"), time.Now().Add(time.Minute))
+	err = m.Commit(ctx, "session_token", []byte("new_encoded_data"), time.Now().Add(time.Minute))
 	if err != nil {
 		t.Fatalf("got %v: expected %v", err, nil)
 	}
@@ -74,30 +81,34 @@ func TestCommitUpdated(t *testing.T) {
 }
 
 func TestExpiry(t *testing.T) {
+	ctx := context.Background()
+
 	m := NewWithCleanupInterval(0)
 
-	err := m.Commit("session_token", []byte("encoded_data"), time.Now().Add(100*time.Millisecond))
+	err := m.Commit(ctx, "session_token", []byte("encoded_data"), time.Now().Add(100*time.Millisecond))
 	if err != nil {
 		t.Fatalf("got %v: expected %v", err, nil)
 	}
 
-	_, found, _ := m.Find("session_token")
+	_, found, _ := m.Find(ctx, "session_token")
 	if found != true {
 		t.Fatalf("got %v: expected %v", found, true)
 	}
 
 	time.Sleep(101 * time.Millisecond)
-	_, found, _ = m.Find("session_token")
+	_, found, _ = m.Find(ctx, "session_token")
 	if found != false {
 		t.Fatalf("got %v: expected %v", found, false)
 	}
 }
 
 func TestDelete(t *testing.T) {
+	ctx := context.Background()
+
 	m := newRawWithCleanupInterval(0)
 	m.items["session_token"] = item{object: []byte("encoded_data"), expiration: time.Now().Add(time.Second).UnixNano()}
 
-	err := m.Delete("session_token")
+	err := m.Delete(ctx, "session_token")
 	if err != nil {
 		t.Fatalf("got %v: expected %v", err, nil)
 	}

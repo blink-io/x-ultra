@@ -43,7 +43,7 @@ func TestSessionManager_Load(T *testing.T) {
 			t.Errorf("unexpected error encoding value: %v", err)
 		}
 
-		if err := s.Store.Commit(expected, encodedValue, exampleDeadline); err != nil {
+		if err := s.Store.Commit(ctx, expected, encodedValue, exampleDeadline); err != nil {
 			t.Errorf("error committing to session store: %v", err)
 		}
 
@@ -101,7 +101,7 @@ func TestSessionManager_Load(T *testing.T) {
 			t.Errorf("unexpected error encoding value: %v", err)
 		}
 
-		if err := s.Store.Commit(expected, encodedValue, exampleDeadline); err != nil {
+		if err := s.Store.Commit(ctx, expected, encodedValue, exampleDeadline); err != nil {
 			t.Errorf("error committing to session store: %v", err)
 		}
 
@@ -186,7 +186,7 @@ func TestSessionManager_Load(T *testing.T) {
 		expected := "example"
 		exampleDeadline := time.Now().Add(time.Hour)
 
-		if err := s.Store.Commit(expected, []byte(""), exampleDeadline); err != nil {
+		if err := s.Store.Commit(ctx, expected, []byte(""), exampleDeadline); err != nil {
 			t.Errorf("error committing to session store: %v", err)
 		}
 
