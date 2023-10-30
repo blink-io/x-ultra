@@ -8,6 +8,8 @@ import (
 	"github.com/vmihailenco/msgpack/v5"
 )
 
+const Name = "msgpack"
+
 type codec struct {
 }
 
@@ -37,4 +39,8 @@ func (codec) Decode(b []byte) (deadline time.Time, values map[string]any, err er
 	}
 
 	return pyd.Deadline, pyd.Values, nil
+}
+
+func (codec) Name() string {
+	return Name
 }

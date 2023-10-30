@@ -9,6 +9,8 @@ import (
 	"github.com/goccy/go-json"
 )
 
+const Name = "json"
+
 type codec struct {
 }
 
@@ -38,4 +40,8 @@ func (codec) Decode(b []byte) (deadline time.Time, values map[string]any, err er
 	}
 
 	return pyd.Deadline, pyd.Values, nil
+}
+
+func (codec) Name() string {
+	return Name
 }
