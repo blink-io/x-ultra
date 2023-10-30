@@ -10,6 +10,8 @@ import (
 	"github.com/tink-crypto/tink-go/v2/aead"
 	"github.com/tink-crypto/tink-go/v2/insecurecleartextkeyset"
 	"github.com/tink-crypto/tink-go/v2/keyset"
+	"github.com/tink-crypto/tink-go/v2/testing/fakekms"
+	_ "github.com/tink-crypto/tink-go/v2/testing/fakekms"
 )
 
 func TestTink_1(t *testing.T) {
@@ -39,8 +41,7 @@ func TestTink_1(t *testing.T) {
 	// that your key material is passed in cleartext, which is a security risk.
 	// Consider encrypting it with a remote key in Cloud KMS, AWS KMS or HashiCorp Vault.
 	// See https://github.com/google/tink/blob/master/docs/GOLANG-HOWTO.md#storing-and-loading-existing-keysets.
-	keysetHandle, err := insecurecleartextkeyset.Read(
-		keyset.NewJSONReader(bytes.NewBufferString(jsonKeyset)))
+	keysetHandle, err := insecurecleartextkeyset.Read(keyset.NewJSONReader(bytes.NewBufferString(jsonKeyset)))
 	require.NoError(t, err)
 
 	// Retrieve the AEAD primitive we want to use from the keyset handle.
@@ -63,4 +64,31 @@ func TestTink_1(t *testing.T) {
 
 	fmt.Println(string(decrypted))
 	// Output: message
+}
+
+func TestTink_FakeKMS_1(t *testing.T) {
+	fakeKMSURL, err := fakekms.NewKeyURI()
+	require.NoError(t, err)
+
+	c, err := fakekms.NewClient(fakeKMSURL)
+	require.NoError(t, err)
+	require.NotNil(t, c)
+
+	primitive, err := c.GetAEAD(fakeKMSURL)
+	require.NoError(t, err)
+	// Use the primitive to encrypt a message. In this case the primary key of the
+	// keyset will be used (which is also the only key in this example).
+	plaintext := []byte("message")
+	associatedData := []byte("associated data")
+	ciphertext, err := primitive.Encrypt(plaintext, associatedData)
+	require.NoError(t, err)
+
+	fmt.Println("ciphertext in base64:  ", base64.StdEncoding.EncodeToString(ciphertext))
+	// Use the primitive to decrypt the message. Decrypt finds the correct key in
+	// the keyset and decrypts the ciphertext. If no key is found or decryption
+	// fails, it returns an error.
+	decrypted, err := primitive.Decrypt(ciphertext, associatedData)
+	require.NoError(t, err)
+
+	fmt.Println(string(decrypted))
 }
