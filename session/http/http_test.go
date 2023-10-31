@@ -70,7 +70,7 @@ func TestEnable(t *testing.T) {
 		w.Write([]byte(s))
 	}))
 
-	ts := newTestServer(t, sessionManager.LoadAndSave(mux))
+	ts := newTestServer(t, sessionManager.Handle(mux))
 	defer ts.Close()
 
 	header, _ := ts.execute(t, "/put")
@@ -110,7 +110,7 @@ func TestLifetime(t *testing.T) {
 		w.Write([]byte(v.(string)))
 	}))
 
-	ts := newTestServer(t, sessionManager.LoadAndSave(mux))
+	ts := newTestServer(t, sessionManager.Handle(mux))
 	defer ts.Close()
 
 	ts.execute(t, "/put")
@@ -147,7 +147,7 @@ func TestIdleTimeout(t *testing.T) {
 		w.Write([]byte(v.(string)))
 	}))
 
-	ts := newTestServer(t, sessionManager.LoadAndSave(mux))
+	ts := newTestServer(t, sessionManager.Handle(mux))
 	defer ts.Close()
 
 	ts.execute(t, "/put")
@@ -193,7 +193,7 @@ func TestDestroy(t *testing.T) {
 		w.Write([]byte(v.(string)))
 	}))
 
-	ts := newTestServer(t, sessionManager.LoadAndSave(mux))
+	ts := newTestServer(t, sessionManager.Handle(mux))
 	defer ts.Close()
 
 	ts.execute(t, "/put")
@@ -241,7 +241,7 @@ func TestRenewToken(t *testing.T) {
 		w.Write([]byte(v.(string)))
 	}))
 
-	ts := newTestServer(t, sessionManager.LoadAndSave(mux))
+	ts := newTestServer(t, sessionManager.Handle(mux))
 	defer ts.Close()
 
 	header, _ := ts.execute(t, "/put")
@@ -281,7 +281,7 @@ func TestRememberMe(t *testing.T) {
 		sessionManager.Put(r.Context(), "foo", "bar")
 	}))
 
-	ts := newTestServer(t, sessionManager.LoadAndSave(mux))
+	ts := newTestServer(t, sessionManager.Handle(mux))
 	defer ts.Close()
 
 	header, _ := ts.execute(t, "/put-normal")
@@ -317,7 +317,7 @@ func TestIterate(t *testing.T) {
 	}))
 
 	for i := 0; i < 3; i++ {
-		ts := newTestServer(t, sessionManager.LoadAndSave(mux))
+		ts := newTestServer(t, sessionManager.Handle(mux))
 		defer ts.Close()
 
 		ts.execute(t, "/put?foo="+strconv.Itoa(i))

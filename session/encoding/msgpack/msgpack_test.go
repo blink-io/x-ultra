@@ -17,6 +17,12 @@ func TestJSON_1(t *testing.T) {
 			"level":   10,
 			"score":   66.7,
 			"enabled": true,
+			"samples": []string{
+				"11", "22", "33",
+			},
+			"ratios": []float32{
+				11.1, 22.2, 33.3, 44.4,
+			},
 		},
 	}
 
@@ -29,5 +35,5 @@ func TestJSON_1(t *testing.T) {
 
 	d2, v2, err2 := enc.Decode(b1)
 	require.NoError(t, err2)
-	fmt.Println("Deadline:   ", d2, "  Values:   ", v2)
+	fmt.Println("Len:   ", len(b1), "  Deadline:   ", d2, "  Values:   ", v2)
 }

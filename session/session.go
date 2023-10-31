@@ -33,23 +33,28 @@ type Manager struct {
 
 	// contextKey is the key used to set and retrieve the session data from a
 	// context.Context. It's automatically generated to ensure uniqueness.
-	contextKey ContextKey
+	contextKey contextKey
 }
 
 // NewManager returns a new session manager with the default options. It is safe for
 // concurrent use.
-func NewManager() *Manager {
-	s := &Manager{
+func NewManager(ops ...Option) *Manager {
+	m := &Manager{
 		IdleTimeout: 0,
 		Lifetime:    24 * time.Hour,
 		Store:       mem.New(),
 		Codec:       json.New(),
 		contextKey:  generateContextKey(),
 	}
-	return s
+
+	for _, o := range ops {
+		o(m)
+	}
+
+	return m
 }
 
 //
-//func (s *Manager) GetContextKey() ContextKey {
+//func (s *Manager) GetContextKey() contextKey {
 //	return s.contextKey
 //}

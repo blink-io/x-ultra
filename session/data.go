@@ -4,14 +4,11 @@ import (
 	"context"
 	"crypto/rand"
 	"encoding/base64"
-	"errors"
 	"fmt"
 	"sort"
 	"sync"
 	"sync/atomic"
 	"time"
-
-	"github.com/blink-io/x/session/store"
 )
 
 // Status represents the state of the session data during a request cycle.
@@ -51,7 +48,7 @@ func newSessionData(lifetime time.Duration) *sessionData {
 // and returns a new context.Context containing the session data. If no matching
 // token is found then this will create a new session.
 //
-// Most applications will use the LoadAndSave() middleware and will not need to
+// Most applications will use the Handle() middleware and will not need to
 // use this method.
 func (s *Manager) Load(ctx context.Context, token string) (context.Context, error) {
 	if _, ok := ctx.Value(s.contextKey).(*sessionData); ok {
@@ -90,7 +87,7 @@ func (s *Manager) Load(ctx context.Context, token string) (context.Context, erro
 // Commit saves the session data to the session store and returns the session
 // token and expiry time.
 //
-// Most applications will use the LoadAndSave() middleware and will not need to
+// Most applications will use the Handle() middleware and will not need to
 // use this method.
 func (s *Manager) Commit(ctx context.Context) (string, time.Time, error) {
 	sd := s.getSessionDataFromContext(ctx)
@@ -415,7 +412,7 @@ func (s *Manager) GetInt32(ctx context.Context, key string) int32 {
 }
 
 // GetFloat returns the float64 value for a given key from the session data. The
-// zero value for an float64 (0) is returned if the key does not exist or the
+// zero value for float64 (0) is returned if the key does not exist or the
 // value could not be type asserted to a float64.
 func (s *Manager) GetFloat(ctx context.Context, key string) float64 {
 	val := s.Get(ctx, key)
@@ -492,7 +489,7 @@ func (s *Manager) PopInt(ctx context.Context, key string) int {
 
 // PopFloat returns the float64 value for a given key and then deletes it from the
 // session data. The session data status will be set to Modified. The zero
-// value for an float64 (0) is returned if the key does not exist or the value
+// value for float64 (0) is returned if the key does not exist or the value
 // could not be type asserted to a float64.
 func (s *Manager) PopFloat(ctx context.Context, key string) float64 {
 	val := s.Pop(ctx, key)
@@ -529,10 +526,10 @@ func (s *Manager) PopTime(ctx context.Context, key string) time.Time {
 	return t
 }
 
-// RememberMe controls whether the session cookie is persistent (i.e  whether it
+// RememberMe controls whether the session cookie is persistent (whether it
 // is retained after a user closes their browser). RememberMe only has an effect
 // if you have set Manager.Cookie.Persist = false (the default is true) and
-// you are using the standard LoadAndSave() middleware.
+// you are using the standard Handle() middleware.
 func (s *Manager) RememberMe(ctx context.Context, val bool) {
 	s.Put(ctx, "__rememberMe", val)
 }
@@ -599,7 +596,7 @@ func (s *Manager) addSessionDataToContext(ctx context.Context, sd *sessionData) 
 func (s *Manager) getSessionDataFromContext(ctx context.Context) *sessionData {
 	c, ok := ctx.Value(s.contextKey).(*sessionData)
 	if !ok {
-		panic("scs: no session data in context")
+		panic("no session data in context")
 	}
 	return c
 }
@@ -613,18 +610,18 @@ func generateToken() (string, error) {
 	return base64.RawURLEncoding.EncodeToString(b), nil
 }
 
-type ContextKey string
+type contextKey string
 
 var (
 	contextKeyID      uint64
 	contextKeyIDMutex = &sync.Mutex{}
 )
 
-func generateContextKey() ContextKey {
+func generateContextKey() contextKey {
 	contextKeyIDMutex.Lock()
 	defer contextKeyIDMutex.Unlock()
 	atomic.AddUint64(&contextKeyID, 1)
-	return ContextKey(fmt.Sprintf("session.%d", contextKeyID))
+	return contextKey(fmt.Sprintf("session.%d", contextKeyID))
 }
 
 func (s *Manager) doStoreDelete(ctx context.Context, token string) (err error) {
@@ -640,11 +637,5 @@ func (s *Manager) doStoreCommit(ctx context.Context, token string, b []byte, exp
 }
 
 func (s *Manager) doStoreAll(ctx context.Context) (map[string][]byte, error) {
-	is, ok := s.Store.(store.IterableStore)
-	if ok {
-		return is.All(ctx)
-	}
-
-	//panic(fmt.Sprintf("type %T does not support iteration", s.Store))
-	return nil, errors.New("store is not implemented store.IterableStore")
+	return s.Store.All(ctx)
 }

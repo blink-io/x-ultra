@@ -148,7 +148,6 @@ func (s *istore) ExpectAll(mb map[string][]byte, err error) {
 	})
 }
 
-// All implements the IterableStore interface
 func (s *istore) All(ctx context.Context) (map[string][]byte, error) {
 	var (
 		indexToRemove    int

@@ -1,4 +1,4 @@
-package json
+package cbor
 
 import (
 	"fmt"
@@ -11,7 +11,7 @@ import (
 
 func TestJSON_1(t *testing.T) {
 	p1 := &encoding.Payload{
-		Deadline: time.Now().Add(30 * time.Hour),
+		Deadline: time.Now().Add(3 * time.Hour),
 		Values: map[string]any{
 			"name":    "Heison",
 			"level":   10,
@@ -31,9 +31,9 @@ func TestJSON_1(t *testing.T) {
 	b1, err1 := enc.Encode(p1.Deadline, p1.Values)
 	require.NoError(t, err1)
 
-	fmt.Println("json:   ", string(b1))
+	fmt.Println("cbor:   ", string(b1))
 
 	d2, v2, err2 := enc.Decode(b1)
 	require.NoError(t, err2)
-	fmt.Println("Deadline:   ", d2, "  Values:   ", v2)
+	fmt.Println("Len:   ", len(b1), "  Deadline:   ", d2, "  Values:   ", v2)
 }

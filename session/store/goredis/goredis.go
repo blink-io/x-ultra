@@ -19,9 +19,8 @@ type istore struct {
 // to a go-redis connection.
 func New(client redis.UniversalClient) interface {
 	store.Store
-	store.IterableStore
 } {
-	return NewWithPrefix(client, "scs:session:")
+	return NewWithPrefix(client, store.DefaultPrefix)
 }
 
 // NewWithPrefix returns a new store instance. The pool parameter should be a pointer
@@ -29,13 +28,12 @@ func New(client redis.UniversalClient) interface {
 // prefix, which can be used to avoid naming clashes if necessary.
 func NewWithPrefix(client redis.UniversalClient, prefix string) interface {
 	store.Store
-	store.IterableStore
 } {
 	return newRawWithPrefix(client, prefix)
 }
 
 func newRaw(client redis.UniversalClient) *istore {
-	return newRawWithPrefix(client, "scs:session:")
+	return newRawWithPrefix(client, store.DefaultPrefix)
 }
 
 func newRawWithPrefix(client redis.UniversalClient, prefix string) *istore {

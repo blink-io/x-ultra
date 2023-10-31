@@ -148,7 +148,7 @@ func TestSessionManager_Load(T *testing.T) {
 		}
 	})
 
-	T.Run("with unfound token in store", func(t *testing.T) {
+	T.Run("with not-found token in store", func(t *testing.T) {
 		s := NewManager()
 
 		ctx := context.Background()

@@ -9,9 +9,15 @@ import (
 	"testing"
 	"time"
 
+	"github.com/blink-io/x/redis/rueidis/hooks/debug"
 	"github.com/redis/rueidis"
+	"github.com/redis/rueidis/rueidishook"
 	"github.com/stretchr/testify/require"
 )
+
+//func init() {
+//	os.Setenv("REDIS_TEST_DSN", "redis://localhost:6379/0")
+//}
 
 func TestFind(t *testing.T) {
 	opt, err := rueidis.ParseURL(os.Getenv("REDIS_TEST_DSN"))
@@ -193,6 +199,8 @@ func TestDelete(t *testing.T) {
 	client, err := rueidis.NewClient(opt)
 	require.NoError(t, err)
 
+	client = rueidishook.WithHook(client, debug.New())
+
 	defer client.Close()
 
 	ctx := context.Background()
@@ -232,6 +240,8 @@ func TestAll(t *testing.T) {
 	client, err := rueidis.NewClient(opt)
 	require.NoError(t, err)
 
+	client = rueidishook.WithHook(client, debug.New())
+
 	defer client.Close()
 
 	ctx := context.Background()
@@ -246,7 +256,10 @@ func TestAll(t *testing.T) {
 	for i := 0; i < 4; i++ {
 		key := fmt.Sprintf("token_%v", i)
 		val := []byte(key)
-		setCmd := client.B().Setex().Key(r.prefix + "session_token").Seconds(0).Value("encoded_data").Build()
+		setCmd := client.B().Set().
+			Key(r.prefix + key).
+			Value(key).
+			Ex(9999 * time.Second).Build()
 		err = client.Do(ctx, setCmd).Error()
 		if err != nil {
 			t.Fatal(err)

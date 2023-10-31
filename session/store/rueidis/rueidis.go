@@ -19,9 +19,8 @@ type istore struct {
 // to a go-redis connection.
 func New(client rueidis.Client) interface {
 	store.Store
-	store.IterableStore
 } {
-	return NewWithPrefix(client, "scs:session:")
+	return NewWithPrefix(client, store.DefaultPrefix)
 }
 
 // NewWithPrefix returns a new store instance. The pool parameter should be a pointer
@@ -29,13 +28,12 @@ func New(client rueidis.Client) interface {
 // prefix, which can be used to avoid naming clashes if necessary.
 func NewWithPrefix(client rueidis.Client, prefix string) interface {
 	store.Store
-	store.IterableStore
 } {
 	return newRawWithPrefix(client, prefix)
 }
 
 func newRaw(client rueidis.Client) *istore {
-	return newRawWithPrefix(client, "scs:session:")
+	return newRawWithPrefix(client, store.DefaultPrefix)
 }
 
 func newRawWithPrefix(client rueidis.Client, prefix string) *istore {
@@ -82,10 +80,10 @@ func (s *istore) All(ctx context.Context) (map[string][]byte, error) {
 	sessions := make(map[string][]byte)
 
 	for {
-		var keys []string
-		var err error
 		scanCmd := s.client.B().Scan().Cursor(cursor).Match(s.prefix + "*").Build()
-		s.client.Do(ctx, scanCmd)
+		v, err := s.client.Do(ctx, scanCmd).AsScanEntry()
+		cursor = v.Cursor
+		keys := v.Elements
 		if err != nil {
 			if err == rueidis.Nil {
 				return nil, nil

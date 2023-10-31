@@ -5,8 +5,8 @@ import (
 )
 
 type Payload struct {
-	Deadline time.Time              `json:"deadline" toml:"deadline" yaml:"deadline" msgpack:"deadline"`
-	Values   map[string]interface{} `json:"values" toml:"values" yaml:"values" msgpack:"values"`
+	Deadline time.Time              `json:"deadline" toml:"deadline" yaml:"deadline" msgpack:"deadline" cbor:"deadline"`
+	Values   map[string]interface{} `json:"values" toml:"values" yaml:"values" msgpack:"values" cbor:"values"`
 }
 
 // Codec is the interface for encoding/decoding session data to and from a byte

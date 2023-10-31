@@ -19,7 +19,7 @@ type Manager struct {
 	Cookie SessionCookie
 
 	// ErrorFunc allows you to control behavior when an error is encountered by
-	// the LoadAndSave middleware. The default behavior is for a HTTP 500
+	// the Handle middleware. The default behavior is for HTTP 500
 	// "Internal Server Error" message to be sent to the client and the error
 	// logged using Go's standard logger. If a custom ErrorFunc is set, then
 	// control will be passed to this instead. A typical use would be to provide
@@ -29,8 +29,8 @@ type Manager struct {
 
 // NewManager returns a new session manager with the default options. It is safe for
 // concurrent use.
-func NewManager() *Manager {
-	s := &Manager{
+func NewManager(ops ...Option) *Manager {
+	m := &Manager{
 		sm:        session.NewManager(),
 		ErrorFunc: defaultErrorFunc,
 		Cookie: SessionCookie{
@@ -43,13 +43,16 @@ func NewManager() *Manager {
 			SameSite: http.SameSiteLaxMode,
 		},
 	}
-	return s
+	for _, o := range ops {
+		o(m)
+	}
+	return m
 }
 
-// LoadAndSave provides middleware which automatically loads and saves session
+// Handle provides middleware which automatically loads and saves session
 // data for the current request, and communicates the session token to and from
 // the client in a cookie.
-func (s *Manager) LoadAndSave(next http.Handler) http.Handler {
+func (s *Manager) Handle(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Add("Vary", "Cookie")
 
@@ -106,7 +109,7 @@ func (s *Manager) commitAndWriteSessionCookie(w http.ResponseWriter, r *http.Req
 // marked with a historical expiry time and negative max-age (so the browser
 // deletes it).
 //
-// Most applications will use the LoadAndSave() middleware and will not need to
+// Most applications will use the Handle() middleware and will not need to
 // use this method.
 func (s *Manager) WriteSessionCookie(ctx context.Context, w http.ResponseWriter, token string, expiry time.Time) {
 	cookie := &http.Cookie{

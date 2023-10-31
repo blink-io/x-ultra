@@ -5,6 +5,8 @@ import (
 	"time"
 )
 
+const DefaultPrefix = "default:session:"
+
 // Store is an interface for session stores which take a context.Context
 // parameter.
 type Store interface {
@@ -17,17 +19,7 @@ type Store interface {
 
 	// Commit is the same as Store.Commit, except it takes a context.Context.
 	Commit(ctx context.Context, token string, b []byte, expiry time.Time) (err error)
-}
-
-// IterableStore is the interface for session stores which support iteration
-// and which take a context.Context parameter.
-type IterableStore interface {
-	// All is the same as IterableStore.All, expect it takes a
+	// All is the same as Store.All, expect it takes a
 	// context.Context.
 	All(ctx context.Context) (map[string][]byte, error)
-}
-
-type CompleteStore interface {
-	Store
-	IterableStore
 }
