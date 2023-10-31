@@ -6,6 +6,7 @@ require (
 	github.com/Masterminds/squirrel v1.5.4
 	github.com/Xuanwo/go-locale v1.1.0
 	github.com/alexedwards/argon2id v1.0.0
+	github.com/blockloop/scan/v2 v2.5.0
 	github.com/cespare/xxhash/v2 v2.2.0
 	github.com/creasty/defaults v1.7.0
 	github.com/disgoorg/snowflake/v2 v2.0.1
@@ -40,7 +41,7 @@ require (
 	github.com/oklog/ulid/v2 v2.1.0
 	github.com/outcaste-io/ristretto v0.2.3
 	github.com/pelletier/go-toml/v2 v2.1.0
-	github.com/quic-go/quic-go v0.39.3
+	github.com/quic-go/quic-go v0.40.0
 	github.com/qustavo/sqlhooks/v2 v2.1.0
 	github.com/redis/go-redis/extra/rediscmd/v9 v9.0.5
 	github.com/redis/go-redis/v9 v9.2.1

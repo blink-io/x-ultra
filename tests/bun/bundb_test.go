@@ -11,6 +11,7 @@ import (
 	"github.com/blink-io/x/bun/extra/timing"
 	"github.com/blink-io/x/sql"
 	"github.com/blink-io/x/sql/generics"
+	"github.com/blockloop/scan/v2"
 	"github.com/stretchr/testify/require"
 	"github.com/uptrace/bun"
 )
@@ -98,15 +99,30 @@ func TestSQLite_Model_Select_2(t *testing.T) {
 
 func TestSQLite_Raw_Select_1(t *testing.T) {
 	db := getDB(t)
-
+	var rs []*Application
 	_, err := db.NewRaw("select * from applications where ? = ?",
-		bun.Ident("status"), "status1").Exec(ctx)
+		bun.Ident("status"), "status1").Exec(ctx, &rs)
 	require.NoError(t, err)
 }
 
 func TestSQLite_Raw_Select_2(t *testing.T) {
 	db := getDB(t)
 
+	defer db.Close()
+
 	_, err := db.Exec("select * from applications where status = ?", "status1")
+	require.NoError(t, err)
+}
+
+func TestSLite_Scan_1(t *testing.T) {
+	db := getDB(t)
+
+	defer db.Close()
+
+	var rs []Application
+
+	rows, err := db.Query("select * from applications where  1=1")
+	require.NoError(t, err)
+	err = scan.Rows(&rs, rows)
 	require.NoError(t, err)
 }
