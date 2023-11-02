@@ -54,7 +54,11 @@ func NewWithCodec(ctx context.Context, endpoints []string, options *Config, code
 	return makeStore(ctx, client, codec), nil
 }
 
-func newClient(endpoints []string, options *Config) (rueidis.Client, error) {
+func newClient(endpoints []string, cfg *Config) (rueidis.Client, error) {
+	if len(endpoints) > 1 {
+		return nil, ErrMultipleEndpointsUnsupported
+	}
+
 	opt := rueidis.ClientOption{
 		InitAddress: endpoints,
 		//DialTimeout:  5 * time.Second,
@@ -62,50 +66,29 @@ func newClient(endpoints []string, options *Config) (rueidis.Client, error) {
 		//WriteTimeout: 30 * time.Second,
 	}
 
-	if options != nil && options.Sentinel != nil {
-		if options.Sentinel.MasterName == "" {
+	if cfg != nil {
+		opt.TLSConfig = cfg.TLS
+		opt.Username = cfg.Username
+		opt.Password = cfg.Password
+		opt.SelectDB = cfg.DB
+	}
+
+	if cfg != nil && cfg.Sentinel != nil {
+		if cfg.Sentinel.MasterName == "" {
 			return nil, ErrMasterSetMustBeProvided
 		}
 
-		if !options.Sentinel.ClusterClient && (options.Sentinel.RouteByLatency || options.Sentinel.RouteRandomly) {
+		if !cfg.Sentinel.ClusterClient && (cfg.Sentinel.RouteByLatency || cfg.Sentinel.RouteRandomly) {
 			return nil, ErrInvalidRoutesOptions
 		}
-		//
-		//	cfg := &redis.FailoverOptions{
-		//		SentinelAddrs:           endpoints,
-		//		SentinelUsername:        options.Sentinel.Username,
-		//		SentinelPassword:        options.Sentinel.Password,
-		//		MasterName:              options.Sentinel.MasterName,
-		//		RouteByLatency:          options.Sentinel.RouteByLatency,
-		//		RouteRandomly:           options.Sentinel.RouteRandomly,
-		//		ReplicaOnly:             options.Sentinel.ReplicaOnly,
-		//		UseDisconnectedReplicas: options.Sentinel.UseDisconnectedReplicas,
-		//		Username:                options.Username,
-		//		Password:                options.Password,
-		//		DB:                      options.DB,
-		//		DialTimeout:             5 * time.Second,
-		//		ReadTimeout:             30 * time.Second,
-		//		WriteTimeout:            30 * time.Second,
-		//		ContextTimeoutEnabled:   true,
-		//		TLSConfig:               options.TLS,
-		//	}
-		//
-		//	if options.Sentinel.ClusterClient {
-		//		return redis.NewFailoverClusterClient(cfg), nil
-		//	}
-		//
-		//	return redis.NewFailoverClient(cfg), nil
-	}
 
-	if len(endpoints) > 1 {
-		return nil, ErrMultipleEndpointsUnsupported
-	}
-
-	if options != nil {
-		opt.TLSConfig = options.TLS
-		opt.Username = options.Username
-		opt.Password = options.Password
-		opt.SelectDB = options.DB
+		// TODO Need to be verified
+		opt.Sentinel = rueidis.SentinelOption{
+			Username:  cfg.Sentinel.Username,
+			Password:  cfg.Sentinel.Password,
+			MasterSet: cfg.Sentinel.MasterName,
+			TLSConfig: opt.TLSConfig,
+		}
 	}
 
 	return rueidis.NewClient(opt)
@@ -113,14 +96,12 @@ func newClient(endpoints []string, options *Config) (rueidis.Client, error) {
 
 func makeStore(ctx context.Context, client rueidis.Client, codec Codec) *Store {
 	// Listen to Keyspace events.
-	//client.ConfigSet(ctx, )
-	cfgParam := "notify-keyspace-events"
 	cfgsetCmd := client.B().ConfigSet().
 		ParameterValue().
-		ParameterValue(cfgParam, "KEA").
+		ParameterValue(ConfigSetParam, ConfigSetVal).
 		Build()
 	if err := client.Do(ctx, cfgsetCmd).Error(); err != nil {
-		log.Printf("unable to set config value for: %s", cfgParam)
+		log.Printf("unable to set config value for: %s", ConfigSetParam)
 	}
 
 	var c Codec = &JSONCodec{}

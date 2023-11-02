@@ -8,6 +8,9 @@ import (
 const (
 	NoExpiration   = time.Duration(0)
 	DefaultLockTTL = 60 * time.Second
+
+	ConfigSetParam = "notify-keyspace-events"
+	ConfigSetVal   = "KEA"
 )
 
 // Config the Redis configuration.

@@ -114,7 +114,9 @@ func newClient(endpoints []string, options *Config) (redis.UniversalClient, erro
 
 func makeStore(ctx context.Context, client redis.UniversalClient, codec Codec) *Store {
 	// Listen to Keyspace events.
-	client.ConfigSet(ctx, "notify-keyspace-events", "KEA")
+	if err := client.ConfigSet(ctx, ConfigSetParam, ConfigSetVal).Err(); err != nil {
+		log.Printf("unable to set config value for: %s", ConfigSetParam)
+	}
 
 	var c Codec = &JSONCodec{}
 	if codec != nil {
