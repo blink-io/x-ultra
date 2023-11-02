@@ -7,6 +7,7 @@ require (
 	github.com/Xuanwo/go-locale v1.1.0
 	github.com/alexedwards/argon2id v1.0.0
 	github.com/blockloop/scan/v2 v2.5.0
+	github.com/cenkalti/backoff/v4 v4.2.1
 	github.com/cespare/xxhash/v2 v2.2.0
 	github.com/creasty/defaults v1.7.0
 	github.com/disgoorg/snowflake/v2 v2.0.1
@@ -20,6 +21,7 @@ require (
 	github.com/goccy/go-json v0.10.2
 	github.com/goccy/go-reflect v1.2.0
 	github.com/gofrs/uuid/v5 v5.0.0
+	github.com/google/flatbuffers v23.5.26+incompatible
 	github.com/google/uuid v1.4.0
 	github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.0.1
 	github.com/hashicorp/golang-lru/v2 v2.0.7
@@ -62,6 +64,7 @@ require (
 	github.com/vmihailenco/msgpack/v5 v5.4.1
 	github.com/zeebo/xxh3 v1.0.2
 	gitlab.com/greyxor/slogor v1.1.2
+	go.etcd.io/etcd/client/v3 v3.5.10
 	go.uber.org/zap v1.26.0
 	golang.org/x/crypto v0.14.0
 	golang.org/x/text v0.13.0
@@ -72,6 +75,8 @@ require (
 )
 
 require (
+	github.com/coreos/go-semver v0.3.1 // indirect
+	github.com/coreos/go-systemd/v22 v22.5.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
@@ -84,8 +89,9 @@ require (
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/go-task/slim-sprig v0.0.0-20230315185526-52ccab3ef572 // indirect
+	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
-	github.com/google/pprof v0.0.0-20231023181126-ff6d637d2a7b // indirect
+	github.com/google/pprof v0.0.0-20231101202521-4ca4178f5c7a // indirect
 	github.com/gorilla/mux v1.8.0 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a // indirect
@@ -106,6 +112,8 @@ require (
 	github.com/tmthrgd/go-hex v0.0.0-20190904060850-447a3041c3bc // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	github.com/x448/float16 v0.8.4 // indirect
+	go.etcd.io/etcd/api/v3 v3.5.10 // indirect
+	go.etcd.io/etcd/client/pkg/v3 v3.5.10 // indirect
 	go.opentelemetry.io/otel v1.19.0 // indirect
 	go.opentelemetry.io/otel/metric v1.19.0 // indirect
 	go.opentelemetry.io/otel/trace v1.19.0 // indirect
