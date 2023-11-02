@@ -3,7 +3,6 @@ package goredis
 
 import (
 	"context"
-	"crypto/tls"
 	"errors"
 	"fmt"
 	"log"
@@ -19,67 +18,9 @@ import (
 // Name the name of the store.
 const Name = "goredis"
 
-const (
-	noExpiration   = time.Duration(0)
-	defaultLockTTL = 60 * time.Second
-)
-
-var (
-	// ErrMultipleEndpointsUnsupported is thrown when there are
-	// multiple endpoints specified for Redis.
-	ErrMultipleEndpointsUnsupported = errors.New("redis: does not support multiple endpoints")
-
-	// ErrAbortTryLock is thrown when a user stops trying to seek the lock
-	// by sending a signal to the stop chan,
-	// this is used to verify if the operation succeeded.
-	ErrAbortTryLock = errors.New("redis: lock operation aborted")
-
-	// ErrMasterSetMustBeProvided is thrown when Redis Sentinel is enabled
-	// and the MasterName option is undefined.
-	ErrMasterSetMustBeProvided = errors.New("master set name must be provided")
-
-	// ErrInvalidRoutesOptions is thrown when Redis Sentinel is enabled
-	// with RouteByLatency & RouteRandomly options without the ClusterClient.
-	ErrInvalidRoutesOptions = errors.New("RouteByLatency and RouteRandomly options are only allowed with the ClusterClient")
-)
-
 // registers Redis to kvstore.
 func init() {
 	kvstore.Register(Name, newStore)
-}
-
-// Config the Redis configuration.
-type Config struct {
-	TLS      *tls.Config
-	Username string
-	Password string
-	DB       int
-	Sentinel *Sentinel
-}
-
-// Sentinel holds the Redis Sentinel configuration.
-type Sentinel struct {
-	MasterName string
-	Username   string
-	Password   string
-
-	// ClusterClient indicates whether to use the NewFailoverClusterClient to build the client.
-	ClusterClient bool
-
-	// Allows routing read-only commands to the closest master or replica node.
-	// This option only works with NewFailoverClusterClient.
-	RouteByLatency bool
-
-	// Allows routing read-only commands to the random master or replica node.
-	// This option only works with NewFailoverClusterClient.
-	RouteRandomly bool
-
-	// Route all commands to replica read-only nodes.
-	ReplicaOnly bool
-
-	// Use replicas disconnected with master when cannot get connected replicas
-	// Now, this option only works in RandomReplicaAddr function.
-	UseDisconnectedReplicas bool
 }
 
 func newStore(ctx context.Context, endpoints []string, options kvstore.Config) (kvstore.Store, error) {
@@ -189,7 +130,7 @@ func makeStore(ctx context.Context, client redis.UniversalClient, codec Codec) *
 
 // Put a value at the specified key.
 func (r *Store) Put(ctx context.Context, key string, value []byte, opts *kvstore.WriteOptions) error {
-	expirationAfter := noExpiration
+	expirationAfter := NoExpiration
 	if opts != nil && opts.TTL != 0 {
 		expirationAfter = opts.TTL
 	}
@@ -324,7 +265,7 @@ func (r *Store) WatchTree(ctx context.Context, directory string, _ *kvstore.Read
 // The returned Locker is not held and must be acquired
 // with `.Lock`. The Value is optional.
 func (r *Store) NewLock(_ context.Context, key string, opts *kvstore.LockOptions) (kvstore.Locker, error) {
-	ttl := defaultLockTTL
+	ttl := DefaultLockTTL
 	var value []byte
 
 	if opts != nil {
@@ -447,7 +388,7 @@ func (r *Store) DeleteTree(ctx context.Context, directory string) error {
 // Pass previous = nil to create a new key.
 // We introduced script on this page, so atomicity is guaranteed.
 func (r *Store) AtomicPut(ctx context.Context, key string, value []byte, previous *kvstore.KVPair, opts *kvstore.WriteOptions) (bool, *kvstore.KVPair, error) {
-	expirationAfter := noExpiration
+	expirationAfter := NoExpiration
 	if opts != nil && opts.TTL != 0 {
 		expirationAfter = opts.TTL
 	}

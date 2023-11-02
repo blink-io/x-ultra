@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/blink-io/x/kvstore"
+	. "github.com/blink-io/x/kvstore/store/redis/shared"
 	"github.com/blink-io/x/kvstore/testsuite"
 
 	"github.com/stretchr/testify/assert"

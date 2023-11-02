@@ -2,10 +2,12 @@ package rueidis
 
 import (
 	"context"
+	"log"
 	"testing"
 	"time"
 
 	"github.com/blink-io/x/kvstore"
+	. "github.com/blink-io/x/kvstore/store/redis/shared"
 	"github.com/blink-io/x/kvstore/testsuite"
 
 	"github.com/stretchr/testify/assert"
@@ -28,6 +30,14 @@ func makeRedisClient(t *testing.T, endpoints []string, config *Config) kvstore.S
 	// NOTE: please turn on redis's notification
 	// before you using watch/watchtree/lock related features.
 	//kv.client.ConfigSet(ctx, "notify-keyspace-events", "KA")
+	cfgParam := "notify-keyspace-events"
+	cfgsetCmd := kv.client.B().ConfigSet().
+		ParameterValue().
+		ParameterValue(cfgParam, "KEA").
+		Build()
+	if err := kv.client.Do(ctx, cfgsetCmd).Error(); err != nil {
+		log.Printf("unable to set config value for: %s", cfgParam)
+	}
 
 	return kv
 }
