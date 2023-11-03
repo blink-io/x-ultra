@@ -37,6 +37,7 @@ require (
 	github.com/lithammer/shortuuid/v4 v4.0.0
 	github.com/lmittmann/tint v1.0.3
 	github.com/matthewhartstonge/argon2 v0.3.4
+	github.com/miekg/dns v1.1.56
 	github.com/natefinch/lumberjack/v3 v3.0.0-alpha
 	github.com/nicksnyder/go-i18n/v2 v2.2.2
 	github.com/npillmayer/nestext v0.1.3
@@ -47,7 +48,7 @@ require (
 	github.com/qustavo/sqlhooks/v2 v2.1.0
 	github.com/redis/go-redis/extra/rediscmd/v9 v9.0.5
 	github.com/redis/go-redis/v9 v9.3.0
-	github.com/redis/rueidis v1.0.20
+	github.com/redis/rueidis v1.0.21
 	github.com/rs/xid v1.5.0
 	github.com/segmentio/ksuid v1.0.4
 	github.com/stretchr/testify v1.8.4
