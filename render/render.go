@@ -87,3 +87,17 @@ func (r *Render) Msgpack(w io.Writer, status int, v interface{}) error {
 
 	return r.rr.Render(w, e, v)
 }
+
+// Cbor marshals the given interface object and writes the Cbor response.
+func (r *Render) Cbor(w io.Writer, status int, v interface{}) error {
+	head := render.Head{
+		ContentType: ContentCbor,
+		Status:      status,
+	}
+
+	e := Cbor{
+		Head: head,
+	}
+
+	return r.rr.Render(w, e, v)
+}
