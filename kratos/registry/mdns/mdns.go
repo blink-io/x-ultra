@@ -1,4 +1,4 @@
-package dns
+package mdns
 
 import (
 	"context"
@@ -38,8 +38,9 @@ func MaxRetry(num int) Option {
 }
 
 type Registry struct {
-	client *dns.Client
-	opts   *options
+	client    *dns.Client
+	instances map[string]*registry.ServiceInstance
+	opts      *options
 }
 
 func New(client *dns.Client, opts ...Option) (r *Registry) {
@@ -59,8 +60,7 @@ func New(client *dns.Client, opts ...Option) (r *Registry) {
 }
 
 func (r *Registry) GetService(ctx context.Context, serviceName string) ([]*registry.ServiceInstance, error) {
-	//TODO implement me
-	panic("implement me")
+	return nil, nil
 }
 
 func (r *Registry) Watch(ctx context.Context, serviceName string) (registry.Watcher, error) {
