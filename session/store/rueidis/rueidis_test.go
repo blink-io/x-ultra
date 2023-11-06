@@ -224,7 +224,7 @@ func TestDelete(t *testing.T) {
 
 	getCmd := client.B().Get().Key(r.prefix + "session_token").Build()
 	data, err := client.Do(ctx, getCmd).AsBytes()
-	if err != rueidis.Nil {
+	if rueidis.IsRedisNil(err) {
 		t.Fatal(err)
 	}
 	if data != nil {

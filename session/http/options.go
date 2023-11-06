@@ -5,36 +5,43 @@ import (
 	"time"
 
 	"github.com/blink-io/x/session/encoding"
+	"github.com/blink-io/x/session/http/resolver"
 	"github.com/blink-io/x/session/store"
 )
 
 type Option func(*Manager)
 
-func Store(s store.Store) Option {
+func WithResolver(rv resolver.Resolver) Option {
+	return func(m *Manager) {
+		m.rv = rv
+	}
+}
+
+func WithStore(s store.Store) Option {
 	return func(m *Manager) {
 		m.Store = s
 	}
 }
 
-func Codec(c encoding.Codec) Option {
+func WithCodec(c encoding.Codec) Option {
 	return func(m *Manager) {
 		m.Codec = c
 	}
 }
 
-func ErrorFunc(ef func(http.ResponseWriter, *http.Request, error)) Option {
+func WithErrorFunc(ef func(http.ResponseWriter, *http.Request, error)) Option {
 	return func(m *Manager) {
-		m.ErrorFunc = ef
+		m.errorFunc = ef
 	}
 }
 
-func Lifetime(t time.Duration) Option {
+func WithLifetime(t time.Duration) Option {
 	return func(m *Manager) {
 		m.Lifetime = t
 	}
 }
 
-func IdleTimeout(t time.Duration) Option {
+func WithIdleTimeout(t time.Duration) Option {
 	return func(m *Manager) {
 		m.IdleTimeout = t
 	}

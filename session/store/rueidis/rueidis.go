@@ -49,7 +49,7 @@ func newRawWithPrefix(client rueidis.Client, prefix string) *istore {
 func (s *istore) Find(ctx context.Context, token string) (b []byte, exists bool, err error) {
 	getCmd := s.client.B().Get().Key(s.prefix + token).Build()
 	b, err = s.client.Do(ctx, getCmd).AsBytes()
-	if err == rueidis.Nil {
+	if rueidis.IsRedisNil(err) {
 		return nil, false, nil
 	} else if err != nil {
 		return nil, false, err
@@ -85,7 +85,7 @@ func (s *istore) All(ctx context.Context) (map[string][]byte, error) {
 		cursor = v.Cursor
 		keys := v.Elements
 		if err != nil {
-			if err == rueidis.Nil {
+			if rueidis.IsRedisNil(err) {
 				return nil, nil
 			} else {
 				return nil, err

@@ -148,7 +148,7 @@ func (r *Store) get(ctx context.Context, key string) (*kvstore.KVPair, error) {
 	getCmd := r.client.B().Get().Key(key).Build()
 	reply, err := r.client.Do(ctx, getCmd).AsBytes()
 	if err != nil {
-		if errors.Is(err, rueidis.Nil) {
+		if rueidis.IsRedisNil(err) {
 			return nil, kvstore.ErrKeyNotFound
 		}
 		return nil, err

@@ -526,12 +526,16 @@ func (s *Manager) PopTime(ctx context.Context, key string) time.Time {
 	return t
 }
 
-// RememberMe controls whether the session cookie is persistent (whether it
-// is retained after a user closes their browser). RememberMe only has an effect
+// SetRememberMe controls whether the session cookie is persistent (whether it
+// is retained after a user closes their browser). SetRememberMe only has an effect
 // if you have set Manager.Cookie.Persist = false (the default is true) and
 // you are using the standard Handle() middleware.
-func (s *Manager) RememberMe(ctx context.Context, val bool) {
-	s.Put(ctx, "__rememberMe", val)
+func (s *Manager) SetRememberMe(ctx context.Context, key string, val bool) {
+	s.Put(ctx, key, val)
+}
+
+func (s *Manager) IsRememberMe(ctx context.Context, key string) bool {
+	return s.GetBool(ctx, key)
 }
 
 // Iterate retrieves all active (i.e. not expired) sessions from the store and
