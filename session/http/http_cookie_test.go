@@ -135,10 +135,14 @@ func TestLifetime(t *testing.T) {
 	}
 }
 
-func TestIdleTimeout(t *testing.T) {
+func TestIdleTimeout_Cookie(t *testing.T) {
+	testIdleTimeout(t, cookie.Default())
+}
+
+func testIdleTimeout(t *testing.T, rv resolver.Resolver) {
 	t.Parallel()
 
-	sessionManager := NewManager()
+	sessionManager := NewManager(WithResolver(rv))
 	sessionManager.IdleTimeout = 200 * time.Millisecond
 	sessionManager.Lifetime = time.Second
 

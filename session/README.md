@@ -5,7 +5,7 @@
 [![Test coverage](http://gocover.io/_badge/github.com/alexedwards/scs)](https://gocover.io/github.com/alexedwards/scs)
 
 ## Important
-* This package is based on [scs-v2.6.0](github.com/alexedwards/scs).
+* This package is based on [scs-v2.6.0](https://github.com/alexedwards/scs).
 
 
 ## Features
