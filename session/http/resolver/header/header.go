@@ -27,7 +27,7 @@ func New(h string) resolver.Resolver {
 }
 
 func (v *rv) Resolve(m resolver.Manager, w http.ResponseWriter, r *http.Request, next http.Handler) error {
-	token := w.Header().Get(v.header)
+	token := r.Header.Get(v.header)
 
 	ctx, err := m.Load(r.Context(), token)
 	if err != nil {
@@ -63,7 +63,7 @@ func (v *rv) commitAndWriteSessionHeader(m resolver.Manager, w http.ResponseWrit
 			return
 		}
 
-		w.Header().Set(v.header, token)
+		w.Header().Add(v.header, token)
 	case session.Destroyed:
 		w.Header().Del(v.header)
 	}

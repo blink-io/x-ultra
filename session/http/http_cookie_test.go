@@ -44,8 +44,36 @@ func newTestServer(t *testing.T, h http.Handler) *testServer {
 	return &testServer{ts}
 }
 
+func (ts *testServer) executeWithHeaders(t *testing.T, urlPath string, headers map[string]string) (http.Header, string) {
+	req, err := http.NewRequest(http.MethodGet, ts.URL+urlPath, nil)
+	for h, v := range headers {
+		req.Header.Set(h, v)
+	}
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	rs, err := ts.Client().Do(req)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	defer rs.Body.Close()
+	body, err := io.ReadAll(rs.Body)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	return rs.Header, string(body)
+}
+
 func (ts *testServer) execute(t *testing.T, urlPath string) (http.Header, string) {
-	rs, err := ts.Client().Get(ts.URL + urlPath)
+	req, err := http.NewRequest(http.MethodGet, ts.URL+urlPath, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	rs, err := ts.Client().Do(req)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -64,7 +92,7 @@ func extractTokenFromCookie(c string) string {
 	return strings.SplitN(parts[0], "=", 2)[1]
 }
 
-func TestEnable(t *testing.T) {
+func TestEnable_Cookie(t *testing.T) {
 	t.Parallel()
 
 	sessionManager := NewManager()
@@ -99,7 +127,7 @@ func TestEnable(t *testing.T) {
 	}
 }
 
-func TestLifetime(t *testing.T) {
+func TestLifetime_Cookie(t *testing.T) {
 	t.Parallel()
 
 	sessionManager := NewManager()
@@ -136,13 +164,9 @@ func TestLifetime(t *testing.T) {
 }
 
 func TestIdleTimeout_Cookie(t *testing.T) {
-	testIdleTimeout(t, cookie.Default())
-}
-
-func testIdleTimeout(t *testing.T, rv resolver.Resolver) {
 	t.Parallel()
 
-	sessionManager := NewManager(WithResolver(rv))
+	sessionManager := NewManager(WithResolver(cookie.Default()))
 	sessionManager.IdleTimeout = 200 * time.Millisecond
 	sessionManager.Lifetime = time.Second
 
@@ -180,7 +204,7 @@ func testIdleTimeout(t *testing.T, rv resolver.Resolver) {
 	}
 }
 
-func TestDestroy(t *testing.T) {
+func TestDestroy_Cookie(t *testing.T) {
 	t.Parallel()
 
 	crv := newCookieResolver()
@@ -234,7 +258,7 @@ func TestDestroy(t *testing.T) {
 	}
 }
 
-func TestRenewToken(t *testing.T) {
+func TestRenewToken_Cookie(t *testing.T) {
 	t.Parallel()
 
 	sessionManager := NewManager()
@@ -280,7 +304,7 @@ func TestRenewToken(t *testing.T) {
 	}
 }
 
-func TestRememberMe(t *testing.T) {
+func TestRememberMe_Cookie(t *testing.T) {
 	t.Parallel()
 
 	csc := &cookie.DefaultSessionCookie
@@ -328,7 +352,7 @@ func TestRememberMe(t *testing.T) {
 	}
 }
 
-func TestIterate(t *testing.T) {
+func TestIterate_Cookie(t *testing.T) {
 	t.Parallel()
 
 	sessionManager := NewManager()
