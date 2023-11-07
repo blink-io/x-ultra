@@ -12,7 +12,7 @@ import (
 
 // SessionHandler holds the configuration settings for your sessions.
 type SessionHandler struct {
-	sm *session.Manager
+	sm session.Manager
 
 	rv resolver.Resolver
 
@@ -57,7 +57,7 @@ func (sh *SessionHandler) Handle(next http.Handler) http.Handler {
 	})
 }
 
-func (sh *SessionHandler) SessionManager() *session.Manager {
+func (sh *SessionHandler) SessionManager() session.Manager {
 	return sh.sm
 }
 

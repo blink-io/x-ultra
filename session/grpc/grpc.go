@@ -16,7 +16,7 @@ import (
 const DefaultHeader = "X-Auth-Token"
 
 type SessionHandler struct {
-	sm *session.Manager
+	sm session.Manager
 
 	header string
 

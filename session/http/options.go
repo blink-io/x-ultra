@@ -15,7 +15,7 @@ func WithResolver(rv resolver.Resolver) Option {
 	}
 }
 
-func WithSessionManager(sm *session.Manager) Option {
+func WithSessionManager(sm session.Manager) Option {
 	return func(sh *SessionHandler) {
 		sh.sm = sm
 	}

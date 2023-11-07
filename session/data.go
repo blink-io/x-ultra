@@ -50,7 +50,7 @@ func newSessionData(lifetime time.Duration) *sessionData {
 //
 // Most applications will use the Handle() middleware and will not need to
 // use this method.
-func (s *Manager) Load(ctx context.Context, token string) (context.Context, error) {
+func (s *manager) Load(ctx context.Context, token string) (context.Context, error) {
 	if _, ok := ctx.Value(s.contextKey).(*sessionData); ok {
 		return ctx, nil
 	}
@@ -89,7 +89,7 @@ func (s *Manager) Load(ctx context.Context, token string) (context.Context, erro
 //
 // Most applications will use the Handle() middleware and will not need to
 // use this method.
-func (s *Manager) Commit(ctx context.Context) (string, time.Time, error) {
+func (s *manager) Commit(ctx context.Context) (string, time.Time, error) {
 	sd := s.getSessionDataFromContext(ctx)
 
 	sd.mu.Lock()
@@ -125,7 +125,7 @@ func (s *Manager) Commit(ctx context.Context) (string, time.Time, error) {
 // Destroy deletes the session data from the session store and sets the session
 // status to Destroyed. Any further operations in the same request cycle will
 // result in a new session being created.
-func (s *Manager) Destroy(ctx context.Context) error {
+func (s *manager) Destroy(ctx context.Context) error {
 	sd := s.getSessionDataFromContext(ctx)
 
 	sd.mu.Lock()
@@ -151,7 +151,7 @@ func (s *Manager) Destroy(ctx context.Context) error {
 // Put adds a key and corresponding value to the session data. Any existing
 // value for the key will be replaced. The session data status will be set to
 // Modified.
-func (s *Manager) Put(ctx context.Context, key string, val interface{}) {
+func (s *manager) Put(ctx context.Context, key string, val interface{}) {
 	sd := s.getSessionDataFromContext(ctx)
 
 	sd.mu.Lock()
@@ -171,7 +171,7 @@ func (s *Manager) Put(ctx context.Context, key string, val interface{}) {
 //
 // Also see the GetString(), GetInt(), GetBytes() and other helper methods which
 // wrap the type conversion for common types.
-func (s *Manager) Get(ctx context.Context, key string) interface{} {
+func (s *manager) Get(ctx context.Context, key string) interface{} {
 	sd := s.getSessionDataFromContext(ctx)
 
 	sd.mu.Lock()
@@ -184,7 +184,7 @@ func (s *Manager) Get(ctx context.Context, key string) interface{} {
 // session data and deletes the key and value from the session data. The
 // session data status will be set to Modified. The return value has the type
 // interface{} so will usually need to be type asserted before you can use it.
-func (s *Manager) Pop(ctx context.Context, key string) interface{} {
+func (s *manager) Pop(ctx context.Context, key string) interface{} {
 	sd := s.getSessionDataFromContext(ctx)
 
 	sd.mu.Lock()
@@ -203,7 +203,7 @@ func (s *Manager) Pop(ctx context.Context, key string) interface{} {
 // Remove deletes the given key and corresponding value from the session data.
 // The session data status will be set to Modified. If the key is not present
 // this operation is a no-op.
-func (s *Manager) Remove(ctx context.Context, key string) {
+func (s *manager) Remove(ctx context.Context, key string) {
 	sd := s.getSessionDataFromContext(ctx)
 
 	sd.mu.Lock()
@@ -221,7 +221,7 @@ func (s *Manager) Remove(ctx context.Context, key string) {
 // Clear removes all data for the current session. The session token and
 // lifetime are unaffected. If there is no data in the current session this is
 // a no-op.
-func (s *Manager) Clear(ctx context.Context) error {
+func (s *manager) Clear(ctx context.Context) error {
 	sd := s.getSessionDataFromContext(ctx)
 
 	sd.mu.Lock()
@@ -239,7 +239,7 @@ func (s *Manager) Clear(ctx context.Context) error {
 }
 
 // Exists returns true if the given key is present in the session data.
-func (s *Manager) Exists(ctx context.Context, key string) bool {
+func (s *manager) Exists(ctx context.Context, key string) bool {
 	sd := s.getSessionDataFromContext(ctx)
 
 	sd.mu.Lock()
@@ -252,7 +252,7 @@ func (s *Manager) Exists(ctx context.Context, key string) bool {
 // Keys returns a slice of all key names present in the session data, sorted
 // alphabetically. If the data contains no data then an empty slice will be
 // returned.
-func (s *Manager) Keys(ctx context.Context) []string {
+func (s *manager) Keys(ctx context.Context) []string {
 	sd := s.getSessionDataFromContext(ctx)
 
 	sd.mu.Lock()
@@ -278,7 +278,7 @@ func (s *Manager) Keys(ctx context.Context) []string {
 // RenewToken before making any changes to privilege levels (e.g. login and
 // logout operations). See https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Session_Management_Cheat_Sheet.md#renew-the-session-id-after-any-privilege-level-change
 // for additional information.
-func (s *Manager) RenewToken(ctx context.Context) error {
+func (s *manager) RenewToken(ctx context.Context) error {
 	sd := s.getSessionDataFromContext(ctx)
 
 	sd.mu.Lock()
@@ -306,7 +306,7 @@ func (s *Manager) RenewToken(ctx context.Context) error {
 // MergeSession is used to merge in data from a different session in case strict
 // session tokens are lost across an oauth or similar redirect flows. Use Clear()
 // if no values of the new session are to be used.
-func (s *Manager) MergeSession(ctx context.Context, token string) error {
+func (s *manager) MergeSession(ctx context.Context, token string) error {
 	sd := s.getSessionDataFromContext(ctx)
 
 	b, found, err := s.doStoreFind(ctx, token)
@@ -342,7 +342,7 @@ func (s *Manager) MergeSession(ctx context.Context, token string) error {
 }
 
 // Status returns the current status of the session data.
-func (s *Manager) Status(ctx context.Context) Status {
+func (s *manager) Status(ctx context.Context) Status {
 	sd := s.getSessionDataFromContext(ctx)
 
 	sd.mu.Lock()
@@ -354,7 +354,7 @@ func (s *Manager) Status(ctx context.Context) Status {
 // GetString returns the string value for a given key from the session data.
 // The zero value for a string ("") is returned if the key does not exist or the
 // value could not be type asserted to a string.
-func (s *Manager) GetString(ctx context.Context, key string) string {
+func (s *manager) GetString(ctx context.Context, key string) string {
 	val := s.Get(ctx, key)
 	str, ok := val.(string)
 	if !ok {
@@ -366,7 +366,7 @@ func (s *Manager) GetString(ctx context.Context, key string) string {
 // GetBool returns the bool value for a given key from the session data. The
 // zero value for a bool (false) is returned if the key does not exist or the
 // value could not be type asserted to a bool.
-func (s *Manager) GetBool(ctx context.Context, key string) bool {
+func (s *manager) GetBool(ctx context.Context, key string) bool {
 	val := s.Get(ctx, key)
 	b, ok := val.(bool)
 	if !ok {
@@ -378,7 +378,7 @@ func (s *Manager) GetBool(ctx context.Context, key string) bool {
 // GetInt returns the int value for a given key from the session data. The
 // zero value for an int (0) is returned if the key does not exist or the
 // value could not be type asserted to an int.
-func (s *Manager) GetInt(ctx context.Context, key string) int {
+func (s *manager) GetInt(ctx context.Context, key string) int {
 	val := s.Get(ctx, key)
 	i, ok := val.(int)
 	if !ok {
@@ -390,7 +390,7 @@ func (s *Manager) GetInt(ctx context.Context, key string) int {
 // GetInt64 returns the int64 value for a given key from the session data. The
 // zero value for an int64 (0) is returned if the key does not exist or the
 // value could not be type asserted to an int64.
-func (s *Manager) GetInt64(ctx context.Context, key string) int64 {
+func (s *manager) GetInt64(ctx context.Context, key string) int64 {
 	val := s.Get(ctx, key)
 	i, ok := val.(int64)
 	if !ok {
@@ -402,7 +402,7 @@ func (s *Manager) GetInt64(ctx context.Context, key string) int64 {
 // GetInt32 returns the int value for a given key from the session data. The
 // zero value for an int32 (0) is returned if the key does not exist or the
 // value could not be type asserted to an int32.
-func (s *Manager) GetInt32(ctx context.Context, key string) int32 {
+func (s *manager) GetInt32(ctx context.Context, key string) int32 {
 	val := s.Get(ctx, key)
 	i, ok := val.(int32)
 	if !ok {
@@ -414,7 +414,7 @@ func (s *Manager) GetInt32(ctx context.Context, key string) int32 {
 // GetFloat returns the float64 value for a given key from the session data. The
 // zero value for float64 (0) is returned if the key does not exist or the
 // value could not be type asserted to a float64.
-func (s *Manager) GetFloat(ctx context.Context, key string) float64 {
+func (s *manager) GetFloat(ctx context.Context, key string) float64 {
 	val := s.Get(ctx, key)
 	f, ok := val.(float64)
 	if !ok {
@@ -426,7 +426,7 @@ func (s *Manager) GetFloat(ctx context.Context, key string) float64 {
 // GetBytes returns the byte slice ([]byte) value for a given key from the session
 // data. The zero value for a slice (nil) is returned if the key does not exist
 // or could not be type asserted to []byte.
-func (s *Manager) GetBytes(ctx context.Context, key string) []byte {
+func (s *manager) GetBytes(ctx context.Context, key string) []byte {
 	val := s.Get(ctx, key)
 	b, ok := val.([]byte)
 	if !ok {
@@ -439,7 +439,7 @@ func (s *Manager) GetBytes(ctx context.Context, key string) []byte {
 // zero value for a time.Time object is returned if the key does not exist or the
 // value could not be type asserted to a time.Time. This can be tested with the
 // time.IsZero() method.
-func (s *Manager) GetTime(ctx context.Context, key string) time.Time {
+func (s *manager) GetTime(ctx context.Context, key string) time.Time {
 	val := s.Get(ctx, key)
 	t, ok := val.(time.Time)
 	if !ok {
@@ -452,7 +452,7 @@ func (s *Manager) GetTime(ctx context.Context, key string) time.Time {
 // session data. The session data status will be set to Modified. The zero
 // value for a string ("") is returned if the key does not exist or the value
 // could not be type asserted to a string.
-func (s *Manager) PopString(ctx context.Context, key string) string {
+func (s *manager) PopString(ctx context.Context, key string) string {
 	val := s.Pop(ctx, key)
 	str, ok := val.(string)
 	if !ok {
@@ -465,7 +465,7 @@ func (s *Manager) PopString(ctx context.Context, key string) string {
 // session data. The session data status will be set to Modified. The zero
 // value for a bool (false) is returned if the key does not exist or the value
 // could not be type asserted to a bool.
-func (s *Manager) PopBool(ctx context.Context, key string) bool {
+func (s *manager) PopBool(ctx context.Context, key string) bool {
 	val := s.Pop(ctx, key)
 	b, ok := val.(bool)
 	if !ok {
@@ -478,7 +478,7 @@ func (s *Manager) PopBool(ctx context.Context, key string) bool {
 // session data. The session data status will be set to Modified. The zero
 // value for an int (0) is returned if the key does not exist or the value could
 // not be type asserted to an int.
-func (s *Manager) PopInt(ctx context.Context, key string) int {
+func (s *manager) PopInt(ctx context.Context, key string) int {
 	val := s.Pop(ctx, key)
 	i, ok := val.(int)
 	if !ok {
@@ -491,7 +491,7 @@ func (s *Manager) PopInt(ctx context.Context, key string) int {
 // session data. The session data status will be set to Modified. The zero
 // value for float64 (0) is returned if the key does not exist or the value
 // could not be type asserted to a float64.
-func (s *Manager) PopFloat(ctx context.Context, key string) float64 {
+func (s *manager) PopFloat(ctx context.Context, key string) float64 {
 	val := s.Pop(ctx, key)
 	f, ok := val.(float64)
 	if !ok {
@@ -504,7 +504,7 @@ func (s *Manager) PopFloat(ctx context.Context, key string) float64 {
 // deletes it from the session data. The session data status will be
 // set to Modified. The zero value for a slice (nil) is returned if the key does
 // not exist or could not be type asserted to []byte.
-func (s *Manager) PopBytes(ctx context.Context, key string) []byte {
+func (s *manager) PopBytes(ctx context.Context, key string) []byte {
 	val := s.Pop(ctx, key)
 	b, ok := val.([]byte)
 	if !ok {
@@ -517,7 +517,7 @@ func (s *Manager) PopBytes(ctx context.Context, key string) []byte {
 // the session data. The session data status will be set to Modified. The zero
 // value for a time.Time object is returned if the key does not exist or the
 // value could not be type asserted to a time.Time.
-func (s *Manager) PopTime(ctx context.Context, key string) time.Time {
+func (s *manager) PopTime(ctx context.Context, key string) time.Time {
 	val := s.Pop(ctx, key)
 	t, ok := val.(time.Time)
 	if !ok {
@@ -528,20 +528,20 @@ func (s *Manager) PopTime(ctx context.Context, key string) time.Time {
 
 // SetRememberMe controls whether the session cookie is persistent (whether it
 // is retained after a user closes their browser). SetRememberMe only has an effect
-// if you have set Manager.Cookie.Persist = false (the default is true) and
+// if you have set manager.Cookie.Persist = false (the default is true) and
 // you are using the standard Handle() middleware.
-func (s *Manager) SetRememberMe(ctx context.Context, key string, val bool) {
+func (s *manager) SetRememberMe(ctx context.Context, key string, val bool) {
 	s.Put(ctx, key, val)
 }
 
-func (s *Manager) IsRememberMe(ctx context.Context, key string) bool {
+func (s *manager) IsRememberMe(ctx context.Context, key string) bool {
 	return s.GetBool(ctx, key)
 }
 
 // Iterate retrieves all active (i.e. not expired) sessions from the store and
 // executes the provided function fn for each session. If the session store
 // being used does not support iteration then Iterate will panic.
-func (s *Manager) Iterate(ctx context.Context, fn func(context.Context) error) error {
+func (s *manager) Iterate(ctx context.Context, fn func(context.Context) error) error {
 	allSessions, err := s.doStoreAll(ctx)
 	if err != nil {
 		return err
@@ -572,7 +572,7 @@ func (s *Manager) Iterate(ctx context.Context, fn func(context.Context) error) e
 // Deadline returns the 'absolute' expiry time for the session. Please note
 // that if you are using an idle timeout, it is possible that a session will
 // expire due to non-use before the returned deadline.
-func (s *Manager) Deadline(ctx context.Context) time.Time {
+func (s *manager) Deadline(ctx context.Context) time.Time {
 	sd := s.getSessionDataFromContext(ctx)
 
 	sd.mu.Lock()
@@ -584,7 +584,7 @@ func (s *Manager) Deadline(ctx context.Context) time.Time {
 // Token returns the session token. Please note that this will return the
 // empty string "" if it is called before the session has been committed to
 // the store.
-func (s *Manager) Token(ctx context.Context) string {
+func (s *manager) Token(ctx context.Context) string {
 	sd := s.getSessionDataFromContext(ctx)
 
 	sd.mu.Lock()
@@ -593,11 +593,11 @@ func (s *Manager) Token(ctx context.Context) string {
 	return sd.token
 }
 
-func (s *Manager) addSessionDataToContext(ctx context.Context, sd *sessionData) context.Context {
+func (s *manager) addSessionDataToContext(ctx context.Context, sd *sessionData) context.Context {
 	return context.WithValue(ctx, s.contextKey, sd)
 }
 
-func (s *Manager) getSessionDataFromContext(ctx context.Context) *sessionData {
+func (s *manager) getSessionDataFromContext(ctx context.Context) *sessionData {
 	c, ok := ctx.Value(s.contextKey).(*sessionData)
 	if !ok {
 		panic("no session data in context")
@@ -628,18 +628,18 @@ func generateContextKey() contextKey {
 	return contextKey(fmt.Sprintf("session.%d", contextKeyID))
 }
 
-func (s *Manager) doStoreDelete(ctx context.Context, token string) (err error) {
+func (s *manager) doStoreDelete(ctx context.Context, token string) (err error) {
 	return s.Store.Delete(ctx, token)
 }
 
-func (s *Manager) doStoreFind(ctx context.Context, token string) (b []byte, found bool, err error) {
+func (s *manager) doStoreFind(ctx context.Context, token string) (b []byte, found bool, err error) {
 	return s.Store.Find(ctx, token)
 }
 
-func (s *Manager) doStoreCommit(ctx context.Context, token string, b []byte, expiry time.Time) (err error) {
+func (s *manager) doStoreCommit(ctx context.Context, token string, b []byte, expiry time.Time) (err error) {
 	return s.Store.Commit(ctx, token, b, expiry)
 }
 
-func (s *Manager) doStoreAll(ctx context.Context) (map[string][]byte, error) {
+func (s *manager) doStoreAll(ctx context.Context) (map[string][]byte, error) {
 	return s.Store.All(ctx)
 }

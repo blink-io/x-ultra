@@ -44,6 +44,10 @@ func New() interface {
 	ExpectFind(string, []byte, bool, error)
 	ExpectCommit(string, []byte, time.Time, error)
 } {
+	return newRaw()
+}
+
+func newRaw() *istore {
 	return &istore{}
 }
 

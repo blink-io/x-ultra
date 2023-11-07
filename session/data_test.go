@@ -21,7 +21,7 @@ func TestSessionDataFromContext(t *testing.T) {
 		}
 	}()
 
-	s := NewManager()
+	s := newManager()
 	s.getSessionDataFromContext(context.Background())
 }
 
@@ -29,7 +29,7 @@ func TestSessionManager_Load(T *testing.T) {
 	T.Parallel()
 
 	T.Run("happy path", func(t *testing.T) {
-		s := NewManager()
+		s := newManager()
 		s.IdleTimeout = time.Hour * 24
 
 		ctx := context.Background()
@@ -72,7 +72,7 @@ func TestSessionManager_Load(T *testing.T) {
 	})
 
 	T.Run("with preexisting session data", func(t *testing.T) {
-		s := NewManager()
+		s := newManager()
 
 		obligatorySessionData := &sessionData{}
 		ctx := context.WithValue(context.Background(), s.contextKey, obligatorySessionData)
@@ -88,7 +88,7 @@ func TestSessionManager_Load(T *testing.T) {
 	})
 
 	T.Run("with empty token", func(t *testing.T) {
-		s := NewManager()
+		s := newManager()
 
 		ctx := context.Background()
 		expected := ""
@@ -130,7 +130,7 @@ func TestSessionManager_Load(T *testing.T) {
 	})
 
 	T.Run("with error finding token in store", func(t *testing.T) {
-		s := NewManager()
+		s := newManager()
 		store := mock.New()
 
 		ctx := context.Background()
@@ -149,7 +149,7 @@ func TestSessionManager_Load(T *testing.T) {
 	})
 
 	T.Run("with not-found token in store", func(t *testing.T) {
-		s := NewManager()
+		s := newManager()
 
 		ctx := context.Background()
 		exampleToken := "example"
@@ -180,7 +180,7 @@ func TestSessionManager_Load(T *testing.T) {
 	})
 
 	T.Run("with error decoding found token", func(t *testing.T) {
-		s := NewManager()
+		s := newManager()
 
 		ctx := context.Background()
 		expected := "example"
@@ -204,7 +204,7 @@ func TestSessionManager_Commit(T *testing.T) {
 	T.Parallel()
 
 	T.Run("happy path", func(t *testing.T) {
-		s := NewManager()
+		s := newManager()
 		s.IdleTimeout = time.Hour * 24
 
 		expectedToken := "example"
@@ -232,7 +232,7 @@ func TestSessionManager_Commit(T *testing.T) {
 	})
 
 	T.Run("with empty token", func(t *testing.T) {
-		s := NewManager()
+		s := newManager()
 		s.IdleTimeout = time.Hour * 24
 
 		expectedToken := "XO6_D4NBpGP3D_BtekxTEO6o2ZvOzYnArauSQbgg"
@@ -260,7 +260,7 @@ func TestSessionManager_Commit(T *testing.T) {
 	})
 
 	T.Run("with expired deadline", func(t *testing.T) {
-		s := NewManager()
+		s := newManager()
 		s.IdleTimeout = time.Millisecond
 
 		expectedToken := "example"
@@ -288,7 +288,7 @@ func TestSessionManager_Commit(T *testing.T) {
 	})
 
 	T.Run("with error committing to store", func(t *testing.T) {
-		s := NewManager()
+		s := newManager()
 		s.IdleTimeout = time.Hour * 24
 
 		store := mock.New()
@@ -325,7 +325,7 @@ func TestSessionManager_Commit(T *testing.T) {
 func TestPut(t *testing.T) {
 	t.Parallel()
 
-	s := NewManager()
+	s := newManager()
 	sd := newSessionData(time.Hour)
 	ctx := s.addSessionDataToContext(context.Background(), sd)
 
@@ -343,7 +343,7 @@ func TestPut(t *testing.T) {
 func TestGet(t *testing.T) {
 	t.Parallel()
 
-	s := NewManager()
+	s := newManager()
 	sd := newSessionData(time.Hour)
 	sd.values["foo"] = "bar"
 	ctx := s.addSessionDataToContext(context.Background(), sd)
@@ -361,7 +361,7 @@ func TestGet(t *testing.T) {
 func TestPop(t *testing.T) {
 	t.Parallel()
 
-	s := NewManager()
+	s := newManager()
 	sd := newSessionData(time.Hour)
 	sd.values["foo"] = "bar"
 	ctx := s.addSessionDataToContext(context.Background(), sd)
@@ -388,7 +388,7 @@ func TestPop(t *testing.T) {
 func TestRemove(t *testing.T) {
 	t.Parallel()
 
-	s := NewManager()
+	s := newManager()
 	sd := newSessionData(time.Hour)
 	sd.values["foo"] = "bar"
 	ctx := s.addSessionDataToContext(context.Background(), sd)
@@ -407,7 +407,7 @@ func TestRemove(t *testing.T) {
 func TestClear(t *testing.T) {
 	t.Parallel()
 
-	s := NewManager()
+	s := newManager()
 	sd := newSessionData(time.Hour)
 	sd.values["foo"] = "bar"
 	sd.values["baz"] = "boz"
@@ -433,7 +433,7 @@ func TestClear(t *testing.T) {
 func TestExists(t *testing.T) {
 	t.Parallel()
 
-	s := NewManager()
+	s := newManager()
 	sd := newSessionData(time.Hour)
 	sd.values["foo"] = "bar"
 	ctx := s.addSessionDataToContext(context.Background(), sd)
@@ -450,7 +450,7 @@ func TestExists(t *testing.T) {
 func TestKeys(t *testing.T) {
 	t.Parallel()
 
-	s := NewManager()
+	s := newManager()
 	sd := newSessionData(time.Hour)
 	sd.values["foo"] = "bar"
 	sd.values["woo"] = "waa"
@@ -465,7 +465,7 @@ func TestKeys(t *testing.T) {
 func TestGetString(t *testing.T) {
 	t.Parallel()
 
-	s := NewManager()
+	s := newManager()
 	sd := newSessionData(time.Hour)
 	sd.values["foo"] = "bar"
 	ctx := s.addSessionDataToContext(context.Background(), sd)
@@ -484,7 +484,7 @@ func TestGetString(t *testing.T) {
 func TestGetBool(t *testing.T) {
 	t.Parallel()
 
-	s := NewManager()
+	s := newManager()
 	sd := newSessionData(time.Hour)
 	sd.values["foo"] = true
 	ctx := s.addSessionDataToContext(context.Background(), sd)
@@ -503,7 +503,7 @@ func TestGetBool(t *testing.T) {
 func TestGetInt(t *testing.T) {
 	t.Parallel()
 
-	s := NewManager()
+	s := newManager()
 	sd := newSessionData(time.Hour)
 	sd.values["foo"] = 123
 	ctx := s.addSessionDataToContext(context.Background(), sd)
@@ -522,7 +522,7 @@ func TestGetInt(t *testing.T) {
 func TestGetFloat(t *testing.T) {
 	t.Parallel()
 
-	s := NewManager()
+	s := newManager()
 	sd := newSessionData(time.Hour)
 	sd.values["foo"] = 123.456
 	ctx := s.addSessionDataToContext(context.Background(), sd)
@@ -541,7 +541,7 @@ func TestGetFloat(t *testing.T) {
 func TestGetBytes(t *testing.T) {
 	t.Parallel()
 
-	s := NewManager()
+	s := newManager()
 	sd := newSessionData(time.Hour)
 	sd.values["foo"] = []byte("bar")
 	ctx := s.addSessionDataToContext(context.Background(), sd)
@@ -562,7 +562,7 @@ func TestGetTime(t *testing.T) {
 
 	now := time.Now()
 
-	s := NewManager()
+	s := newManager()
 	sd := newSessionData(time.Hour)
 	sd.values["foo"] = now
 	ctx := s.addSessionDataToContext(context.Background(), sd)
@@ -581,7 +581,7 @@ func TestGetTime(t *testing.T) {
 func TestPopString(t *testing.T) {
 	t.Parallel()
 
-	s := NewManager()
+	s := newManager()
 	sd := newSessionData(time.Hour)
 	sd.values["foo"] = "bar"
 	ctx := s.addSessionDataToContext(context.Background(), sd)
@@ -609,7 +609,7 @@ func TestPopString(t *testing.T) {
 func TestPopBool(t *testing.T) {
 	t.Parallel()
 
-	s := NewManager()
+	s := newManager()
 	sd := newSessionData(time.Hour)
 	sd.values["foo"] = true
 	ctx := s.addSessionDataToContext(context.Background(), sd)
@@ -637,7 +637,7 @@ func TestPopBool(t *testing.T) {
 func TestPopInt(t *testing.T) {
 	t.Parallel()
 
-	s := NewManager()
+	s := newManager()
 	sd := newSessionData(time.Hour)
 	sd.values["foo"] = 123
 	ctx := s.addSessionDataToContext(context.Background(), sd)
@@ -665,7 +665,7 @@ func TestPopInt(t *testing.T) {
 func TestPopFloat(t *testing.T) {
 	t.Parallel()
 
-	s := NewManager()
+	s := newManager()
 	sd := newSessionData(time.Hour)
 	sd.values["foo"] = 123.456
 	ctx := s.addSessionDataToContext(context.Background(), sd)
@@ -693,7 +693,7 @@ func TestPopFloat(t *testing.T) {
 func TestPopBytes(t *testing.T) {
 	t.Parallel()
 
-	s := NewManager()
+	s := newManager()
 	sd := newSessionData(time.Hour)
 	sd.values["foo"] = []byte("bar")
 	ctx := s.addSessionDataToContext(context.Background(), sd)
@@ -721,7 +721,7 @@ func TestPopTime(t *testing.T) {
 	t.Parallel()
 
 	now := time.Now()
-	s := NewManager()
+	s := newManager()
 	sd := newSessionData(time.Hour)
 	sd.values["foo"] = now
 	ctx := s.addSessionDataToContext(context.Background(), sd)
@@ -750,7 +750,7 @@ func TestPopTime(t *testing.T) {
 func TestStatus(t *testing.T) {
 	t.Parallel()
 
-	s := NewManager()
+	s := newManager()
 	sd := newSessionData(time.Hour)
 	ctx := s.addSessionDataToContext(context.Background(), sd)
 

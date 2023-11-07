@@ -17,18 +17,14 @@ type istore struct {
 
 // New returns a new store instance. The client parameter should be a pointer
 // to a go-redis connection.
-func New(client redis.UniversalClient) interface {
-	store.Store
-} {
+func New(client redis.UniversalClient) store.Store {
 	return NewWithPrefix(client, store.DefaultPrefix)
 }
 
 // NewWithPrefix returns a new store instance. The pool parameter should be a pointer
 // to a redigo connection pool. The prefix parameter controls the Redis key
 // prefix, which can be used to avoid naming clashes if necessary.
-func NewWithPrefix(client redis.UniversalClient, prefix string) interface {
-	store.Store
-} {
+func NewWithPrefix(client redis.UniversalClient, prefix string) store.Store {
 	return newRawWithPrefix(client, prefix)
 }
 
