@@ -26,7 +26,7 @@ func New(h string) resolver.Resolver {
 	}
 }
 
-func (v *rv) Resolve(m resolver.Manager, w http.ResponseWriter, r *http.Request, next http.Handler) error {
+func (v *rv) Resolve(m resolver.Manager, ef resolver.ErrorFunc, w http.ResponseWriter, r *http.Request, next http.Handler) error {
 	token := r.Header.Get(v.header)
 
 	ctx, err := m.Load(r.Context(), token)
@@ -38,7 +38,7 @@ func (v *rv) Resolve(m resolver.Manager, w http.ResponseWriter, r *http.Request,
 
 	sw := &SessionResponseWriter{
 		CommitAndWriteSession: func(w http.ResponseWriter, r *http.Request) {
-			v.commitAndWriteSessionHeader(m, w, sr)
+			v.commitAndWriteSessionHeader(m, ef, w, sr)
 		},
 		ResponseWriter: w,
 		Request:        sr,
@@ -47,19 +47,19 @@ func (v *rv) Resolve(m resolver.Manager, w http.ResponseWriter, r *http.Request,
 	next.ServeHTTP(sw, sr)
 
 	if !sw.IsWritten() {
-		v.commitAndWriteSessionHeader(m, w, sr)
+		v.commitAndWriteSessionHeader(m, ef, w, sr)
 	}
 	return nil
 }
 
-func (v *rv) commitAndWriteSessionHeader(m resolver.Manager, w http.ResponseWriter, r *http.Request) {
+func (v *rv) commitAndWriteSessionHeader(m resolver.Manager, ef resolver.ErrorFunc, w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	switch m.Status(ctx) {
 	case session.Modified:
 		token, _, err := m.Commit(ctx)
 		if err != nil {
-			m.ErrorFunc(w, r, err)
+			ef(w, r, err)
 			return
 		}
 

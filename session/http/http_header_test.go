@@ -1,10 +1,13 @@
 package http
 
 import (
+	"errors"
 	"net/http"
 	"testing"
 	"time"
 
+	"github.com/blink-io/x/session"
+	"github.com/blink-io/x/session/http/resolver/cookie"
 	headerrv "github.com/blink-io/x/session/http/resolver/header"
 )
 
@@ -16,14 +19,14 @@ func TestEnable_Header(t *testing.T) {
 	t.Parallel()
 
 	rv := headerrv.Default()
-	sessionManager := NewManager(WithResolver(rv))
+	sessionManager := NewSessionHandler(WithResolver(rv))
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/put", func(w http.ResponseWriter, r *http.Request) {
-		sessionManager.Put(r.Context(), "foo", "bar")
+		doSessionManagerPut(r, "foo", "bar")
 	})
 	mux.HandleFunc("/get", func(w http.ResponseWriter, r *http.Request) {
-		s := sessionManager.Get(r.Context(), "foo").(string)
+		s := doSessionManagerGet(r, "foo").(string)
 		w.Write([]byte(s))
 	})
 
@@ -56,15 +59,21 @@ func TestLifetime_Header(t *testing.T) {
 	t.Parallel()
 
 	rv := headerrv.Default()
-	sessionManager := NewManager(WithResolver(rv))
-	sessionManager.Lifetime = 500 * time.Millisecond
+	sm := session.NewManager(session.Lifetime(500 * time.Millisecond))
+	sh := NewSessionHandler(
+		WithResolver(rv),
+		WithSessionManager(sm),
+	)
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/put", func(w http.ResponseWriter, r *http.Request) {
-		sessionManager.Put(r.Context(), "foo", "bar")
+		sm, ok := session.FromContext(r.Context())
+		if ok {
+			sm.Put(r.Context(), "foo", "bar")
+		}
 	})
 	mux.HandleFunc("/get", func(w http.ResponseWriter, r *http.Request) {
-		v := sessionManager.Get(r.Context(), "foo")
+		v := doSessionManagerGet(r, "foo")
 		if v == nil {
 			http.Error(w, "foo does not exist in session", 500)
 			return
@@ -72,7 +81,7 @@ func TestLifetime_Header(t *testing.T) {
 		w.Write([]byte(v.(string)))
 	})
 
-	ts := newTestServer(t, sessionManager.Handle(mux))
+	ts := newTestServer(t, sh.Handle(mux))
 	defer ts.Close()
 
 	header1, _ := ts.execute(t, "/put")
@@ -96,21 +105,22 @@ func TestRenewToken_Header(t *testing.T) {
 	t.Parallel()
 
 	rv := headerrv.Default()
-	sessionManager := NewManager(WithResolver(rv))
+	sessionManager := NewSessionHandler(WithResolver(rv))
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/put", func(w http.ResponseWriter, r *http.Request) {
-		sessionManager.Put(r.Context(), "foo", "bar")
+		doSessionManagerPut(r, "foo", "bar")
+
 	})
 	mux.HandleFunc("/renew", func(w http.ResponseWriter, r *http.Request) {
-		err := sessionManager.RenewToken(r.Context())
+		err := doSessionManagerRenewToken(r)
 		if err != nil {
 			http.Error(w, err.Error(), 500)
 			return
 		}
 	})
 	mux.HandleFunc("/get", func(w http.ResponseWriter, r *http.Request) {
-		v := sessionManager.Get(r.Context(), "foo")
+		v := doSessionManagerGet(r, "foo")
 		if v == nil {
 			http.Error(w, "foo does not exist in session", 500)
 			return
@@ -140,26 +150,28 @@ func TestRenewToken_Header(t *testing.T) {
 		t.Errorf("want %q; got %q", "bar", body)
 	}
 }
+
 func TestDestroy_Header(t *testing.T) {
 	t.Parallel()
 
 	rv := headerrv.Default()
-	sessionManager := NewManager(WithResolver(rv))
+	sessionManager := NewSessionHandler(WithResolver(rv))
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/put", func(w http.ResponseWriter, r *http.Request) {
-		sessionManager.Put(r.Context(), "foo", "bar")
+		doSessionManagerPut(r, "foo", "bar")
 	})
 	mux.HandleFunc("/destroy", func(w http.ResponseWriter, r *http.Request) {
 		headerrv.Default()
-		err := sessionManager.Destroy(r.Context())
+		err := doSessionManagerDestroy(r)
 		if err != nil {
 			http.Error(w, err.Error(), 500)
 			return
 		}
 	})
 	mux.HandleFunc("/get", func(w http.ResponseWriter, r *http.Request) {
-		v := sessionManager.Get(r.Context(), "foo")
+		//v := sessionManager.Get(r.Context(), "foo")
+		v := doSessionManagerGet(r, "foo")
 		if v == nil {
 			http.Error(w, "foo does not exist in session", 500)
 			return
@@ -186,4 +198,46 @@ func TestDestroy_Header(t *testing.T) {
 	if body != "foo does not exist in session\n" {
 		t.Errorf("want %q; got %q", "foo does not exist in session\n", body)
 	}
+}
+
+func doSessionManagerPut(r *http.Request, key string, val any) {
+	sm, ok := session.FromContext(r.Context())
+	if ok {
+		sm.Put(r.Context(), key, val)
+	}
+}
+
+func doSessionManagerGet(r *http.Request, key string) any {
+	sm, ok := session.FromContext(r.Context())
+	if ok {
+		return sm.Get(r.Context(), key)
+	}
+	return errNoSessionManager
+}
+
+var errNoSessionManager = errors.New("no http session manager")
+
+func doSessionManagerRenewToken(r *http.Request) error {
+	sm, ok := session.FromContext(r.Context())
+	if ok {
+		return sm.RenewToken(r.Context())
+	}
+	return errNoSessionManager
+}
+
+func doSessionManagerDestroy(r *http.Request) error {
+	sm, ok := session.FromContext(r.Context())
+	if ok {
+		return sm.Destroy(r.Context())
+	}
+	return errNoSessionManager
+}
+
+func doSessionManagerSetRememberMe(r *http.Request, okme bool) error {
+	sm, ok := session.FromContext(r.Context())
+	if ok {
+		sm.SetRememberMe(r.Context(), cookie.DefaultRememberMe, okme)
+		return nil
+	}
+	return errNoSessionManager
 }

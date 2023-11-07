@@ -6,9 +6,13 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
-func ValueFromContext(ctx context.Context, key string) string {
+func SingleValueFromContext(ctx context.Context, key string) string {
 	if vals := metadata.ValueFromIncomingContext(ctx, key); len(vals) > 0 {
 		return vals[0]
 	}
 	return ""
+}
+
+func MultipleValuesFromContext(ctx context.Context, key string) []string {
+	return metadata.ValueFromIncomingContext(ctx, key)
 }

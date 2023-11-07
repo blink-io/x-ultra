@@ -10,30 +10,28 @@ import (
 	"github.com/blink-io/x/session/http/resolver/cookie"
 )
 
-type sm = session.Manager
-
-// Manager holds the configuration settings for your sessions.
-type Manager struct {
-	*sm
+// SessionHandler holds the configuration settings for your sessions.
+type SessionHandler struct {
+	sm *session.Manager
 
 	rv resolver.Resolver
 
-	// ErrorFunc allows you to control behavior when an error is encountered by
+	// ef allows you to control behavior when an error is encountered by
 	// the Handle middleware. The default behavior is for HTTP 500
 	// "Internal Server Error" message to be sent to the client and the error
 	// logged using Go's standard logger. If a custom ErrorFunc is set, then
 	// control will be passed to this instead. A typical use would be to provide
 	// a function which logs the error and returns a customized HTML error page.
-	errorFunc func(http.ResponseWriter, *http.Request, error)
+	ef func(http.ResponseWriter, *http.Request, error)
 }
 
-// NewManager returns a new session manager with the default options. It is safe for
+// NewSessionHandler returns a new session manager with the default options. It is safe for
 // concurrent use.
-func NewManager(ops ...Option) *Manager {
-	m := &Manager{
-		sm:        session.NewManager(),
-		rv:        cookie.Default(),
-		errorFunc: defaultErrorFunc,
+func NewSessionHandler(ops ...Option) *SessionHandler {
+	m := &SessionHandler{
+		sm: session.NewManager(),
+		rv: cookie.Default(),
+		ef: defaultErrorFunc,
 	}
 	for _, o := range ops {
 		o(m)
@@ -44,20 +42,23 @@ func NewManager(ops ...Option) *Manager {
 // Handle provides middleware which automatically loads and saves session
 // data for the current request, and communicates the session token to and from
 // the client in a cookie.
-func (s *Manager) Handle(next http.Handler) http.Handler {
+func (sh *SessionHandler) Handle(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if s.rv == nil {
-			s.ErrorFunc(w, r, errors.New("http session resolver is required"))
+		if sh.rv == nil {
+			sh.ef(w, r, errors.New("http session resolver is required"))
 		} else {
-			err := s.rv.Resolve(s, w, r, next)
+			nctx := session.NewContext(r.Context(), sh.sm)
+			nr := r.WithContext(nctx)
+			err := sh.rv.Resolve(sh.sm, sh.ef, w, nr, next)
 			if err != nil {
-				s.ErrorFunc(w, r, err)
+				sh.ef(w, r, err)
 			}
 		}
 	})
 }
-func (s *Manager) ErrorFunc(w http.ResponseWriter, r *http.Request, err error) {
-	s.errorFunc(w, r, err)
+
+func (sh *SessionHandler) SessionManager() *session.Manager {
+	return sh.sm
 }
 
 func defaultErrorFunc(w http.ResponseWriter, r *http.Request, err error) {

@@ -82,7 +82,7 @@ func New(sc SessionCookie) resolver.Resolver {
 	}
 }
 
-func (v *rv) Resolve(m resolver.Manager, w http.ResponseWriter, r *http.Request, next http.Handler) error {
+func (v *rv) Resolve(m resolver.Manager, ef resolver.ErrorFunc, w http.ResponseWriter, r *http.Request, next http.Handler) error {
 	w.Header().Add("Vary", "Cookie")
 
 	var token string
@@ -102,14 +102,14 @@ func (v *rv) Resolve(m resolver.Manager, w http.ResponseWriter, r *http.Request,
 		ResponseWriter: w,
 		Request:        sr,
 		CommitAndWriteSession: func(w http.ResponseWriter, r *http.Request) {
-			v.commitAndWriteSessionCookie(m, w, sr)
+			v.commitAndWriteSessionCookie(m, ef, w, sr)
 		},
 	}
 
 	next.ServeHTTP(sw, sr)
 
 	if !sw.IsWritten() {
-		v.commitAndWriteSessionCookie(m, w, sr)
+		v.commitAndWriteSessionCookie(m, ef, w, sr)
 	}
 	return nil
 }
@@ -117,14 +117,14 @@ func (v *rv) SessionCookie() SessionCookie {
 	return v.Cookie
 }
 
-func (v *rv) commitAndWriteSessionCookie(m resolver.Manager, w http.ResponseWriter, r *http.Request) {
+func (v *rv) commitAndWriteSessionCookie(m resolver.Manager, ef resolver.ErrorFunc, w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	switch m.Status(ctx) {
 	case session.Modified:
 		token, expiry, err := m.Commit(ctx)
 		if err != nil {
-			m.ErrorFunc(w, r, err)
+			ef(w, r, err)
 			return
 		}
 

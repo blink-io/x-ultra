@@ -8,8 +8,10 @@ import (
 	"github.com/blink-io/x/session"
 )
 
+type ErrorFunc func(http.ResponseWriter, *http.Request, error)
+
 type Resolver interface {
-	Resolve(m Manager, w http.ResponseWriter, r *http.Request, next http.Handler) error
+	Resolve(m Manager, ef ErrorFunc, w http.ResponseWriter, r *http.Request, next http.Handler) error
 }
 
 type Manager interface {
@@ -18,5 +20,4 @@ type Manager interface {
 	Status(context.Context) session.Status
 	Commit(context.Context) (string, time.Time, error)
 	Load(context.Context, string) (context.Context, error)
-	ErrorFunc(http.ResponseWriter, *http.Request, error)
 }

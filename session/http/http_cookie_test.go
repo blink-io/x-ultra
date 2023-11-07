@@ -15,6 +15,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/blink-io/x/session"
 	"github.com/blink-io/x/session/http/resolver"
 	"github.com/blink-io/x/session/http/resolver/cookie"
 	"github.com/stretchr/testify/require"
@@ -95,14 +96,14 @@ func extractTokenFromCookie(c string) string {
 func TestEnable_Cookie(t *testing.T) {
 	t.Parallel()
 
-	sessionManager := NewManager()
+	sessionManager := NewSessionHandler()
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/put", func(w http.ResponseWriter, r *http.Request) {
-		sessionManager.Put(r.Context(), "foo", "bar")
+		doSessionManagerPut(r, "foo", "bar")
 	})
 	mux.HandleFunc("/get", func(w http.ResponseWriter, r *http.Request) {
-		s := sessionManager.Get(r.Context(), "foo").(string)
+		s := doSessionManagerGet(r, "foo").(string)
 		w.Write([]byte(s))
 	})
 
@@ -130,15 +131,17 @@ func TestEnable_Cookie(t *testing.T) {
 func TestLifetime_Cookie(t *testing.T) {
 	t.Parallel()
 
-	sessionManager := NewManager()
-	sessionManager.Lifetime = 500 * time.Millisecond
+	sm := session.NewManager(session.Lifetime(500 * time.Millisecond))
+	sessionManager := NewSessionHandler(WithSessionManager(sm))
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/put", func(w http.ResponseWriter, r *http.Request) {
-		sessionManager.Put(r.Context(), "foo", "bar")
+		//sessionManager.Put(r.Context(), "foo", "bar")
+		doSessionManagerPut(r, "foo", "bar")
 	})
 	mux.HandleFunc("/get", func(w http.ResponseWriter, r *http.Request) {
-		v := sessionManager.Get(r.Context(), "foo")
+		//v := sessionManager.Get(r.Context(), "foo")
+		v := doSessionManagerGet(r, "foo")
 		if v == nil {
 			http.Error(w, "foo does not exist in session", 500)
 			return
@@ -166,16 +169,24 @@ func TestLifetime_Cookie(t *testing.T) {
 func TestIdleTimeout_Cookie(t *testing.T) {
 	t.Parallel()
 
-	sessionManager := NewManager(WithResolver(cookie.Default()))
-	sessionManager.IdleTimeout = 200 * time.Millisecond
-	sessionManager.Lifetime = time.Second
+	sm := session.NewManager(
+		session.IdleTimeout(200*time.Millisecond),
+		session.Lifetime(time.Second),
+	)
+
+	sessionManager := NewSessionHandler(
+		WithSessionManager(sm),
+		WithErrorFunc(defaultErrorFunc),
+		WithResolver(cookie.Default()),
+	)
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/put", func(w http.ResponseWriter, r *http.Request) {
-		sessionManager.Put(r.Context(), "foo", "bar")
+		doSessionManagerPut(r, "foo", "bar")
 	})
+
 	mux.HandleFunc("/get", func(w http.ResponseWriter, r *http.Request) {
-		v := sessionManager.Get(r.Context(), "foo")
+		v := doSessionManagerGet(r, "foo")
 		if v == nil {
 			http.Error(w, "foo does not exist in session", 500)
 			return
@@ -208,7 +219,7 @@ func TestDestroy_Cookie(t *testing.T) {
 	t.Parallel()
 
 	crv := newCookieResolver()
-	sessionManager := NewManager(WithResolver(crv))
+	sessionManager := NewSessionHandler(WithResolver(crv))
 
 	rv, ok := crv.(interface {
 		SessionCookie() cookie.SessionCookie
@@ -217,17 +228,17 @@ func TestDestroy_Cookie(t *testing.T) {
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/put", func(w http.ResponseWriter, r *http.Request) {
-		sessionManager.Put(r.Context(), "foo", "bar")
+		doSessionManagerPut(r, "foo", "bar")
 	})
 	mux.HandleFunc("/destroy", func(w http.ResponseWriter, r *http.Request) {
-		err := sessionManager.Destroy(r.Context())
+		err := doSessionManagerDestroy(r)
 		if err != nil {
 			http.Error(w, err.Error(), 500)
 			return
 		}
 	})
 	mux.HandleFunc("/get", func(w http.ResponseWriter, r *http.Request) {
-		v := sessionManager.Get(r.Context(), "foo")
+		v := doSessionManagerGet(r, "foo")
 		if v == nil {
 			http.Error(w, "foo does not exist in session", 500)
 			return
@@ -261,21 +272,21 @@ func TestDestroy_Cookie(t *testing.T) {
 func TestRenewToken_Cookie(t *testing.T) {
 	t.Parallel()
 
-	sessionManager := NewManager()
+	sessionManager := NewSessionHandler()
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/put", func(w http.ResponseWriter, r *http.Request) {
-		sessionManager.Put(r.Context(), "foo", "bar")
+		doSessionManagerPut(r, "foo", "bar")
 	})
 	mux.HandleFunc("/renew", func(w http.ResponseWriter, r *http.Request) {
-		err := sessionManager.RenewToken(r.Context())
+		err := doSessionManagerRenewToken(r)
 		if err != nil {
 			http.Error(w, err.Error(), 500)
 			return
 		}
 	})
 	mux.HandleFunc("/get", func(w http.ResponseWriter, r *http.Request) {
-		v := sessionManager.Get(r.Context(), "foo")
+		v := doSessionManagerGet(r, "foo")
 		if v == nil {
 			http.Error(w, "foo does not exist in session", 500)
 			return
@@ -312,22 +323,28 @@ func TestRememberMe_Cookie(t *testing.T) {
 
 	crv := cookie.New(*csc)
 
-	sessionManager := NewManager(WithResolver(crv))
+	sh := NewSessionHandler(WithResolver(crv))
 
 	mux := http.NewServeMux()
-	mux.HandleFunc("/put-normal", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		sessionManager.Put(r.Context(), "foo", "bar")
-	}))
-	mux.HandleFunc("/put-rememberMe-true", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		sessionManager.SetRememberMe(r.Context(), cookie.DefaultRememberMe, true)
-		sessionManager.Put(r.Context(), "foo", "bar")
-	}))
-	mux.HandleFunc("/put-rememberMe-false", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		sessionManager.SetRememberMe(r.Context(), cookie.DefaultRememberMe, false)
-		sessionManager.Put(r.Context(), "foo", "bar")
-	}))
+	mux.HandleFunc("/put-normal", func(w http.ResponseWriter, r *http.Request) {
+		doSessionManagerPut(r, "foo", "bar")
+	})
+	mux.HandleFunc("/put-rememberMe-true", func(w http.ResponseWriter, r *http.Request) {
+		if err := doSessionManagerSetRememberMe(r, true); err != nil {
+			http.Error(w, err.Error(), 500)
+			return
+		}
+		doSessionManagerPut(r, "foo", "bar")
+	})
+	mux.HandleFunc("/put-rememberMe-false", func(w http.ResponseWriter, r *http.Request) {
+		if err := doSessionManagerSetRememberMe(r, false); err != nil {
+			http.Error(w, err.Error(), 500)
+			return
+		}
+		doSessionManagerPut(r, "foo", "bar")
+	})
 
-	ts := newTestServer(t, sessionManager.Handle(mux))
+	ts := newTestServer(t, sh.Handle(mux))
 	defer ts.Close()
 
 	header, _ := ts.execute(t, "/put-normal")
@@ -355,15 +372,16 @@ func TestRememberMe_Cookie(t *testing.T) {
 func TestIterate_Cookie(t *testing.T) {
 	t.Parallel()
 
-	sessionManager := NewManager()
+	sh := NewSessionHandler()
+	sm := sh.SessionManager()
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/put", func(w http.ResponseWriter, r *http.Request) {
-		sessionManager.Put(r.Context(), "foo", r.URL.Query().Get("foo"))
+		doSessionManagerPut(r, "foo", r.URL.Query().Get("foo"))
 	})
 
 	for i := 0; i < 3; i++ {
-		ts := newTestServer(t, sessionManager.Handle(mux))
+		ts := newTestServer(t, sh.Handle(mux))
 		defer ts.Close()
 
 		ts.execute(t, "/put?foo="+strconv.Itoa(i))
@@ -371,8 +389,8 @@ func TestIterate_Cookie(t *testing.T) {
 
 	results := []string{}
 
-	err := sessionManager.Iterate(context.Background(), func(ctx context.Context) error {
-		i := sessionManager.GetString(ctx, "foo")
+	err := sm.Iterate(context.Background(), func(ctx context.Context) error {
+		i := sm.GetString(ctx, "foo")
 		results = append(results, i)
 		return nil
 	})
@@ -387,7 +405,7 @@ func TestIterate_Cookie(t *testing.T) {
 		t.Fatalf("unexpected value: got %v", results)
 	}
 
-	err = sessionManager.Iterate(context.Background(), func(ctx context.Context) error {
+	err = sm.Iterate(context.Background(), func(ctx context.Context) error {
 		return errors.New("expected error")
 	})
 	if err.Error() != "expected error" {
