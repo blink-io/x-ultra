@@ -2,6 +2,7 @@ package msgpack
 
 import (
 	"fmt"
+	"log/slog"
 	"testing"
 	"time"
 
@@ -33,7 +34,8 @@ func TestJSON_1(t *testing.T) {
 
 	fmt.Println("msgpack:   ", string(b1))
 
-	d2, v2, err2 := enc.Decode(b1)
+	_, _, err2 := enc.Decode(b1)
 	require.NoError(t, err2)
-	fmt.Println("Len:   ", len(b1), "  Deadline:   ", d2, "  Values:   ", v2)
+
+	slog.Info("msgpack codec", "len", len(b1))
 }

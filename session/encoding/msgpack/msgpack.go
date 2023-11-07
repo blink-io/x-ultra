@@ -10,6 +10,10 @@ import (
 
 const Name = "msgpack"
 
+func init() {
+	encoding.Register(Name, &codec{})
+}
+
 type codec struct {
 }
 

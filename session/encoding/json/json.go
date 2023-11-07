@@ -11,6 +11,10 @@ import (
 
 const Name = "json"
 
+func init() {
+	encoding.Register(Name, &codec{})
+}
+
 type codec struct {
 }
 

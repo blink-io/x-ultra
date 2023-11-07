@@ -10,6 +10,10 @@ import (
 
 const Name = "cbor"
 
+func init() {
+	encoding.Register(Name, &codec{})
+}
+
 type codec struct {
 }
 

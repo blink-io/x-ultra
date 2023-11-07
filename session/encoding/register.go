@@ -14,3 +14,11 @@ func Register(name string, codec Codec) {
 
 	registers[name] = codec
 }
+
+func Get(name string) (Codec, bool) {
+	mu.Lock()
+	defer mu.Unlock()
+
+	c, ok := registers[name]
+	return c, ok
+}
