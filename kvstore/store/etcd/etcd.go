@@ -1,5 +1,5 @@
-// Package etcdv3 contains the etcd v3 store implementation.
-package etcdv3
+// Package etcd contains the etcd v3 store implementation.
+package etcd
 
 import (
 	"context"
