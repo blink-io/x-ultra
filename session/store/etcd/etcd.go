@@ -18,7 +18,7 @@ type istore struct {
 // New returns a new store.Store instance.
 // The client parameter should be a pointer to an etcd client instance.
 func New(client *clientv3.Client) store.Store {
-	return newRaw(client)
+	return NewWithPrefix(client, store.DefaultPrefix)
 }
 
 // NewWithPrefix returns a new store.Store instance. The client parameter should be a pointer
@@ -29,10 +29,7 @@ func NewWithPrefix(client *clientv3.Client, prefix string) store.Store {
 }
 
 func newRaw(client *clientv3.Client) *istore {
-	return &istore{
-		client: client,
-		prefix: store.DefaultPrefix,
-	}
+	return newRawWithPrefix(client, store.DefaultPrefix)
 }
 
 func newRawWithPrefix(client *clientv3.Client, prefix string) *istore {
