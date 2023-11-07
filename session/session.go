@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/blink-io/x/session/encoding"
-	"github.com/blink-io/x/session/encoding/json"
+	"github.com/blink-io/x/session/encoding/msgpack"
 	"github.com/blink-io/x/session/store"
 	"github.com/blink-io/x/session/store/mem"
 )
@@ -43,7 +43,7 @@ func NewManager(ops ...Option) *Manager {
 		IdleTimeout: 0,
 		Lifetime:    24 * time.Hour,
 		Store:       mem.New(),
-		Codec:       json.New(),
+		Codec:       msgpack.New(),
 		contextKey:  generateContextKey(),
 	}
 
@@ -53,8 +53,3 @@ func NewManager(ops ...Option) *Manager {
 
 	return m
 }
-
-//
-//func (s *Manager) GetContextKey() contextKey {
-//	return s.contextKey
-//}

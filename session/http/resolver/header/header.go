@@ -2,6 +2,7 @@ package header
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/blink-io/x/session"
 	"github.com/blink-io/x/session/http/resolver"
@@ -13,7 +14,8 @@ const DefaultHeader = "X-Auth-Token"
 var _ resolver.Resolver = (*rv)(nil)
 
 type rv struct {
-	header string
+	header       string
+	exposeExpiry bool
 }
 
 func Default() resolver.Resolver {
@@ -57,13 +59,16 @@ func (v *rv) commitAndWriteSessionHeader(m resolver.Manager, ef resolver.ErrorFu
 
 	switch m.Status(ctx) {
 	case session.Modified:
-		token, _, err := m.Commit(ctx)
+		token, expiry, err := m.Commit(ctx)
 		if err != nil {
 			ef(w, r, err)
 			return
 		}
 
 		w.Header().Add(v.header, token)
+		if v.exposeExpiry {
+			w.Header().Add(v.header+"-Expires", expiry.Format(time.RFC3339Nano))
+		}
 	case session.Destroyed:
 		w.Header().Del(v.header)
 	}

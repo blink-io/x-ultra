@@ -10,7 +10,10 @@ import (
 
 	"github.com/blink-io/x/session"
 	sessgrpc "github.com/blink-io/x/session/grpc"
+	"github.com/blink-io/x/session/store/goredis"
 	"github.com/blink-io/x/testdata"
+
+	"github.com/redis/go-redis/v9"
 	"github.com/stretchr/testify/require"
 	"gitlab.com/greyxor/slogor"
 	"google.golang.org/grpc"
@@ -51,6 +54,10 @@ func (s *commonService) Health(ctx context.Context, req *HealthRequest) (*Health
 	sm, ok := session.FromContext(ctx)
 	if ok {
 		sm.Put(ctx, "from", from)
+		sm.Put(ctx, "is_admin", true)
+		sm.Put(ctx, "version", &VersionRequest{
+			From: "From Version",
+		})
 	}
 
 	return res, nil
@@ -120,8 +127,11 @@ func (s *statsHandler) HandleConn(ctx context.Context, connStats stats.ConnStats
 func TestGRPC_Server_1(t *testing.T) {
 	creds := credentials.NewTLS(testdata.GetTLSConfig())
 
-	sm := session.NewManager()
+	rc := redis.NewUniversalClient(&redis.UniversalOptions{})
+	rs := goredis.New(rc)
+	sm := session.NewManager(session.Store(rs))
 	sh := sessgrpc.NewSessionHandler(
+		sessgrpc.WithExposeExpiry(),
 		sessgrpc.WithHeader(sessgrpc.DefaultHeader),
 		sessgrpc.WithSessionManager(sm))
 

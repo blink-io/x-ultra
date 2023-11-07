@@ -54,3 +54,9 @@ func TestGRPC_Client_1(t *testing.T) {
 
 	fmt.Println("Version res:  ", vres)
 }
+
+func TestMD_1(t *testing.T) {
+	md := metadata.Pairs()
+	md.Set("a", "111")
+	require.NotNil(t, md)
+}

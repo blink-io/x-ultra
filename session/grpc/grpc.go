@@ -3,10 +3,12 @@ package grpc
 import (
 	"context"
 	"strings"
+	"time"
 
 	"github.com/blink-io/x/grpc/mdutil"
 	"github.com/blink-io/x/grpc/util"
 	"github.com/blink-io/x/session"
+	"go.uber.org/multierr"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 )
@@ -17,6 +19,8 @@ type SessionHandler struct {
 	sm *session.Manager
 
 	header string
+
+	exposeExpiry bool
 }
 
 func NewSessionHandler(ops ...Option) *SessionHandler {
@@ -55,6 +59,7 @@ func (sh *SessionHandler) StreamServerInterceptor(srv any, ss grpc.ServerStream,
 	wss.WrappedContext = ctx
 
 	sm := sh.sm
+	//NOTICE In MD, all keys are lower characters.
 	header := strings.ToLower(sh.header)
 	token := mdutil.SingleValueFromContext(ctx, header)
 
@@ -75,7 +80,8 @@ func (sh *SessionHandler) StreamServerInterceptor(srv any, ss grpc.ServerStream,
 }
 
 func (sh *SessionHandler) commitAndWriteSession(ctx context.Context) error {
-	header := sh.header
+	headerKey := strings.ToLower(sh.header)
+	expiryKey := headerKey + "-expiry"
 	sm := sh.sm
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {
@@ -84,14 +90,24 @@ func (sh *SessionHandler) commitAndWriteSession(ctx context.Context) error {
 
 	switch sm.Status(ctx) {
 	case session.Modified:
-		token, _, err := sm.Commit(ctx)
+		token, expiry, err := sm.Commit(ctx)
+		expiryStr := expiry.Format(time.RFC3339Nano)
 		if err != nil {
 			return err
 		}
-		md.Set(header, token)
+		md.Set(headerKey, token)
+		if sh.exposeExpiry {
+			md.Set(expiryKey, expiryStr)
+		}
 	case session.Destroyed:
-		md.Delete(header)
+		md.Delete(headerKey)
+		if sh.exposeExpiry {
+			md.Delete(expiryKey)
+		}
 	}
 
-	return grpc.SendHeader(ctx, md)
+	return multierr.Combine(
+		grpc.SendHeader(ctx, md),
+		grpc.SetTrailer(ctx, md),
+	)
 }
