@@ -6,16 +6,19 @@ import (
 	"testing"
 
 	sessgrpc "github.com/blink-io/x/session/grpc"
+	"github.com/blink-io/x/testdata"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/metadata"
 )
 
 func TestGRPC_Client_1(t *testing.T) {
+	creds := credentials.NewTLS(testdata.CreateClientTLSConfig())
+
 	ctx := context.Background()
 	ops := []grpc.DialOption{
-		grpc.WithTransportCredentials(insecure.NewCredentials()),
+		grpc.WithTransportCredentials(creds),
 	}
 	c, err := grpc.Dial(":9999", ops...)
 	require.NoError(t, err)

@@ -13,6 +13,6 @@ func SingleValueFromContext(ctx context.Context, key string) string {
 	return ""
 }
 
-func MultipleValuesFromContext(ctx context.Context, key string) []string {
+func MultiValuesFromContext(ctx context.Context, key string) []string {
 	return metadata.ValueFromIncomingContext(ctx, key)
 }
