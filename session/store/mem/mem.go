@@ -8,6 +8,8 @@ import (
 	"github.com/blink-io/x/session/store"
 )
 
+const Name = "mem"
+
 type item struct {
 	object     []byte
 	expiration int64
@@ -42,6 +44,10 @@ func newRawWithCleanupInterval(cleanupInterval time.Duration) *istore {
 		go s.startCleanup(cleanupInterval)
 	}
 	return s
+}
+
+func (s *istore) Name() string {
+	return Name
 }
 
 // Find returns the data for a given session token from the store instance.

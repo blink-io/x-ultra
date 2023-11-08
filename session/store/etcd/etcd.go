@@ -9,6 +9,8 @@ import (
 	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
+const Name = "etcd"
+
 // istore represents the session store.
 type istore struct {
 	client *clientv3.Client
@@ -37,6 +39,10 @@ func newRawWithPrefix(client *clientv3.Client, prefix string) *istore {
 		client: client,
 		prefix: prefix,
 	}
+}
+
+func (e *istore) Name() string {
+	return Name
 }
 
 // Find returns the data for a given session token from the store.Store instance.

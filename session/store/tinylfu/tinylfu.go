@@ -9,6 +9,8 @@ import (
 	"github.com/vmihailenco/go-tinylfu"
 )
 
+const Name = "tinylfu"
+
 // New returns a new store.Store instance.
 // The client parameter should be a pointer to an etcd client instance.
 func New() store.Store {
@@ -27,14 +29,18 @@ type istore struct {
 	cc *tinylfu.T
 }
 
-func (i *istore) Delete(ctx context.Context, token string) (err error) {
-	i.cc.Del(token)
-	delete(i.tt, token)
+func (s *istore) Name() string {
+	return Name
+}
+
+func (s *istore) Delete(ctx context.Context, token string) (err error) {
+	s.cc.Del(token)
+	delete(s.tt, token)
 	return nil
 }
 
-func (i *istore) Find(ctx context.Context, token string) ([]byte, bool, error) {
-	if v, ok := i.cc.Get(token); ok {
+func (s *istore) Find(ctx context.Context, token string) ([]byte, bool, error) {
+	if v, ok := s.cc.Get(token); ok {
 		if data, vok := v.([]byte); vok {
 			return data, true, nil
 		} else {
@@ -45,20 +51,20 @@ func (i *istore) Find(ctx context.Context, token string) ([]byte, bool, error) {
 	}
 }
 
-func (i *istore) Commit(ctx context.Context, token string, data []byte, expiry time.Time) (err error) {
-	i.cc.Set(&tinylfu.Item{
+func (s *istore) Commit(ctx context.Context, token string, data []byte, expiry time.Time) (err error) {
+	s.cc.Set(&tinylfu.Item{
 		Key:      token,
 		Value:    data,
 		ExpireAt: expiry,
 	})
-	i.tt[token] = store.NilStruct
+	s.tt[token] = store.NilStruct
 	return nil
 }
 
-func (i *istore) All(ctx context.Context) (map[string][]byte, error) {
+func (s *istore) All(ctx context.Context) (map[string][]byte, error) {
 	sessions := make(map[string][]byte)
-	for token := range i.tt {
-		if v, ok := i.cc.Get(token); ok {
+	for token := range s.tt {
+		if v, ok := s.cc.Get(token); ok {
 			if data, vok := v.([]byte); vok {
 				sessions[token] = data
 			}

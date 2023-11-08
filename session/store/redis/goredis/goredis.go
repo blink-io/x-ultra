@@ -9,6 +9,8 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
+const Name = "goredis"
+
 // istore represents the session store.
 type istore struct {
 	client redis.UniversalClient
@@ -37,6 +39,10 @@ func newRawWithPrefix(client redis.UniversalClient, prefix string) *istore {
 		client: client,
 		prefix: prefix,
 	}
+}
+
+func (s *istore) Name() string {
+	return Name
 }
 
 // Find returns the data for a given session token from the store instance.

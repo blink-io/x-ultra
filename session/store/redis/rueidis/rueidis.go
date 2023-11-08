@@ -9,6 +9,8 @@ import (
 	"github.com/redis/rueidis"
 )
 
+const Name = "rueidis"
+
 // istore represents the session store.
 type istore struct {
 	client rueidis.Client
@@ -37,6 +39,10 @@ func newRawWithPrefix(client rueidis.Client, prefix string) *istore {
 		client: client,
 		prefix: prefix,
 	}
+}
+
+func (s *istore) Name() string {
+	return Name
 }
 
 // Find returns the data for a given session token from the store instance.

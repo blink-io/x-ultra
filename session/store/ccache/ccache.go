@@ -1,16 +1,14 @@
-package ristretto
+package ccache
 
 import (
 	"context"
-	"errors"
-	"fmt"
 	"time"
 
 	"github.com/blink-io/x/session/store"
-	"github.com/outcaste-io/ristretto"
+	"github.com/karlseguin/ccache/v3"
 )
 
-const Name = "ristretto"
+const Name = "ccache"
 
 // New returns a new store.Store instance.
 // The client parameter should be a pointer to an etcd client instance.
@@ -19,20 +17,16 @@ func New() store.Store {
 }
 
 func newRaw() *istore {
-	cc, _ := ristretto.NewCache(&ristretto.Config{
-		NumCounters: 100_000,
-		MaxCost:     100_000,
-		BufferItems: 100_000,
-	})
-	s := &istore{cc: cc, tt: make(map[string]*struct{})}
-	return s
+	cfg := ccache.Configure[[]byte]()
+	cc := ccache.New(cfg)
+	return &istore{cc: cc, tt: make(map[string]*struct{})}
 }
 
 var _ store.Store = (*istore)(nil)
 
 type istore struct {
 	tt map[string]*struct{}
-	cc *ristretto.Cache
+	cc *ccache.Cache[[]byte]
 }
 
 func (s *istore) Name() string {
@@ -40,29 +34,21 @@ func (s *istore) Name() string {
 }
 
 func (s *istore) Delete(ctx context.Context, token string) (err error) {
-	s.cc.Del(token)
+	s.cc.Delete(token)
 	delete(s.tt, token)
 	return nil
 }
 
 func (s *istore) Find(ctx context.Context, token string) ([]byte, bool, error) {
-	if v, ok := s.cc.Get(token); ok {
-		if data, vok := v.([]byte); vok {
-			return data, true, nil
-		} else {
-			return nil, false, errors.New("invalid value type")
-		}
-	} else {
-		return nil, false, nil
+	if item := s.cc.Get(token); item != nil && !item.Expired() {
+		return item.Value(), true, nil
 	}
+	return nil, false, nil
 }
 
 func (s *istore) Commit(ctx context.Context, token string, data []byte, expiry time.Time) (err error) {
 	ttl := time.Until(expiry)
-	ok := s.cc.SetWithTTL(token, data, 1, ttl)
-	if !ok {
-		return fmt.Errorf("unable to store: %s", token)
-	}
+	s.cc.Set(token, data, ttl)
 	s.tt[token] = store.NilStruct
 	return nil
 }
@@ -70,10 +56,8 @@ func (s *istore) Commit(ctx context.Context, token string, data []byte, expiry t
 func (s *istore) All(ctx context.Context) (map[string][]byte, error) {
 	sessions := make(map[string][]byte)
 	for token := range s.tt {
-		if v, ok := s.cc.Get(token); ok {
-			if data, vok := v.([]byte); vok {
-				sessions[token] = data
-			}
+		if item := s.cc.Get(token); item != nil && !item.Expired() {
+			sessions[token] = item.Value()
 		}
 	}
 	return sessions, nil

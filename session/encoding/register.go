@@ -12,6 +12,14 @@ func Register(name string, codec Codec) {
 	mu.Lock()
 	defer mu.Unlock()
 
+	if codec == nil {
+		panic("session encoding: codec can not be nil")
+	}
+
+	if _, dup := registers[name]; dup {
+		panic("session encoding: register called twice for codec " + name)
+	}
+
 	registers[name] = codec
 }
 
