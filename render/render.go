@@ -7,7 +7,7 @@ import (
 	"github.com/unrolled/render"
 )
 
-type Marshaler func(v interface{}) ([]byte, error)
+type Marshaler func(v any) ([]byte, error)
 
 type rr = render.Render
 
@@ -33,7 +33,7 @@ func New(o ...Options) *Render {
 }
 
 // Protobuf marshals the given interface object and writes the Protobuf response.
-func (r *Render) Protobuf(w io.Writer, status int, v interface{}) error {
+func (r *Render) Protobuf(w io.Writer, status int, v any) error {
 	head := render.Head{
 		ContentType: ContentProtobuf,
 		Status:      status,
@@ -47,7 +47,7 @@ func (r *Render) Protobuf(w io.Writer, status int, v interface{}) error {
 }
 
 // TOML marshals the given interface object and writes the TOML response.
-func (r *Render) TOML(w io.Writer, status int, v interface{}) error {
+func (r *Render) TOML(w io.Writer, status int, v any) error {
 	head := render.Head{
 		ContentType: ContentTOML,
 		Status:      status,
@@ -61,7 +61,7 @@ func (r *Render) TOML(w io.Writer, status int, v interface{}) error {
 }
 
 // YAML marshals the given interface object and writes the YAML response.
-func (r *Render) YAML(w io.Writer, status int, v interface{}) error {
+func (r *Render) YAML(w io.Writer, status int, v any) error {
 	head := render.Head{
 		ContentType: ContentYAML,
 		Status:      status,
@@ -75,7 +75,7 @@ func (r *Render) YAML(w io.Writer, status int, v interface{}) error {
 }
 
 // Msgpack marshals the given interface object and writes the Msgpack response.
-func (r *Render) Msgpack(w io.Writer, status int, v interface{}) error {
+func (r *Render) Msgpack(w io.Writer, status int, v any) error {
 	head := render.Head{
 		ContentType: ContentMsgpack,
 		Status:      status,
@@ -89,7 +89,7 @@ func (r *Render) Msgpack(w io.Writer, status int, v interface{}) error {
 }
 
 // Cbor marshals the given interface object and writes the Cbor response.
-func (r *Render) Cbor(w io.Writer, status int, v interface{}) error {
+func (r *Render) Cbor(w io.Writer, status int, v any) error {
 	head := render.Head{
 		ContentType: ContentCbor,
 		Status:      status,
@@ -100,4 +100,27 @@ func (r *Render) Cbor(w io.Writer, status int, v interface{}) error {
 	}
 
 	return r.rr.Render(w, e, v)
+}
+
+func (r *Render) AnyVal(t string) func(w io.Writer, status int, v any) error {
+	switch t {
+	case ContentCbor:
+		return r.Cbor
+	case ContentYAML:
+		return r.YAML
+	case ContentProtobuf:
+		return r.Protobuf
+	case ContentMsgpack:
+		return r.Msgpack
+	case ContentTOML:
+		return r.TOML
+	case render.ContentJSON:
+		return r.JSON
+	case render.ContentXML:
+		return r.XML
+	default:
+		return func(w io.Writer, status int, v any) error {
+			return nil
+		}
+	}
 }

@@ -58,7 +58,7 @@ func (s *istore) ExpectDelete(token string, err error) {
 	})
 }
 
-// Delete implements the Store interface
+// Delete implements the store interface
 func (s *istore) Delete(ctx context.Context, token string) (err error) {
 	var (
 		indexToRemove    int
@@ -90,7 +90,7 @@ func (s *istore) ExpectFind(token string, b []byte, found bool, err error) {
 	})
 }
 
-// Find implements the Store interface
+// Find implements the store interface
 func (s *istore) Find(ctx context.Context, token string) (b []byte, found bool, err error) {
 	var (
 		indexToRemove    int
@@ -122,7 +122,7 @@ func (s *istore) ExpectCommit(token string, b []byte, expiry time.Time, err erro
 	})
 }
 
-// Commit implements the Store interface
+// Commit implements the store interface
 func (s *istore) Commit(ctx context.Context, token string, b []byte, expiry time.Time) (err error) {
 	var (
 		indexToRemove    int

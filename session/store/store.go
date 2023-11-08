@@ -7,6 +7,8 @@ import (
 
 const DefaultPrefix = "default:session:"
 
+var NilStruct = (*struct{})(nil)
+
 // Store is an interface for session storage.
 type Store interface {
 	// Delete is the same as Store.Delete, except it takes a context.Context.

@@ -22,7 +22,7 @@ func New[V any](ctx context.Context, ttl time.Duration) (cache.Cache[V], error) 
 }
 
 func (l *icache[V]) Set(key string, value V) {
-	l.c.Set(key, value, 0)
+	l.c.Set(key, value, l.ttl)
 }
 
 func (l *icache[V]) Get(key string) (V, bool) {

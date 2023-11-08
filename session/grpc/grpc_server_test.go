@@ -11,10 +11,9 @@ import (
 	"github.com/blink-io/x/session"
 	"github.com/blink-io/x/session/encoding/json"
 	sessgrpc "github.com/blink-io/x/session/grpc"
-	"github.com/blink-io/x/session/store/goredis"
+	"github.com/blink-io/x/session/store/ristretto"
 	"github.com/blink-io/x/testdata"
 
-	"github.com/redis/go-redis/v9"
 	"github.com/stretchr/testify/require"
 	"gitlab.com/greyxor/slogor"
 	"google.golang.org/grpc"
@@ -77,6 +76,7 @@ func (s *commonService) Version(ctx context.Context, req *VersionRequest) (*Vers
 	if ok {
 		v := sm.GetString(ctx, "from")
 		slog.Info("[Version] Invoke, stored in session", "value", v)
+		res.Message = v
 	}
 
 	return res, nil
@@ -128,12 +128,12 @@ func (s *statsHandler) HandleConn(ctx context.Context, connStats stats.ConnStats
 func TestGRPC_Server_1(t *testing.T) {
 	creds := credentials.NewTLS(testdata.GetTLSConfig())
 
-	rc := redis.NewUniversalClient(&redis.UniversalOptions{})
-	rs := goredis.New(rc)
+	//rc := redis.NewUniversalClient(&redis.UniversalOptions{})
+	//rs := goredis.New(rc)
 	sm := session.NewManager(
 		session.Lifetime(10*time.Minute),
 		session.Codec(json.New()),
-		session.Store(rs),
+		session.Store(ristretto.New()),
 	)
 	sh := sessgrpc.NewSessionHandler(
 		sessgrpc.WithExposeExpiry(),

@@ -45,31 +45,40 @@ type Manager interface {
 	Token(ctx context.Context) string
 }
 
+const (
+	DefaultLifetime = 24 * time.Hour
+
+	DefaultIdleTimeout = 0
+)
+
 // manager holds the configuration settings for your sessions.
 type manager struct {
-	// IdleTimeout controls the maximum length of time a session can be inactive
+	// idleTimeout controls the maximum length of time a session can be inactive
 	// before it expires. For example, some applications may wish to set this so
-	// there is a timeout after 20 minutes of inactivity. By default, IdleTimeout
+	// there is a timeout after 20 minutes of inactivity. By default, idleTimeout
 	// is not set and there is no inactivity timeout.
-	IdleTimeout time.Duration
+	idleTimeout time.Duration
 
-	// Lifetime controls the maximum length of time that a session is valid for
+	// lifetime controls the maximum length of time that a session is valid for
 	// before it expires. The lifetime is an 'absolute expiry' which is set when
 	// the session is first created and does not change. The default value is 24
 	// hours.
-	Lifetime time.Duration
+	lifetime time.Duration
 
-	// Codec controls the encoder/decoder used to transform session data to a
+	// codec controls the encoder/decoder used to transform session data to a
 	// byte slice for use by the session store. By default, session data is
 	// encoded/decoded using encoding/gob.
-	Codec encoding.Codec
+	codec encoding.Codec
 
-	// Store controls the session store where the session data is persisted.
-	Store store.Store
+	// store controls the session store where the session data is persisted.
+	store store.Store
 
 	// contextKey is the key used to set and retrieve the session data from a
 	// context.Context. It's automatically generated to ensure uniqueness.
 	contextKey contextKey
+
+	//
+	isUTC bool
 }
 
 // NewManager returns a new session manager with the default options. It is safe for
@@ -80,11 +89,12 @@ func NewManager(ops ...Option) Manager {
 
 func newManager(ops ...Option) *manager {
 	m := &manager{
-		IdleTimeout: 0,
-		Lifetime:    24 * time.Hour,
-		Store:       mem.New(),
-		Codec:       msgpack.New(),
+		idleTimeout: DefaultIdleTimeout,
+		lifetime:    DefaultLifetime,
+		store:       mem.New(),
+		codec:       msgpack.New(),
 		contextKey:  generateContextKey(),
+		isUTC:       false,
 	}
 
 	for _, o := range ops {

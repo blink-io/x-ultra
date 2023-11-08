@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"testing"
+	"time"
 
 	sessgrpc "github.com/blink-io/x/session/grpc"
 	"github.com/blink-io/x/testdata"
@@ -32,7 +33,7 @@ func TestGRPC_SessMgr_Client_1(t *testing.T) {
 	cc := NewCommonClient(c)
 
 	req := &HealthRequest{
-		From: "我是来自GRPPC Client的Session值",
+		From: "我是来自GRPPC Client的Session，通过调用Health",
 	}
 	var header, trailer metadata.MD
 	res, err := cc.Health(ctx, req, grpc.Header(&header), grpc.Trailer(&trailer))
@@ -62,9 +63,10 @@ func TestGRPC_SessMgr_Client_1(t *testing.T) {
 }
 
 func TestMD_1(t *testing.T) {
-	md := metadata.Pairs()
-	md.Set("a", "111")
-	require.NotNil(t, md)
+	tnUTC := time.Now().UTC()
+	tn := time.Now()
+	fmt.Println("time now in UTC: ", tnUTC)
+	fmt.Println("time now       : ", tn)
 }
 
 func TestGRPC_SessMgr_Client_2(t *testing.T) {

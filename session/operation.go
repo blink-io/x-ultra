@@ -56,28 +56,28 @@ func (s *manager) Load(ctx context.Context, token string) (context.Context, erro
 	}
 
 	if token == "" {
-		return s.addSessionDataToContext(ctx, newSessionData(s.Lifetime)), nil
+		return s.addSessionDataToContext(ctx, newSessionData(s.lifetime)), nil
 	}
 
 	b, found, err := s.doStoreFind(ctx, token)
 	if err != nil {
 		return nil, err
 	} else if !found {
-		return s.addSessionDataToContext(ctx, newSessionData(s.Lifetime)), nil
+		return s.addSessionDataToContext(ctx, newSessionData(s.lifetime)), nil
 	}
 
 	sd := &sessionData{
 		status: Unmodified,
 		token:  token,
 	}
-	if sd.deadline, sd.values, err = s.Codec.Decode(b); err != nil {
+	if sd.deadline, sd.values, err = s.codec.Decode(b); err != nil {
 		return nil, err
 	}
 
 	// Mark the session data as modified if an idle timeout is being used. This
 	// will force the session data to be re-committed to the session store with
 	// a new expiry time.
-	if s.IdleTimeout > 0 {
+	if s.idleTimeout > 0 {
 		sd.status = Modified
 	}
 
@@ -102,14 +102,14 @@ func (s *manager) Commit(ctx context.Context) (string, time.Time, error) {
 		}
 	}
 
-	b, err := s.Codec.Encode(sd.deadline, sd.values)
+	b, err := s.codec.Encode(sd.deadline, sd.values)
 	if err != nil {
 		return "", time.Time{}, err
 	}
 
 	expiry := sd.deadline
-	if s.IdleTimeout > 0 {
-		ie := time.Now().Add(s.IdleTimeout).UTC()
+	if s.idleTimeout > 0 {
+		ie := time.Now().Add(s.idleTimeout).UTC()
 		if ie.Before(expiry) {
 			expiry = ie
 		}
@@ -140,7 +140,7 @@ func (s *manager) Destroy(ctx context.Context) error {
 
 	// Reset everything else to defaults.
 	sd.token = ""
-	sd.deadline = time.Now().Add(s.Lifetime).UTC()
+	sd.deadline = time.Now().Add(s.lifetime).UTC()
 	for key := range sd.values {
 		delete(sd.values, key)
 	}
@@ -297,7 +297,7 @@ func (s *manager) RenewToken(ctx context.Context) error {
 	}
 
 	sd.token = newToken
-	sd.deadline = time.Now().Add(s.Lifetime).UTC()
+	sd.deadline = time.Now().Add(s.lifetime).UTC()
 	sd.status = Modified
 
 	return nil
@@ -316,7 +316,7 @@ func (s *manager) MergeSession(ctx context.Context, token string) error {
 		return nil
 	}
 
-	deadline, values, err := s.Codec.Decode(b)
+	deadline, values, err := s.codec.Decode(b)
 	if err != nil {
 		return err
 	}
@@ -553,7 +553,7 @@ func (s *manager) Iterate(ctx context.Context, fn func(context.Context) error) e
 			token:  token,
 		}
 
-		sd.deadline, sd.values, err = s.Codec.Decode(b)
+		sd.deadline, sd.values, err = s.codec.Decode(b)
 		if err != nil {
 			return err
 		}
@@ -629,17 +629,17 @@ func generateContextKey() contextKey {
 }
 
 func (s *manager) doStoreDelete(ctx context.Context, token string) (err error) {
-	return s.Store.Delete(ctx, token)
+	return s.store.Delete(ctx, token)
 }
 
 func (s *manager) doStoreFind(ctx context.Context, token string) (b []byte, found bool, err error) {
-	return s.Store.Find(ctx, token)
+	return s.store.Find(ctx, token)
 }
 
 func (s *manager) doStoreCommit(ctx context.Context, token string, b []byte, expiry time.Time) (err error) {
-	return s.Store.Commit(ctx, token, b, expiry)
+	return s.store.Commit(ctx, token, b, expiry)
 }
 
 func (s *manager) doStoreAll(ctx context.Context) (map[string][]byte, error) {
-	return s.Store.All(ctx)
+	return s.store.All(ctx)
 }

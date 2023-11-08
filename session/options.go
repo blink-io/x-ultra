@@ -11,30 +11,30 @@ type Option func(*manager)
 
 func Store(s store.Store) Option {
 	return func(m *manager) {
-		m.Store = s
+		m.store = s
 	}
 }
 
 func Codec(c encoding.Codec) Option {
 	return func(m *manager) {
-		m.Codec = c
+		m.codec = c
 	}
 }
 
 func IdleTimeout(t time.Duration) Option {
 	return func(m *manager) {
-		m.IdleTimeout = t
+		m.idleTimeout = t
 	}
 }
 
 func Lifetime(t time.Duration) Option {
 	return func(m *manager) {
-		m.Lifetime = t
+		m.lifetime = t
 	}
 }
 
-func ContextKey(k contextKey) Option {
+func UTC() Option {
 	return func(m *manager) {
-		m.contextKey = k
+		m.isUTC = true
 	}
 }
