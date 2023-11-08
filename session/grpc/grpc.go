@@ -21,11 +21,14 @@ type SessionHandler struct {
 	header string
 
 	exposeExpiry bool
+
+	expiryTimeFormat string
 }
 
 func NewSessionHandler(ops ...Option) *SessionHandler {
 	sh := &SessionHandler{
-		sm: session.NewManager(),
+		sm:               session.NewManager(),
+		expiryTimeFormat: time.RFC3339Nano,
 	}
 	for _, o := range ops {
 		o(sh)
@@ -35,6 +38,7 @@ func NewSessionHandler(ops ...Option) *SessionHandler {
 
 func (sh *SessionHandler) UnaryServerInterceptor(ctx context.Context, req any, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (any, error) {
 	sm := sh.sm
+	ctx = session.NewContext(ctx, sm)
 	header := strings.ToLower(sh.header)
 	token := mdutil.SingleValueFromContext(ctx, header)
 
@@ -43,22 +47,24 @@ func (sh *SessionHandler) UnaryServerInterceptor(ctx context.Context, req any, i
 		return nil, err
 	}
 
-	ctx = session.NewContext(ctx, sh.sm)
-	res, err := handler(ctx, req)
+	xres, xerr := handler(ctx, req)
+	if xerr != nil {
+		return nil, xerr
+	}
 
 	if err := sh.commitAndWriteSession(ctx); err != nil {
 		return nil, err
 	}
 
-	return res, err
+	return xres, xerr
 }
 
 func (sh *SessionHandler) StreamServerInterceptor(srv any, ss grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
-	ctx := session.NewContext(ss.Context(), sh.sm)
+	sm := sh.sm
+	ctx := session.NewContext(ss.Context(), sm)
 	wss := util.WrapServerStream(ss)
 	wss.WrappedContext = ctx
 
-	sm := sh.sm
 	//NOTICE In MD, all keys are lower characters.
 	header := strings.ToLower(sh.header)
 	token := mdutil.SingleValueFromContext(ctx, header)
@@ -68,8 +74,8 @@ func (sh *SessionHandler) StreamServerInterceptor(srv any, ss grpc.ServerStream,
 		return err
 	}
 
-	if err := handler(srv, ss); err != nil {
-		return err
+	if xerr := handler(srv, ss); xerr != nil {
+		return xerr
 	}
 
 	if err := sh.commitAndWriteSession(ctx); err != nil {
@@ -91,7 +97,7 @@ func (sh *SessionHandler) commitAndWriteSession(ctx context.Context) error {
 	switch sm.Status(ctx) {
 	case session.Modified:
 		token, expiry, err := sm.Commit(ctx)
-		expiryStr := expiry.Format(time.RFC3339Nano)
+		expiryStr := expiry.Format(sh.expiryTimeFormat)
 		if err != nil {
 			return err
 		}

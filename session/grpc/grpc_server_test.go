@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/blink-io/x/session"
+	"github.com/blink-io/x/session/encoding/json"
 	sessgrpc "github.com/blink-io/x/session/grpc"
 	"github.com/blink-io/x/session/store/goredis"
 	"github.com/blink-io/x/testdata"
@@ -129,7 +130,11 @@ func TestGRPC_Server_1(t *testing.T) {
 
 	rc := redis.NewUniversalClient(&redis.UniversalOptions{})
 	rs := goredis.New(rc)
-	sm := session.NewManager(session.Store(rs))
+	sm := session.NewManager(
+		session.Lifetime(10*time.Minute),
+		session.Codec(json.New()),
+		session.Store(rs),
+	)
 	sh := sessgrpc.NewSessionHandler(
 		sessgrpc.WithExposeExpiry(),
 		sessgrpc.WithHeader(sessgrpc.DefaultHeader),

@@ -23,6 +23,7 @@ require (
 	github.com/goccy/go-json v0.10.2
 	github.com/goccy/go-reflect v1.2.0
 	github.com/gofrs/uuid/v5 v5.0.0
+	github.com/gogo/protobuf v1.3.2
 	github.com/google/flatbuffers v23.5.26+incompatible
 	github.com/google/uuid v1.4.0
 	github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.0.1
@@ -36,6 +37,7 @@ require (
 	github.com/karlseguin/ccache/v3 v3.0.5
 	github.com/karrick/godirwalk v1.17.0
 	github.com/keegancsmith/sqlf v1.1.2
+	github.com/klauspost/compress v1.17.2
 	github.com/lithammer/shortuuid/v4 v4.0.0
 	github.com/lmittmann/tint v1.0.3
 	github.com/matthewhartstonge/argon2 v0.3.4
@@ -48,6 +50,7 @@ require (
 	github.com/onsi/gomega v1.29.0
 	github.com/outcaste-io/ristretto v0.2.3
 	github.com/pelletier/go-toml/v2 v2.1.0
+	github.com/pierrec/lz4/v4 v4.1.18
 	github.com/quic-go/quic-go v0.40.0
 	github.com/qustavo/sqlhooks/v2 v2.1.0
 	github.com/redis/go-redis/extra/rediscmd/v9 v9.0.5
@@ -60,6 +63,7 @@ require (
 	github.com/teris-io/shortid v0.0.0-20220617161101-71ec9f2aa569
 	github.com/tink-crypto/tink-go/v2 v2.0.0
 	github.com/twmb/murmur3 v1.1.8
+	github.com/ulikunitz/xz v0.5.11
 	github.com/unrolled/render v1.6.1
 	github.com/uptrace/bun v1.1.16
 	github.com/uptrace/bun/dialect/mysqldialect v1.1.16
@@ -99,7 +103,6 @@ require (
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/go-task/slim-sprig v0.0.0-20230315185526-52ccab3ef572 // indirect
-	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/google/pprof v0.0.0-20231101202521-4ca4178f5c7a // indirect

@@ -47,9 +47,10 @@ func (sh *SessionHandler) Handle(next http.Handler) http.Handler {
 		if sh.rv == nil {
 			sh.ef(w, r, errors.New("http session resolver is required"))
 		} else {
-			nctx := session.NewContext(r.Context(), sh.sm)
+			sm := sh.sm
+			nctx := session.NewContext(r.Context(), sm)
 			nr := r.WithContext(nctx)
-			err := sh.rv.Resolve(sh.sm, sh.ef, w, nr, next)
+			err := sh.rv.Resolve(sm, sh.ef, w, nr, next)
 			if err != nil {
 				sh.ef(w, r, err)
 			}

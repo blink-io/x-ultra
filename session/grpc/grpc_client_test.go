@@ -3,6 +3,7 @@ package grpc_test
 import (
 	"context"
 	"fmt"
+	"log"
 	"testing"
 
 	sessgrpc "github.com/blink-io/x/session/grpc"
@@ -13,16 +14,21 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
-func TestGRPC_Client_1(t *testing.T) {
+func createGRPCClient() *grpc.ClientConn {
 	creds := credentials.NewTLS(testdata.CreateClientTLSConfig())
-
-	ctx := context.Background()
 	ops := []grpc.DialOption{
 		grpc.WithTransportCredentials(creds),
 	}
 	c, err := grpc.Dial(":9999", ops...)
-	require.NoError(t, err)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return c
+}
 
+func TestGRPC_SessMgr_Client_1(t *testing.T) {
+	ctx := context.Background()
+	c := createGRPCClient()
 	cc := NewCommonClient(c)
 
 	req := &HealthRequest{
@@ -59,4 +65,21 @@ func TestMD_1(t *testing.T) {
 	md := metadata.Pairs()
 	md.Set("a", "111")
 	require.NotNil(t, md)
+}
+
+func TestGRPC_SessMgr_Client_2(t *testing.T) {
+	ctx := context.Background()
+	c := createGRPCClient()
+	cc := NewCommonClient(c)
+
+	req := &TestingRequest{
+		Action: "我是来自GRPPC Client的Testing",
+	}
+	var header, trailer metadata.MD
+	res, err := cc.Testing(ctx, req, grpc.Header(&header), grpc.Trailer(&trailer))
+	require.NoError(t, err)
+
+	fmt.Println("Health res:  ", res)
+	fmt.Println("header:  ", header)
+	fmt.Println("trailer:  ", trailer)
 }
