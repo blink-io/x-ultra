@@ -21,7 +21,7 @@ func init() {
 
 // GetCertificatePaths returns the paths to certificate and key
 func GetCertificatePaths() (string, string) {
-	return path.Join(certPath, "cert.pem"), path.Join(certPath, "privkey")
+	return path.Join(certPath, "cert.pem"), path.Join(certPath, "privkey.pem")
 }
 
 // GetTLSConfig returns a tls config for quic.clemente.io

@@ -8,7 +8,7 @@ openssl req -x509 -sha256 -nodes -days 3650 -newkey rsa:2048 \
   -subj "/O=quic-go Certificate Authority/"
 
 echo "Generating CSR"
-openssl req -out cert.csr -new -newkey rsa:2048 -nodes -keyout privkey \
+openssl req -out cert.csr -new -newkey rsa:2048 -nodes -keyout privkey.pem \
   -subj "/O=quic-go/"
 
 echo "Sign certificate:"
