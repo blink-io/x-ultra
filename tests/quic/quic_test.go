@@ -5,6 +5,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/gopacket/gopacket"
 	"github.com/quic-go/quic-go"
 	"github.com/quic-go/quic-go/http3"
 	"github.com/stretchr/testify/require"
@@ -33,4 +34,9 @@ func initQuicConfig(qconf *quic.Config) {
 		qconf.MaxIncomingStreams = 555
 	}
 	fmt.Printf("qconf: %#v", qconf)
+}
+
+func TestPacket(t *testing.T) {
+	var applyr gopacket.ApplicationLayer
+	require.NotNil(t, applyr)
 }

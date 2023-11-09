@@ -36,6 +36,14 @@ func NewSessionHandler(ops ...Option) *SessionHandler {
 	return sh
 }
 
+func UnaryServerInterceptor(sh *SessionHandler) grpc.UnaryServerInterceptor {
+	return sh.UnaryServerInterceptor
+}
+
+func StreamServerInterceptor(sh *SessionHandler) grpc.StreamServerInterceptor {
+	return sh.StreamServerInterceptor
+}
+
 func (sh *SessionHandler) UnaryServerInterceptor(ctx context.Context, req any, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (any, error) {
 	sm := sh.sm
 	ctx = session.NewContext(ctx, sm)

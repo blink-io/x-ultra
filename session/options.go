@@ -32,9 +32,3 @@ func Lifetime(t time.Duration) Option {
 		m.lifetime = t
 	}
 }
-
-func UTC() Option {
-	return func(m *manager) {
-		m.isUTC = true
-	}
-}

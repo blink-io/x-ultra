@@ -76,9 +76,6 @@ type manager struct {
 	// contextKey is the key used to set and retrieve the session data from a
 	// context.Context. It's automatically generated to ensure uniqueness.
 	contextKey contextKey
-
-	//
-	isUTC bool
 }
 
 // NewManager returns a new session manager with the default options. It is safe for
@@ -94,7 +91,6 @@ func newManager(ops ...Option) *manager {
 		store:       mem.New(),
 		codec:       msgpack.New(),
 		contextKey:  generateContextKey(),
-		isUTC:       false,
 	}
 
 	for _, o := range ops {
