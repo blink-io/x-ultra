@@ -27,6 +27,7 @@ require (
 	github.com/gogo/protobuf v1.3.2
 	github.com/google/flatbuffers v23.5.26+incompatible
 	github.com/google/uuid v1.4.0
+	github.com/gopacket/gopacket v1.1.1
 	github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.0.1
 	github.com/hashicorp/golang-lru/v2 v2.0.7
 	github.com/jackc/pgx-zap v0.0.0-20221202020421-94b1cb2f889f
@@ -108,7 +109,6 @@ require (
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/google/pprof v0.0.0-20231101202521-4ca4178f5c7a // indirect
-	github.com/gopacket/gopacket v1.1.1 // indirect
 	github.com/gorilla/mux v1.8.1 // indirect
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
