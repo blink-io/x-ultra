@@ -6,6 +6,7 @@ require (
 	github.com/Masterminds/squirrel v1.5.4
 	github.com/Xuanwo/go-locale v1.1.0
 	github.com/alexedwards/argon2id v1.0.0
+	github.com/andybalholm/brotli v1.0.6
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2
 	github.com/blockloop/scan/v2 v2.5.0
 	github.com/cenkalti/backoff/v4 v4.2.1
@@ -151,7 +152,7 @@ require (
 	lukechampine.com/uint128 v1.3.0 // indirect
 	modernc.org/cc/v3 v3.41.0 // indirect
 	modernc.org/ccgo/v3 v3.16.15 // indirect
-	modernc.org/libc v1.31.0 // indirect
+	modernc.org/libc v1.32.0 // indirect
 	modernc.org/mathutil v1.6.0 // indirect
 	modernc.org/memory v1.7.2 // indirect
 	modernc.org/opt v0.1.3 // indirect

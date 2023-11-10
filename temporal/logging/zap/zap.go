@@ -3,7 +3,7 @@ package zap
 import (
 	"fmt"
 
-	"github.com/blink-io/x/temporal"
+	"go.temporal.io/sdk/log"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
@@ -12,9 +12,9 @@ type logger struct {
 	i *zap.Logger
 }
 
-var _ temporal.Logger = (*logger)(nil)
+var _ log.Logger = (*logger)(nil)
 
-func NewLogger(zlog *zap.Logger) temporal.Logger {
+func NewLogger(zlog *zap.Logger) log.Logger {
 	return &logger{zlog}
 }
 

@@ -1,6 +1,6 @@
 package errcode
 
-// Source: https://www.postgresql.org/docs/14/errcodes-appendix.html
+// https://www.postgresql.org/docs/current/errcodes-appendix.html
 // "github.com/jackc/pgerrcode"
 // See gen.rb for script that can convert the error code table to Go code.
 
