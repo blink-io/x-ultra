@@ -11,7 +11,8 @@ import (
 	"github.com/blink-io/x/bun/extra/timing"
 	"github.com/blink-io/x/sql"
 	"github.com/blink-io/x/sql/generics"
-	"github.com/blockloop/scan/v2"
+	"github.com/blink-io/x/sql/scan"
+
 	"github.com/stretchr/testify/require"
 	"github.com/uptrace/bun"
 )
