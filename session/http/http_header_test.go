@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/blink-io/x/session"
-	"github.com/blink-io/x/session/http/resolver/cookie"
-	headerrv "github.com/blink-io/x/session/http/resolver/header"
+	ckrv "github.com/blink-io/x/session/http/resolver/cookie"
+	hdrv "github.com/blink-io/x/session/http/resolver/header"
 )
 
 func TestIdleTimeout_Header(t *testing.T) {
@@ -18,7 +18,7 @@ func TestIdleTimeout_Header(t *testing.T) {
 func TestEnable_Header(t *testing.T) {
 	t.Parallel()
 
-	rv := headerrv.Default()
+	rv := hdrv.Default()
 	sessionManager := NewSessionHandler(WithResolver(rv))
 
 	mux := http.NewServeMux()
@@ -34,22 +34,22 @@ func TestEnable_Header(t *testing.T) {
 	defer ts.Close()
 
 	header, _ := ts.execute(t, "/put")
-	token1 := header.Get(headerrv.DefaultHeader)
+	token1 := header.Get(hdrv.DefaultHeader)
 
 	header, body := ts.executeWithHeaders(t, "/get", map[string]string{
-		headerrv.DefaultHeader: token1,
+		hdrv.DefaultHeader: token1,
 	})
 	if body != "bar" {
 		t.Errorf("want %q; got %q", "bar", body)
 	}
-	if header.Get(headerrv.DefaultHeader) != "" {
-		t.Errorf("want %q; got %q", "", header.Get(headerrv.DefaultHeader))
+	if header.Get(hdrv.DefaultHeader) != "" {
+		t.Errorf("want %q; got %q", "", header.Get(hdrv.DefaultHeader))
 	}
 
 	header, _ = ts.executeWithHeaders(t, "/put", map[string]string{
-		headerrv.DefaultHeader: token1,
+		hdrv.DefaultHeader: token1,
 	})
-	token2 := header.Get(headerrv.DefaultHeader)
+	token2 := header.Get(hdrv.DefaultHeader)
 	if token1 != token2 {
 		t.Error("want tokens to be the same")
 	}
@@ -58,7 +58,7 @@ func TestEnable_Header(t *testing.T) {
 func TestLifetime_Header(t *testing.T) {
 	t.Parallel()
 
-	rv := headerrv.Default()
+	rv := hdrv.Default()
 	sm := session.NewManager(session.Lifetime(500 * time.Millisecond))
 	sh := NewSessionHandler(
 		WithResolver(rv),
@@ -85,10 +85,10 @@ func TestLifetime_Header(t *testing.T) {
 	defer ts.Close()
 
 	header1, _ := ts.execute(t, "/put")
-	token1 := header1.Get(headerrv.DefaultHeader)
+	token1 := header1.Get(hdrv.DefaultHeader)
 
 	_, body := ts.executeWithHeaders(t, "/get", map[string]string{
-		headerrv.DefaultHeader: token1,
+		hdrv.DefaultHeader: token1,
 	})
 	if body != "bar" {
 		t.Errorf("want %q; got %q", "bar", body)
@@ -104,7 +104,7 @@ func TestLifetime_Header(t *testing.T) {
 func TestRenewToken_Header(t *testing.T) {
 	t.Parallel()
 
-	rv := headerrv.Default()
+	rv := hdrv.Default()
 	sessionManager := NewSessionHandler(WithResolver(rv))
 
 	mux := http.NewServeMux()
@@ -132,19 +132,19 @@ func TestRenewToken_Header(t *testing.T) {
 	defer ts.Close()
 
 	header, _ := ts.execute(t, "/put")
-	originalToken := header.Get(headerrv.DefaultHeader)
+	originalToken := header.Get(hdrv.DefaultHeader)
 
 	header2, _ := ts.executeWithHeaders(t, "/renew", map[string]string{
-		headerrv.DefaultHeader: originalToken,
+		hdrv.DefaultHeader: originalToken,
 	})
-	newToken := header2.Get(headerrv.DefaultHeader)
+	newToken := header2.Get(hdrv.DefaultHeader)
 
 	if newToken == originalToken {
 		t.Fatal("token has not changed")
 	}
 
 	_, body := ts.executeWithHeaders(t, "/get", map[string]string{
-		headerrv.DefaultHeader: newToken,
+		hdrv.DefaultHeader: newToken,
 	})
 	if body != "bar" {
 		t.Errorf("want %q; got %q", "bar", body)
@@ -154,7 +154,7 @@ func TestRenewToken_Header(t *testing.T) {
 func TestDestroy_Header(t *testing.T) {
 	t.Parallel()
 
-	rv := headerrv.Default()
+	rv := hdrv.Default()
 	sessionManager := NewSessionHandler(WithResolver(rv))
 
 	mux := http.NewServeMux()
@@ -162,7 +162,7 @@ func TestDestroy_Header(t *testing.T) {
 		doSessionManagerPut(r, "foo", "bar")
 	})
 	mux.HandleFunc("/destroy", func(w http.ResponseWriter, r *http.Request) {
-		headerrv.Default()
+		hdrv.Default()
 		err := doSessionManagerDestroy(r)
 		if err != nil {
 			http.Error(w, err.Error(), 500)
@@ -183,12 +183,12 @@ func TestDestroy_Header(t *testing.T) {
 	defer ts.Close()
 
 	header, _ := ts.execute(t, "/put")
-	token := header.Get(headerrv.DefaultHeader)
+	token := header.Get(hdrv.DefaultHeader)
 
 	header2, _ := ts.executeWithHeaders(t, "/destroy", map[string]string{
-		headerrv.DefaultHeader: token,
+		hdrv.DefaultHeader: token,
 	})
-	token2 := header2.Get(headerrv.DefaultHeader)
+	token2 := header2.Get(hdrv.DefaultHeader)
 
 	if len(token2) != 0 {
 		t.Fatalf("got %s: expected empty", token2)
@@ -233,10 +233,10 @@ func doSessionManagerDestroy(r *http.Request) error {
 	return errNoSessionManager
 }
 
-func doSessionManagerSetRememberMe(r *http.Request, okme bool) error {
-	sm, ok := session.FromContext(r.Context())
-	if ok {
-		sm.SetRememberMe(r.Context(), cookie.DefaultRememberMe, okme)
+func doSessionManagerSetRememberMe(r *http.Request, ok bool) error {
+	sm, has := session.FromContext(r.Context())
+	if has {
+		sm.SetRememberMe(r.Context(), ckrv.DefaultRememberMe, ok)
 		return nil
 	}
 	return errNoSessionManager

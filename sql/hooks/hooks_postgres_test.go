@@ -6,12 +6,13 @@ import (
 	"testing"
 
 	"github.com/jackc/pgx/v5/stdlib"
+	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 func setUpPostgres(t *testing.T, dsn string) {
-	db, err := sql.Open("postgres", dsn)
+	db, err := sql.Open("pgx", dsn)
 	require.NoError(t, err)
 	require.NoError(t, db.Ping())
 	defer db.Close()

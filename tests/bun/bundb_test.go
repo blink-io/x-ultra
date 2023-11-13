@@ -11,7 +11,7 @@ import (
 	"github.com/blink-io/x/bun/extra/timing"
 	"github.com/blink-io/x/sql"
 	"github.com/blink-io/x/sql/generics"
-	"github.com/blink-io/x/sql/scan"
+	"github.com/blink-io/x/sql/scany/dbscan"
 
 	"github.com/stretchr/testify/require"
 	"github.com/uptrace/bun"
@@ -98,9 +98,17 @@ func TestSQLite_Model_Select_2(t *testing.T) {
 	require.NoError(t, err)
 }
 
-func TestSQLite_Raw_Select_1(t *testing.T) {
+func TestSQLite_Raw_Select_Model_1(t *testing.T) {
 	db := getDB(t)
 	var rs []*Application
+	_, err := db.NewRaw("select * from applications where ? = ?",
+		bun.Ident("status"), "status1").Exec(ctx, &rs)
+	require.NoError(t, err)
+}
+
+func TestSQLite_Raw_Select_Model_2(t *testing.T) {
+	db := getDB(t)
+	var rs []Application
 	_, err := db.NewRaw("select * from applications where ? = ?",
 		bun.Ident("status"), "status1").Exec(ctx, &rs)
 	require.NoError(t, err)
@@ -115,15 +123,54 @@ func TestSQLite_Raw_Select_2(t *testing.T) {
 	require.NoError(t, err)
 }
 
-func TestSLite_Scan_1(t *testing.T) {
+func TestSLite_Scan_Slice_1(t *testing.T) {
 	db := getDB(t)
 
 	defer db.Close()
 
 	var rs []Application
 
-	rows, err := db.Query("select * from applications where  1=1")
+	rows, err := db.Query("select * from applications limit 5")
 	require.NoError(t, err)
-	err = scan.Rows(&rs, rows)
+	err = dbscan.ScanAll(&rs, rows)
+	require.NoError(t, err)
+}
+
+func TestSLite_Scan_Slice_2(t *testing.T) {
+	db := getDB(t)
+
+	defer db.Close()
+
+	var rs []*Application
+
+	rows, err := db.Query("select * from applications limit 5")
+	require.NoError(t, err)
+	err = dbscan.ScanAll(&rs, rows)
+	require.NoError(t, err)
+}
+
+func TestSLite_Scan_Slice_3(t *testing.T) {
+	db := getDB(t)
+
+	defer db.Close()
+
+	var rs []map[string]any
+
+	rows, err := db.Query("select * from applications limit 5")
+	require.NoError(t, err)
+	err = dbscan.ScanAll(&rs, rows)
+	require.NoError(t, err)
+}
+
+func TestSLite_Scan_2(t *testing.T) {
+	db := getDB(t)
+
+	defer db.Close()
+
+	var rs = new(Application)
+
+	rows, err := db.Query("select * from applications limit 1")
+	require.NoError(t, err)
+	err = dbscan.ScanOne(rs, rows)
 	require.NoError(t, err)
 }
