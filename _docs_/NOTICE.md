@@ -9,6 +9,9 @@
 ### sql/scan
 * [scan v2.5.0](https://github.com/blockloop/scan/releases/tag/v2.5.0)
 
+### sql/nulls
+* [null v4.0.0](https://github.com/guregu/null/releases/tag/v4.0.0)
+* 
 ### log
 * [kratos log](https://github.com/go-kratos/kratos/tree/main/log)
 
@@ -23,3 +26,6 @@
 
 ### locale
 * [go-locale](https://github.com/Xuanwo/go-locale/releases/tag/v1.1.0)
+
+### govalidator(from master branch)
+* [govalidator](https://github.com/asaskevich/govalidator.git)

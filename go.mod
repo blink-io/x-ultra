@@ -8,7 +8,6 @@ require (
 	github.com/ProtonMail/gopenpgp/v2 v2.7.4
 	github.com/alexedwards/argon2id v1.0.0
 	github.com/andybalholm/brotli v1.0.6
-	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2
 	github.com/cenkalti/backoff/v4 v4.2.1
 	github.com/cespare/xxhash/v2 v2.2.0
 	github.com/creasty/defaults v1.7.0

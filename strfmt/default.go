@@ -23,7 +23,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/asaskevich/govalidator"
+	"github.com/blink-io/x/validator"
 )
 
 const (
@@ -146,7 +146,7 @@ func init() {
 	//   - uuid4
 	//   - uuid5
 	u := URI("")
-	Default.Add("uri", &u, govalidator.IsRequestURI)
+	Default.Add("uri", &u, validator.IsRequestURI)
 
 	eml := Email("")
 	Default.Add("email", &eml, IsEmail)
@@ -155,16 +155,16 @@ func init() {
 	Default.Add("hostname", &hn, IsHostname)
 
 	ip4 := IPv4("")
-	Default.Add("ipv4", &ip4, govalidator.IsIPv4)
+	Default.Add("ipv4", &ip4, validator.IsIPv4)
 
 	ip6 := IPv6("")
-	Default.Add("ipv6", &ip6, govalidator.IsIPv6)
+	Default.Add("ipv6", &ip6, validator.IsIPv6)
 
 	cidr := CIDR("")
-	Default.Add("cidr", &cidr, govalidator.IsCIDR)
+	Default.Add("cidr", &cidr, validator.IsCIDR)
 
 	mac := MAC("")
-	Default.Add("mac", &mac, govalidator.IsMAC)
+	Default.Add("mac", &mac, validator.IsMAC)
 
 	uid := UUID("")
 	Default.Add("uuid", &uid, IsUUID)
@@ -179,28 +179,28 @@ func init() {
 	Default.Add("uuid5", &uid5, IsUUID5)
 
 	isbn := ISBN("")
-	Default.Add("isbn", &isbn, func(str string) bool { return govalidator.IsISBN10(str) || govalidator.IsISBN13(str) })
+	Default.Add("isbn", &isbn, func(str string) bool { return validator.IsISBN10(str) || validator.IsISBN13(str) })
 
 	isbn10 := ISBN10("")
-	Default.Add("isbn10", &isbn10, govalidator.IsISBN10)
+	Default.Add("isbn10", &isbn10, validator.IsISBN10)
 
 	isbn13 := ISBN13("")
-	Default.Add("isbn13", &isbn13, govalidator.IsISBN13)
+	Default.Add("isbn13", &isbn13, validator.IsISBN13)
 
 	cc := CreditCard("")
-	Default.Add("creditcard", &cc, govalidator.IsCreditCard)
+	Default.Add("creditcard", &cc, validator.IsCreditCard)
 
 	ssn := SSN("")
-	Default.Add("ssn", &ssn, govalidator.IsSSN)
+	Default.Add("ssn", &ssn, validator.IsSSN)
 
 	hc := HexColor("")
-	Default.Add("hexcolor", &hc, govalidator.IsHexcolor)
+	Default.Add("hexcolor", &hc, validator.IsHexcolor)
 
 	rc := RGBColor("")
-	Default.Add("rgbcolor", &rc, govalidator.IsRGBcolor)
+	Default.Add("rgbcolor", &rc, validator.IsRGBcolor)
 
 	b64 := Base64([]byte(nil))
-	Default.Add("byte", &b64, govalidator.IsBase64)
+	Default.Add("byte", &b64, validator.IsBase64)
 
 	pw := Password("")
 	Default.Add("password", &pw, func(_ string) bool { return true })
