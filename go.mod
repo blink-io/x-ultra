@@ -42,9 +42,11 @@ require (
 	github.com/karrick/godirwalk v1.17.0
 	github.com/keegancsmith/sqlf v1.1.2
 	github.com/klauspost/compress v1.17.2
+	github.com/kvtools/valkeyrie v1.0.0
 	github.com/lithammer/shortuuid/v4 v4.0.0
 	github.com/lmittmann/tint v1.0.3
 	github.com/matthewhartstonge/argon2 v0.3.4
+	github.com/mattn/go-sqlite3 v1.14.17
 	github.com/maxbrunsfeld/counterfeiter/v6 v6.7.0
 	github.com/miekg/dns v1.1.56
 	github.com/mitchellh/mapstructure v1.5.0
@@ -60,7 +62,6 @@ require (
 	github.com/pierrec/lz4/v4 v4.1.18
 	github.com/proullon/ramsql v0.1.3
 	github.com/quic-go/quic-go v0.40.0
-	github.com/qustavo/sqlhooks/v2 v2.1.0
 	github.com/redis/go-redis/extra/rediscmd/v9 v9.0.5
 	github.com/redis/go-redis/v9 v9.3.0
 	github.com/redis/rueidis v1.0.21
@@ -82,6 +83,7 @@ require (
 	github.com/vmihailenco/msgpack/v5 v5.4.1
 	github.com/zeebo/xxh3 v1.0.2
 	gitlab.com/greyxor/slogor v1.2.0
+	go.etcd.io/bbolt v1.3.8
 	go.etcd.io/etcd/client/v3 v3.5.10
 	go.temporal.io/api v1.25.0
 	go.temporal.io/sdk v1.25.1
