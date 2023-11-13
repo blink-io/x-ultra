@@ -6,7 +6,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Xuanwo/go-locale"
+	"github.com/blink-io/x/locale"
+
 	"github.com/go-task/slim-sprig/v3"
 	"github.com/jellydator/ttlcache/v3"
 	"github.com/nicksnyder/go-i18n/v2/i18n"

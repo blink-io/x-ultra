@@ -6,16 +6,16 @@ import (
 	"testing"
 	"time"
 
-	"github.com/kvtools/valkeyrie"
-	"github.com/kvtools/valkeyrie/store"
-	"github.com/kvtools/valkeyrie/testsuite"
+	"github.com/blink-io/x/kvstore"
+	"github.com/blink-io/x/kvstore/testsuite"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 const testTimeout = 60 * time.Second
 
-func makeBoltDBClient(t *testing.T) store.Store {
+func makeBoltDBClient(t *testing.T) kvstore.Store {
 	t.Helper()
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -35,7 +35,7 @@ func TestRegister(t *testing.T) {
 
 	config := &Config{Bucket: "boltDBTest"}
 
-	kv, err := valkeyrie.NewStore(ctx, StoreName, []string{"/tmp/not_exist_dir/__boltdbtest"}, config)
+	kv, err := kvstore.NewStore(ctx, StoreName, []string{"/tmp/not_exist_dir/__boltdbtest"}, config)
 	require.NoError(t, err)
 	require.NotNil(t, kv)
 
@@ -56,14 +56,14 @@ func TestMultiplePersistConnection(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), testTimeout)
 	defer cancel()
 
-	kv, err := valkeyrie.NewStore(ctx, StoreName, []string{"/tmp/not_exist_dir/__boltdbtest"}, config)
+	kv, err := kvstore.NewStore(ctx, StoreName, []string{"/tmp/not_exist_dir/__boltdbtest"}, config)
 	require.NoError(t, err)
 	assert.NotNil(t, kv)
 
 	assert.IsTypef(t, kv, new(Store), "Error registering and initializing boltDB")
 
 	// Must fail if multiple boltdb requests are made with a valid timeout.
-	_, err = valkeyrie.NewStore(ctx, StoreName, []string{"/tmp/not_exist_dir/__boltdbtest"}, config)
+	_, err = kvstore.NewStore(ctx, StoreName, []string{"/tmp/not_exist_dir/__boltdbtest"}, config)
 	assert.Error(t, err)
 
 	_ = os.Remove("/tmp/not_exist_dir/__boltdbtest")
@@ -84,11 +84,11 @@ func TestConcurrentConnection(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), testTimeout)
 	defer cancel()
 
-	kv1, err := valkeyrie.NewStore(ctx, StoreName, []string{"/tmp/__boltdbtest"}, config)
+	kv1, err := kvstore.NewStore(ctx, StoreName, []string{"/tmp/__boltdbtest"}, config)
 	require.NoError(t, err)
 	assert.NotNil(t, kv1)
 
-	kv2, err := valkeyrie.NewStore(ctx, StoreName, []string{"/tmp/__boltdbtest"}, config)
+	kv2, err := kvstore.NewStore(ctx, StoreName, []string{"/tmp/__boltdbtest"}, config)
 	require.NoError(t, err)
 	assert.NotNil(t, kv2)
 
@@ -145,7 +145,7 @@ func TestGetAllKeys(t *testing.T) {
 		_ = kv.Delete(ctx, "key1")
 	})
 
-	err := kv.Put(ctx, "key1", []byte("value1"), &store.WriteOptions{})
+	err := kv.Put(ctx, "key1", []byte("value1"), &kvstore.WriteOptions{})
 	require.NoError(t, err)
 
 	pairs, err := kv.List(ctx, "", nil)

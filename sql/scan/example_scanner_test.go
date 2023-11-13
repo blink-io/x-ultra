@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"github.com/blink-io/x/sql/scan"
+
 	_ "github.com/proullon/ramsql/driver"
 )
 

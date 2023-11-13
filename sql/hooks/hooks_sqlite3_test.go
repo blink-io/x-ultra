@@ -6,9 +6,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mattn/go-sqlite3"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"modernc.org/sqlite"
 )
 
 func setUp(t *testing.T) func() {
@@ -26,7 +26,7 @@ func setUp(t *testing.T) func() {
 
 func TestSQLite3(t *testing.T) {
 	defer setUp(t)()
-	s := newSuite(t, &sqlite3.SQLiteDriver{}, "sqlite3test.db")
+	s := newSuite(t, &sqlite.Driver{}, "sqlite3test.db")
 
 	s.TestHooksExecution(t, "SELECT * FROM users WHERE id = ?", 1)
 	s.TestHooksArguments(t, "SELECT * FROM users WHERE id = ? AND name = ?", int64(1), "Gus")

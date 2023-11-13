@@ -20,3 +20,6 @@
 
 ### sqlhooks
 * [sqlhooks v2.0.0](https://github.com/qustavo/sqlhooks/releases/tag/v2.0.0)
+
+### locale
+* [go-locale](https://github.com/Xuanwo/go-locale/releases/tag/v1.1.0)

@@ -37,7 +37,7 @@ func benchmark(b *testing.B, driver, dsn string) {
 
 func BenchmarkSQLite3(b *testing.B) {
 	b.Run("Without Hooks", func(b *testing.B) {
-		benchmark(b, "sqlite3", ":memory:")
+		benchmark(b, "sqlite", ":memory:")
 	})
 
 	b.Run("With Hooks", func(b *testing.B) {
