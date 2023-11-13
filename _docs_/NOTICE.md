@@ -1,5 +1,8 @@
 # NOTICE
 
+### config(modified from fig)
+* [fig v0.3.2](https://github.com/kkyr/fig/releases/tag/v0.3.2)
+
 ### cast
 * [cast v1.5.1](https://github.com/spf13/cast/releases/tag/v1.5.1)
 

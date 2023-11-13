@@ -3,7 +3,6 @@ module github.com/blink-io/x
 go 1.21.2
 
 require (
-	aead.dev/minisign v0.2.1
 	github.com/Masterminds/squirrel v1.5.4
 	github.com/ProtonMail/gopenpgp/v2 v2.7.4
 	github.com/alexedwards/argon2id v1.0.0
@@ -43,7 +42,6 @@ require (
 	github.com/lithammer/shortuuid/v4 v4.0.0
 	github.com/lmittmann/tint v1.0.3
 	github.com/matthewhartstonge/argon2 v0.3.4
-	github.com/maxbrunsfeld/counterfeiter/v6 v6.7.0
 	github.com/miekg/dns v1.1.56
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/natefinch/lumberjack/v3 v3.0.0-alpha
@@ -101,6 +99,7 @@ require (
 )
 
 require (
+	github.com/BurntSushi/toml v1.3.2 // indirect
 	github.com/ProtonMail/go-crypto v0.0.0-20230923063757-afb1ddc0824c // indirect
 	github.com/ProtonMail/go-mime v0.0.0-20230322103455-7d82a3887f2f // indirect
 	github.com/cloudflare/circl v1.3.3 // indirect
@@ -169,7 +168,7 @@ require (
 	lukechampine.com/uint128 v1.3.0 // indirect
 	modernc.org/cc/v3 v3.41.0 // indirect
 	modernc.org/ccgo/v3 v3.16.15 // indirect
-	modernc.org/libc v1.34.0 // indirect
+	modernc.org/libc v1.34.1 // indirect
 	modernc.org/mathutil v1.6.0 // indirect
 	modernc.org/memory v1.7.2 // indirect
 	modernc.org/opt v0.1.3 // indirect

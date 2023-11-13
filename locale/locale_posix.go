@@ -1,5 +1,4 @@
 //go:build aix || dragonfly || freebsd || hurd || illumos || linux || nacl || netbsd || openbsd || plan9 || solaris || zos
-// +build aix dragonfly freebsd hurd illumos linux nacl netbsd openbsd plan9 solaris zos
 
 package locale
 
@@ -81,7 +80,7 @@ func detectViaLocaleConf() (_ []string, err error) {
 //   - POSIX Locale: https://pubs.opengroup.org/onlinepubs/9699919799/
 //   - XDG Base Directory: https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html
 func getLocaleConfPath() string {
-	// Try to loading from $XDG_CONFIG_HOME/locale.conf
+	// Try to load from $XDG_CONFIG_HOME/locale.conf
 	xdg, ok := os.LookupEnv("XDG_CONFIG_HOME")
 	if ok {
 		fp := path.Join(xdg, "locale.conf")
@@ -91,7 +90,7 @@ func getLocaleConfPath() string {
 		}
 	}
 
-	// Try to loading from $HOME/.config/locale.conf
+	// Try to load from $HOME/.config/locale.conf
 	home, ok := os.LookupEnv("HOME")
 	if ok {
 		fp := path.Join(home, ".config", "locale.conf")
@@ -101,7 +100,7 @@ func getLocaleConfPath() string {
 		}
 	}
 
-	// Try to loading from /etc/locale.conf
+	// Try to load from /etc/locale.conf
 	fp := "/etc/locale.conf"
 	_, err := os.Stat(fp)
 	if err == nil {

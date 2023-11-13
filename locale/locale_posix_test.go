@@ -1,5 +1,4 @@
 //go:build !windows && !darwin && !js
-// +build !windows,!darwin,!js
 
 package locale
 

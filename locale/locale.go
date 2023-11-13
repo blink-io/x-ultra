@@ -6,7 +6,7 @@ import (
 	"golang.org/x/text/language"
 )
 
-// Detect will detect current env's language.
+// Detect will detect language from current env.
 func Detect() (tag language.Tag, err error) {
 	tags, err := DetectAll()
 	if err != nil {
@@ -15,7 +15,7 @@ func Detect() (tag language.Tag, err error) {
 	return tags[0], nil
 }
 
-// DetectAll will detect current env's all available language.
+// DetectAll will detect all available language from current env.
 func DetectAll() (tags []language.Tag, err error) {
 	lang, err := detect()
 	if err != nil {
