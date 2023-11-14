@@ -95,14 +95,19 @@ const (
 // - we generate random int63's
 // - from each int63, we are extracting multiple random letters by bit-shifting and masking
 // - if some index is out of range of alphanums we neglect it (unlikely to happen multiple times in a row)
-func String(n int) string {
-	b := make([]byte, n)
+func String(size int) string {
+	b := Bytes(size)
+	return string(b)
+}
+
+func Bytes(size int) []byte {
+	b := make([]byte, size)
 	rng.Lock()
 	defer rng.Unlock()
 
 	randomInt63 := rng.rand.Int63()
 	remaining := maxAlphanumsPerInt
-	for i := 0; i < n; {
+	for i := 0; i < size; {
 		if remaining == 0 {
 			randomInt63, remaining = rng.rand.Int63(), maxAlphanumsPerInt
 		}
@@ -113,7 +118,7 @@ func String(n int) string {
 		randomInt63 >>= alphanumsIdxBits
 		remaining--
 	}
-	return string(b)
+	return b
 }
 
 // SafeEncodeString encodes s using the same characters as rand.String. This reduces the chances of bad words and

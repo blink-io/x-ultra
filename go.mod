@@ -93,6 +93,7 @@ require (
 
 require (
 	github.com/DATA-DOG/go-sqlmock v1.5.0
+	github.com/matryer/is v1.4.1
 	github.com/pashagolub/pgxmock/v3 v3.2.0
 	github.com/smartystreets/goconvey v1.8.1
 	golang.org/x/sys v0.14.0
@@ -168,7 +169,7 @@ require (
 	lukechampine.com/uint128 v1.3.0 // indirect
 	modernc.org/cc/v3 v3.41.0 // indirect
 	modernc.org/ccgo/v3 v3.16.15 // indirect
-	modernc.org/libc v1.34.1 // indirect
+	modernc.org/libc v1.34.3 // indirect
 	modernc.org/mathutil v1.6.0 // indirect
 	modernc.org/memory v1.7.2 // indirect
 	modernc.org/opt v0.1.3 // indirect

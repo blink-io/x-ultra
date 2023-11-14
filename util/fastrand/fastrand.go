@@ -26,7 +26,7 @@ func Uint32() uint32 {
 
 var rngPool sync.Pool
 
-// Uint32n returns pseudorandom uint32 in the range [0..maxN).
+// Uint32n returns pseudorandom uint32 in the range [0...maxN).
 //
 // It is safe calling this function from concurrent goroutines.
 func Uint32n(maxN uint32) uint32 {

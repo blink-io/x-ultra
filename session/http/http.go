@@ -39,6 +39,10 @@ func NewSessionHandler(ops ...Option) *SessionHandler {
 	return m
 }
 
+func Handle(sh *SessionHandler) func(next http.Handler) http.Handler {
+	return sh.Handle
+}
+
 // Handle provides middleware which automatically loads and saves session
 // data for the current request, and communicates the session token to and from
 // the client in a cookie.

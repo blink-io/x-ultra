@@ -59,7 +59,7 @@ func Tag(tag string) Option {
 	}
 }
 
-// TimeLayout returns an option that conmfigures the time layout that config uses when
+// TimeLayout returns an option that configures the time layout that config uses when
 // parsing a time in a config file or in the default tag for time.Time fields.
 //
 //	config.Load(&cfg, config.TimeLayout("2006-01-02"))
@@ -78,8 +78,8 @@ func TimeLayout(layout string) Option {
 //
 // Values loaded from the environment overwrite values loaded by the config file (if any).
 //
-// Fig looks for environment variables in the format PREFIX_FIELD_PATH or
-// FIELD_PATH if prefix is empty. Prefix is capitalised regardless of what
+// config looks for environment variables in the format PREFIX_FIELD_PATH or
+// FIELD_PATH if prefix is empty. Prefix is capitalized regardless of what
 // is provided. The field's path is formed by prepending its name with the
 // names of all surrounding fields up to the root struct. If a field has
 // an alternative name defined inside a struct tag then that name is
