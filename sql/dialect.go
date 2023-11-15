@@ -9,6 +9,7 @@ import (
 
 	"github.com/blink-io/x/sql/hooks"
 
+	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/schema"
 )
 
@@ -47,7 +48,17 @@ func GetDialect(o *Options) (schema.Dialect, *sql.DB, error) {
 	}
 
 	conn := &dsnConnector{dsn: dsn, driver: drv}
-	db := openDB(conn)
+	var db *sql.DB
+	if o.WithOTEL {
+		db = otelOpenDB(conn,
+			OTelDBName(o.Name),
+			OTelDBSystem(o.Dialect),
+			OTelDBAccessMethod("bun"+" "+bun.Version()),
+			OTelReportDBStats(),
+		)
+	} else {
+		db = sqlOpenDB(conn)
+	}
 
 	// Ignore driver.ErrSkip when the Conn does not implement driver.Pinger interface
 	if err := db.Ping(); err != nil && !errors.Is(err, driver.ErrSkip) {
