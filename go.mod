@@ -96,6 +96,7 @@ require (
 	github.com/XSAM/otelsql v0.26.0
 	github.com/matryer/is v1.4.1
 	github.com/pashagolub/pgxmock/v3 v3.2.0
+	github.com/segmentio/encoding v0.3.6
 	github.com/smartystreets/goconvey v1.8.1
 	go.opentelemetry.io/otel v1.20.0
 	golang.org/x/sys v0.14.0
@@ -148,6 +149,7 @@ require (
 	github.com/quic-go/qtls-go1-20 v0.4.1 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
 	github.com/rogpeppe/go-internal v1.11.0 // indirect
+	github.com/segmentio/asm v1.1.3 // indirect
 	github.com/smarty/assertions v1.15.0 // indirect
 	github.com/stretchr/objx v0.5.1 // indirect
 	github.com/tmthrgd/go-hex v0.0.0-20190904060850-447a3041c3bc // indirect
