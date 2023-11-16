@@ -1,3 +1,3 @@
-//go:build !postgres || !pg
+//go:build !postgres || !pg || !postgresql
 
 package sql

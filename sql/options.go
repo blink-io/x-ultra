@@ -24,8 +24,8 @@ type Options struct {
 	Options         map[string]string
 	DialTimeout     time.Duration
 	ConnInitSQL     string
-	ConnMaxLifetime *time.Duration
-	ConnMaxIdleTime *time.Duration
+	ConnMaxLifetime time.Duration
+	ConnMaxIdleTime time.Duration
 	MaxOpenConns    int
 	MaxIdleConns    int
 	ValidationSQL   string
@@ -34,15 +34,19 @@ type Options struct {
 	Loc             *time.Location
 	Debug           bool
 	WithOTEL        bool
+	Collation       string
 	dsn             string
 }
 
-func setupOptions(c *Options) (*Options, error) {
-	if c == nil {
+func setupOptions(o *Options) (*Options, error) {
+	if o == nil {
 		return nil, errors.New("idb config cannot be empty")
 	}
-	if len(c.Network) == 0 {
-		c.Network = "tcp"
+	if len(o.Network) == 0 {
+		o.Network = "tcp"
 	}
-	return c, nil
+	if o.Loc == nil {
+		o.Loc = time.Local
+	}
+	return o, nil
 }

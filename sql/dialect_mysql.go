@@ -1,8 +1,10 @@
-//go:build mysql
-
 package sql
 
 import (
+	"net"
+
+	"github.com/blink-io/x/cast"
+
 	"github.com/go-sql-driver/mysql"
 	"github.com/uptrace/bun/dialect/mysqldialect"
 	"github.com/uptrace/bun/schema"
@@ -19,8 +21,6 @@ func init() {
 		return mysqldialect.New()
 	}
 	dsnFuncs[dn] = MySQLDSN
-
-	slog.Info("MySQL is enabled")
 }
 
 func MySQLDSN(o *Options) string {
@@ -34,6 +34,7 @@ func MySQLDSN(o *Options) string {
 	tlsConfig := o.TLSConfig
 	options := o.Options
 	loc := o.Loc
+	collation := o.Collation
 
 	// Restful TLS Options
 	cc := mysql.NewConfig()
@@ -47,6 +48,7 @@ func MySQLDSN(o *Options) string {
 	cc.Passwd = password
 	// TODO Do we need to check them?
 	cc.Params = options
+	cc.Collation = collation
 	if network == "tcp" {
 		cc.Addr = net.JoinHostPort(host, cast.ToString(port))
 	} else {
@@ -59,4 +61,5 @@ func MySQLDSN(o *Options) string {
 		cc.TLSConfig = DialectMySQL
 	}
 	dsn := cc.FormatDSN()
+	return dsn
 }

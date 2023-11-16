@@ -79,7 +79,7 @@ func GetDialect(o *Options) (schema.Dialect, *sql.DB, error) {
 		}
 	}
 
-	// https://bun.uptrace.dev/guide/running-bun-in-production.html
+	// Reference: https://bun.uptrace.dev/guide/running-bun-in-production.html
 	maxIdleConns := o.MaxIdleConns
 	maxOpenConns := o.MaxOpenConns
 	connMaxLifetime := o.ConnMaxLifetime
@@ -96,11 +96,11 @@ func GetDialect(o *Options) (schema.Dialect, *sql.DB, error) {
 	} else {
 		db.SetMaxIdleConns(maxOpenConns)
 	}
-	if connMaxIdleTime != nil {
-		db.SetConnMaxIdleTime(*connMaxIdleTime)
+	if connMaxIdleTime > 0 {
+		db.SetConnMaxIdleTime(connMaxIdleTime)
 	}
-	if connMaxLifetime != nil {
-		db.SetConnMaxLifetime(*connMaxLifetime)
+	if connMaxLifetime > 0 {
+		db.SetConnMaxLifetime(connMaxLifetime)
 	}
 
 	return sd, db, err

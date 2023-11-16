@@ -78,7 +78,7 @@ require (
 	gitlab.com/greyxor/slogor v1.2.0
 	go.etcd.io/bbolt v1.3.8
 	go.etcd.io/etcd/client/v3 v3.5.10
-	go.temporal.io/api v1.25.0
+	go.temporal.io/api v1.26.0
 	go.temporal.io/sdk v1.25.1
 	go.uber.org/multierr v1.11.0
 	go.uber.org/zap v1.26.0

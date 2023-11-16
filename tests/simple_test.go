@@ -28,3 +28,23 @@ func TestSim_1(t *testing.T) {
 
 	require.Equal(t, u1, u2)
 }
+
+func TestIfaceStruct_1(t *testing.T) {
+	type SS struct {
+		Name string
+	}
+	var ss = SS(struct {
+		Name string
+	}{
+		Name: "ok",
+	})
+	require.NotNil(t, ss)
+
+	var ssp = &struct {
+		Name string
+	}{
+		Name: "very ok",
+	}
+	var sspp = (*SS)(ssp)
+	require.NotNil(t, sspp)
+}

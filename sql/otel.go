@@ -26,25 +26,21 @@ type otelOption func(*otelOptions)
 
 func (oo *otelOptions) forOTelSql() []otelsql.Option {
 	ops := make([]otelsql.Option, 0)
-	if len(oo.dbName) > 0 {
-		ops = append(ops, otelsql.WithDBName(oo.dbName))
-	}
-	if len(oo.dbSystem) > 0 {
-		ops = append(ops, otelsql.WithDBSystem(oo.dbSystem))
-	}
 	attrs := make([]attribute.KeyValue, 0)
-	if len(oo.dbAccessMethod) > 0 {
-		attrs = append(attrs, DBAccessMethodKey.String(oo.dbAccessMethod))
-	}
-	if len(attrs) > 0 {
-		ops = append(ops, otelsql.WithAttributes(attrs...))
-	}
+	attrs = oo.appendDBInfo(attrs)
+	ops = append(ops, otelsql.WithAttributes(attrs...))
 	return ops
 }
 
 func (oo *otelOptions) forXOTelSql() []xotelsql.Option {
 	ops := make([]xotelsql.Option, 0)
 	attrs := make([]attribute.KeyValue, 0)
+	attrs = oo.appendDBInfo(attrs)
+	ops = append(ops, xotelsql.WithAttributes(attrs...))
+	return ops
+}
+
+func (oo *otelOptions) appendDBInfo(attrs []attribute.KeyValue) []attribute.KeyValue {
 	if len(oo.dbName) > 0 {
 		attrs = append(attrs, semconv.DBNameKey.String(oo.dbName))
 	}
@@ -54,10 +50,7 @@ func (oo *otelOptions) forXOTelSql() []xotelsql.Option {
 	if len(oo.dbAccessMethod) > 0 {
 		attrs = append(attrs, DBAccessMethodKey.String(oo.dbAccessMethod))
 	}
-	if len(attrs) > 0 {
-		ops = append(ops, xotelsql.WithAttributes(attrs...))
-	}
-	return ops
+	return attrs
 }
 
 func applyOtelOptions(ops ...otelOption) *otelOptions {
