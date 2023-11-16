@@ -49,7 +49,7 @@ func GetDialect(o *Options) (schema.Dialect, *sql.DB, error) {
 
 	conn := &dsnConnector{dsn: dsn, driver: drv}
 	var db *sql.DB
-	if o.WithOTEL {
+	if o.WithOTel {
 		db = otelOpenDB(conn,
 			OTelDBName(o.Name),
 			OTelDBSystem(o.Dialect),

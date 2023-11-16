@@ -33,7 +33,7 @@ type Options struct {
 	QueryHooks      []bun.QueryHook
 	Loc             *time.Location
 	Debug           bool
-	WithOTEL        bool
+	WithOTel        bool
 	Collation       string
 	dsn             string
 }
