@@ -98,6 +98,7 @@ require (
 	github.com/pashagolub/pgxmock/v3 v3.2.0
 	github.com/segmentio/encoding v0.3.6
 	github.com/smartystreets/goconvey v1.8.1
+	github.com/sourcegraph/conc v0.3.0
 	go.opentelemetry.io/otel v1.20.0
 	golang.org/x/sys v0.14.0
 )
@@ -106,7 +107,7 @@ require (
 	github.com/BurntSushi/toml v1.3.2 // indirect
 	github.com/ProtonMail/go-crypto v0.0.0-20230923063757-afb1ddc0824c // indirect
 	github.com/ProtonMail/go-mime v0.0.0-20230322103455-7d82a3887f2f // indirect
-	github.com/cloudflare/circl v1.3.3 // indirect
+	github.com/cloudflare/circl v1.3.6 // indirect
 	github.com/coreos/go-semver v0.3.1 // indirect
 	github.com/coreos/go-systemd/v22 v22.5.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
@@ -149,8 +150,8 @@ require (
 	github.com/quic-go/qtls-go1-20 v0.4.1 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
 	github.com/rogpeppe/go-internal v1.11.0 // indirect
-	github.com/segmentio/asm v1.1.3 // indirect
-	github.com/smarty/assertions v1.15.0 // indirect
+	github.com/segmentio/asm v1.2.0 // indirect
+	github.com/smarty/assertions v1.15.1 // indirect
 	github.com/stretchr/objx v0.5.1 // indirect
 	github.com/tmthrgd/go-hex v0.0.0-20190904060850-447a3041c3bc // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
