@@ -1,6 +1,7 @@
 package tests
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -47,4 +48,21 @@ func TestIfaceStruct_1(t *testing.T) {
 	}
 	var sspp = (*SS)(ssp)
 	require.NotNil(t, sspp)
+}
+
+func autoincr() func() int {
+	i := 0
+	return func() int {
+		i++
+		return i
+	}
+}
+
+func TestClosure(t *testing.T) {
+	ac := autoincr()
+	fmt.Println("i: ", ac())
+	fmt.Println("i: ", ac())
+	fmt.Println("i: ", ac())
+	fmt.Println("i: ", ac())
+	fmt.Println("i: ", ac())
 }
