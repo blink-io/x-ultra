@@ -11,31 +11,40 @@ const (
 	EnvDevelopment = "development"
 	EnvTest        = "test"
 	EnvProduction  = "production"
+
+	EnvSuffix            = ".env"
+	EnvSuffixFormat      = ".env.%s"
+	EnvLocalSuffix       = ".env.local"
+	EnvLocalSuffixFormat = ".env.%s.local"
 )
 
-// Flow load multiple files based on the following order
-// .env.development.local
-// .env.local
-// .env.development
+// Flow load multiple files based on the following orders (from lower to higher)
 // .env
+// .env.production
+// .env.test
+// .env.development
+// .env.local
+// .env.production.local
+// .env.test.local
+// .env.development.local
 // supported env: development|test|production
 // See https://github.com/bkeepers/dotenv#what-other-env-files-can-i-use
-func Flow(env string, paths ...string) error {
-	if env == EnvDevelopment ||
-		env == EnvTest ||
-		env == EnvProduction {
-		if paths == nil {
-			paths = []string{""}
-		}
+func Flow(paths ...string) error {
+	if len(paths) > 0 {
+		envs := []string{EnvProduction, EnvTest, EnvDevelopment}
 		for _, path := range paths {
-			envFile := filepath.Join(path, ".env")
-			customEnvFile := filepath.Join(path, fmt.Sprintf(".env.%s", env))
-			envLocalFile := filepath.Join(path, ".env.local")
-			customEnvLocalFile := filepath.Join(path, fmt.Sprintf(".env.%s.local", env))
-			_ = godotenv.Overload(envFile)
-			_ = godotenv.Overload(customEnvFile)
-			_ = godotenv.Overload(envLocalFile)
-			_ = godotenv.Overload(customEnvLocalFile)
+			// Load .env first
+			_ = godotenv.Overload(filepath.Join(path, EnvSuffix))
+			// Load .env.(production|test|development)
+			for _, env := range envs {
+				_ = godotenv.Overload(filepath.Join(path, fmt.Sprintf(EnvSuffixFormat, env)))
+			}
+			// Load .env.local
+			_ = godotenv.Overload(filepath.Join(path, EnvLocalSuffix))
+			// Load .env.local.(production|test|development)
+			for _, env := range envs {
+				_ = godotenv.Overload(filepath.Join(path, fmt.Sprintf(EnvLocalSuffixFormat, env)))
+			}
 		}
 	}
 	return nil

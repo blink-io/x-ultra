@@ -5,8 +5,10 @@ import (
 	"database/sql/driver"
 	"errors"
 	"fmt"
+	"net"
 	"runtime"
 
+	"github.com/blink-io/x/cast"
 	"github.com/blink-io/x/sql/hooks"
 
 	"github.com/uptrace/bun"
@@ -48,12 +50,14 @@ func GetDialect(o *Options) (schema.Dialect, *sql.DB, error) {
 	}
 
 	conn := &dsnConnector{dsn: dsn, driver: drv}
+	hostPort := net.JoinHostPort(o.Host, cast.ToString(o.Port))
 	var db *sql.DB
 	if o.WithOTel {
 		db = otelOpenDB(conn,
 			OTelDBName(o.Name),
 			OTelDBSystem(o.Dialect),
 			OTelDBAccessMethod("bun"+" "+bun.Version()),
+			OTelDBHostPort(hostPort),
 			OTelReportDBStats(),
 		)
 	} else {

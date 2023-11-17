@@ -1,4 +1,4 @@
-package collections
+package hashmap
 
 import (
 	"math/rand"

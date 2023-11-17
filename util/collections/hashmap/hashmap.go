@@ -2,7 +2,7 @@
 // Use of this source code is governed by an ISC-style
 // license that can be found in the LICENSE file.
 
-package collections
+package hashmap
 
 import (
 	"unsafe"
@@ -117,7 +117,7 @@ func (m *HashMap[K, V]) resize(newCap int) {
 	m.cap = cap
 }
 
-// HashSet assigns a value to a key.
+// Set assigns a value to a key.
 // Returns the previous value, or false when no value was assigned.
 func (m *HashMap[K, V]) Set(key K, value V) (V, bool) {
 	if len(m.buckets) == 0 {
@@ -152,7 +152,7 @@ func (m *HashMap[K, V]) set(hash int, key K, value V) (prev V, ok bool) {
 }
 
 // Get returns a value for a key.
-// Returns false when no value has been assign for key.
+// Returns false when no value has been assigned for the key.
 func (m *HashMap[K, V]) Get(key K) (value V, ok bool) {
 	if len(m.buckets) == 0 {
 		return value, false

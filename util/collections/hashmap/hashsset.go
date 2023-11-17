@@ -1,4 +1,4 @@
-package collections
+package hashmap
 
 type HashSet[K comparable] struct {
 	base HashMap[K, struct{}]
@@ -9,7 +9,7 @@ func (tr *HashSet[K]) Insert(key K) {
 	tr.base.Set(key, struct{}{})
 }
 
-// Get a value for key
+// Contains a value for key
 func (tr *HashSet[K]) Contains(key K) bool {
 	_, ok := tr.base.Get(key)
 	return ok
