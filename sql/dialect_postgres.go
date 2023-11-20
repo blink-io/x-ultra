@@ -34,22 +34,31 @@ func PostgresDSN(o *Options) string {
 	tlsConfig := o.TLSConfig
 	options := o.Options
 
-	//debug := o.Debug
+	pgcc := pgconn.Config{
+		Database:      name,
+		Host:          host,
+		Port:          uint16(port),
+		User:          user,
+		Password:      password,
+		TLSConfig:     tlsConfig,
+		RuntimeParams: handlePostgresParams(options),
+	}
+	if dialTimeout > 0 {
+		pgcc.ConnectTimeout = dialTimeout
+	}
 
 	cc := &pgx.ConnConfig{
-		Config: pgconn.Config{
-			Database:       name,
-			Host:           host,
-			Port:           uint16(port),
-			User:           user,
-			Password:       password,
-			TLSConfig:      tlsConfig,
-			ConnectTimeout: dialTimeout,
-			// TODO Do we need to check them?
-			RuntimeParams: options,
-		},
+		Config: pgcc,
+		Tracer: &tracelog.TraceLog{Logger: pgxzap.NewLogger(zap.L()), LogLevel: tracelog.LogLevelInfo},
 	}
-	cc.Tracer = &tracelog.TraceLog{Logger: pgxzap.NewLogger(zap.L()), LogLevel: tracelog.LogLevelInfo}
 	dsn := stdlib.RegisterConnConfig(cc)
 	return dsn
+}
+
+func handlePostgresParams(params map[string]string) map[string]string {
+	newParams := make(map[string]string)
+	for k, v := range params {
+		newParams[k] = v
+	}
+	return newParams
 }

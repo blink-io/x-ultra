@@ -100,6 +100,7 @@ require (
 	github.com/segmentio/encoding v0.3.6
 	github.com/smartystreets/goconvey v1.8.1
 	github.com/sourcegraph/conc v0.3.0
+	github.com/xo/dburl v0.18.2
 	go.opentelemetry.io/otel v1.21.0
 	golang.org/x/sys v0.14.0
 )

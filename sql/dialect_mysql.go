@@ -44,10 +44,12 @@ func MySQLDSN(o *Options) string {
 	cc.Net = network
 	cc.DBName = name
 	cc.User = user
-	cc.Timeout = dialTimeout
 	cc.Passwd = password
+	if dialTimeout > 0 {
+		cc.Timeout = dialTimeout
+	}
 	// TODO Do we need to check them?
-	cc.Params = options
+	cc.Params = handleMySQLParams(options)
 	cc.Collation = collation
 	if network == "tcp" {
 		cc.Addr = net.JoinHostPort(host, cast.ToString(port))
@@ -62,4 +64,12 @@ func MySQLDSN(o *Options) string {
 	}
 	dsn := cc.FormatDSN()
 	return dsn
+}
+
+func handleMySQLParams(params map[string]string) map[string]string {
+	newParams := make(map[string]string)
+	for k, v := range params {
+		newParams[k] = v
+	}
+	return newParams
 }
