@@ -3,10 +3,10 @@ package sql
 import (
 	"context"
 	"crypto/tls"
-	"errors"
 	"time"
 
 	"github.com/blink-io/x/sql/hooks"
+	"go.opentelemetry.io/otel/attribute"
 
 	"github.com/uptrace/bun"
 )
@@ -35,12 +35,22 @@ type Options struct {
 	Debug           bool
 	WithOTel        bool
 	Collation       string
+	ClientName      string
+	Attrs           []attribute.KeyValue
 	dsn             string
 }
 
-func setupOptions(o *Options) (*Options, error) {
+func setupOptions(o *Options) *Options {
 	if o == nil {
-		return nil, errors.New("idb config cannot be empty")
+		o = new(Options)
+	}
+	o.SetDefaults()
+	return o
+}
+
+func (o *Options) SetDefaults() {
+	if o == nil {
+		return
 	}
 	if len(o.Network) == 0 {
 		o.Network = "tcp"
@@ -48,5 +58,8 @@ func setupOptions(o *Options) (*Options, error) {
 	if o.Loc == nil {
 		o.Loc = time.Local
 	}
-	return o, nil
+}
+
+func (o *Options) Validate() error {
+	return nil
 }

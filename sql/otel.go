@@ -17,23 +17,36 @@ type otelOptions struct {
 	dbSystem       string
 	dbAccessMethod string //dbDam, Database Access Method
 	dbHostPort     string
+	extraAttrs     []attribute.KeyValue
 	reportDBStats  bool
 }
 
 type OTtelOption func(*otelOptions)
 
 func (oo *otelOptions) otelSqlOptions() []otelsql.Option {
+	attrs := oo.createAttrs()
+
 	ops := make([]otelsql.Option, 0)
-	attrs := oo.createDBInfoAttrs()
 	ops = append(ops, otelsql.WithAttributes(attrs...))
 	return ops
 }
 
 func (oo *otelOptions) xotelSqlOptions() []xotelsql.Option {
+	attrs := oo.createAttrs()
+
 	ops := make([]xotelsql.Option, 0)
-	attrs := oo.createDBInfoAttrs()
 	ops = append(ops, xotelsql.WithAttributes(attrs...))
 	return ops
+}
+
+func (oo *otelOptions) createAttrs() []attribute.KeyValue {
+	attrs := make([]attribute.KeyValue, 0)
+	if len(oo.extraAttrs) > 0 {
+		attrs = append(attrs, oo.extraAttrs...)
+	}
+	attrs = append(attrs, oo.createDBInfoAttrs()...)
+	// TODO Remove duplicated attrs
+	return attrs
 }
 
 func (oo *otelOptions) createDBInfoAttrs() []attribute.KeyValue {
@@ -88,6 +101,12 @@ func OTelDBHostPort(dbHostPort string) OTtelOption {
 func OTelReportDBStats() OTtelOption {
 	return func(o *otelOptions) {
 		o.reportDBStats = true
+	}
+}
+
+func OTelAttrs(attrs ...attribute.KeyValue) OTtelOption {
+	return func(o *otelOptions) {
+		o.extraAttrs = attrs
 	}
 }
 

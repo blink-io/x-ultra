@@ -16,10 +16,7 @@ import (
 )
 
 func GetDialect(o *Options) (schema.Dialect, *sql.DB, error) {
-	o, err := setupOptions(o)
-	if err != nil {
-		return nil, nil, err
-	}
+	o = setupOptions(o)
 
 	dialect := o.Dialect
 
@@ -59,6 +56,7 @@ func GetDialect(o *Options) (schema.Dialect, *sql.DB, error) {
 			OTelDBAccessMethod("bun"+" "+bun.Version()),
 			OTelDBHostPort(hostPort),
 			OTelReportDBStats(),
+			OTelAttrs(o.Attrs...),
 		)
 	} else {
 		db = sqlOpenDB(conn)
@@ -107,5 +105,5 @@ func GetDialect(o *Options) (schema.Dialect, *sql.DB, error) {
 		db.SetConnMaxLifetime(connMaxLifetime)
 	}
 
-	return sd, db, err
+	return sd, db, nil
 }

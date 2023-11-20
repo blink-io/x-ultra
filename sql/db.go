@@ -23,10 +23,7 @@ func NewRawDB(sqlDB *sql.DB, dialect schema.Dialect) (*DB, error) {
 }
 
 func NewDB(o *Options) (*DB, error) {
-	o, err := setupOptions(o)
-	if err != nil {
-		return nil, err
-	}
+	o = setupOptions(o)
 
 	sd, sqlDB, err := GetDialect(o)
 	if err != nil {

@@ -1,4 +1,4 @@
-package toml
+package tomlv2
 
 import (
 	"testing"
