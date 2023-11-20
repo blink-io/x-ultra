@@ -1,4 +1,4 @@
-package xz
+package snappy
 
 import (
 	"testing"

@@ -1,4 +1,4 @@
-package zstd
+package brotli
 
 import (
 	"testing"

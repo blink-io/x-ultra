@@ -1,4 +1,4 @@
-package xz
+package s2
 
 import (
 	"testing"
