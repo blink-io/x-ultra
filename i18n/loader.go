@@ -8,12 +8,15 @@ import (
 	"time"
 )
 
+const (
+	HTTPTimeout = 10 * time.Second
+)
+
 type (
 	Bundler interface {
-		LoadMessageFile(path string) (*MessageFile, error)
-		LoadMessageFileFS(fsys fs.FS, path string) (*MessageFile, error)
-		MustLoadMessageFile(path string)
-		ParseMessageFileBytes(buf []byte, path string) (*MessageFile, error)
+		LoadMessageFile(string) (*MessageFile, error)
+		LoadMessageFileFS(fs.FS, string) (*MessageFile, error)
+		LoadMessageFileBytes([]byte, string) (*MessageFile, error)
 	}
 	Loader interface {
 		Load(Bundler) error
@@ -24,19 +27,19 @@ var _ Bundler = (*Bundle)(nil)
 
 // dirLoader loads files from directory
 type dirLoader struct {
-	root string
+	dir string
 }
 
-func NewDirLoader(root string) Loader {
-	l := &dirLoader{root: root}
+func NewDirLoader(dir string) Loader {
+	l := &dirLoader{dir: dir}
 	return l
 }
 
 func (l *dirLoader) Load(b Bundler) error {
-	if len(l.root) == 0 {
+	if len(l.dir) == 0 {
 		return nil
 	}
-	return filepath.WalkDir(l.root, func(path string, d fs.DirEntry, err error) error {
+	return filepath.WalkDir(l.dir, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
@@ -82,13 +85,17 @@ func (l *fsLoader) Load(b Bundler) error {
 // httpLoader loads by http GET requests
 // URL should be like: https://xxx.com/languages/zh_Hans.toml
 type httpLoader struct {
-	c   *http.Client
-	url string
+	c       *http.Client
+	extract func(string) string
+	url     string
 }
 
-func NewHTTPLoader(url string, timeout time.Duration) Loader {
+func NewHTTPLoader(url string, extract func(string) string, timeout time.Duration) Loader {
+	if timeout == 0 {
+		timeout = HTTPTimeout
+	}
 	c := &http.Client{Timeout: timeout}
-	return &httpLoader{c, url}
+	return &httpLoader{c: c, extract: extract, url: url}
 }
 
 func (h *httpLoader) Load(b Bundler) error {
@@ -104,7 +111,13 @@ func (h *httpLoader) Load(b Bundler) error {
 		return err
 	}
 
-	if _, err := b.ParseMessageFileBytes(buf, h.url); err != nil {
+	var path string
+	if h.extract != nil {
+		path = h.extract(h.url)
+	} else {
+		path = h.url
+	}
+	if _, err := b.LoadMessageFileBytes(buf, path); err != nil {
 		log("[WARN] unable to load message from URL: %s", h.url)
 	}
 	return nil
@@ -121,7 +134,7 @@ func NewBytesLoader(path string, data []byte) Loader {
 
 func (h *bytesLoader) Load(b Bundler) error {
 	if len(h.Path) > 0 && len(h.Data) > 0 {
-		if _, err := b.ParseMessageFileBytes(h.Data, h.Path); err != nil {
+		if _, err := b.LoadMessageFileBytes(h.Data, h.Path); err != nil {
 			log("[WARN] unable to load message from bytes: %s", h.Path)
 		}
 	}

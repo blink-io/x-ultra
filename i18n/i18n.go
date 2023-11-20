@@ -4,7 +4,6 @@ import (
 	"io/fs"
 	stdlog "log"
 	"sync"
-	"time"
 
 	"github.com/blink-io/x/locale"
 
@@ -20,6 +19,7 @@ type (
 	MessageFile    = i18n.MessageFile
 	Localizer      = i18n.Localizer
 	LocalizeConfig = i18n.LocalizeConfig
+	UnmarshalFunc  = i18n.UnmarshalFunc
 
 	LOption func(*LocalizeConfig)
 	// T is short for translation function
@@ -81,10 +81,8 @@ func Replace(b *Bundle) {
 	globalMux.Unlock()
 }
 
-func SetLogger(l Logger) {
-	if log != nil {
-		log = l
-	}
+func (b *Bundle) LoadMessageFileBytes(buf []byte, path string) (*MessageFile, error) {
+	return b.ParseMessageFileBytes(buf, path)
 }
 
 func (b *Bundle) Clone() *Bundle {
@@ -99,6 +97,22 @@ func (b *Bundle) Languages() []string {
 	return langs
 }
 
+func (b *Bundle) LoadFromDir(dir string) error {
+	return NewDirLoader(dir).Load(b)
+}
+
+func (b *Bundle) LoadFromFS(fs fs.FS, root string) error {
+	return NewFSLoader(fs, root).Load(b)
+}
+
+func (b *Bundle) LoadFromHTTP(url string, extract func(string) string) error {
+	return NewHTTPLoader(url, extract, HTTPTimeout).Load(b)
+}
+
+func (b *Bundle) LoadFromBytes(path string, data []byte) error {
+	return NewBytesLoader(path, data).Load(b)
+}
+
 func GetT(lang string) T {
 	i, _ := cc.GetOrSet(lang, L(i18n.NewLocalizer(bb.ib, lang)))
 	return i.Value()
@@ -108,18 +122,24 @@ func Languages() []string {
 	return bb.Languages()
 }
 
-func LoadFromDir(root string) error {
-	return NewDirLoader(root).Load(bb)
+func LoadFromDir(dir string) error {
+	return NewDirLoader(dir).Load(bb)
 }
 
 func LoadFromFS(fs fs.FS, root string) error {
 	return NewFSLoader(fs, root).Load(bb)
 }
 
-func LoadFromHTTP(url string) error {
-	return NewHTTPLoader(url, 10*time.Second).Load(bb)
+func LoadFromHTTP(url string, extract func(string) string) error {
+	return NewHTTPLoader(url, extract, HTTPTimeout).Load(bb)
 }
 
 func LoadFromBytes(path string, data []byte) error {
 	return NewBytesLoader(path, data).Load(bb)
+}
+
+func SetLogger(l Logger) {
+	if log != nil {
+		log = l
+	}
 }
