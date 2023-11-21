@@ -9,8 +9,8 @@ import (
 )
 
 func UnaryClientInterceptor(ops ...Option) grpc.UnaryClientInterceptor {
-	o := initOption(ops...)
 	return func(ctx context.Context, method string, req, reply any, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
+		o := initOption(ops...)
 		if ip := o.GetFromGRPC(ctx); len(ip) > 0 {
 			ctx = realip.NewContext(ctx, ip)
 		}
@@ -19,8 +19,8 @@ func UnaryClientInterceptor(ops ...Option) grpc.UnaryClientInterceptor {
 }
 
 func StreamClientInterceptor(ops ...Option) grpc.StreamClientInterceptor {
-	o := initOption(ops...)
 	return func(ctx context.Context, desc *grpc.StreamDesc, cc *grpc.ClientConn, method string, streamer grpc.Streamer, opts ...grpc.CallOption) (grpc.ClientStream, error) {
+		o := initOption(ops...)
 		if ip := o.GetFromGRPC(ctx); len(ip) > 0 {
 			ctx = realip.NewContext(ctx, ip)
 		}
@@ -29,8 +29,8 @@ func StreamClientInterceptor(ops ...Option) grpc.StreamClientInterceptor {
 }
 
 func UnaryServerInterceptor(ops ...Option) grpc.UnaryServerInterceptor {
-	o := initOption(ops...)
 	return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
+		o := initOption(ops...)
 		if ip := o.GetFromGRPC(ctx); len(ip) > 0 {
 			ctx = realip.NewContext(ctx, ip)
 		}
@@ -40,8 +40,8 @@ func UnaryServerInterceptor(ops ...Option) grpc.UnaryServerInterceptor {
 }
 
 func StreamServerInterceptor(ops ...Option) grpc.StreamServerInterceptor {
-	o := initOption(ops...)
 	return func(srv interface{}, ss grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
+		o := initOption(ops...)
 		ctx := ss.Context()
 		if ip := o.GetFromGRPC(ctx); len(ip) > 0 {
 			ws := util.WrapServerStream(ss)
