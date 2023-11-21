@@ -46,12 +46,12 @@ func TestLog(t *testing.T) {
 		_ = sugar.Sync()
 	}()
 
-	sugar.Infow("failed to fetch URL",
+	sugar.Infow("failed to fetch URLVar",
 		"url", "http://example.com",
 		"attempt", 3,
 		"backoff", time.Second,
 	)
-	sugar.Infof(`failed to "fetch" [URL]: %s`, "http://example.com")
+	sugar.Infof(`failed to "fetch" [URLVar]: %s`, "http://example.com")
 	sugar.Debugw("Slow query",
 		"sql", `SELECT * FROM TABLE
 	WHERE ID="abc"`,
@@ -99,8 +99,8 @@ func TestLog(t *testing.T) {
 		zap.Duration("duration", 10*time.Second),
 	)
 	ts.assertMessages(
-		`[INFO] [zap_log_test.go:49] ["failed to fetch URL"] [url=http://example.com] [attempt=3] [backoff=1s]`,
-		`[INFO] [zap_log_test.go:54] ["failed to \"fetch\" [URL]: http://example.com"]`,
+		`[INFO] [zap_log_test.go:49] ["failed to fetch URLVar"] [url=http://example.com] [attempt=3] [backoff=1s]`,
+		`[INFO] [zap_log_test.go:54] ["failed to \"fetch\" [URLVar]: http://example.com"]`,
 		`[DEBUG] [zap_log_test.go:55] ["Slow query"] [sql="SELECT * FROM TABLE\n\tWHERE ID=\"abc\""] [duration=1.3s] ["process keys"=1500]`,
 		`[INFO] [zap_log_test.go:61] [Welcome]`,
 		`[INFO] [zap_log_test.go:62] ["Welcome TiDB"]`,
@@ -225,13 +225,13 @@ func TestLogJSON(t *testing.T) {
 	sugar := logger.Sugar()
 	defer sugar.Sync()
 
-	sugar.Infow("failed to fetch URL",
+	sugar.Infow("failed to fetch URLVar",
 		"url", "http://example.com",
 		"attempt", 3,
 		"backoff", time.Second,
 	)
 	logger.With(zap.String("connID", "1"), zap.String("traceID", "dse1121")).Info("new connection")
-	ts.assertMessages("{\"level\":\"INFO\",\"caller\":\"zap_log_test.go:228\",\"message\":\"failed to fetch URL\",\"url\":\"http://example.com\",\"attempt\":3,\"backoff\":\"1s\"}",
+	ts.assertMessages("{\"level\":\"INFO\",\"caller\":\"zap_log_test.go:228\",\"message\":\"failed to fetch URLVar\",\"url\":\"http://example.com\",\"attempt\":3,\"backoff\":\"1s\"}",
 		"{\"level\":\"INFO\",\"caller\":\"zap_log_test.go:233\",\"message\":\"new connection\",\"connID\":\"1\",\"traceID\":\"dse1121\"}")
 }
 

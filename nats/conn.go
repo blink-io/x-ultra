@@ -9,6 +9,7 @@ import (
 	"github.com/nats-io/nats.go"
 )
 
+// IConn is extracted from nats.Conn struct.
 type IConn interface {
 	RequestMsgWithContext(ctx context.Context, msg *nats.Msg) (*nats.Msg, error)
 	RequestWithContext(ctx context.Context, subj string, data []byte) (*nats.Msg, error)

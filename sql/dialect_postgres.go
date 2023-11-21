@@ -1,6 +1,7 @@
 package sql
 
 import (
+	"github.com/blink-io/x/postgres/params"
 	pgxzap "github.com/jackc/pgx-zap"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
@@ -33,6 +34,12 @@ func PostgresDSN(o *Options) string {
 	dialTimeout := o.DialTimeout
 	tlsConfig := o.TLSConfig
 	options := o.Options
+	if options == nil {
+		options = make(map[string]string)
+	}
+	if len(o.ClientName) > 0 {
+		options[params.APPLICATION_NAME] = o.ClientName
+	}
 
 	pgcc := pgconn.Config{
 		Database:      name,

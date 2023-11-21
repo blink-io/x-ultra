@@ -7,322 +7,357 @@ import (
 	"net"
 	"time"
 
+	"github.com/jellydator/ttlcache/v3"
 	"github.com/nats-io/nats.go"
 )
 
-type mockConn struct {
-	serverID      string
-	serverName    string
-	serverVersion string
+type MockConn struct {
+	Cache            *ttlcache.Cache[string, any]
+	ServerIDVar      string
+	ServerNameVar    string
+	ServerVersionVar string
 
-	addr        string
-	url         string
-	clusterName string
-	newInbox    string
-	respInbox   string
+	AddrVar         string
+	URLVar          string
+	URLRedactedVar  string
+	ClusterNameVar  string
+	NewInboxVar     string
+	NewRespInboxVar string
 
-	servers []string
+	ServersVar []string
 
-	maxPayload       int64
-	headersSupported bool
-	authRequired     bool
-	tlsRequired      bool
-	isClosed         bool
-	isReconnecting   bool
-	isDraining       bool
-	isConnected      bool
+	MaxPayloadVar       int64
+	HeadersSupportedVar bool
+	AuthRequiredVar     bool
+	TLSRequiredVar      bool
+	IsClosedVar         bool
+	IsReconnectingVar   bool
+	IsDrainingVar       bool
+	IsConnectedVar      bool
 
-	clientID uint64
-	clientIP net.IP
+	ClientIDVar uint64
+	ClientIPVar net.IP
 
-	rtt          time.Duration
+	RTTVar       time.Duration
 	flushTimeout time.Duration
 
-	bufferd          int
-	numSubscriptions int
+	BufferedVar         int
+	NumSubscriptionsVar int
 
-	status nats.Status
+	StatusVar nats.Status
 
-	stats nats.Statistics
+	StatsVar nats.Statistics
 
-	reqMsg *nats.Msg
-	rwcMsg *nats.Msg
+	RequestVar               *nats.Msg
+	RequestMsgVar            *nats.Msg
+	RequestWithContextVar    *nats.Msg
+	RequestMsgWithContextVar *nats.Msg
 
-	tlsConnState tls.ConnectionState
+	TLSConnState tls.ConnectionState
 
-	qsSub   *nats.Subscription
-	cqsSub  *nats.Subscription
-	csSub   *nats.Subscription
-	sSub    *nats.Subscription
-	ssSub   *nats.Subscription
-	qssSub  *nats.Subscription
-	qsscSub *nats.Subscription
+	QueueSubscribeVar             *nats.Subscription
+	ChanQueueSubscribeVar         *nats.Subscription
+	ChanSubscribeVar              *nats.Subscription
+	SubscribeVar                  *nats.Subscription
+	SubscribeSyncVar              *nats.Subscription
+	QueueSubscribeSyncVar         *nats.Subscription
+	QueueSubscribeSyncWithChanVar *nats.Subscription
 
-	ceb  nats.ConnErrHandler
-	rcb  nats.ConnHandler
-	dscb nats.ConnHandler
-	eb   nats.ErrHandler
-	cb   nats.ConnHandler
-	dcb  nats.ConnHandler
+	DisconnectErrHandlerVar     nats.ConnErrHandler
+	ReconnectHandlerVar         nats.ConnHandler
+	DiscoveredServersHandlerVar nats.ConnHandler
+	ErrorHandlerVar             nats.ErrHandler
+	ClosedHandlerVar            nats.ConnHandler
+	DisconnectHandlerVar        nats.ConnHandler
 
-	jsCtx nats.JetStreamContext
+	JSCtx nats.JetStreamContext
 
-	chStatus chan nats.Status
+	StatusChangedVar chan nats.Status
+
+	BufferdErr        error
+	BarrierErr        error
+	DrainErr          error
+	FlushErr          error
+	FlushTimeoutErr   error
+	PublishRequestErr error
+
+	LastErrorErr  error
+	PublishErr    error
+	PublishMsgErr error
+
+	FlushWithContextErr           error
+	RequestWithContextErr         error
+	RequestMsgWithContextErr      error
+	JSCtxErr                      error
+	RequestMsgErr                 error
+	tlsConnStateErr               error
+	RequestErr                    error
+	SubscribeErr                  error
+	SubscribeSyncErr              error
+	ChanSubscribeErr              error
+	ChanQueueSubscribeErr         error
+	QueueSubscribeErr             error
+	QueueSubscribeSyncErr         error
+	QueueSubscribeSyncWithChanErr error
 }
 
-func newMockConn() IConn {
-	mcc := &mockConn{}
+func NewMockConn() *MockConn {
+	mcc := &MockConn{
+		Cache: ttlcache.New[string, any](
+			ttlcache.WithVersion[string, any](true),
+		),
+	}
 	return mcc
 }
 
-func (m *mockConn) RequestMsgWithContext(ctx context.Context, msg *nats.Msg) (*nats.Msg, error) {
-	return m.rwcMsg, nil
+func (m *MockConn) RequestMsgWithContext(ctx context.Context, msg *nats.Msg) (*nats.Msg, error) {
+	return m.RequestMsgWithContextVar, m.RequestMsgWithContextErr
 }
 
-func (m *mockConn) RequestWithContext(ctx context.Context, subject string, data []byte) (*nats.Msg, error) {
-	return m.rwcMsg, nil
+func (m *MockConn) RequestWithContext(ctx context.Context, subject string, data []byte) (*nats.Msg, error) {
+	return m.RequestWithContextVar, m.RequestWithContextErr
 }
 
-func (m *mockConn) FlushWithContext(ctx context.Context) error {
-	return nil
+func (m *MockConn) FlushWithContext(ctx context.Context) error {
+	return m.FlushWithContextErr
 }
 
-func (m *mockConn) RemoveMsgFilter(subject string) {
+func (m *MockConn) RemoveMsgFilter(subject string) {
 	slog.Info("invoke RemoveMsgFilter", slog.String("subject", subject))
 }
 
-func (m *mockConn) CloseTCPConn() {
+func (m *MockConn) CloseTCPConn() {
 	slog.Info("invoke CloseTCPConn")
 }
 
-func (m *mockConn) JetStream(opts ...nats.JSOpt) (nats.JetStreamContext, error) {
-	return m.jsCtx, nil
+func (m *MockConn) JetStream(opts ...nats.JSOpt) (nats.JetStreamContext, error) {
+	return m.JSCtx, m.JSCtxErr
 }
 
-func (m *mockConn) SetDisconnectHandler(dcb nats.ConnHandler) {
-	m.dcb = dcb
+func (m *MockConn) SetDisconnectHandler(dcb nats.ConnHandler) {
+	m.DisconnectHandlerVar = dcb
 }
 
-func (m *mockConn) SetDisconnectErrHandler(ceb nats.ConnErrHandler) {
-	m.ceb = ceb
+func (m *MockConn) SetDisconnectErrHandler(ceb nats.ConnErrHandler) {
+	m.DisconnectErrHandlerVar = ceb
 }
 
-func (m *mockConn) DisconnectErrHandler() nats.ConnErrHandler {
-	return m.ceb
+func (m *MockConn) DisconnectErrHandler() nats.ConnErrHandler {
+	return m.DisconnectErrHandlerVar
 }
 
-func (m *mockConn) SetReconnectHandler(rcb nats.ConnHandler) {
-	m.rcb = rcb
+func (m *MockConn) SetReconnectHandler(rcb nats.ConnHandler) {
+	m.ReconnectHandlerVar = rcb
 }
 
-func (m *mockConn) ReconnectHandler() nats.ConnHandler {
-	return nil
+func (m *MockConn) ReconnectHandler() nats.ConnHandler {
+	return m.ReconnectHandlerVar
 }
 
-func (m *mockConn) SetDiscoveredServersHandler(dscb nats.ConnHandler) {
-	m.dscb = dscb
+func (m *MockConn) SetDiscoveredServersHandler(dscb nats.ConnHandler) {
+	m.DiscoveredServersHandlerVar = dscb
 }
 
-func (m *mockConn) DiscoveredServersHandler() nats.ConnHandler {
-	return m.dscb
+func (m *MockConn) DiscoveredServersHandler() nats.ConnHandler {
+	return m.DiscoveredServersHandlerVar
 }
 
-func (m *mockConn) SetClosedHandler(cb nats.ConnHandler) {
-	m.cb = cb
+func (m *MockConn) SetClosedHandler(cb nats.ConnHandler) {
+	m.ClosedHandlerVar = cb
 }
 
-func (m *mockConn) ClosedHandler() nats.ConnHandler {
-	return m.cb
+func (m *MockConn) ClosedHandler() nats.ConnHandler {
+	return m.ClosedHandlerVar
 }
 
-func (m *mockConn) SetErrorHandler(eb nats.ErrHandler) {
-	m.eb = eb
+func (m *MockConn) SetErrorHandler(eb nats.ErrHandler) {
+	m.ErrorHandlerVar = eb
 }
 
-func (m *mockConn) ErrorHandler() nats.ErrHandler {
-	return m.eb
+func (m *MockConn) ErrorHandler() nats.ErrHandler {
+	return m.ErrorHandlerVar
 }
 
-func (m *mockConn) TLSConnectionState() (tls.ConnectionState, error) {
-	return m.tlsConnState, nil
+func (m *MockConn) TLSConnectionState() (tls.ConnectionState, error) {
+	return m.TLSConnState, m.tlsConnStateErr
 }
 
-func (m *mockConn) ConnectedUrl() string {
-	return m.url
+func (m *MockConn) ConnectedUrl() string {
+	return m.URLVar
 }
 
-func (m *mockConn) ConnectedUrlRedacted() string {
-	return m.url
+func (m *MockConn) ConnectedUrlRedacted() string {
+	return m.URLRedactedVar
 }
 
-func (m *mockConn) ConnectedAddr() string {
-	return m.addr
+func (m *MockConn) ConnectedAddr() string {
+	return m.AddrVar
 }
 
-func (m *mockConn) ConnectedServerId() string {
-	return m.serverID
+func (m *MockConn) ConnectedServerId() string {
+	return m.ServerIDVar
 }
 
-func (m *mockConn) ConnectedServerName() string {
-	return m.serverName
+func (m *MockConn) ConnectedServerName() string {
+	return m.ServerNameVar
 }
 
-func (m *mockConn) ConnectedServerVersion() string {
-	return m.serverVersion
+func (m *MockConn) ConnectedServerVersion() string {
+	return m.ServerVersionVar
 }
 
-func (m *mockConn) ConnectedClusterName() string {
-	return m.clusterName
+func (m *MockConn) ConnectedClusterName() string {
+	return m.ClusterNameVar
 }
 
-func (m *mockConn) LastError() error {
-	return nil
+func (m *MockConn) LastError() error {
+	return m.LastErrorErr
 }
 
-func (m *mockConn) Publish(subject string, data []byte) error {
-	return nil
+func (m *MockConn) Publish(subject string, data []byte) error {
+	return m.PublishErr
 }
 
-func (m *mockConn) PublishMsg(msg *nats.Msg) error {
-	return nil
+func (m *MockConn) PublishMsg(msg *nats.Msg) error {
+	return m.PublishMsgErr
 }
 
-func (m *mockConn) PublishRequest(subj, reply string, data []byte) error {
-	return nil
+func (m *MockConn) PublishRequest(subj, reply string, data []byte) error {
+	return m.PublishRequestErr
 }
 
-func (m *mockConn) RequestMsg(msg *nats.Msg, timeout time.Duration) (*nats.Msg, error) {
-	return m.reqMsg, nil
+func (m *MockConn) RequestMsg(msg *nats.Msg, timeout time.Duration) (*nats.Msg, error) {
+	return m.RequestMsgVar, m.RequestMsgErr
 }
 
-func (m *mockConn) Request(subject string, data []byte, timeout time.Duration) (*nats.Msg, error) {
-	return m.reqMsg, nil
+func (m *MockConn) Request(subject string, data []byte, timeout time.Duration) (*nats.Msg, error) {
+	return m.RequestVar, m.RequestErr
 }
 
-func (m *mockConn) NewInbox() string {
-	return m.newInbox
+func (m *MockConn) NewInbox() string {
+	return m.NewInboxVar
 }
 
-func (m *mockConn) NewRespInbox() string {
-	return m.respInbox
+func (m *MockConn) NewRespInbox() string {
+	return m.NewRespInboxVar
 }
 
-func (m *mockConn) Subscribe(subject string, cb nats.MsgHandler) (*nats.Subscription, error) {
-	return m.sSub, nil
+func (m *MockConn) Subscribe(subject string, cb nats.MsgHandler) (*nats.Subscription, error) {
+	return m.SubscribeVar, m.SubscribeErr
 }
 
-func (m *mockConn) ChanSubscribe(subject string, ch chan *nats.Msg) (*nats.Subscription, error) {
-	return m.csSub, nil
+func (m *MockConn) ChanSubscribe(subject string, ch chan *nats.Msg) (*nats.Subscription, error) {
+	return m.ChanSubscribeVar, m.ChanSubscribeErr
 }
 
-func (m *mockConn) ChanQueueSubscribe(subject, group string, chn chan *nats.Msg) (*nats.Subscription, error) {
-	return m.cqsSub, nil
+func (m *MockConn) ChanQueueSubscribe(subject, group string, chn chan *nats.Msg) (*nats.Subscription, error) {
+	return m.ChanQueueSubscribeVar, m.ChanQueueSubscribeErr
 }
 
-func (m *mockConn) SubscribeSync(subject string) (*nats.Subscription, error) {
-	return m.ssSub, nil
+func (m *MockConn) SubscribeSync(subject string) (*nats.Subscription, error) {
+	return m.SubscribeSyncVar, m.SubscribeSyncErr
 }
 
-func (m *mockConn) QueueSubscribe(subject, queue string, cb nats.MsgHandler) (*nats.Subscription, error) {
-	return m.qsSub, nil
+func (m *MockConn) QueueSubscribe(subject, queue string, cb nats.MsgHandler) (*nats.Subscription, error) {
+	return m.QueueSubscribeVar, m.QueueSubscribeErr
 }
 
-func (m *mockConn) QueueSubscribeSync(subject, queue string) (*nats.Subscription, error) {
-	return m.qssSub, nil
+func (m *MockConn) QueueSubscribeSync(subject, queue string) (*nats.Subscription, error) {
+	return m.QueueSubscribeSyncVar, m.QueueSubscribeSyncErr
 }
 
-func (m *mockConn) QueueSubscribeSyncWithChan(subject, queue string, chn chan *nats.Msg) (*nats.Subscription, error) {
-	return m.qsscSub, nil
+func (m *MockConn) QueueSubscribeSyncWithChan(subject, queue string, chn chan *nats.Msg) (*nats.Subscription, error) {
+	return m.QueueSubscribeSyncWithChanVar, m.QueueSubscribeSyncWithChanErr
 }
 
-func (m *mockConn) NumSubscriptions() int {
-	return m.numSubscriptions
+func (m *MockConn) NumSubscriptions() int {
+	return m.NumSubscriptionsVar
 }
 
-func (m *mockConn) FlushTimeout(timeout time.Duration) error {
-	return nil
+func (m *MockConn) FlushTimeout(timeout time.Duration) error {
+	return m.FlushTimeoutErr
 }
 
-func (m *mockConn) RTT() (time.Duration, error) {
-	return m.rtt, nil
+func (m *MockConn) RTT() (time.Duration, error) {
+	return m.RTTVar, nil
 }
 
-func (m *mockConn) Flush() error {
-	return nil
+func (m *MockConn) Flush() error {
+	return m.FlushErr
 }
 
-func (m *mockConn) Buffered() (int, error) {
-	return m.bufferd, nil
+func (m *MockConn) Buffered() (int, error) {
+	return m.BufferedVar, m.BufferdErr
 }
 
-func (m *mockConn) Close() {
+func (m *MockConn) Close() {
 	slog.Info("invoke Close")
 }
 
-func (m *mockConn) IsClosed() bool {
-	return m.isClosed
+func (m *MockConn) IsClosed() bool {
+	return m.IsClosedVar
 }
 
-func (m *mockConn) IsReconnecting() bool {
-	return m.isReconnecting
+func (m *MockConn) IsReconnecting() bool {
+	return m.IsReconnectingVar
 }
 
-func (m *mockConn) IsConnected() bool {
-	return m.isConnected
+func (m *MockConn) IsConnected() bool {
+	return m.IsConnectedVar
 }
 
-func (m *mockConn) Drain() error {
-	return nil
+func (m *MockConn) Drain() error {
+	return m.DrainErr
 }
 
-func (m *mockConn) IsDraining() bool {
-	return m.isDraining
+func (m *MockConn) IsDraining() bool {
+	return m.IsDrainingVar
 }
 
-func (m *mockConn) Servers() []string {
-	return m.servers
+func (m *MockConn) Servers() []string {
+	return m.ServersVar
 }
 
-func (m *mockConn) DiscoveredServers() []string {
-	return m.servers
+func (m *MockConn) DiscoveredServers() []string {
+	return m.ServersVar
 }
 
-func (m *mockConn) Status() nats.Status {
-	return m.status
+func (m *MockConn) Status() nats.Status {
+	return m.StatusVar
 }
 
-func (m *mockConn) Stats() nats.Statistics {
-	return m.stats
+func (m *MockConn) Stats() nats.Statistics {
+	return m.StatsVar
 }
 
-func (m *mockConn) MaxPayload() int64 {
-	return m.maxPayload
+func (m *MockConn) MaxPayload() int64 {
+	return m.MaxPayloadVar
 }
 
-func (m *mockConn) HeadersSupported() bool {
-	return m.headersSupported
+func (m *MockConn) HeadersSupported() bool {
+	return m.HeadersSupportedVar
 }
 
-func (m *mockConn) AuthRequired() bool {
-	return m.authRequired
+func (m *MockConn) AuthRequired() bool {
+	return m.AuthRequiredVar
 }
 
-func (m *mockConn) TLSRequired() bool {
-	return m.tlsRequired
+func (m *MockConn) TLSRequired() bool {
+	return m.TLSRequiredVar
 }
 
-func (m *mockConn) Barrier(f func()) error {
-	return nil
+func (m *MockConn) Barrier(f func()) error {
+	return m.BarrierErr
 }
 
-func (m *mockConn) GetClientIP() (net.IP, error) {
-	return m.clientIP, nil
+func (m *MockConn) GetClientIP() (net.IP, error) {
+	return m.ClientIPVar, nil
 }
 
-func (m *mockConn) GetClientID() (uint64, error) {
-	return m.clientID, nil
+func (m *MockConn) GetClientID() (uint64, error) {
+	return m.ClientIDVar, nil
 }
 
-func (m *mockConn) StatusChanged(statuses ...nats.Status) chan nats.Status {
-	return m.chStatus
+func (m *MockConn) StatusChanged(statuses ...nats.Status) chan nats.Status {
+	return m.StatusChangedVar
 }

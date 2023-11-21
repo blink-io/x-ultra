@@ -11,18 +11,30 @@ import (
 	"github.com/uptrace/bun"
 )
 
-// Model is the common part for all models in the project
-var _ bun.BeforeAppendModelHook = (*Model)(nil)
+var (
+	// m is a lock for SetGenerator
+	m = new(sync.Mutex)
 
-// m is a lock for SetGenerator
-var m = new(sync.Mutex)
+	// gg is global generator for all tables' ID field
+	gg = func() string {
+		return uuid.New().String()
+	}
 
-// gg is global generator for all tables' ID field
-var gg = func() string {
-	return uuid.New().String()
-}
+	Columns = &columns{
+		// Required fields
+		ID:        "id",
+		CreatedAt: "created_at",
+		UpdatedAt: "updated_at",
+		// Optional fields
+		CreatedBy: "created_by",
+		UpdatedBy: "updated_by",
+		DeletedAt: "deleted_at",
+		DeletedBy: "deleted_by",
+		IsDeleted: "is_deleted",
+	}
+)
 
-var Columns = struct {
+type columns struct {
 	// Require columns
 	ID        string
 	CreatedAt string
@@ -33,23 +45,15 @@ var Columns = struct {
 	DeletedAt string
 	DeletedBy string
 	IsDeleted string
-}{
-	// Required fields
-	ID:        "id",
-	CreatedAt: "created_at",
-	UpdatedAt: "updated_at",
-	// Optional fields
-	CreatedBy: "created_by",
-	UpdatedBy: "updated_by",
-	DeletedAt: "deleted_at",
-	DeletedBy: "deleted_by",
-	IsDeleted: "is_deleted",
 }
 
 type Generator func() string
 
+// Model is the common part for all models in the project
+var _ bun.BeforeAppendModelHook = (*Model)(nil)
+
 type Model struct {
-	ig        Generator // ID generator for single model
+	ig        Generator // ID generator for a single model
 	ID        string    `bun:"id,pk" db:"id" json:"id,omitempty" toml:"id,omitempty" yaml:"id,omitempty" msgpack:"id,omitempty"`
 	CreatedAt time.Time `bun:"created_at,notnull,skipupdate" db:"created_at" json:"created_at,omitempty" toml:"created_at,omitempty" yaml:"created_at,omitempty" msgpack:"created_at,omitempty"`
 	UpdatedAt time.Time `bun:"updated_at,notnull" db:"updated_at" json:"updated_at,omitempty" toml:"updated_at,omitempty" yaml:"updated_at,omitempty" msgpack:"updated_at,omitempty"`

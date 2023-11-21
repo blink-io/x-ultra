@@ -92,7 +92,7 @@ func (pt *Credentials) Info() credentials.ProtocolInfo {
 			SecurityProtocol: "quic-tls",
 			// SecurityVersion is the security protocol version.
 			// SecurityVersion: "1.2.0",
-			// ServerName is the user-configured server name.
+			// ServerNameVar is the user-configured server name.
 			ServerName: pt.serverName,
 		}
 	}

@@ -16,4 +16,18 @@ const (
 	DBTimeZone = attribute.Key("db.time_zone")
 
 	DBProvider = attribute.Key("db.provider")
+
+	DBProviderAlicloud = attribute.Key("db.provider.alicloud")
+
+	DBProviderAWS = attribute.Key("db.provider.aws")
+
+	DBProviderAzure = attribute.Key("db.provider.azure")
+
+	DBProviderGCP = attribute.Key("db.provider.gcp")
+)
+
+const (
+	ApplicationNameKey = attribute.Key("application.name")
+
+	ApplicationVersionKey = attribute.Key("application.version")
 )

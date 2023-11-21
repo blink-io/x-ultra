@@ -83,7 +83,7 @@ func (l *fsLoader) Load(b Bundler) error {
 }
 
 // httpLoader loads by http GET requests
-// URL should be like: https://xxx.com/languages/zh_Hans.toml
+// URLVar should be like: https://xxx.com/languages/zh_Hans.toml
 type httpLoader struct {
 	c       *http.Client
 	extract func(string) string
@@ -118,7 +118,7 @@ func (h *httpLoader) Load(b Bundler) error {
 		path = h.url
 	}
 	if _, err := b.LoadMessageFileBytes(buf, path); err != nil {
-		log("[WARN] unable to load message from URL: %s", h.url)
+		log("[WARN] unable to load message from URLVar: %s", h.url)
 	}
 	return nil
 }
