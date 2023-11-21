@@ -4,7 +4,7 @@ import (
 	"net"
 
 	"github.com/blink-io/x/cast"
-
+	mysqlparams "github.com/blink-io/x/mysql/params"
 	"github.com/go-sql-driver/mysql"
 	"github.com/uptrace/bun/dialect/mysqldialect"
 	"github.com/uptrace/bun/schema"
@@ -32,11 +32,20 @@ func MySQLDSN(o *Options) string {
 	password := o.Password
 	dialTimeout := o.DialTimeout
 	tlsConfig := o.TLSConfig
-	options := o.Options
 	loc := o.Loc
 	collation := o.Collation
+	params := o.Params
+	if params == nil {
+		params = make(map[string]string)
+	}
+	if len(o.ClientName) > 0 {
+		params[mysqlparams.PROGRAM_NAME] = o.ClientName
+	}
+	if len(o.Collation) > 0 {
+		params[mysqlparams.COLLATION] = o.Collation
+	}
 
-	// Restful TLS Options
+	// Restful TLS Params
 	cc := mysql.NewConfig()
 	// Set the local timezone because the default value is UTC
 	cc.Loc = loc
@@ -49,7 +58,7 @@ func MySQLDSN(o *Options) string {
 		cc.Timeout = dialTimeout
 	}
 	// TODO Do we need to check them?
-	cc.Params = handleMySQLParams(options)
+	cc.Params = handleMySQLParams(params)
 	cc.Collation = collation
 	if network == "tcp" {
 		cc.Addr = net.JoinHostPort(host, cast.ToString(port))

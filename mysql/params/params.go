@@ -55,4 +55,8 @@ const (
 	CONNECT_TIMEOUT = "connect_timeout"
 
 	COMPRESSION = "compression"
+
+	PROGRAM_NAME = "program_name"
+
+	COLLATION = "collation"
 )

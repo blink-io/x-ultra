@@ -21,7 +21,7 @@ type Options struct {
 	User            string
 	Password        string
 	TLSConfig       *tls.Config
-	Options         map[string]string
+	Params          map[string]string
 	DialTimeout     time.Duration
 	ConnInitSQL     string
 	ConnMaxLifetime time.Duration

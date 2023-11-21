@@ -11,7 +11,7 @@ const (
 	// DBNAME specifies database name.
 	DBNAME = "dbname"
 
-	// USER specifies a PostgreSQL user name to connect as.
+	// USER specifies a PostgreSQL user to connect as.
 	USER = "user"
 
 	// PASSWORD specifies password to be used if the server demands password authentication.
