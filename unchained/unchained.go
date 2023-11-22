@@ -35,6 +35,10 @@ func (h hasher) String() string {
 	}
 }
 
+func hasherToString(h hasher) string {
+	return h.String()
+}
+
 func hasherFromString(s string) hasher {
 	switch s {
 	case "argon2":
@@ -95,9 +99,10 @@ func CheckPassword(password, encoded string) (bool, error) {
 
 	hasher := IdentifyHasher(encoded)
 
-	if IsValidHasher(hasher) {
+	if !IsValidHasher(hasher) {
 		return false, ErrInvalidHasher
 	}
+
 	switch hasher {
 	case Argon2Hasher:
 		return argon2.NewArgon2Hasher().Verify(password, encoded)
@@ -128,7 +133,7 @@ func MakePassword(password, salt string, hasher hasher) (string, error) {
 		salt = GetRandomString(DefaultSaltSize)
 	}
 
-	if IsValidHasher(hasher) {
+	if !IsValidHasher(hasher) {
 		return "", ErrInvalidHasher
 	}
 

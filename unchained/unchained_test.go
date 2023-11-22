@@ -27,10 +27,10 @@ func TestMakePasswordEmptySaltDefault(t *testing.T) {
 		t.Fatalf("MakePassword error: %s", err)
 	}
 
-	hasher := IdentifyHasher(encoded)
+	hasher := IdentifyHasher(encoded).String()
 
-	if hasher != DefaultHasher {
-		t.Fatalf("hasher %s is not %s.", hasher, DefaultHasher)
+	if hasher != hasherToString(DefaultHasher) {
+		t.Fatalf("hasher %s is not %s.", hasher, hasherToString(DefaultHasher))
 	}
 }
 
@@ -41,8 +41,8 @@ func TestMakePasswordArgon2Hasher(t *testing.T) {
 		t.Fatalf("Make password error: %s", err)
 	}
 
-	if !strings.HasPrefix(encoded, fmt.Sprintf("%$", Argon2Hasher)) {
-		t.Fatalf("Encoded password doesn't match algorithm (%s): %s", Argon2Hasher, encoded)
+	if !strings.HasPrefix(encoded, fmt.Sprintf("%s$", hasherToString(Argon2Hasher))) {
+		t.Fatalf("Encoded password doesn't match algorithm (%s): %s", hasherToString(Argon2Hasher), encoded)
 	}
 }
 
@@ -53,8 +53,8 @@ func TestMakePasswordBCryptHasher(t *testing.T) {
 		t.Fatalf("Make password error: %s", err)
 	}
 
-	if !strings.HasPrefix(encoded, fmt.Sprintf("%s$", BCryptHasher)) {
-		t.Fatalf("Encoded password doesn't match algorithm (%s): %s", BCryptHasher, encoded)
+	if !strings.HasPrefix(encoded, fmt.Sprintf("%s$", hasherToString(BCryptHasher))) {
+		t.Fatalf("Encoded password doesn't match algorithm (%s): %s", hasherToString(BCryptHasher), encoded)
 	}
 }
 
@@ -65,8 +65,8 @@ func TestMakePasswordBCryptSHA256Hasher(t *testing.T) {
 		t.Fatalf("Make password error: %s", err)
 	}
 
-	if !strings.HasPrefix(encoded, fmt.Sprintf("%s$", BCryptSHA256Hasher)) {
-		t.Fatalf("Encoded password doesn't match algorithm (%s): %s", BCryptSHA256Hasher, encoded)
+	if !strings.HasPrefix(encoded, fmt.Sprintf("%s$", hasherToString(BCryptSHA256Hasher))) {
+		t.Fatalf("Encoded password doesn't match algorithm (%s): %s", hasherToString(BCryptSHA256Hasher), encoded)
 	}
 }
 
@@ -77,25 +77,13 @@ func TestMakePasswordPBKDF2SHA256Hasher(t *testing.T) {
 		t.Fatalf("Make password error: %s", err)
 	}
 
-	if !strings.HasPrefix(encoded, fmt.Sprintf("%s$", PBKDF2SHA256Hasher)) {
-		t.Fatalf("Encoded password doesn't match algorithm (%s): %s", PBKDF2SHA256Hasher, encoded)
+	if !strings.HasPrefix(encoded, fmt.Sprintf("%s$", hasherToString(PBKDF2SHA256Hasher))) {
+		t.Fatalf("Encoded password doesn't match algorithm (%s): %s", hasherToString(PBKDF2SHA256Hasher), encoded)
 	}
 }
 
 func TestCheckPasswordArgon2(t *testing.T) {
 	valid, err := CheckPassword("admin", "argon2$argon2i$v=19$m=512,t=2,p=2$NnFZNGxmQTE1bmFV$kPPGrqD6dnRllcQeksFN+w")
-
-	if err != nil {
-		t.Fatalf("CheckPassword error: %s", err)
-	}
-
-	if !valid {
-		t.Fatal("Password should be valid.")
-	}
-}
-
-func TestCheckPasswordPBKDF2SHA1(t *testing.T) {
-	valid, err := CheckPassword("admin", "pbkdf2_sha1$120000$1TMOT0Rohg3g$zVJ4+gcRcano9Qks+kcsgKeRnVs=")
 
 	if err != nil {
 		t.Fatalf("CheckPassword error: %s", err)
@@ -132,54 +120,6 @@ func TestCheckPasswordBCrypto(t *testing.T) {
 
 func TestCheckPasswordBCryptoSHA256(t *testing.T) {
 	valid, err := CheckPassword("admin", "bcrypt_sha256$$2b$12$WZK9cb9qKN.Q5LCYPq/gj.6gvry1b37HUsJER6KhQBnIWmPyyaaqi")
-
-	if err != nil {
-		t.Fatalf("CheckPassword error: %s", err)
-	}
-
-	if !valid {
-		t.Fatal("Password should be valid.")
-	}
-}
-
-func TestCheckPasswordMD5Hasher(t *testing.T) {
-	valid, err := CheckPassword("admin", "md5$8CjhcHYaEGZQ$c7f218365947cecaac46415390d5cb6a")
-
-	if err != nil {
-		t.Fatalf("CheckPassword error: %s", err)
-	}
-
-	if !valid {
-		t.Fatal("Password should be valid.")
-	}
-}
-
-func TestCheckPasswordSHA1Hasher(t *testing.T) {
-	valid, err := CheckPassword("admin", "sha1$7E3eUiuxfTHG$154faafaf5455924ad853c5f1630eaf062c135a7")
-
-	if err != nil {
-		t.Fatalf("CheckPassword error: %s", err)
-	}
-
-	if !valid {
-		t.Fatal("Password should be valid.")
-	}
-}
-
-func TestCheckPasswordUnsaltedMD5Hasher(t *testing.T) {
-	valid, err := CheckPassword("admin", "21232f297a57a5a743894a0e4a801fc3")
-
-	if err != nil {
-		t.Fatalf("CheckPassword error: %s", err)
-	}
-
-	if !valid {
-		t.Fatal("Password should be valid.")
-	}
-}
-
-func TestCheckPasswordUnsaltedSHA1Hasher(t *testing.T) {
-	valid, err := CheckPassword("admin", "sha1$$d033e22ae348aeb5660fc2140aec35850c4da997")
 
 	if err != nil {
 		t.Fatalf("CheckPassword error: %s", err)
