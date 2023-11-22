@@ -39,10 +39,10 @@ func PostgresDSN(o *Options) string {
 		params = make(map[string]string)
 	}
 	if len(o.ClientName) > 0 {
-		params[pgparams.APPLICATION_NAME] = o.ClientName
+		params[pgparams.ApplicationName] = o.ClientName
 	}
 	if len(o.Collation) > 0 {
-		params[pgparams.CLIENT_ENCODING] = o.Collation
+		params[pgparams.ClientEncoding] = o.Collation
 	}
 
 	pgcc := pgconn.Config{

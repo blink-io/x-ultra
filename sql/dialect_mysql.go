@@ -39,10 +39,10 @@ func MySQLDSN(o *Options) string {
 		params = make(map[string]string)
 	}
 	if len(o.ClientName) > 0 {
-		params[mysqlparams.PROGRAM_NAME] = o.ClientName
+		params[mysqlparams.ProgramName] = o.ClientName
 	}
 	if len(o.Collation) > 0 {
-		params[mysqlparams.COLLATION] = o.Collation
+		params[mysqlparams.Collation] = o.Collation
 	}
 
 	// Restful TLS Params

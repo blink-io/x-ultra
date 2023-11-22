@@ -94,7 +94,8 @@ require (
 require (
 	github.com/DATA-DOG/go-sqlmock v1.5.0
 	github.com/XSAM/otelsql v0.26.0
-	github.com/deckarep/golang-set/v2 v2.3.1
+	github.com/dchest/siphash v1.2.3
+	github.com/deckarep/golang-set/v2 v2.4.0
 	github.com/matryer/is v1.4.1
 	github.com/pashagolub/pgxmock/v3 v3.2.0
 	github.com/segmentio/encoding v0.3.6
@@ -175,7 +176,7 @@ require (
 	lukechampine.com/uint128 v1.3.0 // indirect
 	modernc.org/cc/v3 v3.41.0 // indirect
 	modernc.org/ccgo/v3 v3.16.15 // indirect
-	modernc.org/libc v1.34.7 // indirect
+	modernc.org/libc v1.34.9 // indirect
 	modernc.org/mathutil v1.6.0 // indirect
 	modernc.org/memory v1.7.2 // indirect
 	modernc.org/opt v0.1.3 // indirect
