@@ -18,18 +18,21 @@ const (
 	BCryptHasher
 	BCryptSHA256Hasher
 	PBKDF2SHA256Hasher
+	PBKDF2SHA512Hasher
 )
 
 func (h hasher) String() string {
 	switch h {
 	case Argon2Hasher:
-		return "argon2"
+		return argon2.AlgorithmArgon2
 	case BCryptHasher:
-		return "bcrypt"
+		return bcrypt.AlgorithmBCrypt
 	case BCryptSHA256Hasher:
-		return "bcrypt_sha256"
+		return bcrypt.AlgorithmBCryptSHA256
 	case PBKDF2SHA256Hasher:
-		return "pbkdf2_sha256"
+		return pbkdf2.AlgorithmPBKDF2SHA256
+	case PBKDF2SHA512Hasher:
+		return pbkdf2.AlgorithmPBKDF2SHA512
 	default:
 		return ""
 	}
@@ -41,14 +44,16 @@ func hasherToString(h hasher) string {
 
 func hasherFromString(s string) hasher {
 	switch s {
-	case "argon2":
+	case argon2.AlgorithmArgon2:
 		return Argon2Hasher
-	case "bcrypt":
+	case bcrypt.AlgorithmBCrypt:
 		return BCryptHasher
-	case "bcrypt_sha256":
+	case bcrypt.AlgorithmBCryptSHA256:
 		return BCryptSHA256Hasher
-	case "pbkdf2_sha256":
+	case pbkdf2.AlgorithmPBKDF2SHA256:
 		return PBKDF2SHA256Hasher
+	case pbkdf2.AlgorithmPBKDF2SHA512:
+		return PBKDF2SHA512Hasher
 	}
 	return UnknownHasher
 }

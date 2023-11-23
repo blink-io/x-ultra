@@ -11,6 +11,11 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+const (
+	AlgorithmBCrypt       = "bcrypt"
+	AlgorithmBCryptSHA256 = "bcrypt_sha256"
+)
+
 // Errors returned by BCryptHasher.
 var (
 	ErrHashComponentMismatch = errors.New("unchained/bcrypt: hashed password components mismatch")
@@ -76,7 +81,7 @@ func (h *BCryptHasher) Verify(password string, encoded string) (bool, error) {
 // bcrypt's 72 bytes password truncation.
 func NewBCryptHasher() *BCryptHasher {
 	return &BCryptHasher{
-		Algorithm: "bcrypt",
+		Algorithm: AlgorithmBCrypt,
 		Digest:    nil,
 		Cost:      12,
 	}
@@ -87,7 +92,7 @@ func NewBCryptHasher() *BCryptHasher {
 // This hasher first hash the password with SHA-256.
 func NewBCryptSHA256Hasher() *BCryptHasher {
 	return &BCryptHasher{
-		Algorithm: "bcrypt_sha256",
+		Algorithm: AlgorithmBCryptSHA256,
 		Digest:    sha256.New,
 		Cost:      12,
 	}

@@ -10,6 +10,10 @@ import (
 	"golang.org/x/crypto/argon2"
 )
 
+const (
+	AlgorithmArgon2 = "argon2"
+)
+
 // Errors returned by Argon2Hasher.
 var (
 	ErrHashComponentUnreadable = errors.New("unchained/argon2: unreadable component in hashed password")

@@ -119,3 +119,45 @@ func TestPBKDF2SHA256VerifyInvalidPassword(t *testing.T) {
 		t.Fatal("Password should not be valid.")
 	}
 }
+
+func TestPBKDF2SHA512Encode1(t *testing.T) {
+	encoded, err := NewPBKDF2SHA512Hasher().Encode("admin", "WZrFZhpl3wOU", 120000)
+
+	if err != nil {
+		t.Fatalf("Encode error: %s", err)
+	}
+
+	expected := "pbkdf2_sha512$120000$WZrFZhpl3wOU$fQPfIwsU+s7Etb+mJJWRXP1cRDgMO3dTHbIMcxxlHFvTtOQHH9+4pIlCSeTJ39+gWE9BxdUPYXwAIeFVioFApA=="
+
+	if encoded != expected {
+		t.Fatalf("Encoded hash %s does not match %s.", encoded, expected)
+	}
+}
+
+func TestPBKDF2SHA512Encode2(t *testing.T) {
+	encoded, err := NewPBKDF2SHA512Hasher().Encode("this-is-my-password", "ITqksnfwCKZr", 80000)
+
+	if err != nil {
+		t.Fatalf("Encode error: %s", err)
+	}
+
+	expected := "pbkdf2_sha512$80000$ITqksnfwCKZr$uBoxwuYk7m93Urqa013F56o6+NhFhC7kv0UaZwPrB9fh3RoVArjH2oXADgAc0vtnoArR6b8vrYAUoQed0gmq/Q=="
+
+	if encoded != expected {
+		t.Fatalf("Encoded hash %s does not match %s.", encoded, expected)
+	}
+}
+
+func TestPBKDF2SHA512Encode3(t *testing.T) {
+	encoded, err := NewPBKDF2SHA512Hasher().Encode("Th1S1sMYp4ssw0rd", "vM98pB74e18T", 120000)
+
+	if err != nil {
+		t.Fatalf("Encode error: %s", err)
+	}
+
+	expected := "pbkdf2_sha512$120000$vM98pB74e18T$JaEd67PNI0WYXa4R5osmSaBvBH/QZJzpecIgfhw2lzZ37we/sK0m4MGp3fYiuhl0tDcWsTws4QZRSeOCMt/XTA=="
+
+	if encoded != expected {
+		t.Fatalf("Encoded hash %s does not match %s.", encoded, expected)
+	}
+}

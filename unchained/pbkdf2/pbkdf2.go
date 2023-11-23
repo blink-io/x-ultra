@@ -3,6 +3,7 @@ package pbkdf2
 import (
 	"crypto/hmac"
 	"crypto/sha256"
+	"crypto/sha512"
 	"encoding/base64"
 	"errors"
 	"fmt"
@@ -11,6 +12,11 @@ import (
 	"strings"
 
 	"golang.org/x/crypto/pbkdf2"
+)
+
+const (
+	AlgorithmPBKDF2SHA256 = "pbkdf2_sha256"
+	AlgorithmPBKDF2SHA512 = "pbkdf2_sha512"
 )
 
 // Errors returned by PBKDF2Hasher.
@@ -83,9 +89,22 @@ func (h *PBKDF2Hasher) Verify(password string, encoded string) (bool, error) {
 // The result is a 64 byte binary string.
 func NewPBKDF2SHA256Hasher() *PBKDF2Hasher {
 	return &PBKDF2Hasher{
-		Algorithm:  "pbkdf2_sha256",
+		Algorithm:  AlgorithmPBKDF2SHA256,
 		Iterations: 216000,
 		Size:       sha256.Size,
 		Digest:     sha256.New,
+	}
+}
+
+// NewPBKDF2SHA512Hasher secures password hashing using the PBKDF2 algorithm.
+//
+// Configured to use PBKDF2 + HMAC + SHA512.
+// The result is a 64 byte binary string.
+func NewPBKDF2SHA512Hasher() *PBKDF2Hasher {
+	return &PBKDF2Hasher{
+		Algorithm:  AlgorithmPBKDF2SHA512,
+		Iterations: 216000,
+		Size:       sha512.Size,
+		Digest:     sha512.New,
 	}
 }
