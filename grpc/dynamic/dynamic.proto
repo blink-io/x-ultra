@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+option optimize_for = SPEED;
+option go_package = "github.com/blink.fun/x/grpc/dynamic;dynamic";
+
+message UnaryRequest {
+  bytes payload = 1;
+  map<string, string> meta = 2;
+  string action = 3;
+}
+
+message UnaryResponse {
+  bytes payload = 1;
+  map<string, string> meta = 2;
+  string action = 3;
+}
+
+// The I18N service definition.
+service Dynamic {
+  // Unary requests
+  rpc Unary (UnaryRequest) returns (UnaryResponse);
+}

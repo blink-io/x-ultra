@@ -9,18 +9,11 @@ import (
 	"time"
 
 	"github.com/blink-io/x/session"
-	"github.com/blink-io/x/session/encoding/json"
-	sessgrpc "github.com/blink-io/x/session/grpc"
-	"github.com/blink-io/x/session/store/ristretto"
 	"github.com/blink-io/x/testdata"
-	"google.golang.org/grpc/credentials/insecure"
-
 	"github.com/stretchr/testify/require"
 	"gitlab.com/greyxor/slogor"
-	"google.golang.org/grpc"
 	"google.golang.org/grpc/channelz/service"
 	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/stats"
 	"google.golang.org/grpc/status"
 )
@@ -126,41 +119,10 @@ func (s *statsHandler) HandleConn(ctx context.Context, connStats stats.ConnStats
 	slog.Info("Invoke [HandleConn]", "connStats", connStats)
 }
 
-func createGRPCServer(secure bool) *grpc.Server {
-	var creds credentials.TransportCredentials
-	if secure {
-		creds = credentials.NewTLS(testdata.GetTLSConfig())
-	} else {
-		creds = insecure.NewCredentials()
-	}
-
-	//rc := redis.NewUniversalClient(&redis.UniversalOptions{})
-	//rs := goredis.New(rc)
-	sm := session.NewManager(
-		session.Lifetime(10*time.Minute),
-		session.Codec(json.New()),
-		session.Store(ristretto.New()),
-	)
-	sh := sessgrpc.NewSessionHandler(
-		sessgrpc.WithExposeExpiry(),
-		sessgrpc.WithHeader(sessgrpc.DefaultHeader),
-		sessgrpc.WithSessionManager(sm),
-	)
-
-	gsrv := grpc.NewServer(
-		grpc.Creds(creds),
-		grpc.StatsHandler(&statsHandler{}),
-		grpc.ChainUnaryInterceptor(sh.UnaryServerInterceptor),
-		grpc.ChainStreamInterceptor(sh.StreamServerInterceptor),
-	)
-
-	return gsrv
-}
-
 func TestGRPC_Server_1(t *testing.T) {
 	svc := &commonService{}
 
-	gsrv := createGRPCServer(true)
+	gsrv := testdata.CreateGRPCServer(true)
 
 	RegisterCommonServer(gsrv, svc)
 	service.RegisterChannelzServiceToServer(gsrv)

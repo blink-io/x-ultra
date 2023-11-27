@@ -74,13 +74,13 @@ func (h *PBKDF2Hasher) Verify(password string, encoded string) (bool, error) {
 		return false, ErrHashComponentUnreadable
 	}
 
-	newencoded, err := h.Encode(password, salt, i)
+	newEncoded, err := h.Encode(password, salt, i)
 
 	if err != nil {
 		return false, err
 	}
 
-	return hmac.Equal([]byte(newencoded), []byte(encoded)), nil
+	return hmac.Equal([]byte(newEncoded), []byte(encoded)), nil
 }
 
 // NewPBKDF2SHA256Hasher secures password hashing using the PBKDF2 algorithm.
