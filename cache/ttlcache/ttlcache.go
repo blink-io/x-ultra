@@ -1,7 +1,6 @@
 package ttlcache
 
 import (
-	"context"
 	"time"
 
 	"github.com/blink-io/x/cache"
@@ -16,21 +15,24 @@ type icache[V any] struct {
 	ttl time.Duration
 }
 
-func New[V any](ctx context.Context, ttl time.Duration) (cache.Cache[V], error) {
+func New[V any](ttl time.Duration) cache.TTLCache[V] {
 	c := ttlcache.New(ttlcache.WithTTL[string, V](ttl))
-	return &icache[V]{c, ttl}, nil
+	return &icache[V]{c, ttl}
 }
 
 func (l *icache[V]) Set(key string, value V) {
 	l.c.Set(key, value, l.ttl)
 }
 
+func (l *icache[V]) SetWithTTL(key string, value V, ttl time.Duration) {
+	l.c.Set(key, value, ttl)
+}
+
 func (l *icache[V]) Get(key string) (V, bool) {
 	i := l.c.Get(key)
 	var v V
 	if i != nil {
-		return i.Value(), i.IsExpired()
-
+		return i.Value(), !i.IsExpired()
 	}
 	return v, false
 }

@@ -9,6 +9,7 @@ import (
 )
 
 const Name = "ristretto"
+const defaultCost = 1
 
 func init() {
 	//local.SetProviderFn(ProviderLRU, NewLRULocal)
@@ -32,7 +33,11 @@ func New[V any](ctx context.Context, ttl time.Duration) (cache.Cache[V], error) 
 }
 
 func (l *icache[V]) Set(key string, value V) {
-	l.c.SetWithTTL(key, value, 1, l.ttl)
+	l.c.SetWithTTL(key, value, defaultCost, l.ttl)
+}
+
+func (l *icache[V]) SetWithTTL(key string, value V, ttl time.Duration) {
+	l.c.SetWithTTL(key, value, defaultCost, ttl)
 }
 
 func (l *icache[V]) Get(key string) (V, bool) {

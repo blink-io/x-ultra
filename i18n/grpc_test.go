@@ -39,7 +39,7 @@ func TestGRPC_Server_1(t *testing.T) {
 	ln, err := net.Listen("tcp", ":9999")
 	require.NoError(t, err)
 
-	gsrv.Serve(ln)
+	require.NoError(t, gsrv.Serve(ln))
 }
 
 func TestNewGRPCLoader_1(t *testing.T) {

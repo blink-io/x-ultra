@@ -21,7 +21,11 @@ func New[V any](ctx context.Context, ttl time.Duration) (cache.Cache[V], error) 
 }
 
 func (l *icache[V]) Set(key string, value V) {
-	expiresAt := time.Now().Add(l.ttl)
+	l.SetWithTTL(key, value, l.ttl)
+}
+
+func (l *icache[V]) SetWithTTL(key string, value V, ttl time.Duration) {
+	expiresAt := time.Now().Add(ttl)
 	i := &tinylfu.Item{
 		Key:      key,
 		Value:    value,
