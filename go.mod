@@ -96,6 +96,7 @@ require (
 	github.com/XSAM/otelsql v0.26.0
 	github.com/dchest/siphash v1.2.3
 	github.com/deckarep/golang-set/v2 v2.4.0
+	github.com/leonelquinteros/gotext v1.5.2
 	github.com/matryer/is v1.4.1
 	github.com/pashagolub/pgxmock/v3 v3.2.0
 	github.com/segmentio/encoding v0.3.6
