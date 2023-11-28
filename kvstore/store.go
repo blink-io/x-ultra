@@ -52,9 +52,9 @@ type Store interface {
 
 // KVPair represents {Key, Value, LastIndex} tuple.
 type KVPair struct {
-	Key       string
-	Value     []byte
-	LastIndex uint64
+	Key       string `json:"id" cbor:"id" msgpack:"id"`
+	Value     []byte `json:"value" cbor:"value" msgpack:"value"`
+	LastIndex uint64 `json:"last_index" cbor:"last_index" msgpack:"last_index"`
 }
 
 // WriteOptions contains optional request parameters.
