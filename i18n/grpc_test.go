@@ -2,7 +2,9 @@ package i18n
 
 import (
 	"context"
+	"fmt"
 	"net"
+	"os"
 	"testing"
 
 	"github.com/blink-io/x/testdata"
@@ -46,5 +48,13 @@ func TestNewGRPCLoader_1(t *testing.T) {
 	cc := testdata.CreateGRPCClient(":9999", true)
 	ld := NewGRPCLoader(cc, []string{"zh-Hans"})
 	err := ld.Load(bb)
+	require.NoError(t, err)
+}
+
+func TestPB_Desc(t *testing.T) {
+	pbdesc := file_i18n_proto_rawDescGZIP()
+	fmt.Println(string(pbdesc))
+
+	err := os.WriteFile("./i18n.pb.bin", pbdesc, 0544)
 	require.NoError(t, err)
 }

@@ -1,4 +1,4 @@
-package zap
+package xlog
 
 import (
 	xlog "github.com/blink-io/x/log"

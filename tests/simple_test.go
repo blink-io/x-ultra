@@ -3,6 +3,7 @@ package tests
 import (
 	"fmt"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/require"
 )
@@ -65,4 +66,23 @@ func TestClosure(t *testing.T) {
 	fmt.Println("i: ", ac())
 	fmt.Println("i: ", ac())
 	fmt.Println("i: ", ac())
+}
+
+type user struct {
+	Name      string
+	Birthdate time.Time
+	Point     float64
+	Valid     bool
+}
+
+func TestSprint(t *testing.T) {
+	u := &user{
+		Name:      "或绘画",
+		Birthdate: time.Now(),
+		Point:     3.1415,
+		Valid:     true,
+	}
+	ss := fmt.Sprint(u)
+
+	fmt.Println(ss)
 }
