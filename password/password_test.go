@@ -1,4 +1,4 @@
-package unchained
+package password
 
 import (
 	"fmt"
@@ -7,10 +7,10 @@ import (
 )
 
 func TestMakePasswordDefault(t *testing.T) {
-	encoded, err := MakePassword("admin", "1TMOT0Rohg3g", DefaultHasher)
+	encoded, err := Make("admin", "1TMOT0Rohg3g", DefaultHasher)
 
 	if err != nil {
-		t.Fatalf("MakePassword error: %s", err)
+		t.Fatalf("Make error: %s", err)
 	}
 
 	expected := "pbkdf2_sha256$216000$1TMOT0Rohg3g$N+wIigWW4zpxnFBwXTWK1Qt8C9aduBIAayDS2ee8KxI="
@@ -21,10 +21,10 @@ func TestMakePasswordDefault(t *testing.T) {
 }
 
 func TestMakePasswordEmptySaltDefault(t *testing.T) {
-	encoded, err := MakePassword("admin", "", DefaultHasher)
+	encoded, err := Make("admin", "", DefaultHasher)
 
 	if err != nil {
-		t.Fatalf("MakePassword error: %s", err)
+		t.Fatalf("Make error: %s", err)
 	}
 
 	hasher := IdentifyHasher(encoded).String()
@@ -35,7 +35,7 @@ func TestMakePasswordEmptySaltDefault(t *testing.T) {
 }
 
 func TestMakePasswordArgon2Hasher(t *testing.T) {
-	encoded, err := MakePassword("admin", "", Argon2Hasher)
+	encoded, err := Make("admin", "", Argon2Hasher)
 
 	if err != nil {
 		t.Fatalf("Make password error: %s", err)
@@ -47,7 +47,7 @@ func TestMakePasswordArgon2Hasher(t *testing.T) {
 }
 
 func TestMakePasswordBCryptHasher(t *testing.T) {
-	encoded, err := MakePassword("admin", "", BCryptHasher)
+	encoded, err := Make("admin", "", BCryptHasher)
 
 	if err != nil {
 		t.Fatalf("Make password error: %s", err)
@@ -59,7 +59,7 @@ func TestMakePasswordBCryptHasher(t *testing.T) {
 }
 
 func TestMakePasswordBCryptSHA256Hasher(t *testing.T) {
-	encoded, err := MakePassword("admin", "", BCryptSHA256Hasher)
+	encoded, err := Make("admin", "", BCryptSHA256Hasher)
 
 	if err != nil {
 		t.Fatalf("Make password error: %s", err)
@@ -71,7 +71,7 @@ func TestMakePasswordBCryptSHA256Hasher(t *testing.T) {
 }
 
 func TestMakePasswordPBKDF2SHA256Hasher(t *testing.T) {
-	encoded, err := MakePassword("admin", "", PBKDF2SHA256Hasher)
+	encoded, err := Make("admin", "", PBKDF2SHA256Hasher)
 
 	if err != nil {
 		t.Fatalf("Make password error: %s", err)
@@ -83,10 +83,10 @@ func TestMakePasswordPBKDF2SHA256Hasher(t *testing.T) {
 }
 
 func TestCheckPasswordArgon2(t *testing.T) {
-	valid, err := CheckPassword("admin", "argon2$argon2i$v=19$m=512,t=2,p=2$NnFZNGxmQTE1bmFV$kPPGrqD6dnRllcQeksFN+w")
+	valid, err := Check("admin", "argon2$argon2i$v=19$m=512,t=2,p=2$NnFZNGxmQTE1bmFV$kPPGrqD6dnRllcQeksFN+w")
 
 	if err != nil {
-		t.Fatalf("CheckPassword error: %s", err)
+		t.Fatalf("Check error: %s", err)
 	}
 
 	if !valid {
@@ -95,10 +95,10 @@ func TestCheckPasswordArgon2(t *testing.T) {
 }
 
 func TestCheckPasswordPBKDF2SHA256(t *testing.T) {
-	valid, err := CheckPassword("admin", "pbkdf2_sha256$120000$WZrFZhpl3wOU$yPimyWN658IuAu0XErvg1Nowfd55k60hu4o+eDUlBDM=")
+	valid, err := Check("admin", "pbkdf2_sha256$120000$WZrFZhpl3wOU$yPimyWN658IuAu0XErvg1Nowfd55k60hu4o+eDUlBDM=")
 
 	if err != nil {
-		t.Fatalf("CheckPassword error: %s", err)
+		t.Fatalf("Check error: %s", err)
 	}
 
 	if !valid {
@@ -107,10 +107,10 @@ func TestCheckPasswordPBKDF2SHA256(t *testing.T) {
 }
 
 func TestCheckPasswordBCrypto(t *testing.T) {
-	valid, err := CheckPassword("admin", "bcrypt$$2b$12$qcNExitVe89wMG.nmRD4Qupn2hFm0pxvnu6VC.w6LShOx30l.F9/.")
+	valid, err := Check("admin", "bcrypt$$2b$12$qcNExitVe89wMG.nmRD4Qupn2hFm0pxvnu6VC.w6LShOx30l.F9/.")
 
 	if err != nil {
-		t.Fatalf("CheckPassword error: %s", err)
+		t.Fatalf("Check error: %s", err)
 	}
 
 	if !valid {
@@ -119,10 +119,10 @@ func TestCheckPasswordBCrypto(t *testing.T) {
 }
 
 func TestCheckPasswordBCryptoSHA256(t *testing.T) {
-	valid, err := CheckPassword("admin", "bcrypt_sha256$$2b$12$WZK9cb9qKN.Q5LCYPq/gj.6gvry1b37HUsJER6KhQBnIWmPyyaaqi")
+	valid, err := Check("admin", "bcrypt_sha256$$2b$12$WZK9cb9qKN.Q5LCYPq/gj.6gvry1b37HUsJER6KhQBnIWmPyyaaqi")
 
 	if err != nil {
-		t.Fatalf("CheckPassword error: %s", err)
+		t.Fatalf("Check error: %s", err)
 	}
 
 	if !valid {
@@ -131,7 +131,7 @@ func TestCheckPasswordBCryptoSHA256(t *testing.T) {
 }
 
 func TestIsPasswordUsableWithValidPassword(t *testing.T) {
-	usable := IsPasswordUsable("pbkdf2_sha256$24000$JMO9TJawIXB1$5iz40fwwc+QW6lZY+TuNciua3YVMV3GXdgkhXrcvWag=")
+	usable := IsUsable("pbkdf2_sha256$24000$JMO9TJawIXB1$5iz40fwwc+QW6lZY+TuNciua3YVMV3GXdgkhXrcvWag=")
 
 	if !usable {
 		t.Fatal("Password should be usable.")
@@ -139,7 +139,7 @@ func TestIsPasswordUsableWithValidPassword(t *testing.T) {
 }
 
 func TestIsPasswordUsableWithUnusablePassword1(t *testing.T) {
-	usable := IsPasswordUsable("!")
+	usable := IsUsable("!")
 
 	if usable {
 		t.Fatal("Password should be unusable.")
@@ -147,7 +147,7 @@ func TestIsPasswordUsableWithUnusablePassword1(t *testing.T) {
 }
 
 func TestIsPasswordUsableWithUnusablePassword2(t *testing.T) {
-	usable := IsPasswordUsable("!password")
+	usable := IsUsable("!password")
 
 	if usable {
 		t.Fatal("Password should be unusable.")
@@ -155,7 +155,7 @@ func TestIsPasswordUsableWithUnusablePassword2(t *testing.T) {
 }
 
 func TestIsPasswordUsableWithEmptyPassword(t *testing.T) {
-	usable := IsPasswordUsable("")
+	usable := IsUsable("")
 
 	if usable {
 		t.Fatal("Password should be unusable.")

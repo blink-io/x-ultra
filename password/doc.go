@@ -1,4 +1,4 @@
-// Package unchained provides password hashers that are compatible with Django.
+// Package password provides password hashers that are compatible with Django.
 //
 // These hashers can be also used to perform validation against
 // legacy and shared Django databases.
@@ -11,4 +11,4 @@
 //	<algorithm>$<iterations>$<salt>$<hash>
 //
 // This library supports Argon2, BCrypt, PBKDF2, MD5 and SHA1 algorithms.
-package unchained
+package password

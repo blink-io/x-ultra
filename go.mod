@@ -49,7 +49,7 @@ require (
 	github.com/nicksnyder/go-i18n/v2 v2.2.2
 	github.com/npillmayer/nestext v0.1.3
 	github.com/oklog/ulid/v2 v2.1.0
-	github.com/onsi/ginkgo/v2 v2.13.1
+	github.com/onsi/ginkgo/v2 v2.13.2
 	github.com/onsi/gomega v1.30.0
 	github.com/outcaste-io/ristretto v0.2.3
 	github.com/pelletier/go-toml/v2 v2.1.0
@@ -96,8 +96,10 @@ require (
 	github.com/XSAM/otelsql v0.26.0
 	github.com/dchest/siphash v1.2.3
 	github.com/deckarep/golang-set/v2 v2.4.0
+	github.com/jhump/protoreflect v1.15.3
 	github.com/leonelquinteros/gotext v1.5.2
 	github.com/matryer/is v1.4.1
+	github.com/matttproud/golang_protobuf_extensions/v2 v2.0.0
 	github.com/pashagolub/pgxmock/v3 v3.2.0
 	github.com/segmentio/encoding v0.3.6
 	github.com/smartystreets/goconvey v1.8.1
@@ -111,6 +113,7 @@ require (
 	github.com/BurntSushi/toml v1.3.2 // indirect
 	github.com/ProtonMail/go-crypto v0.0.0-20230923063757-afb1ddc0824c // indirect
 	github.com/ProtonMail/go-mime v0.0.0-20230322103455-7d82a3887f2f // indirect
+	github.com/bufbuild/protocompile v0.6.0 // indirect
 	github.com/cloudflare/circl v1.3.6 // indirect
 	github.com/coreos/go-semver v0.3.1 // indirect
 	github.com/coreos/go-systemd/v22 v22.5.0 // indirect
@@ -146,7 +149,6 @@ require (
 	github.com/leodido/go-urn v1.2.4 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-sqlite3 v1.14.18 // indirect
-	github.com/matttproud/golang_protobuf_extensions/v2 v2.0.0 // indirect
 	github.com/nats-io/nkeys v0.4.6 // indirect
 	github.com/nats-io/nuid v1.0.1 // indirect
 	github.com/pkg/errors v0.9.1 // indirect

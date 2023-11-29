@@ -114,7 +114,7 @@ func (h *Argon2Hasher) Verify(password string, encoded string) (bool, error) {
 // NewArgon2Hasher secures password hashing using the argon2 algorithm.
 func NewArgon2Hasher() *Argon2Hasher {
 	return &Argon2Hasher{
-		Algorithm: "argon2",
+		Algorithm: AlgorithmArgon2,
 		Time:      2,
 		Memory:    512,
 		Threads:   2,

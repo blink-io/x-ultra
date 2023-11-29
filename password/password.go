@@ -1,12 +1,12 @@
-package unchained
+package password
 
 import (
 	"errors"
 	"strings"
 
-	"github.com/blink-io/x/unchained/argon2"
-	"github.com/blink-io/x/unchained/bcrypt"
-	"github.com/blink-io/x/unchained/pbkdf2"
+	"github.com/blink-io/x/password/argon2"
+	"github.com/blink-io/x/password/bcrypt"
+	"github.com/blink-io/x/password/pbkdf2"
 )
 
 // hasher defines Django hasher identifiers.
@@ -87,18 +87,18 @@ func IdentifyHasher(encoded string) hasher {
 	return h
 }
 
-// IsPasswordUsable returns true if encoded password
+// IsUsable returns true if encoded password
 // is usable, or false otherwise.
-func IsPasswordUsable(encoded string) bool {
+func IsUsable(encoded string) bool {
 	return encoded != "" && !strings.HasPrefix(encoded, UnusablePasswordPrefix)
 }
 
-// CheckPassword validates if the raw password matches the encoded digest.
+// Check validates if the raw password matches the encoded digest.
 //
 // This is a shortcut that discovers the hasher used in the encoded digest
 // to perform the correct validation.
-func CheckPassword(password, encoded string) (bool, error) {
-	if !IsPasswordUsable(encoded) {
+func Check(password, encoded string) (bool, error) {
+	if !IsUsable(encoded) {
 		return false, nil
 	}
 
@@ -122,14 +122,14 @@ func CheckPassword(password, encoded string) (bool, error) {
 	return false, ErrInvalidHasher
 }
 
-// MakePassword turns a plain-text password into a hash.
+// Make turns a plain-text password into a hash.
 //
 // If password is empty, then return a concatenation
 // of UnusablePasswordPrefix and a random string.
 // If salt is empty, then a random string is generated.
 // BCrypt algorithm ignores salt parameter.
 // If hasher is "default", encode using default hasher.
-func MakePassword(password, salt string, hasher hasher) (string, error) {
+func Make(password, salt string, hasher hasher) (string, error) {
 	if password == "" {
 		return UnusablePasswordPrefix + GetRandomString(UnusablePasswordSuffixLength), nil
 	}

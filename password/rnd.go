@@ -1,4 +1,4 @@
-package unchained
+package password
 
 import (
 	crand "crypto/rand"

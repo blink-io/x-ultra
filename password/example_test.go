@@ -1,13 +1,13 @@
-package unchained_test
+package password_test
 
 import (
 	"fmt"
 
-	"github.com/blink-io/x/unchained"
+	"github.com/blink-io/x/password"
 )
 
 func ExampleCheckPassword() {
-	valid, err := unchained.CheckPassword("admin", "pbkdf2_sha256$24000$JMO9TJawIXB1$5iz40fwwc+QW6lZY+TuNciua3YVMV3GXdgkhXrcvWag=")
+	valid, err := password.Check("admin", "pbkdf2_sha256$24000$JMO9TJawIXB1$5iz40fwwc+QW6lZY+TuNciua3YVMV3GXdgkhXrcvWag=")
 
 	if valid {
 		fmt.Println("Password is valid.")
@@ -21,7 +21,7 @@ func ExampleCheckPassword() {
 }
 
 func ExampleMakePassword() {
-	hash, err := unchained.MakePassword("my-password", unchained.GetRandomString(32), unchained.DefaultHasher)
+	hash, err := password.Make("my-password", password.GetRandomString(32), password.DefaultHasher)
 
 	if err == nil {
 		fmt.Println(hash)
