@@ -26,7 +26,7 @@ require (
 	github.com/gogo/protobuf v1.3.2
 	github.com/google/flatbuffers v23.5.26+incompatible
 	github.com/google/uuid v1.4.0
-	github.com/gopacket/gopacket v1.1.1
+	github.com/gopacket/gopacket v1.2.0
 	github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.0.1
 	github.com/hashicorp/golang-lru/v2 v2.0.7
 	github.com/jackc/pgx-zap v0.0.0-20221202020421-94b1cb2f889f
@@ -78,7 +78,7 @@ require (
 	gitlab.com/greyxor/slogor v1.2.0
 	go.etcd.io/bbolt v1.3.8
 	go.etcd.io/etcd/client/v3 v3.5.10
-	go.temporal.io/api v1.26.0
+	go.temporal.io/api v1.26.1
 	go.temporal.io/sdk v1.25.1
 	go.uber.org/multierr v1.11.0
 	go.uber.org/zap v1.26.0
@@ -95,16 +95,16 @@ require (
 	github.com/DATA-DOG/go-sqlmock v1.5.0
 	github.com/XSAM/otelsql v0.26.0
 	github.com/dchest/siphash v1.2.3
-	github.com/deckarep/golang-set/v2 v2.4.0
+	github.com/deckarep/golang-set/v2 v2.5.0
 	github.com/jhump/protoreflect v1.15.3
 	github.com/leonelquinteros/gotext v1.5.2
 	github.com/matryer/is v1.4.1
 	github.com/matttproud/golang_protobuf_extensions/v2 v2.0.0
 	github.com/pashagolub/pgxmock/v3 v3.2.0
-	github.com/segmentio/encoding v0.3.6
+	github.com/segmentio/encoding v0.3.7
 	github.com/smartystreets/goconvey v1.8.1
 	github.com/sourcegraph/conc v0.3.0
-	github.com/xo/dburl v0.18.2
+	github.com/xo/dburl v0.18.3
 	go.opentelemetry.io/otel v1.21.0
 	golang.org/x/sys v0.15.0
 )
@@ -113,6 +113,8 @@ require (
 	github.com/BurntSushi/toml v1.3.2 // indirect
 	github.com/ProtonMail/go-crypto v0.0.0-20230923063757-afb1ddc0824c // indirect
 	github.com/ProtonMail/go-mime v0.0.0-20230322103455-7d82a3887f2f // indirect
+	github.com/ammario/tlru v0.3.0 // indirect
+	github.com/armon/go-radix v1.0.0 // indirect
 	github.com/bufbuild/protocompile v0.6.0 // indirect
 	github.com/cloudflare/circl v1.3.6 // indirect
 	github.com/coreos/go-semver v0.3.1 // indirect
@@ -134,7 +136,7 @@ require (
 	github.com/google/pprof v0.0.0-20231127191134-f3a68a39ae15 // indirect
 	github.com/gopherjs/gopherjs v1.17.2 // indirect
 	github.com/gorilla/mux v1.8.1 // indirect
-	github.com/grpc-ecosystem/grpc-gateway v1.16.0 // indirect
+	github.com/grpc-ecosystem/grpc-gateway/v2 v2.18.1 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a // indirect
 	github.com/jackc/puddle/v2 v2.2.1 // indirect

@@ -25,3 +25,8 @@ build:
 test:
 	@echo 'Testing'
 	go test ./...
+
+.PHONY: mod-list
+# Run mod list
+mod-list:
+	go list -u -mod=mod -f '{{if (and (not (or .Main .Indirect)) .Update)}}{{.Path}}: {{.Version}} -> {{.Update.Version}}{{end}}' -m all
