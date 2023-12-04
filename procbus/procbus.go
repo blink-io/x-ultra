@@ -1,4 +1,4 @@
-package bus
+package procbus
 
 import (
 	"context"
@@ -31,7 +31,7 @@ type InProcBus struct {
 	tracer    trace.Tracer
 }
 
-func ProvideBus(tracer trace.Tracer) *InProcBus {
+func New(tracer trace.Tracer) *InProcBus {
 	return &InProcBus{
 		listeners: make(map[string][]HandlerFunc),
 		tracer:    tracer,

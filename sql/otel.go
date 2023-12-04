@@ -13,12 +13,12 @@ import (
 )
 
 type otelOptions struct {
-	dbName         string
-	dbSystem       string
-	dbAccessMethod string //dbDam, Database Access Method
-	dbHostPort     string
-	extraAttrs     []attribute.KeyValue
-	reportDBStats  bool
+	dbName        string
+	dbSystem      string
+	dbAccessor    string //dbDam, Database Access Method
+	dbHostPort    string
+	extraAttrs    []attribute.KeyValue
+	reportDBStats bool
 }
 
 type OTtelOption func(*otelOptions)
@@ -57,8 +57,8 @@ func (oo *otelOptions) createDBInfoAttrs() []attribute.KeyValue {
 	if len(oo.dbSystem) > 0 {
 		attrs = append(attrs, semconv.DBSystemKey.String(oo.dbSystem))
 	}
-	if len(oo.dbAccessMethod) > 0 {
-		attrs = append(attrs, xsemconv.DBAccessMethodKey.String(oo.dbAccessMethod))
+	if len(oo.dbAccessor) > 0 {
+		attrs = append(attrs, xsemconv.DBAccessorKey.String(oo.dbAccessor))
 	}
 	if len(oo.dbHostPort) > 0 {
 		attrs = append(attrs, xsemconv.DBHostPortKey.String(oo.dbHostPort))
@@ -88,7 +88,7 @@ func OTelDBSystem(dbName string) OTtelOption {
 
 func OTelDBAccessMethod(dbAccessMethod string) OTtelOption {
 	return func(o *otelOptions) {
-		o.dbAccessMethod = dbAccessMethod
+		o.dbAccessor = dbAccessMethod
 	}
 }
 

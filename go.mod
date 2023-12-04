@@ -41,7 +41,7 @@ require (
 	github.com/klauspost/compress v1.17.4
 	github.com/lithammer/shortuuid/v4 v4.0.0
 	github.com/lmittmann/tint v1.0.3
-	github.com/matthewhartstonge/argon2 v0.3.4
+	github.com/matthewhartstonge/argon2 v1.0.0
 	github.com/miekg/dns v1.1.57
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/natefinch/lumberjack/v3 v3.0.0-alpha
@@ -93,11 +93,18 @@ require (
 
 require (
 	github.com/DATA-DOG/go-sqlmock v1.5.0
+	github.com/VictoriaMetrics/fastcache v1.12.2
 	github.com/XSAM/otelsql v0.26.0
+	github.com/ahmetb/go-linq/v3 v3.2.0
+	github.com/allegro/bigcache/v3 v3.1.0
 	github.com/ammario/tlru v0.3.0
 	github.com/dchest/siphash v1.2.3
 	github.com/deckarep/golang-set/v2 v2.5.0
+	github.com/emicklei/proto v1.12.2
+	github.com/go-kit/log v0.2.1
+	github.com/gorilla/websocket v1.5.1
 	github.com/jhump/protoreflect v1.15.3
+	github.com/kardianos/osext v0.0.0-20190222173326-2bc1f35cddc0
 	github.com/leonelquinteros/gotext v1.5.2
 	github.com/matryer/is v1.4.1
 	github.com/matttproud/golang_protobuf_extensions/v2 v2.0.0
@@ -105,9 +112,10 @@ require (
 	github.com/segmentio/encoding v0.3.7
 	github.com/smartystreets/goconvey v1.8.1
 	github.com/sourcegraph/conc v0.3.0
-	github.com/xo/dburl v0.18.3
+	github.com/xo/dburl v0.19.1
 	go.opentelemetry.io/otel v1.21.0
 	go.opentelemetry.io/otel/trace v1.21.0
+	golang.org/x/net v0.19.0
 	golang.org/x/sys v0.15.0
 )
 
@@ -126,6 +134,7 @@ require (
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.3 // indirect
 	github.com/go-kratos/aegis v0.2.0 // indirect
+	github.com/go-logfmt/logfmt v0.6.0 // indirect
 	github.com/go-logr/logr v1.3.0 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-playground/form/v4 v4.2.1 // indirect
@@ -133,13 +142,14 @@ require (
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/go-task/slim-sprig v0.0.0-20230315185526-52ccab3ef572 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
+	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
-	github.com/google/pprof v0.0.0-20231127191134-f3a68a39ae15 // indirect
+	github.com/google/pprof v0.0.0-20231203200248-ad67f76aa53d // indirect
 	github.com/gopherjs/gopherjs v1.17.2 // indirect
 	github.com/gorilla/mux v1.8.1 // indirect
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.18.1 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
-	github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a // indirect
+	github.com/jackc/pgservicefile v0.0.0-20231201235250-de7065d80cb9 // indirect
 	github.com/jackc/puddle/v2 v2.2.1 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jtolds/gls v4.20.0+incompatible // indirect
@@ -154,6 +164,7 @@ require (
 	github.com/mattn/go-sqlite3 v1.14.18 // indirect
 	github.com/nats-io/nkeys v0.4.6 // indirect
 	github.com/nats-io/nuid v1.0.1 // indirect
+	github.com/orcaman/concurrent-map/v2 v2.0.1 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/quic-go/qpack v0.4.0 // indirect
@@ -173,7 +184,6 @@ require (
 	go.uber.org/mock v0.3.0 // indirect
 	golang.org/x/exp v0.0.0-20231127185646-65229373498e // indirect
 	golang.org/x/mod v0.14.0 // indirect
-	golang.org/x/net v0.19.0 // indirect
 	golang.org/x/sync v0.5.0 // indirect
 	golang.org/x/term v0.15.0 // indirect
 	golang.org/x/tools v0.16.0 // indirect
@@ -182,7 +192,7 @@ require (
 	lukechampine.com/uint128 v1.3.0 // indirect
 	modernc.org/cc/v3 v3.41.0 // indirect
 	modernc.org/ccgo/v3 v3.16.15 // indirect
-	modernc.org/libc v1.34.11 // indirect
+	modernc.org/libc v1.35.0 // indirect
 	modernc.org/mathutil v1.6.0 // indirect
 	modernc.org/memory v1.7.2 // indirect
 	modernc.org/opt v0.1.3 // indirect

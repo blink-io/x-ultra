@@ -129,7 +129,7 @@ func (bus *EventBus) Unsubscribe(topic string, handler interface{}) error {
 
 // Publish executes callback defined for a topic. Any additional argument will be transferred to the callback.
 func (bus *EventBus) Publish(topic string, args ...interface{}) {
-	bus.lock.Lock() // will unlock if handler is not found or always after setUpPublish
+	bus.lock.Lock() // will unlock if handler is not found or always after setupPublish
 	defer bus.lock.Unlock()
 	if handlers, ok := bus.handlers[topic]; ok && 0 < len(handlers) {
 		// Handlers slice may be changed by removeHandler and Unsubscribe during iteration,
@@ -156,7 +156,7 @@ func (bus *EventBus) Publish(topic string, args ...interface{}) {
 }
 
 func (bus *EventBus) doPublish(handler *eventHandler, topic string, args ...interface{}) {
-	passedArguments := bus.setUpPublish(handler, args...)
+	passedArguments := bus.setupPublish(handler, args...)
 	handler.callBack.Call(passedArguments)
 }
 
@@ -195,7 +195,7 @@ func (bus *EventBus) findHandlerIdx(topic string, callback reflect.Value) int {
 	return -1
 }
 
-func (bus *EventBus) setUpPublish(callback *eventHandler, args ...interface{}) []reflect.Value {
+func (bus *EventBus) setupPublish(callback *eventHandler, args ...interface{}) []reflect.Value {
 	funcType := callback.callBack.Type()
 	passedArguments := make([]reflect.Value, len(args))
 	for i, v := range args {

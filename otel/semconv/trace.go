@@ -5,7 +5,7 @@ import (
 )
 
 const (
-	DBAccessMethodKey = attribute.Key("db.access_method")
+	DBAccessorKey = attribute.Key("db.accessor")
 
 	DBHostPortKey = attribute.Key("db.host_port")
 

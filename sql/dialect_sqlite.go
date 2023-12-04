@@ -3,8 +3,6 @@
 package sql
 
 import (
-	"log/slog"
-
 	"github.com/blink-io/x/bun/dialect/sqlitedialect"
 
 	"github.com/uptrace/bun/schema"
@@ -22,7 +20,6 @@ func init() {
 		return sqlitedialect.New()
 	}
 	dsnFuncs[dn] = SQLiteDSN
-	slog.Info("SQLite is enabled")
 }
 
 func SQLiteDSN(o *Options) string {

@@ -15,5 +15,5 @@ func New(sl *slog.Logger) logger.Logger {
 }
 
 func (l *logz) Print(v ...any) {
-	l.sl.Info("[mysql]", slog.Any("args", v))
+	l.sl.Info("[mysql]", slog.Group("args", v...))
 }
