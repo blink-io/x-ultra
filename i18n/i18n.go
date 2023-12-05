@@ -31,7 +31,7 @@ type (
 		*ib
 	}
 
-	Logger func(string, ...any)
+	Logger func(format string, args ...any)
 )
 
 var (

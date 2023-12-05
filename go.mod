@@ -46,7 +46,7 @@ require (
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/natefinch/lumberjack/v3 v3.0.0-alpha
 	github.com/nats-io/nats.go v1.31.0
-	github.com/nicksnyder/go-i18n/v2 v2.2.2
+	github.com/nicksnyder/go-i18n/v2 v2.3.0
 	github.com/npillmayer/nestext v0.1.3
 	github.com/oklog/ulid/v2 v2.1.0
 	github.com/onsi/ginkgo/v2 v2.13.2
@@ -121,7 +121,6 @@ require (
 )
 
 require (
-	github.com/BurntSushi/toml v1.3.2 // indirect
 	github.com/ProtonMail/go-crypto v0.0.0-20230923063757-afb1ddc0824c // indirect
 	github.com/ProtonMail/go-mime v0.0.0-20230322103455-7d82a3887f2f // indirect
 	github.com/armon/go-radix v1.0.0 // indirect
@@ -145,7 +144,7 @@ require (
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
-	github.com/google/pprof v0.0.0-20231203200248-ad67f76aa53d // indirect
+	github.com/google/pprof v0.0.0-20231205033806-a5a03c77bf08 // indirect
 	github.com/gopherjs/gopherjs v1.17.2 // indirect
 	github.com/gorilla/mux v1.8.1 // indirect
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0 // indirect
