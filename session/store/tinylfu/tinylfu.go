@@ -11,35 +11,33 @@ import (
 
 const Name = "tinylfu"
 
+var _ store.Store = (*Store)(nil)
+
 // New returns a new store.Store instance.
 // The client parameter should be a pointer to an etcd client instance.
-func New() store.Store {
-	return newRaw()
-}
-
-func newRaw() *istore {
+func New() *Store {
 	cc := tinylfu.New(100_000_000, 100_000_000)
-	return &istore{cc: cc, tt: make(map[string]*struct{})}
+	return &Store{cc: cc, tm: store.NewTokenMap()}
 }
 
-var _ store.Store = (*istore)(nil)
+var _ store.Store = (*Store)(nil)
 
-type istore struct {
-	tt map[string]*struct{}
+type Store struct {
+	tm store.TokenMap
 	cc *tinylfu.T
 }
 
-func (s *istore) Name() string {
+func (s *Store) Name() string {
 	return Name
 }
 
-func (s *istore) Delete(ctx context.Context, token string) (err error) {
+func (s *Store) Delete(ctx context.Context, token string) (err error) {
 	s.cc.Del(token)
-	delete(s.tt, token)
+	delete(s.tm, token)
 	return nil
 }
 
-func (s *istore) Find(ctx context.Context, token string) ([]byte, bool, error) {
+func (s *Store) Find(ctx context.Context, token string) ([]byte, bool, error) {
 	if v, ok := s.cc.Get(token); ok {
 		if data, vok := v.([]byte); vok {
 			return data, true, nil
@@ -51,19 +49,19 @@ func (s *istore) Find(ctx context.Context, token string) ([]byte, bool, error) {
 	}
 }
 
-func (s *istore) Commit(ctx context.Context, token string, data []byte, expiry time.Time) (err error) {
+func (s *Store) Commit(ctx context.Context, token string, data []byte, expiry time.Time) (err error) {
 	s.cc.Set(&tinylfu.Item{
 		Key:      token,
 		Value:    data,
 		ExpireAt: expiry,
 	})
-	s.tt[token] = store.NilStruct
+	s.tm[token] = store.NilStruct
 	return nil
 }
 
-func (s *istore) All(ctx context.Context) (map[string][]byte, error) {
+func (s *Store) All(ctx context.Context) (map[string][]byte, error) {
 	sessions := make(map[string][]byte)
-	for token := range s.tt {
+	for token := range s.tm {
 		if v, ok := s.cc.Get(token); ok {
 			if data, vok := v.([]byte); vok {
 				sessions[token] = data

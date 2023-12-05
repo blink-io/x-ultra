@@ -32,26 +32,20 @@ type expectedAll struct {
 	returnErr error
 }
 
-type istore struct {
+var _ store.Store = (*Store)(nil)
+
+type Store struct {
 	deleteExpectations []expectedDelete
 	findExpectations   []expectedFind
 	commitExpectations []expectedCommit
 	allExpectations    []expectedAll
 }
 
-func New() interface {
-	store.Store
-	ExpectFind(string, []byte, bool, error)
-	ExpectCommit(string, []byte, time.Time, error)
-} {
-	return newRaw()
+func New() *Store {
+	return &Store{}
 }
 
-func newRaw() *istore {
-	return &istore{}
-}
-
-func (s *istore) ExpectDelete(token string, err error) {
+func (s *Store) ExpectDelete(token string, err error) {
 	s.deleteExpectations = append(s.deleteExpectations, expectedDelete{
 		inputToken: token,
 		returnErr:  err,
@@ -59,7 +53,7 @@ func (s *istore) ExpectDelete(token string, err error) {
 }
 
 // Delete implements the store interface
-func (s *istore) Delete(ctx context.Context, token string) (err error) {
+func (s *Store) Delete(ctx context.Context, token string) (err error) {
 	var (
 		indexToRemove    int
 		expectationFound bool
@@ -81,7 +75,7 @@ func (s *istore) Delete(ctx context.Context, token string) (err error) {
 	return errToReturn
 }
 
-func (s *istore) ExpectFind(token string, b []byte, found bool, err error) {
+func (s *Store) ExpectFind(token string, b []byte, found bool, err error) {
 	s.findExpectations = append(s.findExpectations, expectedFind{
 		inputToken:  token,
 		returnB:     b,
@@ -91,7 +85,7 @@ func (s *istore) ExpectFind(token string, b []byte, found bool, err error) {
 }
 
 // Find implements the store interface
-func (s *istore) Find(ctx context.Context, token string) (b []byte, found bool, err error) {
+func (s *Store) Find(ctx context.Context, token string) (b []byte, found bool, err error) {
 	var (
 		indexToRemove    int
 		expectationFound bool
@@ -113,7 +107,7 @@ func (s *istore) Find(ctx context.Context, token string) (b []byte, found bool, 
 	return valueToReturn.returnB, valueToReturn.returnFound, valueToReturn.returnErr
 }
 
-func (s *istore) ExpectCommit(token string, b []byte, expiry time.Time, err error) {
+func (s *Store) ExpectCommit(token string, b []byte, expiry time.Time, err error) {
 	s.commitExpectations = append(s.commitExpectations, expectedCommit{
 		inputToken:  token,
 		inputB:      b,
@@ -123,7 +117,7 @@ func (s *istore) ExpectCommit(token string, b []byte, expiry time.Time, err erro
 }
 
 // Commit implements the store interface
-func (s *istore) Commit(ctx context.Context, token string, b []byte, expiry time.Time) (err error) {
+func (s *Store) Commit(ctx context.Context, token string, b []byte, expiry time.Time) (err error) {
 	var (
 		indexToRemove    int
 		expectationFound bool
@@ -145,14 +139,14 @@ func (s *istore) Commit(ctx context.Context, token string, b []byte, expiry time
 	return errToReturn
 }
 
-func (s *istore) ExpectAll(mb map[string][]byte, err error) {
+func (s *Store) ExpectAll(mb map[string][]byte, err error) {
 	s.allExpectations = append(s.allExpectations, expectedAll{
 		returnMB:  mb,
 		returnErr: err,
 	})
 }
 
-func (s *istore) All(ctx context.Context) (map[string][]byte, error) {
+func (s *Store) All(ctx context.Context) (map[string][]byte, error) {
 	var (
 		indexToRemove    int
 		expectationFound bool

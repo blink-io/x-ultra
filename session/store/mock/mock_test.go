@@ -14,7 +14,7 @@ func TestMockStore_Delete(T *testing.T) {
 	T.Parallel()
 
 	T.Run("obligatory", func(t *testing.T) {
-		s := &istore{}
+		s := &Store{}
 
 		exampleToken := "token"
 		expectedErr := errors.New("arbitrary")
@@ -30,7 +30,7 @@ func TestMockStore_Delete(T *testing.T) {
 	})
 
 	T.Run("panics with not found expectation", func(t *testing.T) {
-		s := &istore{}
+		s := &Store{}
 
 		exampleToken := "token"
 
@@ -52,7 +52,7 @@ func TestMockStore_Find(T *testing.T) {
 	T.Parallel()
 
 	T.Run("obligatory", func(t *testing.T) {
-		s := &istore{}
+		s := &Store{}
 
 		exampleToken := "token"
 		expectedBytes := []byte("hello, world!")
@@ -76,7 +76,7 @@ func TestMockStore_Find(T *testing.T) {
 	})
 
 	T.Run("panics with unfound expectation", func(t *testing.T) {
-		s := &istore{}
+		s := &Store{}
 
 		exampleToken := "token"
 
@@ -99,7 +99,7 @@ func TestMockStore_Commit(T *testing.T) {
 	T.Parallel()
 
 	T.Run("obligatory", func(t *testing.T) {
-		s := &istore{}
+		s := &Store{}
 
 		exampleToken := "token"
 		exampleBytes := []byte("hello, world!")
@@ -117,7 +117,7 @@ func TestMockStore_Commit(T *testing.T) {
 	})
 
 	T.Run("panics with unfound expectation", func(t *testing.T) {
-		s := &istore{}
+		s := &Store{}
 
 		exampleToken := "token"
 		exampleBytes := []byte("hello, world!")
@@ -141,7 +141,7 @@ func TestMockStore_All(T *testing.T) {
 	T.Parallel()
 
 	T.Run("obligatory", func(t *testing.T) {
-		s := &istore{}
+		s := &Store{}
 
 		expectedMapBytes := map[string][]byte{"token1": []byte("hello, world 1!"), "token2": []byte("hello, world 2!"), "token3": []byte("hello, world 3!")}
 
@@ -160,7 +160,7 @@ func TestMockStore_All(T *testing.T) {
 	})
 
 	T.Run("panics with unfound expectation", func(t *testing.T) {
-		s := &istore{}
+		s := &Store{}
 
 		defer func() {
 			if r := recover(); r == nil {

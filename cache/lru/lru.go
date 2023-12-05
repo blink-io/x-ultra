@@ -9,34 +9,36 @@ import (
 	"github.com/hashicorp/golang-lru/v2/expirable"
 )
 
-const Name = "icache"
+const Name = "Cache"
+
+var _ cache.Cache[any] = (*Cache[any])(nil)
 
 func init() {
 	//local.SetProviderFn(ProviderLRU, NewLRULocal)
 }
 
-type icache[V any] struct {
-	c   *expirable.LRU[string, V]
+type Cache[V any] struct {
+	cc  *expirable.LRU[string, V]
 	ttl time.Duration
 }
 
-func New[V any](ctx context.Context, ttl time.Duration) (cache.Cache[V], error) {
+func New[V any](ctx context.Context, ttl time.Duration) (*Cache[V], error) {
 	c := expirable.NewLRU[string, V](1000, nil, ttl)
-	return &icache[V]{c, ttl}, nil
+	return &Cache[V]{c, ttl}, nil
 }
 
-func (l *icache[V]) Set(key string, value V) {
-	l.c.Add(key, value)
+func (c *Cache[V]) Set(key string, value V) {
+	c.cc.Add(key, value)
 }
 
-func (l *icache[V]) Get(key string) (V, bool) {
-	return l.c.Get(key)
+func (c *Cache[V]) Get(key string) (V, bool) {
+	return c.cc.Get(key)
 }
 
-func (l *icache[V]) Del(key string) {
-	l.c.Remove(key)
+func (c *Cache[V]) Del(key string) {
+	c.cc.Remove(key)
 }
 
-func (l *icache[V]) Name() string {
+func (c *Cache[V]) Name() string {
 	return Name
 }

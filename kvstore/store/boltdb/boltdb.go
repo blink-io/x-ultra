@@ -35,6 +35,8 @@ const (
 	transientTimeout = time.Duration(10) * time.Second
 )
 
+var _ kvstore.Store = (*Store)(nil)
+
 // registers boltdb to kvstore.
 func init() {
 	kvstore.Register(StoreName, newStore)

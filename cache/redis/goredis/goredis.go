@@ -10,26 +10,32 @@ import (
 
 const Name = "goredis"
 
-type icache[V any] struct {
+var _ cache.TTLCache[any] = (*Cache[any])(nil)
+
+type Cache[V any] struct {
 	cc  redis.UniversalClient
 	ttl time.Duration
 	ctx context.Context
 }
 
-func New[V any](cc redis.UniversalClient, ttl time.Duration) (cache.Cache[V], error) {
-	return &icache[V]{
+func New[V any](cc redis.UniversalClient, ttl time.Duration) (*Cache[V], error) {
+	return &Cache[V]{
 		cc:  cc,
 		ttl: ttl,
 		ctx: context.Background(),
 	}, nil
 }
 
-func (l *icache[V]) Set(key string, data V) {
-	l.cc.Set(l.ctx, key, data, l.ttl)
+func (c *Cache[V]) Set(key string, value V) {
+	c.cc.Set(c.ctx, key, value, c.ttl)
 }
 
-func (l *icache[V]) Get(key string) (V, bool) {
-	//i := l.cc.Get(l.ctx, key)
+func (c *Cache[V]) SetWithTTL(key string, value V, ttl time.Duration) {
+	c.cc.Set(c.ctx, key, value, ttl)
+}
+
+func (c *Cache[V]) Get(key string) (V, bool) {
+	//i := c.cc.Get(c.ctx, key)
 	var v V
 	//if i != nil {
 	//	return i.Value(), i.Expired()
@@ -37,10 +43,10 @@ func (l *icache[V]) Get(key string) (V, bool) {
 	return v, false
 }
 
-func (l *icache[V]) Del(key string) {
-	l.cc.Del(l.ctx, key)
+func (c *Cache[V]) Del(key string) {
+	c.cc.Del(c.ctx, key)
 }
 
-func (l *icache[V]) Name() string {
+func (c *Cache[V]) Name() string {
 	return Name
 }

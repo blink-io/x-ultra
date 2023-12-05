@@ -14,5 +14,14 @@ type Cache[V any] interface {
 
 type TTLCache[V any] interface {
 	Cache[V]
+	TTLSetter[V]
+}
+
+type TTLSetter[V any] interface {
 	SetWithTTL(string, V, time.Duration)
+}
+
+func IsTTLCache(v any) bool {
+	_, ok := v.(TTLSetter[any])
+	return ok
 }

@@ -12,32 +12,34 @@ const Name = "fastcache"
 
 const MaxCost = 100_000
 
+var _ cache.Cache[any] = (*Cache[any])(nil)
+
 func init() {
 	//local.SetProviderFn(ProviderLRU, NewLRULocal)
 }
 
-type icache[V any] struct {
-	c   *fastcache.Cache
+type Cache[V any] struct {
+	cc  *fastcache.Cache
 	ttl time.Duration
 	enc cache.Codec
 }
 
-func New[V any](ctx context.Context, ttl time.Duration) (cache.Cache[V], error) {
+func New[V any](ctx context.Context, ttl time.Duration) (*Cache[V], error) {
 	c := fastcache.New(MaxCost)
-	return &icache[V]{c: c, ttl: ttl}, nil
+	return &Cache[V]{cc: c, ttl: ttl}, nil
 }
 
-func (l *icache[V]) Set(key string, value V) {
-	data, err := l.enc.Encode(value)
+func (c *Cache[V]) Set(key string, value V) {
+	data, err := c.enc.Encode(value)
 	if err == nil {
-		l.c.Set(keyToBytes(key), data)
+		c.cc.Set(keyToBytes(key), data)
 	}
 }
 
-func (l *icache[V]) Get(key string) (V, bool) {
-	data := l.c.Get(nil, keyToBytes(key))
+func (c *Cache[V]) Get(key string) (V, bool) {
+	data := c.cc.Get(nil, keyToBytes(key))
 	var v V
-	if vv, verr := l.enc.Decode(data); verr != nil {
+	if vv, verr := c.enc.Decode(data); verr != nil {
 		return v, false
 	} else {
 		v = vv.(V)
@@ -45,11 +47,11 @@ func (l *icache[V]) Get(key string) (V, bool) {
 	}
 }
 
-func (l *icache[V]) Del(key string) {
-	l.c.Del(keyToBytes(key))
+func (c *Cache[V]) Del(key string) {
+	c.cc.Del(keyToBytes(key))
 }
 
-func (l *icache[V]) Name() string {
+func (c *Cache[V]) Name() string {
 	return Name
 }
 

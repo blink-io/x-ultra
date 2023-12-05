@@ -10,36 +10,38 @@ import (
 
 const Name = "bigcache"
 
+var _ cache.Cache[any] = (*Cache[any])(nil)
+
 func init() {
 	//local.SetProviderFn(ProviderLRU, NewLRULocal)
 }
 
-type icache[V any] struct {
-	c   *bigcache.BigCache
+type Cache[V any] struct {
+	cc  *bigcache.BigCache
 	ttl time.Duration
 	enc cache.Codec
 }
 
-func New[V any](ctx context.Context, ttl time.Duration) (cache.Cache[V], error) {
+func New[V any](ctx context.Context, ttl time.Duration) (*Cache[V], error) {
 	c, err := bigcache.New(ctx, bigcache.DefaultConfig(10*time.Minute))
 	if err != nil {
 		return nil, err
 	}
-	return &icache[V]{c: c, ttl: ttl}, nil
+	return &Cache[V]{cc: c, ttl: ttl}, nil
 }
 
-func (l *icache[V]) Set(key string, value V) {
-	data, err := l.enc.Encode(value)
+func (c *Cache[V]) Set(key string, value V) {
+	data, err := c.enc.Encode(value)
 	if err == nil {
-		l.c.Set(key, data)
+		c.cc.Set(key, data)
 	}
 }
 
-func (l *icache[V]) Get(key string) (V, bool) {
-	data, err := l.c.Get(key)
+func (c *Cache[V]) Get(key string) (V, bool) {
+	data, err := c.cc.Get(key)
 	var v V
 	if err == nil {
-		if vv, verr := l.enc.Decode(data); verr != nil {
+		if vv, verr := c.enc.Decode(data); verr != nil {
 			return v, false
 		} else {
 			v = vv.(V)
@@ -49,10 +51,10 @@ func (l *icache[V]) Get(key string) (V, bool) {
 	return v, false
 }
 
-func (l *icache[V]) Del(key string) {
-	l.c.Delete(key)
+func (c *Cache[V]) Del(key string) {
+	_ = c.cc.Delete(key)
 }
 
-func (l *icache[V]) Name() string {
+func (c *Cache[V]) Name() string {
 	return Name
 }

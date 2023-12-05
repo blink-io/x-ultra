@@ -21,7 +21,7 @@ func TestFind(t *testing.T) {
 	defer client.Close()
 
 	ctx := context.Background()
-	r := newRaw(client)
+	r := New(client)
 
 	err = client.FlushDB(ctx).Err()
 	if err != nil {
@@ -54,7 +54,7 @@ func TestSaveNew(t *testing.T) {
 	defer client.Close()
 
 	ctx := context.Background()
-	r := newRaw(client)
+	r := New(client)
 
 	err = client.FlushDB(ctx).Err()
 	if err != nil {
@@ -110,7 +110,7 @@ func TestSaveUpdated(t *testing.T) {
 	defer client.Close()
 
 	ctx := context.Background()
-	r := newRaw(client)
+	r := New(client)
 
 	err = client.FlushDB(ctx).Err()
 	if err != nil {
@@ -179,7 +179,7 @@ func TestDelete(t *testing.T) {
 	defer client.Close()
 
 	ctx := context.Background()
-	r := newRaw(client)
+	r := New(client)
 
 	err = client.FlushDB(ctx).Err()
 	if err != nil {
@@ -214,7 +214,7 @@ func TestAll(t *testing.T) {
 	defer client.Close()
 
 	ctx := context.Background()
-	r := newRaw(client)
+	r := New(client)
 
 	err = client.FlushDB(ctx).Err()
 	if err != nil {

@@ -30,7 +30,7 @@ func TestFind(t *testing.T) {
 	defer client.Close()
 
 	ctx := context.Background()
-	r := newRaw(client)
+	r := New(client)
 
 	err = client.Do(ctx, client.B().Flushdb().Build()).Error()
 	if err != nil {
@@ -66,7 +66,7 @@ func TestSaveNew(t *testing.T) {
 	defer client.Close()
 
 	ctx := context.Background()
-	r := newRaw(client)
+	r := New(client)
 
 	err = client.Do(ctx, client.B().Flushdb().Build()).Error()
 	if err != nil {
@@ -127,7 +127,7 @@ func TestSaveUpdated(t *testing.T) {
 	defer client.Close()
 
 	ctx := context.Background()
-	r := newRaw(client)
+	r := New(client)
 
 	err = client.Do(ctx, client.B().Flushdb().Build()).Error()
 	if err != nil {
@@ -167,7 +167,7 @@ func TestExpiry(t *testing.T) {
 	defer client.Close()
 
 	ctx := context.Background()
-	r := newRaw(client)
+	r := New(client)
 
 	err = client.Do(ctx, client.B().Flushdb().Build()).Error()
 	if err != nil {
@@ -204,7 +204,7 @@ func TestDelete(t *testing.T) {
 	defer client.Close()
 
 	ctx := context.Background()
-	r := newRaw(client)
+	r := New(client)
 
 	err = client.Do(ctx, client.B().Flushdb().Build()).Error()
 	if err != nil {
@@ -245,7 +245,7 @@ func TestAll(t *testing.T) {
 	defer client.Close()
 
 	ctx := context.Background()
-	r := newRaw(client)
+	r := New(client)
 
 	err = client.Do(ctx, client.B().Flushdb().Build()).Error()
 	if err != nil {

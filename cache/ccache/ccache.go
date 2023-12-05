@@ -15,26 +15,28 @@ func init() {
 	//local.SetProviderFn(ProviderLRU, NewLRULocal)
 }
 
-type icache[V any] struct {
+var _ cache.TTLCache[any] = (*Cache[any])(nil)
+
+type Cache[V any] struct {
 	c   *ccache.Cache[V]
 	ttl time.Duration
 }
 
-func New[V any](ctx context.Context, ttl time.Duration) (cache.Cache[V], error) {
+func New[V any](ctx context.Context, ttl time.Duration) (*Cache[V], error) {
 	cfg := ccache.Configure[V]()
 	c := ccache.New(cfg)
-	return &icache[V]{c, ttl}, nil
+	return &Cache[V]{c, ttl}, nil
 }
 
-func (l *icache[V]) Set(key string, data V) {
+func (l *Cache[V]) Set(key string, data V) {
 	l.c.Set(key, data, l.ttl)
 }
 
-func (l *icache[V]) SetWithTTL(key string, data V, ttl time.Duration) {
+func (l *Cache[V]) SetWithTTL(key string, data V, ttl time.Duration) {
 	l.c.Set(key, data, ttl)
 }
 
-func (l *icache[V]) Get(key string) (V, bool) {
+func (l *Cache[V]) Get(key string) (V, bool) {
 	i := l.c.Get(key)
 	var v V
 	if i != nil {
@@ -43,10 +45,10 @@ func (l *icache[V]) Get(key string) (V, bool) {
 	return v, false
 }
 
-func (l *icache[V]) Del(key string) {
+func (l *Cache[V]) Del(key string) {
 	l.c.Delete(key)
 }
 
-func (l *icache[V]) Name() string {
+func (l *Cache[V]) Name() string {
 	return Name
 }

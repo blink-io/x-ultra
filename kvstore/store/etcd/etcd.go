@@ -24,6 +24,8 @@ const (
 	lockSuffix         = "___lock"
 )
 
+var _ kvstore.Store = (*Store)(nil)
+
 // registers etcd v3 to kvkvstore.
 func init() {
 	kvstore.Register(Name, newStore)

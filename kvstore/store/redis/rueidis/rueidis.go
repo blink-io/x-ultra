@@ -18,6 +18,8 @@ import (
 // Name the name of the store.
 const Name = "rueidis"
 
+var _ kvstore.Store = (*Store)(nil)
+
 // registers Redis to kvstore.
 func init() {
 	kvstore.Register(Name, newStore)
