@@ -18,6 +18,7 @@ import (
 	"github.com/blink-io/x/session"
 	"github.com/blink-io/x/session/http/resolver"
 	"github.com/blink-io/x/session/http/resolver/cookie"
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 )
 
@@ -172,6 +173,9 @@ func TestIdleTimeout_Cookie(t *testing.T) {
 	sm := session.NewManager(
 		session.IdleTimeout(200*time.Millisecond),
 		session.Lifetime(time.Second),
+		session.TokenGenerator(func() (string, error) {
+			return uuid.NewString(), nil
+		}),
 	)
 
 	sessionManager := NewSessionHandler(

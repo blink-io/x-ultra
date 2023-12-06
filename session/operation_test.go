@@ -204,7 +204,7 @@ func TestSessionManager_Commit(T *testing.T) {
 	T.Parallel()
 
 	T.Run("happy path", func(t *testing.T) {
-		s := newManager()
+		s := newManager(TokenGenerator(UUIDTokenGen))
 		s.idleTimeout = time.Hour * 24
 
 		expectedToken := "example"

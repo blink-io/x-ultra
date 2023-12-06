@@ -30,7 +30,7 @@ func (q *hook) AfterQuery(ctx context.Context, event *bun.QueryEvent) {
 }
 
 // Func defines
-type Func func(string, ...any)
+type Func func(format string, args ...any)
 
 func (f Func) BeforeQuery(ctx context.Context, event *bun.QueryEvent) context.Context {
 	f("Executed SQL, query: %s, args: %q", event.Query, event.QueryArgs)
@@ -38,4 +38,14 @@ func (f Func) BeforeQuery(ctx context.Context, event *bun.QueryEvent) context.Co
 }
 
 func (f Func) AfterQuery(ctx context.Context, event *bun.QueryEvent) {
+}
+
+type CtxFunc func(ctx context.Context, format string, args ...any)
+
+func (f CtxFunc) BeforeQuery(ctx context.Context, event *bun.QueryEvent) context.Context {
+	f(ctx, "Executed SQL, query: %s, args: %q", event.Query, event.QueryArgs)
+	return ctx
+}
+
+func (f CtxFunc) AfterQuery(ctx context.Context, event *bun.QueryEvent) {
 }

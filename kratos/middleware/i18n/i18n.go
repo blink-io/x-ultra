@@ -16,7 +16,7 @@ func Default() middleware.Middleware {
 	return New(DefaultOptions)
 }
 
-func New(c *Options) middleware.Middleware {
+func New(o *Options) middleware.Middleware {
 	return func(h middleware.Handler) middleware.Handler {
 		return func(ctx context.Context, req interface{}) (reply interface{}, err error) {
 			return h(ctx, req)

@@ -19,7 +19,13 @@ func TestEnable_Header(t *testing.T) {
 	t.Parallel()
 
 	rv := hdrv.Default()
-	sessionManager := NewSessionHandler(WithResolver(rv))
+	sm := session.NewManager(
+		session.TokenGenerator(session.ShortIDTokenGen),
+	)
+	sessionHandler := NewSessionHandler(
+		WithResolver(rv),
+		WithSessionManager(sm),
+	)
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/put", func(w http.ResponseWriter, r *http.Request) {
@@ -30,7 +36,7 @@ func TestEnable_Header(t *testing.T) {
 		w.Write([]byte(s))
 	})
 
-	ts := newTestServer(t, sessionManager.Handle(mux))
+	ts := newTestServer(t, sessionHandler.Handle(mux))
 	defer ts.Close()
 
 	header, _ := ts.execute(t, "/put")

@@ -32,3 +32,9 @@ func Lifetime(t time.Duration) Option {
 		m.lifetime = t
 	}
 }
+
+func TokenGenerator(fn TokenGenFunc) Option {
+	return func(m *manager) {
+		m.tokenGenerator = fn
+	}
+}

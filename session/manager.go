@@ -10,6 +10,12 @@ import (
 	"github.com/blink-io/x/session/store/mem"
 )
 
+const (
+	DefaultLifetime = 24 * time.Hour
+
+	DefaultIdleTimeout = 0
+)
+
 type Manager interface {
 	Load(ctx context.Context, token string) (context.Context, error)
 	Commit(ctx context.Context) (string, time.Time, error)
@@ -45,11 +51,7 @@ type Manager interface {
 	Token(ctx context.Context) string
 }
 
-const (
-	DefaultLifetime = 24 * time.Hour
-
-	DefaultIdleTimeout = 0
-)
+type TokenGenFunc func() (string, error)
 
 // manager holds the configuration settings for your sessions.
 type manager struct {
@@ -76,6 +78,8 @@ type manager struct {
 	// contextKey is the key used to set and retrieve the session data from a
 	// context.Context. It's automatically generated to ensure uniqueness.
 	contextKey contextKey
+
+	tokenGenerator TokenGenFunc
 }
 
 // NewManager returns a new session manager with the default options. It is safe for
@@ -86,11 +90,12 @@ func NewManager(ops ...Option) Manager {
 
 func newManager(ops ...Option) *manager {
 	m := &manager{
-		idleTimeout: DefaultIdleTimeout,
-		lifetime:    DefaultLifetime,
-		store:       mem.New(),
-		codec:       msgpack.New(),
-		contextKey:  generateContextKey(),
+		idleTimeout:    DefaultIdleTimeout,
+		lifetime:       DefaultLifetime,
+		store:          mem.New(),
+		codec:          msgpack.New(),
+		contextKey:     generateContextKey(),
+		tokenGenerator: generateToken,
 	}
 
 	for _, o := range ops {

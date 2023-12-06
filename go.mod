@@ -110,10 +110,11 @@ require (
 	github.com/matttproud/golang_protobuf_extensions/v2 v2.0.0
 	github.com/orcaman/concurrent-map/v2 v2.0.1
 	github.com/pashagolub/pgxmock/v3 v3.2.0
+	github.com/philhofer/fwd v1.1.2
 	github.com/segmentio/encoding v0.4.0
 	github.com/smartystreets/goconvey v1.8.1
 	github.com/sourcegraph/conc v0.3.0
-	github.com/xo/dburl v0.19.1
+	github.com/xo/dburl v0.20.0
 	go.opentelemetry.io/otel v1.21.0
 	go.opentelemetry.io/otel/trace v1.21.0
 	golang.org/x/net v0.19.0
@@ -191,7 +192,7 @@ require (
 	lukechampine.com/uint128 v1.3.0 // indirect
 	modernc.org/cc/v3 v3.41.0 // indirect
 	modernc.org/ccgo/v3 v3.16.15 // indirect
-	modernc.org/libc v1.35.0 // indirect
+	modernc.org/libc v1.36.0 // indirect
 	modernc.org/mathutil v1.6.0 // indirect
 	modernc.org/memory v1.7.2 // indirect
 	modernc.org/opt v0.1.3 // indirect

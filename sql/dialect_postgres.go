@@ -2,7 +2,6 @@ package sql
 
 import (
 	pgparams "github.com/blink-io/x/postgres/params"
-
 	pgxzap "github.com/jackc/pgx-zap"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
@@ -45,23 +44,22 @@ func PostgresDSN(o *Options) string {
 		params[pgparams.ClientEncoding] = o.Collation
 	}
 
-	pgcc := pgconn.Config{
-		Database:      name,
-		Host:          host,
-		Port:          uint16(port),
-		User:          user,
-		Password:      password,
-		TLSConfig:     tlsConfig,
-		RuntimeParams: handlePostgresParams(params),
-	}
+	pgcc, _ := pgconn.ParseConfig("")
+	pgcc.Database = name
+	pgcc.Host = host
+	pgcc.Port = uint16(port)
+	pgcc.User = user
+	pgcc.Password = password
+	pgcc.TLSConfig = tlsConfig
+	pgcc.RuntimeParams = handlePostgresParams(params)
+
 	if dialTimeout > 0 {
 		pgcc.ConnectTimeout = dialTimeout
 	}
+	cc, _ := pgx.ParseConfig("")
+	cc.Config = *pgcc
+	cc.Tracer = &tracelog.TraceLog{Logger: pgxzap.NewLogger(zap.L()), LogLevel: tracelog.LogLevelInfo}
 
-	cc := &pgx.ConnConfig{
-		Config: pgcc,
-		Tracer: &tracelog.TraceLog{Logger: pgxzap.NewLogger(zap.L()), LogLevel: tracelog.LogLevelInfo},
-	}
 	dsn := stdlib.RegisterConnConfig(cc)
 	return dsn
 }

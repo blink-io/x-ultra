@@ -97,7 +97,7 @@ func (m *manager) Commit(ctx context.Context) (string, time.Time, error) {
 
 	if sd.token == "" {
 		var err error
-		if sd.token, err = generateToken(); err != nil {
+		if sd.token, err = m.tokenGenerator(); err != nil {
 			return "", time.Time{}, err
 		}
 	}
@@ -291,7 +291,7 @@ func (m *manager) RenewToken(ctx context.Context) error {
 		}
 	}
 
-	newToken, err := generateToken()
+	newToken, err := m.tokenGenerator()
 	if err != nil {
 		return err
 	}
