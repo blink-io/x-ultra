@@ -111,6 +111,7 @@ require (
 	github.com/orcaman/concurrent-map/v2 v2.0.1
 	github.com/pashagolub/pgxmock/v3 v3.2.0
 	github.com/philhofer/fwd v1.1.2
+	github.com/rqlite/gorqlite v0.0.0-20231117160833-4e4ea5aa6d88
 	github.com/segmentio/encoding v0.4.0
 	github.com/smartystreets/goconvey v1.8.1
 	github.com/sourcegraph/conc v0.3.0
@@ -192,7 +193,7 @@ require (
 	lukechampine.com/uint128 v1.3.0 // indirect
 	modernc.org/cc/v3 v3.41.0 // indirect
 	modernc.org/ccgo/v3 v3.16.15 // indirect
-	modernc.org/libc v1.36.0 // indirect
+	modernc.org/libc v1.37.0 // indirect
 	modernc.org/mathutil v1.6.0 // indirect
 	modernc.org/memory v1.7.2 // indirect
 	modernc.org/opt v0.1.3 // indirect

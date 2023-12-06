@@ -56,7 +56,11 @@ func PostgresDSN(o *Options) string {
 	if dialTimeout > 0 {
 		pgcc.ConnectTimeout = dialTimeout
 	}
-	cc, _ := pgx.ParseConfig("")
+	cc, err := pgx.ParseConfig("")
+	if err != nil {
+		// This can be happened
+		panic(err)
+	}
 	cc.Config = *pgcc
 	cc.Tracer = &tracelog.TraceLog{Logger: pgxzap.NewLogger(zap.L()), LogLevel: tracelog.LogLevelInfo}
 

@@ -20,9 +20,9 @@ type Manager interface {
 	Load(ctx context.Context, token string) (context.Context, error)
 	Commit(ctx context.Context) (string, time.Time, error)
 	Destroy(ctx context.Context) error
-	Put(ctx context.Context, key string, val interface{})
-	Get(ctx context.Context, key string) interface{}
-	Pop(ctx context.Context, key string) interface{}
+	Put(ctx context.Context, key string, val any)
+	Get(ctx context.Context, key string) any
+	Pop(ctx context.Context, key string) any
 	Remove(ctx context.Context, key string)
 	Clear(ctx context.Context) error
 	Exists(ctx context.Context, key string) bool
@@ -68,8 +68,8 @@ type manager struct {
 	lifetime time.Duration
 
 	// codec controls the encoder/decoder used to transform session data to a
-	// byte slice for use by the session store. By default, session data is
-	// encoded/decoded using encoding/gob.
+	// byte slice for use by the session store.
+	// Session data is encoded/decoded using msgpack by default.
 	codec encoding.Codec
 
 	// store controls the session store where the session data is persisted.

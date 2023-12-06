@@ -27,10 +27,6 @@ func makeInternal(opt *options, fields ...any) []slog.Attr {
 	}
 	f := make([]slog.Attr, 0, len(fields)/2+p)
 
-	for k, v := range opt.extras {
-		f = append(f, slog.Any(k, v))
-	}
-
 	for i := 0; i < len(fields); i += 2 {
 		key := cast.ToString(fields[i])
 		value := fields[i+1]
