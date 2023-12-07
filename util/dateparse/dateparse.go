@@ -167,7 +167,7 @@ func ParseIn(datestr string, loc *time.Location, opts ...ParserOption) (time.Tim
 // ParseLocal Given an unknown date format, detect the layout,
 // using time.Local, parse.
 //
-// Set Location to time.Local.  Same as ParseIn Location but lazily uses
+// Put Location to time.Local.  Same as ParseIn Location but lazily uses
 // the global time.Local variable for Location argument.
 //
 //	denverLoc, _ := time.LoadLocation("America/Denver")

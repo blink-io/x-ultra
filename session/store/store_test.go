@@ -15,8 +15,8 @@ func TestNilStruct(t *testing.T) {
 
 func TestTokenMap_1(t *testing.T) {
 	var tm = NewTokenMap()
-	tm.SetNil("abc")
-	tm.SetNil("efg")
+	tm.Put("abc")
+	tm.Put("efg")
 
 	fmt.Println("done")
 }

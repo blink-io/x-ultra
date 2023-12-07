@@ -164,5 +164,5 @@ func (v *rv) writeSessionCookie(ctx context.Context, m resolver.Manager, w http.
 	}
 
 	w.Header().Add("Set-Cookie", cookie.String())
-	w.Header().Add("Cache-Control", `no-cache="Set-Cookie"`)
+	w.Header().Add("Cache-Control", `no-cache="Put-Cookie"`)
 }

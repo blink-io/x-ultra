@@ -102,5 +102,22 @@ func newManager(ops ...Option) *manager {
 		o(m)
 	}
 
+	m.setDefaults()
+
 	return m
+}
+
+func (m *manager) setDefaults() {
+	if m == nil {
+		return
+	}
+	if m.tokenGenerator == nil {
+		m.tokenGenerator = generateToken
+	}
+	if m.store == nil {
+		m.store = mem.New()
+	}
+	if m.codec == nil {
+		m.codec = msgpack.New()
+	}
 }

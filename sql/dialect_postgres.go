@@ -62,7 +62,11 @@ func PostgresDSN(o *Options) string {
 		panic(err)
 	}
 	cc.Config = *pgcc
-	cc.Tracer = &tracelog.TraceLog{Logger: pgxzap.NewLogger(zap.L()), LogLevel: tracelog.LogLevelInfo}
+	traceLogLevel := tracelog.LogLevelInfo
+	if o.Debug {
+		traceLogLevel = tracelog.LogLevelDebug
+	}
+	cc.Tracer = &tracelog.TraceLog{Logger: pgxzap.NewLogger(zap.L()), LogLevel: traceLogLevel}
 
 	dsn := stdlib.RegisterConnConfig(cc)
 	return dsn

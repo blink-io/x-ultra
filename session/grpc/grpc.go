@@ -15,20 +15,25 @@ import (
 
 const DefaultHeader = "X-Auth-Token"
 
+const DefaultExpirySuffix = "-expiry"
+
 type SessionHandler struct {
-	sm session.Manager
+	manager session.Manager
 
 	header string
 
 	exposeExpiry bool
 
-	expiryTimeFormat string
+	expirySuffix string
+
+	timeFormat string
 }
 
 func NewSessionHandler(ops ...Option) *SessionHandler {
 	sh := &SessionHandler{
-		sm:               session.NewManager(),
-		expiryTimeFormat: time.RFC3339Nano,
+		manager:      session.NewManager(),
+		timeFormat:   time.RFC3339Nano,
+		expirySuffix: DefaultExpirySuffix,
 	}
 	for _, o := range ops {
 		o(sh)
@@ -45,7 +50,7 @@ func StreamServerInterceptor(sh *SessionHandler) grpc.StreamServerInterceptor {
 }
 
 func (sh *SessionHandler) UnaryServerInterceptor(ctx context.Context, req any, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (any, error) {
-	sm := sh.sm
+	sm := sh.manager
 	ctx = session.NewContext(ctx, sm)
 	header := strings.ToLower(sh.header)
 	token := mdutil.SingleValueFromContext(ctx, header)
@@ -68,7 +73,7 @@ func (sh *SessionHandler) UnaryServerInterceptor(ctx context.Context, req any, i
 }
 
 func (sh *SessionHandler) StreamServerInterceptor(srv any, ss grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
-	sm := sh.sm
+	sm := sh.manager
 	ctx := session.NewContext(ss.Context(), sm)
 	wss := util.WrapServerStream(ss)
 	wss.WrappedContext = ctx
@@ -96,7 +101,7 @@ func (sh *SessionHandler) StreamServerInterceptor(srv any, ss grpc.ServerStream,
 func (sh *SessionHandler) commitAndWriteSession(ctx context.Context) error {
 	headerKey := strings.ToLower(sh.header)
 	expiryKey := headerKey + "-expiry"
-	sm := sh.sm
+	sm := sh.manager
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {
 		md = metadata.Pairs()
@@ -105,13 +110,13 @@ func (sh *SessionHandler) commitAndWriteSession(ctx context.Context) error {
 	switch sm.Status(ctx) {
 	case session.Modified:
 		token, expiry, err := sm.Commit(ctx)
-		expiryStr := expiry.Format(sh.expiryTimeFormat)
+		expiryValue := expiry.Format(sh.timeFormat)
 		if err != nil {
 			return err
 		}
 		md.Set(headerKey, token)
 		if sh.exposeExpiry {
-			md.Set(expiryKey, expiryStr)
+			md.Set(expiryKey, expiryValue)
 		}
 	case session.Destroyed:
 		md.Delete(headerKey)

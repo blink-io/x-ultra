@@ -15,7 +15,7 @@ require (
 	github.com/fxamacker/cbor/v2 v2.5.0
 	github.com/getsentry/sentry-go v0.25.0
 	github.com/go-chi/chi/v5 v5.0.10
-	github.com/go-kratos/kratos/v2 v2.7.1
+	github.com/go-kratos/kratos/v2 v2.7.2
 	github.com/go-playground/validator/v10 v10.16.0
 	github.com/go-resty/resty/v2 v2.10.0
 	github.com/go-sql-driver/mysql v1.7.1
@@ -53,7 +53,7 @@ require (
 	github.com/onsi/gomega v1.30.0
 	github.com/outcaste-io/ristretto v0.2.3
 	github.com/pelletier/go-toml/v2 v2.1.0
-	github.com/pierrec/lz4/v4 v4.1.18
+	github.com/pierrec/lz4/v4 v4.1.19
 	github.com/quic-go/quic-go v0.40.0
 	github.com/redis/go-redis/extra/rediscmd/v9 v9.0.5
 	github.com/redis/go-redis/v9 v9.3.0
@@ -96,6 +96,7 @@ require (
 	github.com/VictoriaMetrics/fastcache v1.12.2
 	github.com/XSAM/otelsql v0.26.0
 	github.com/ahmetb/go-linq/v3 v3.2.0
+	github.com/alicebob/miniredis/v2 v2.31.0
 	github.com/allegro/bigcache/v3 v3.1.0
 	github.com/ammario/tlru v0.3.0
 	github.com/dchest/siphash v1.2.3
@@ -111,6 +112,7 @@ require (
 	github.com/orcaman/concurrent-map/v2 v2.0.1
 	github.com/pashagolub/pgxmock/v3 v3.2.0
 	github.com/philhofer/fwd v1.1.2
+	github.com/rickar/cal/v2 v2.1.13
 	github.com/rqlite/gorqlite v0.0.0-20231117160833-4e4ea5aa6d88
 	github.com/segmentio/encoding v0.4.0
 	github.com/smartystreets/goconvey v1.8.1
@@ -125,6 +127,7 @@ require (
 require (
 	github.com/ProtonMail/go-crypto v0.0.0-20230923063757-afb1ddc0824c // indirect
 	github.com/ProtonMail/go-mime v0.0.0-20230322103455-7d82a3887f2f // indirect
+	github.com/alicebob/gopher-json v0.0.0-20200520072559-a9ecdc9d1d3a // indirect
 	github.com/armon/go-radix v1.0.0 // indirect
 	github.com/bufbuild/protocompile v0.7.0 // indirect
 	github.com/cloudflare/circl v1.3.6 // indirect
@@ -178,12 +181,13 @@ require (
 	github.com/tmthrgd/go-hex v0.0.0-20190904060850-447a3041c3bc // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	github.com/x448/float16 v0.8.4 // indirect
+	github.com/yuin/gopher-lua v1.1.0 // indirect
 	go.etcd.io/etcd/api/v3 v3.5.10 // indirect
 	go.etcd.io/etcd/client/pkg/v3 v3.5.10 // indirect
 	go.opentelemetry.io/otel/metric v1.21.0 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
 	go.uber.org/mock v0.3.0 // indirect
-	golang.org/x/exp v0.0.0-20231127185646-65229373498e // indirect
+	golang.org/x/exp v0.0.0-20231206192017-f3f8817b8deb // indirect
 	golang.org/x/mod v0.14.0 // indirect
 	golang.org/x/sync v0.5.0 // indirect
 	golang.org/x/term v0.15.0 // indirect

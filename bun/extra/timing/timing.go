@@ -32,5 +32,5 @@ func (h *hook) BeforeQuery(ctx context.Context, event *bun.QueryEvent) context.C
 }
 
 func (h *hook) AfterQuery(ctx context.Context, event *bun.QueryEvent) {
-	h.logf("Executed SQL, timing cost [%s] for: %s", time.Since(event.StartTime), event.Query)
+	h.logf("[QueryHook] Executed SQL, timing cost [%s] for: %s", time.Since(event.StartTime), event.Query)
 }

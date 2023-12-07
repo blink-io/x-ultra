@@ -11,6 +11,8 @@ import (
 	"github.com/uptrace/bun"
 )
 
+type QueryHook = bun.QueryHook
+
 type Options struct {
 	Context         context.Context
 	Dialect         string
@@ -30,12 +32,12 @@ type Options struct {
 	MaxIdleConns    int
 	ValidationSQL   string
 	DriverHooks     []hooks.Hooks
-	QueryHooks      []bun.QueryHook
+	QueryHooks      []QueryHook
 	Loc             *time.Location
 	Debug           bool
-	WithOTel        bool
 	Collation       string
 	ClientName      string
+	WithOTel        bool
 	Attrs           []attribute.KeyValue
 	dsn             string
 }

@@ -5,23 +5,7 @@ import (
 	"time"
 )
 
-const DefaultPrefix = "default:session:"
-
-type EmptyStruct struct{}
-
-var NilStruct = (*EmptyStruct)(nil)
-
-type TokenMap map[string]*EmptyStruct
-
-func (m TokenMap) SetNil(key string) {
-	if m != nil {
-		m[key] = NilStruct
-	}
-}
-
-func NewTokenMap() TokenMap {
-	return make(TokenMap)
-}
+const DefaultPrefix = "session:"
 
 // Store is an interface for session storage.
 type Store interface {

@@ -8,7 +8,7 @@ import (
 )
 
 func TestGettext_1(t *testing.T) {
-	// Set PO content
+	// Put PO content
 	str := `
 msgid ""
 msgstr ""

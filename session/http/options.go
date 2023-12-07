@@ -11,18 +11,20 @@ type Option func(*SessionHandler)
 
 func WithResolver(rv resolver.Resolver) Option {
 	return func(sh *SessionHandler) {
-		sh.rv = rv
+		sh.resolver = rv
 	}
 }
 
-func WithSessionManager(sm session.Manager) Option {
+func WithSessionManager(manager session.Manager) Option {
 	return func(sh *SessionHandler) {
-		sh.sm = sm
+		if manager != nil {
+			sh.manager = manager
+		}
 	}
 }
 
-func WithErrorFunc(ef func(http.ResponseWriter, *http.Request, error)) Option {
+func WithErrorFunc(errFunc func(http.ResponseWriter, *http.Request, error)) Option {
 	return func(sh *SessionHandler) {
-		sh.ef = ef
+		sh.errFunc = errFunc
 	}
 }

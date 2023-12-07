@@ -18,8 +18,8 @@ func WithExposeExpiry() Option {
 	}
 }
 
-func WithSessionManager(sm session.Manager) Option {
+func WithSessionManager(manager session.Manager) Option {
 	return func(sh *SessionHandler) {
-		sh.sm = sm
+		sh.manager = manager
 	}
 }

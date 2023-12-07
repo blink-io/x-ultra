@@ -34,7 +34,7 @@ func (h *hook) Before(ctx context.Context, query string, args ...interface{}) (c
 
 func (h *hook) After(ctx context.Context, query string, args ...interface{}) (context.Context, error) {
 	if before, ok := ctx.Value(ctxKey{}).(time.Time); ok {
-		h.logf("Executed SQL, timing cost [%s] for: %s", time.Since(before), query)
+		h.logf("[SQLHooks] Executed SQL, timing cost [%s] for: %s", time.Since(before), query)
 	}
 	return ctx, nil
 }

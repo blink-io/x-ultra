@@ -47,7 +47,7 @@ func MySQLDSN(o *Options) string {
 
 	// Restful TLS Params
 	cc := mysql.NewConfig()
-	// Set the local timezone because the default value is UTC
+	// Put the local timezone because the default value is UTC
 	cc.Loc = loc
 	cc.ParseTime = true
 	cc.Net = network
@@ -71,6 +71,7 @@ func MySQLDSN(o *Options) string {
 		_ = mysql.RegisterTLSConfig(DialectMySQL, tlsConfig)
 		cc.TLSConfig = DialectMySQL
 	}
+
 	dsn := cc.FormatDSN()
 	return dsn
 }

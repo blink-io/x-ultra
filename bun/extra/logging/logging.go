@@ -33,7 +33,7 @@ func (q *hook) AfterQuery(ctx context.Context, event *bun.QueryEvent) {
 type Func func(format string, args ...any)
 
 func (f Func) BeforeQuery(ctx context.Context, event *bun.QueryEvent) context.Context {
-	f("Executed SQL, query: %s, args: %q", event.Query, event.QueryArgs)
+	f("[QueryHook] Executed SQL, query: %s, args: %q", event.Query, event.QueryArgs)
 	return ctx
 }
 
@@ -43,7 +43,7 @@ func (f Func) AfterQuery(ctx context.Context, event *bun.QueryEvent) {
 type CtxFunc func(ctx context.Context, format string, args ...any)
 
 func (f CtxFunc) BeforeQuery(ctx context.Context, event *bun.QueryEvent) context.Context {
-	f(ctx, "Executed SQL, query: %s, args: %q", event.Query, event.QueryArgs)
+	f(ctx, "[QueryHook] Executed SQL, query: %s, args: %q", event.Query, event.QueryArgs)
 	return ctx
 }
 
