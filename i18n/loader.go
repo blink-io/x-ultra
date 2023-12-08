@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	HTTPTimeout = 10 * time.Second
+	DefaultHTTPTimeout = 10 * time.Second
 )
 
 type (
@@ -92,7 +92,7 @@ type httpLoader struct {
 
 func NewHTTPLoader(url string, extract func(string) string, timeout time.Duration) Loader {
 	if timeout == 0 {
-		timeout = HTTPTimeout
+		timeout = DefaultHTTPTimeout
 	}
 	c := &http.Client{Timeout: timeout}
 	return &httpLoader{c: c, extract: extract, url: url}

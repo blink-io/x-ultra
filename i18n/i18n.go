@@ -77,8 +77,9 @@ func Default() *Bundle {
 // Replace replaces default Bundle
 func Replace(b *Bundle) {
 	globalMux.Lock()
+
+	defer globalMux.Unlock()
 	bb = b
-	globalMux.Unlock()
 }
 
 func (b *Bundle) LoadMessageFileBytes(buf []byte, path string) (*MessageFile, error) {
@@ -106,7 +107,7 @@ func (b *Bundle) LoadFromFS(fs fs.FS, root string) error {
 }
 
 func (b *Bundle) LoadFromHTTP(url string, extract func(string) string) error {
-	return NewHTTPLoader(url, extract, HTTPTimeout).Load(b)
+	return NewHTTPLoader(url, extract, DefaultHTTPTimeout).Load(b)
 }
 
 func (b *Bundle) LoadFromBytes(path string, data []byte) error {
@@ -131,7 +132,7 @@ func LoadFromFS(fs fs.FS, root string) error {
 }
 
 func LoadFromHTTP(url string, extract func(string) string) error {
-	return NewHTTPLoader(url, extract, HTTPTimeout).Load(bb)
+	return NewHTTPLoader(url, extract, DefaultHTTPTimeout).Load(bb)
 }
 
 func LoadFromBytes(path string, data []byte) error {

@@ -77,7 +77,7 @@ require (
 	github.com/zeebo/xxh3 v1.0.2
 	gitlab.com/greyxor/slogor v1.2.0
 	go.etcd.io/bbolt v1.3.8
-	go.etcd.io/etcd/client/v3 v3.5.10
+	go.etcd.io/etcd/client/v3 v3.5.11
 	go.temporal.io/api v1.26.0
 	go.temporal.io/sdk v1.25.1
 	go.uber.org/multierr v1.11.0
@@ -112,8 +112,8 @@ require (
 	github.com/orcaman/concurrent-map/v2 v2.0.1
 	github.com/pashagolub/pgxmock/v3 v3.2.0
 	github.com/philhofer/fwd v1.1.2
+	github.com/qustavo/dotsql v1.2.0
 	github.com/rickar/cal/v2 v2.1.13
-	github.com/rqlite/gorqlite v0.0.0-20231117160833-4e4ea5aa6d88
 	github.com/segmentio/encoding v0.4.0
 	github.com/smartystreets/goconvey v1.8.1
 	github.com/sourcegraph/conc v0.3.0
@@ -182,8 +182,8 @@ require (
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	github.com/x448/float16 v0.8.4 // indirect
 	github.com/yuin/gopher-lua v1.1.0 // indirect
-	go.etcd.io/etcd/api/v3 v3.5.10 // indirect
-	go.etcd.io/etcd/client/pkg/v3 v3.5.10 // indirect
+	go.etcd.io/etcd/api/v3 v3.5.11 // indirect
+	go.etcd.io/etcd/client/pkg/v3 v3.5.11 // indirect
 	go.opentelemetry.io/otel/metric v1.21.0 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
 	go.uber.org/mock v0.3.0 // indirect

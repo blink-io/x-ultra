@@ -19,6 +19,14 @@ func NewGRPCLoader(cc grpc.ClientConnInterface, languages []string) Loader {
 	return &grpcLoader{client: client, languages: languages}
 }
 
+func (b *Bundle) LoadFromGRPC(cc grpc.ClientConnInterface, languages []string) error {
+	return NewGRPCLoader(cc, languages).Load(b)
+}
+
+func LoadFromGRPC(cc grpc.ClientConnInterface, languages []string) error {
+	return NewGRPCLoader(cc, languages).Load(bb)
+}
+
 func (l *grpcLoader) Load(b Bundler) error {
 	req := &ListLanguagesRequest{
 		Languages: l.languages,

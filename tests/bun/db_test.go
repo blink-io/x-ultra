@@ -3,19 +3,18 @@ package bun
 import (
 	"context"
 	"fmt"
-	"log"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
 	"time"
 
-	"github.com/blink-io/x/bun/extra/logging"
 	"github.com/blink-io/x/bun/extra/timing"
 	xsql "github.com/blink-io/x/sql"
 	"github.com/blink-io/x/sql/hooks"
 	timinghook "github.com/blink-io/x/sql/hooks/timing"
 	"github.com/blink-io/x/sql/scany/dbscan"
+	"github.com/qustavo/dotsql"
 	"github.com/stretchr/testify/require"
 )
 
@@ -44,7 +43,7 @@ func GetPgDB() *xsql.DB {
 			timinghook.New(),
 		},
 		QueryHooks: []xsql.QueryHook{
-			logging.Func(log.Printf),
+			//logging.Func(log.Printf),
 			timing.New(),
 		},
 	}
@@ -73,4 +72,30 @@ func TestPG_Connect_1(t *testing.T) {
 	var nowstr string
 	require.NoError(t, dbscan.ScanOne(&nowstr, rows))
 	fmt.Println("DB Now: ", nowstr)
+}
+
+func TestPG_Connect_2(t *testing.T) {
+	fp := "./demo.pg.sql"
+	f, err := os.Open(fp)
+	require.NoError(t, err)
+
+	dot, err := dotsql.Load(f)
+	require.NoError(t, err)
+
+	db := GetPgDB()
+
+	rows1, err := dot.Query(db, "get-db-version")
+	require.NoError(t, err)
+
+	var dbver string
+	require.NoError(t, dbscan.ScanOne(&dbver, rows1))
+
+	fmt.Println("DB Version: ", dbver)
+
+	rows2, err := dot.Query(db, "get-db-tsz")
+	require.NoError(t, err)
+
+	var dbtsz string
+	require.NoError(t, dbscan.ScanOne(&dbtsz, rows2))
+	fmt.Println("DB TSZ: ", dbtsz)
 }
