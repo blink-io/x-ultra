@@ -73,11 +73,15 @@ func ToMySQLConfig(o *Options) *mysql.Config {
 		cc.Addr = host
 	}
 	if tlsConfig != nil {
-		// Driver Name is valid ant will not throw an error
-		_ = mysql.RegisterTLSConfig(DialectMySQL, tlsConfig)
-		cc.TLSConfig = DialectMySQL
+		keyName := mysqlTLSKeyName(name)
+		_ = mysql.RegisterTLSConfig(keyName, tlsConfig)
+		cc.TLSConfig = keyName
 	}
 	return cc
+}
+
+func mysqlTLSKeyName(name string) string {
+	return DialectMySQL + "_" + name
 }
 
 func handleMySQLParams(params map[string]string) map[string]string {

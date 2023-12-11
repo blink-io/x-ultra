@@ -6,14 +6,14 @@ import (
 	"github.com/blink-io/x/mysql/logger"
 )
 
-type logz struct {
+type log struct {
 	sl *slog.Logger
 }
 
 func New(sl *slog.Logger) logger.Logger {
-	return &logz{sl: sl}
+	return &log{sl: sl}
 }
 
-func (l *logz) Print(v ...any) {
-	l.sl.Info("[mysql]", slog.Group("args", v...))
+func (l *log) Print(v ...any) {
+	l.sl.Info("[mysql]", slog.Any("values", v))
 }

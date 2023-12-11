@@ -11,4 +11,5 @@ func TestSlog_1(t *testing.T) {
 	l.Print()
 	l.Print("abc", errors.New("kkk"), true, 123)
 	l.Print("abc", errors.New("kkk"), true, 123, 3.1415)
+	l.Print(errors.New("i'm error"))
 }

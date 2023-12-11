@@ -1,9 +1,3 @@
--- name: get-db-version
-select version();
-
--- name: get-db-tsz
-select now();
-
 -- name: get-db-detail
 select
     current_database(),
@@ -12,3 +6,10 @@ select
     inet_server_port(),
     pg_backend_pid(),
     pg_conf_load_time();
+
+-- name: get-db-version
+select version();
+
+-- name: get-db-tsz
+select now();
+

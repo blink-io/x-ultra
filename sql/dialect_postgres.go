@@ -2,6 +2,7 @@ package sql
 
 import (
 	pgparams "github.com/blink-io/x/postgres/params"
+
 	pgxzap "github.com/jackc/pgx-zap"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
@@ -50,7 +51,11 @@ func ToPGXConfig(o *Options) *pgx.ConnConfig {
 		params[pgparams.ClientEncoding] = o.Collation
 	}
 
-	pgcc, _ := pgconn.ParseConfig("")
+	pgcc, err := pgconn.ParseConfig("")
+	if err != nil {
+		// This can be happened
+		panic(err)
+	}
 	pgcc.Database = name
 	pgcc.Host = host
 	pgcc.Port = uint16(port)
@@ -58,10 +63,10 @@ func ToPGXConfig(o *Options) *pgx.ConnConfig {
 	pgcc.Password = password
 	pgcc.TLSConfig = tlsConfig
 	pgcc.RuntimeParams = handlePostgresParams(params)
-
 	if dialTimeout > 0 {
 		pgcc.ConnectTimeout = dialTimeout
 	}
+
 	cc, err := pgx.ParseConfig("")
 	if err != nil {
 		// This can be happened
