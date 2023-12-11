@@ -1,4 +1,4 @@
-package temporal
+package logger
 
 // Logger is an interface that can be passed to ClientOptions.Logger.
 type Logger interface {

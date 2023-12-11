@@ -105,4 +105,11 @@ func TestPG_Connect_2(t *testing.T) {
 	var dbtsz string
 	require.NoError(t, dbscan.ScanOne(&dbtsz, rows2))
 	fmt.Println("DB TSZ: ", dbtsz)
+
+	rows3, err := dot.Query(db, "get-db-detail")
+	require.NoError(t, err)
+
+	var dbd = make(map[string]any)
+	require.NoError(t, dbscan.ScanOne(&dbd, rows3))
+	fmt.Println("DB Detail: ", dbd)
 }

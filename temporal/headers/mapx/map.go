@@ -1,4 +1,4 @@
-package temporal
+package mapx
 
 import (
 	"context"
