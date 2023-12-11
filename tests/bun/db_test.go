@@ -18,7 +18,31 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func GetPgDB() *xsql.DB {
+var pgOpt = &xsql.Options{
+	Context:       context.Background(),
+	Dialect:       xsql.DialectPostgres,
+	Name:          "blink",
+	User:          "blinkbot",
+	Port:          15432,
+	Host:          "192.168.11.179",
+	Loc:           time.Local,
+	ValidationSQL: "SELECT 1;",
+	ClientName:    "blink-dev",
+	DriverHooks: []hooks.Hooks{
+		timinghook.New(),
+	},
+	QueryHooks: []xsql.QueryHook{
+		//logging.Func(log.Printf),
+		timing.New(),
+	},
+}
+
+func init() {
+	pwd := getPwd()
+	pgOpt.Password = pwd
+}
+
+func getPwd() string {
 	homedir, _ := os.UserHomeDir()
 
 	data, err := os.ReadFile(filepath.Join(homedir, ".passwd.pg"))
@@ -27,28 +51,11 @@ func GetPgDB() *xsql.DB {
 	}
 
 	pwd := strings.TrimSuffix(string(data), "\n")
+	return pwd
+}
 
-	opt := &xsql.Options{
-		Context:       context.Background(),
-		Dialect:       xsql.DialectPostgres,
-		Name:          "blink",
-		User:          "blinkbot",
-		Port:          15432,
-		Host:          "192.168.11.179",
-		Password:      pwd,
-		Loc:           time.Local,
-		ValidationSQL: "SELECT 1;",
-		ClientName:    "blink-dev",
-		DriverHooks: []hooks.Hooks{
-			timinghook.New(),
-		},
-		QueryHooks: []xsql.QueryHook{
-			//logging.Func(log.Printf),
-			timing.New(),
-		},
-	}
-
-	db, err1 := xsql.NewDB(opt)
+func GetPgDB() *xsql.DB {
+	db, err1 := xsql.NewDB(pgOpt)
 	if err1 != nil {
 		panic(err1)
 	}

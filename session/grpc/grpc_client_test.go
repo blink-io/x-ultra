@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/blink-io/x/internal/testdata"
 	sessgrpc "github.com/blink-io/x/session/grpc"
-	"github.com/blink-io/x/testdata"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"

@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/blink-io/x/i18n"
-	"github.com/blink-io/x/testdata/pb"
+	"github.com/blink-io/x/internal/testdata/pb"
 	"github.com/segmentio/encoding/iso8601"
 	eproto "github.com/segmentio/encoding/proto"
 	"github.com/stretchr/testify/require"

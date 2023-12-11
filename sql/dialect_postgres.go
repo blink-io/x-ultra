@@ -26,6 +26,12 @@ func init() {
 }
 
 func PostgresDSN(o *Options) string {
+	cc := ToPGXConfig(o)
+	dsn := stdlib.RegisterConnConfig(cc)
+	return dsn
+}
+
+func ToPGXConfig(o *Options) *pgx.ConnConfig {
 	name := o.Name
 	host := o.Host
 	port := o.Port
@@ -67,9 +73,7 @@ func PostgresDSN(o *Options) string {
 		traceLogLevel = tracelog.LogLevelDebug
 	}
 	cc.Tracer = &tracelog.TraceLog{Logger: pgxzap.NewLogger(zap.L()), LogLevel: traceLogLevel}
-
-	dsn := stdlib.RegisterConnConfig(cc)
-	return dsn
+	return cc
 }
 
 func handlePostgresParams(params map[string]string) map[string]string {

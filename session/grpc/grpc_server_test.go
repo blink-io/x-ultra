@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/blink-io/x/internal/testdata"
 	"github.com/blink-io/x/session"
-	"github.com/blink-io/x/testdata"
 	"github.com/stretchr/testify/require"
 	"gitlab.com/greyxor/slogor"
 	"google.golang.org/grpc/channelz/service"

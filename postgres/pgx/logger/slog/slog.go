@@ -7,17 +7,17 @@ import (
 	"github.com/jackc/pgx/v5/tracelog"
 )
 
-var _ tracelog.Logger = (*logz)(nil)
+var _ tracelog.Logger = (*log)(nil)
 
-type logz struct {
+type log struct {
 	sl *slog.Logger
 }
 
 func New(sl *slog.Logger) tracelog.Logger {
-	return &logz{sl: sl}
+	return &log{sl: sl}
 }
 
-func (l *logz) Log(ctx context.Context, level tracelog.LogLevel, msg string, data map[string]any) {
+func (l *log) Log(ctx context.Context, level tracelog.LogLevel, msg string, data map[string]any) {
 	attrs := make([]slog.Attr, len(data))
 	i := 0
 	for k, v := range data {

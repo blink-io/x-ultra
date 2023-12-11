@@ -24,6 +24,12 @@ func init() {
 }
 
 func MySQLDSN(o *Options) string {
+	cc := ToMySQLConfig(o)
+	dsn := cc.FormatDSN()
+	return dsn
+}
+
+func ToMySQLConfig(o *Options) *mysql.Config {
 	network := o.Network
 	name := o.Name
 	host := o.Host
@@ -71,9 +77,7 @@ func MySQLDSN(o *Options) string {
 		_ = mysql.RegisterTLSConfig(DialectMySQL, tlsConfig)
 		cc.TLSConfig = DialectMySQL
 	}
-
-	dsn := cc.FormatDSN()
-	return dsn
+	return cc
 }
 
 func handleMySQLParams(params map[string]string) map[string]string {

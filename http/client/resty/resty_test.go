@@ -3,7 +3,7 @@ package resty
 import (
 	"testing"
 
-	"github.com/blink-io/x/testdata"
+	"github.com/blink-io/x/internal/testdata"
 	"github.com/stretchr/testify/require"
 )
 

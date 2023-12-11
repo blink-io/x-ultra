@@ -7,7 +7,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/blink-io/x/testdata"
+	"github.com/blink-io/x/internal/testdata"
 	"github.com/stretchr/testify/require"
 )
 
@@ -29,6 +29,12 @@ func TestGRPC_Server_1(t *testing.T) {
 			Language: "en-US",
 			Valid:    true,
 			Payload:  []byte(enUSJSON),
+		},
+		"en-UK": {
+			Path:     "en-UK.json",
+			Language: "en-UK",
+			Valid:    false,
+			Payload:  []byte(""),
 		},
 	}
 
