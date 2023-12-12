@@ -21,7 +21,7 @@ func NewLogger(zlog *zap.Logger) *Logger {
 func (l *Logger) Log(level log.Level, keyvals ...interface{}) error {
 	keylen := len(keyvals)
 	if keylen == 0 || keylen%2 != 0 {
-		l.log.Warn(fmt.Sprint("Keyvalues must appear in pairs: ", keyvals))
+		l.log.Warn(fmt.Sprint("keyvals must appear in pairs: ", keyvals))
 		return nil
 	}
 

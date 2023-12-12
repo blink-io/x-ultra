@@ -1,6 +1,7 @@
 package slog
 
 import (
+	"fmt"
 	"log/slog"
 
 	"github.com/blink-io/x/mysql/logger"
@@ -15,5 +16,6 @@ func New(sl *slog.Logger) logger.Logger {
 }
 
 func (l *log) Print(v ...any) {
-	l.sl.Info("[mysql]", slog.Any("values", v))
+	msg := fmt.Sprint(v...)
+	l.sl.Info(msg)
 }

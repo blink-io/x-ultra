@@ -35,7 +35,7 @@ func main() {
 	
 	// Initialize a new session manager and configure it to use etcdstore as the session store.
 	sessionManager = scs.New()
-	sessionManager.Store = etcdstore.newRaw(cli)
+	sessionManager.Store = etcdstore.New(cli)
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/put", putHandler)

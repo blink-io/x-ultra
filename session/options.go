@@ -35,6 +35,6 @@ func Lifetime(t time.Duration) Option {
 
 func TokenGenerator(fn TokenGenFunc) Option {
 	return func(m *manager) {
-		m.tokenGenerator = fn
+		m.tokenGen = fn
 	}
 }

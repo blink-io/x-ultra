@@ -17,7 +17,7 @@ type (
 	}
 )
 
-func NewRawDB(sqlDB *sql.DB, dialect schema.Dialect) (*DB, error) {
+func NewWithRawDB(sqlDB *sql.DB, dialect schema.Dialect) (*DB, error) {
 	idb := bun.NewDB(sqlDB, dialect, bun.WithDiscardUnknownColumns())
 	return &DB{idb: idb}, nil
 }

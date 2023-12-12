@@ -26,10 +26,10 @@ type Options struct {
 }
 
 func New(ops Options) converter.PayloadCodec {
-	return newRaw(ops)
+	return doNew(ops)
 }
 
-func newRaw(ops Options) *codec {
+func doNew(ops Options) *codec {
 	return &codec{options: ops}
 }
 

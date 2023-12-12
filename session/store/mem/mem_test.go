@@ -10,7 +10,7 @@ import (
 
 func TestFind(t *testing.T) {
 	ctx := context.Background()
-	m := newRawWithCleanupInterval(0)
+	m := NewWithCleanupInterval(0)
 	m.items["session_token"] = item{object: []byte("encoded_data"), expiration: time.Now().Add(time.Second).UnixNano()}
 
 	b, found, err := m.Find(ctx, "session_token")
@@ -41,7 +41,7 @@ func TestFindMissing(t *testing.T) {
 func TestCommitNew(t *testing.T) {
 	ctx := context.Background()
 
-	m := newRawWithCleanupInterval(0)
+	m := NewWithCleanupInterval(0)
 
 	err := m.Commit(ctx, "session_token", []byte("encoded_data"), time.Now().Add(time.Minute))
 	if err != nil {
@@ -61,7 +61,7 @@ func TestCommitNew(t *testing.T) {
 func TestCommitUpdated(t *testing.T) {
 	ctx := context.Background()
 
-	m := newRawWithCleanupInterval(0)
+	m := NewWithCleanupInterval(0)
 
 	err := m.Commit(ctx, "session_token", []byte("encoded_data"), time.Now().Add(time.Minute))
 	if err != nil {
@@ -105,7 +105,7 @@ func TestExpiry(t *testing.T) {
 func TestDelete(t *testing.T) {
 	ctx := context.Background()
 
-	m := newRawWithCleanupInterval(0)
+	m := NewWithCleanupInterval(0)
 	m.items["session_token"] = item{object: []byte("encoded_data"), expiration: time.Now().Add(time.Second).UnixNano()}
 
 	err := m.Delete(ctx, "session_token")
@@ -120,7 +120,7 @@ func TestDelete(t *testing.T) {
 }
 
 func TestCleanupInterval(t *testing.T) {
-	m := newRawWithCleanupInterval(100 * time.Millisecond)
+	m := NewWithCleanupInterval(100 * time.Millisecond)
 	defer m.StopCleanup()
 	m.items["session_token"] = item{object: []byte("encoded_data"), expiration: time.Now().Add(500 * time.Millisecond).UnixNano()}
 

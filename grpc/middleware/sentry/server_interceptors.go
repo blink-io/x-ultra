@@ -47,9 +47,6 @@ func UnaryServerInterceptor(opts ...Option) grpc.UnaryServerInterceptor {
 
 		// TODO: Perhaps makes sense to use SetRequestBody instead?
 		hub.Scope().SetExtra("requestBody", req)
-		// FIXME: https://github.com/getsentry/sentry-go/pull/605
-		//hub.Scope().SetTransaction(info.FullMethod)
-		span.Name = info.FullMethod
 		defer recoverWithSentry(hub, ctx, o)
 
 		resp, err := handler(ctx, req)
@@ -84,13 +81,11 @@ func StreamServerInterceptor(opts ...Option) grpc.StreamServerInterceptor {
 		stream := util.WrapServerStream(ss)
 		stream.WrappedContext = ctx
 
-		// FIXME: https://github.com/getsentry/sentry-go/pull/605
-		//hub.Scope().SetTransaction(info.FullMethod)
-		span.Name = info.FullMethod
 		defer recoverWithSentry(hub, ctx, o)
 
 		err := handler(srv, stream)
 		if err != nil && o.ReportOn(err) {
+			//fields := util.ExtractFields(ctx)
 			hub.CaptureException(err)
 		}
 		span.Status = toSpanStatus(status.Code(err))

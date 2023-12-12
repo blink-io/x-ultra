@@ -79,7 +79,7 @@ type manager struct {
 	// context.Context. It's automatically generated to ensure uniqueness.
 	contextKey contextKey
 
-	tokenGenerator TokenGenFunc
+	tokenGen TokenGenFunc
 }
 
 // NewManager returns a new session manager with the default options. It is safe for
@@ -90,12 +90,12 @@ func NewManager(ops ...Option) Manager {
 
 func newManager(ops ...Option) *manager {
 	m := &manager{
-		idleTimeout:    DefaultIdleTimeout,
-		lifetime:       DefaultLifetime,
-		store:          mem.New(),
-		codec:          msgpack.New(),
-		contextKey:     generateContextKey(),
-		tokenGenerator: generateToken,
+		idleTimeout: DefaultIdleTimeout,
+		lifetime:    DefaultLifetime,
+		store:       mem.New(),
+		codec:       msgpack.New(),
+		contextKey:  generateContextKey(),
+		tokenGen:    defaultTokenGen,
 	}
 
 	for _, o := range ops {
@@ -111,8 +111,8 @@ func (m *manager) setDefaults() {
 	if m == nil {
 		return
 	}
-	if m.tokenGenerator == nil {
-		m.tokenGenerator = generateToken
+	if m.tokenGen == nil {
+		m.tokenGen = defaultTokenGen
 	}
 	if m.store == nil {
 		m.store = mem.New()

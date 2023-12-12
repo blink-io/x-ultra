@@ -20,7 +20,7 @@ func TestFind(t *testing.T) {
 	}
 	defer cli.Close()
 
-	e := newRaw(cli)
+	e := New(cli)
 	ctx := context.Background()
 
 	_, err = e.client.Delete(ctx, e.prefix+"session_token")
@@ -55,7 +55,7 @@ func TestSaveNew(t *testing.T) {
 	}
 	defer cli.Close()
 
-	e := newRaw(cli)
+	e := New(cli)
 	ctx := context.Background()
 
 	_, err = e.client.Delete(ctx, e.prefix+"session_token")
@@ -91,7 +91,7 @@ func TestFindMissing(t *testing.T) {
 	}
 	defer cli.Close()
 
-	e := newRaw(cli)
+	e := New(cli)
 	ctx := context.Background()
 
 	_, err = e.client.Delete(ctx, e.prefix+"missing_session_token")
@@ -118,7 +118,7 @@ func TestSaveUpdated(t *testing.T) {
 	}
 	defer cli.Close()
 
-	e := newRaw(cli)
+	e := New(cli)
 	ctx := context.Background()
 
 	_, err = e.client.Delete(ctx, e.prefix+"session_token")
@@ -159,7 +159,7 @@ func TestExpiry(t *testing.T) {
 	}
 	defer cli.Close()
 
-	e := newRaw(cli)
+	e := New(cli)
 	ctx := context.Background()
 
 	_, err = e.client.Delete(ctx, e.prefix+"session_token")
@@ -195,7 +195,7 @@ func TestDelete(t *testing.T) {
 	}
 	defer cli.Close()
 
-	e := newRaw(cli)
+	e := New(cli)
 	ctx := context.Background()
 
 	_, err = e.client.Delete(ctx, e.prefix+"session_token")
