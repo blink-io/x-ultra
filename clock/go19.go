@@ -1,5 +1,4 @@
 //go:build go1.9
-// +build go1.9
 
 // This file introduces aliases to allow using of the clock package as a
 // drop-in replacement of the standard time package.

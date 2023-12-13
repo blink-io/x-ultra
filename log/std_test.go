@@ -10,6 +10,7 @@ func TestStdLogger(_ *testing.T) {
 	_ = logger.Log(LevelInfo, "msg", "test info")
 	_ = logger.Log(LevelInfo, "msg", "test warn")
 	_ = logger.Log(LevelInfo, "msg", "test error")
+	_ = logger.Log(LevelFatal, "msg", "test fatal")
 	_ = logger.Log(LevelDebug, "singular")
 
 	logger2 := DefaultLogger

@@ -44,7 +44,13 @@ func (l *Logger) Log(level log.Level, keyvals ...any) error {
 		lv = slog.LevelError
 	}
 
-	l.log.LogAttrs(context.Background(), lv, "", args...)
+	var msg string
+	if level == log.LevelFatal {
+		msg = "[Fatal]"
+		args = append(args, slog.String("LOG_LEVEL", log.LevelFatal.String()))
+	}
+
+	l.log.LogAttrs(context.Background(), lv, msg, args...)
 
 	return nil
 }

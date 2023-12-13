@@ -615,15 +615,6 @@ func (m *manager) getSessionDataFromContext(ctx context.Context) *sessionData {
 	return c
 }
 
-func defaultTokenGen() (string, error) {
-	b := make([]byte, 32)
-	_, err := rand.Read(b)
-	if err != nil {
-		return "", err
-	}
-	return base64.RawURLEncoding.EncodeToString(b), nil
-}
-
 type contextKey string
 
 var (
@@ -652,4 +643,13 @@ func (m *manager) doStoreCommit(ctx context.Context, token string, b []byte, exp
 
 func (m *manager) doStoreAll(ctx context.Context) (map[string][]byte, error) {
 	return m.store.All(ctx)
+}
+
+func defaultTokenGen() (string, error) {
+	b := make([]byte, 32)
+	_, err := rand.Read(b)
+	if err != nil {
+		return "", err
+	}
+	return base64.RawURLEncoding.EncodeToString(b), nil
 }
