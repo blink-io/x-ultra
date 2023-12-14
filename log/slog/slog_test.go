@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/blink-io/x/log"
+
 	"gitlab.com/greyxor/slogor"
 )
 
@@ -23,4 +24,11 @@ func TestSlog_1(t *testing.T) {
 
 	sl.Log(log.LevelInfo, "name", "heison", "reason", "internal error")
 	sl.Log(log.LevelInfo, "name", "heison", "reason", "internal error", "loc")
+}
+
+func TestSlog_Handler_1(t *testing.T) {
+	hdlr := Option{Level: slog.LevelInfo}.NewHandler()
+	sl := slog.New(hdlr)
+
+	sl.Info("Info Level", "hello", "world")
 }

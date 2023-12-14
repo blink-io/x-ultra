@@ -1,6 +1,8 @@
 module github.com/blink-io/x
 
-go 1.21
+go 1.21.0
+
+toolchain go1.21.5
 
 require (
 	github.com/Masterminds/squirrel v1.5.4
@@ -104,6 +106,8 @@ require (
 	github.com/emicklei/proto v1.13.0
 	github.com/go-crypt/crypt v0.2.14
 	github.com/go-kit/log v0.2.1
+	github.com/go-slog/otelslog v0.1.0
+	github.com/golang-cz/devslog v0.0.8
 	github.com/gorilla/websocket v1.5.1
 	github.com/jhump/protoreflect v1.15.4
 	github.com/kardianos/osext v0.0.0-20190222173326-2bc1f35cddc0
@@ -114,7 +118,9 @@ require (
 	github.com/pashagolub/pgxmock/v3 v3.2.0
 	github.com/philhofer/fwd v1.1.2
 	github.com/qustavo/dotsql v1.2.0
+	github.com/remychantenay/slog-otel v1.2.3
 	github.com/rickar/cal/v2 v2.1.13
+	github.com/samber/slog-common v0.13.0
 	github.com/samber/slog-multi v1.0.2
 	github.com/samber/slog-nats v0.1.0
 	github.com/samber/slog-sentry/v2 v2.2.1
@@ -192,7 +198,6 @@ require (
 	github.com/robfig/cron v1.2.0 // indirect
 	github.com/rogpeppe/go-internal v1.11.0 // indirect
 	github.com/samber/lo v1.39.0 // indirect
-	github.com/samber/slog-common v0.13.0 // indirect
 	github.com/segmentio/asm v1.2.0 // indirect
 	github.com/smarty/assertions v1.15.1 // indirect
 	github.com/stretchr/objx v0.5.1 // indirect
@@ -203,6 +208,7 @@ require (
 	go.etcd.io/etcd/api/v3 v3.5.11 // indirect
 	go.etcd.io/etcd/client/pkg/v3 v3.5.11 // indirect
 	go.opentelemetry.io/otel/metric v1.21.0 // indirect
+	go.opentelemetry.io/otel/sdk v1.21.0 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
 	go.uber.org/mock v0.3.0 // indirect
 	golang.org/x/exp v0.0.0-20231206192017-f3f8817b8deb // indirect
@@ -216,7 +222,7 @@ require (
 	lukechampine.com/uint128 v1.3.0 // indirect
 	modernc.org/cc/v3 v3.41.0 // indirect
 	modernc.org/ccgo/v3 v3.16.15 // indirect
-	modernc.org/libc v1.37.1 // indirect
+	modernc.org/libc v1.37.4 // indirect
 	modernc.org/mathutil v1.6.0 // indirect
 	modernc.org/memory v1.7.2 // indirect
 	modernc.org/opt v0.1.3 // indirect

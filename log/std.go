@@ -28,7 +28,7 @@ func NewStdLogger(w io.Writer) Logger {
 }
 
 // Log print the kv pairs log.
-func (l *stdLogger) Log(level Level, keyvals ...interface{}) error {
+func (l *stdLogger) Log(level Level, keyvals ...any) error {
 	if len(keyvals) == 0 {
 		return nil
 	}
