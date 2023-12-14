@@ -35,7 +35,7 @@ require (
 	github.com/jackc/pgx/v5 v5.5.1
 	github.com/jaevor/go-nanoid v1.3.0
 	github.com/jarcoal/httpmock v1.3.1
-	github.com/jellydator/ttlcache/v3 v3.1.0
+	github.com/jellydator/ttlcache/v3 v3.1.1
 	github.com/joho/godotenv v1.5.1
 	github.com/karlseguin/ccache/v3 v3.0.5
 	github.com/karrick/godirwalk v1.17.0
@@ -90,7 +90,7 @@ require (
 	google.golang.org/grpc v1.60.0
 	google.golang.org/protobuf v1.31.1-0.20231027082548-f4a6c1f6e5c1
 	gopkg.in/yaml.v3 v3.0.1
-	modernc.org/sqlite v1.27.0
+	modernc.org/sqlite v1.28.0
 )
 
 require (
