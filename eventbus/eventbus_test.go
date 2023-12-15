@@ -1,6 +1,7 @@
 package eventbus
 
 import (
+	"fmt"
 	"testing"
 	"time"
 )
@@ -111,6 +112,8 @@ func TestPublish(t *testing.T) {
 		}
 	})
 	bus.Publish("topic", 10, nil)
+
+	fmt.Println("done")
 }
 
 func TestSubcribeOnceAsync(t *testing.T) {

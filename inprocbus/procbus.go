@@ -1,4 +1,4 @@
-package procbus
+package inprocbus
 
 import (
 	"context"
@@ -56,6 +56,11 @@ func (b *InProcBus) Publish(ctx context.Context, msg Message) error {
 
 	span.SetAttributes(attribute.String("msg", msgName))
 
+	return nil
+}
+
+// PublishAsync function publish a message to the bus listener.
+func (b *InProcBus) PublishAsync(ctx context.Context, msg Message) error {
 	return nil
 }
 

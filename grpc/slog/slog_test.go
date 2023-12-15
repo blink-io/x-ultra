@@ -5,7 +5,7 @@ import (
 	"log/slog"
 	"testing"
 
-	xslog "github.com/blink-io/x/slog"
+	xslog "github.com/blink-io/x/slog/ext"
 	"github.com/stretchr/testify/require"
 )
 

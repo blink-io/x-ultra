@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log/slog"
 
-	xslog "github.com/blink-io/x/slog"
+	xslog "github.com/blink-io/x/slog/ext"
 
 	"google.golang.org/grpc/grpclog"
 )
@@ -77,7 +77,7 @@ func withWarn() Option {
 // NewLogger returns a new Logger.
 func NewLogger(l *slog.Logger, options ...Option) *Logger {
 	logger := &Logger{
-		delegate: xslog.NewExtLogger(l),
+		delegate: xslog.NewLogger(l),
 		enabler:  l,
 		ctx:      context.Background(),
 	}

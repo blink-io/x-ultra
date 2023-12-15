@@ -10,7 +10,7 @@ type Builder = sq.StatementBuilderType
 
 var sb = sq.StatementBuilder
 
-// B is short SQL Builder
+// B is short for SQL Builder
 func B() Builder {
 	return sb
 }

@@ -1,4 +1,4 @@
-package slog
+package ext
 
 import (
 	"context"
@@ -13,7 +13,7 @@ type Logger struct {
 	*slog.Logger
 }
 
-func NewExtLogger(l *slog.Logger) *Logger {
+func NewLogger(l *slog.Logger) *Logger {
 	return &Logger{l}
 }
 
