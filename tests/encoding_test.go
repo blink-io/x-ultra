@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/blink-io/x/i18n"
+	"github.com/blink-io/x/i18n/grpc"
 	"github.com/blink-io/x/internal/testdata/pb"
 	"github.com/segmentio/encoding/iso8601"
 	eproto "github.com/segmentio/encoding/proto"
@@ -92,7 +92,7 @@ func TestSegment_Encoding_3(t *testing.T) {
 	m = eproto.AppendVarlen(m, 1, e3)
 	m = eproto.AppendVarint(m, 2, 1701148888)
 
-	var res = &i18n.ListLanguagesResponse{}
+	var res = &grpc.ListLanguagesResponse{}
 	require.NotNil(t, res)
 	errx := proto.Unmarshal(m, res)
 	require.NoError(t, errx)
@@ -105,15 +105,15 @@ func TestProto_Marshaml(t *testing.T) {
 	pyd2, err2 := os.ReadFile("./testdata/en-US.json")
 	require.NoError(t, err2)
 
-	entries := make(map[string]*i18n.LanguageEntry)
+	entries := make(map[string]*grpc.LanguageEntry)
 
-	e1 := &i18n.LanguageEntry{
+	e1 := &grpc.LanguageEntry{
 		Path:     "zh-Hans.json",
 		Language: "zh-Hans",
 		Valid:    true,
 		Payload:  pyd1,
 	}
-	e2 := &i18n.LanguageEntry{
+	e2 := &grpc.LanguageEntry{
 		Path:     "en-US.json",
 		Language: "en-US",
 		Valid:    true,
@@ -122,7 +122,7 @@ func TestProto_Marshaml(t *testing.T) {
 	entries["zh-Hans"] = e1
 	entries["en-US"] = e2
 
-	var res = &i18n.ListLanguagesResponse{
+	var res = &grpc.ListLanguagesResponse{
 		Entries:   entries,
 		Timestamp: time.Now().Unix(),
 	}

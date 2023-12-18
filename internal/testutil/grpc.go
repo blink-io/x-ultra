@@ -1,10 +1,11 @@
-package testdata
+package testutil
 
 import (
 	"context"
 	"log"
 	"log/slog"
 
+	"github.com/blink-io/x/internal/testdata"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/credentials/insecure"
@@ -14,7 +15,7 @@ import (
 func CreateGRPCClient(target string, secure bool, ops ...grpc.DialOption) *grpc.ClientConn {
 	var creds credentials.TransportCredentials
 	if secure {
-		creds = credentials.NewTLS(CreateClientTLSConfig())
+		creds = credentials.NewTLS(testdata.CreateClientTLSConfig())
 	} else {
 		creds = insecure.NewCredentials()
 	}
@@ -33,7 +34,7 @@ func CreateGRPCClient(target string, secure bool, ops ...grpc.DialOption) *grpc.
 func CreateGRPCServer(secure bool, ops ...grpc.ServerOption) *grpc.Server {
 	var creds credentials.TransportCredentials
 	if secure {
-		creds = credentials.NewTLS(GetTLSConfig())
+		creds = credentials.NewTLS(testdata.GetTLSConfig())
 	} else {
 		creds = insecure.NewCredentials()
 	}

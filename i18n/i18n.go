@@ -1,9 +1,11 @@
 package i18n
 
 import (
+	"fmt"
 	"io/fs"
-	stdlog "log"
+	"log/slog"
 	"sync"
+	"text/template"
 
 	"github.com/blink-io/x/locale"
 
@@ -29,20 +31,26 @@ type (
 
 	Bundle struct {
 		*ib
+		cc    *ttlcache.Cache[string, T]
+		cache bool
+		fm    template.FuncMap
 	}
-
-	Logger func(format string, args ...any)
 )
 
 var (
 	globalMux sync.Mutex
 	// bb is default bb
 	bb = New(DefaultOptions)
-	cc = ttlcache.New[string, T](
-		ttlcache.WithTTL[string, T](ttlcache.DefaultTTL),
-	)
-	fm  = sprig.TxtFuncMap()
-	log = stdlog.Printf
+
+	fm         = sprig.TxtFuncMap()
+	log Logger = func(format string, args ...any) {
+		msg := fmt.Sprintf(format, args...)
+		slog.Info(msg)
+	}
+
+	noopT T = func(s string, option ...LOption) string {
+		return s
+	}
 )
 
 func New(o *Options) *Bundle {
@@ -61,7 +69,16 @@ func New(o *Options) *Bundle {
 		ib.RegisterUnmarshalFunc(k, f)
 	}
 
-	b := &Bundle{ib}
+	b := &Bundle{
+		ib:    ib,
+		cache: o.Cache,
+		fm:    fm,
+	}
+	if b.cache {
+		b.cc = ttlcache.New[string, T](
+			ttlcache.WithTTL[string, T](ttlcache.DefaultTTL),
+		)
+	}
 	for _, l := range o.Loaders {
 		_ = l.Load(b)
 	}
@@ -77,17 +94,12 @@ func Default() *Bundle {
 // Replace replaces default Bundle
 func Replace(b *Bundle) {
 	globalMux.Lock()
-
 	defer globalMux.Unlock()
 	bb = b
 }
 
 func (b *Bundle) LoadMessageFileBytes(buf []byte, path string) (*MessageFile, error) {
 	return b.ParseMessageFileBytes(buf, path)
-}
-
-func (b *Bundle) Clone() *Bundle {
-	return b
 }
 
 func (b *Bundle) Languages() []string {
@@ -107,7 +119,7 @@ func (b *Bundle) LoadFromFS(fs fs.FS, root string) error {
 }
 
 func (b *Bundle) LoadFromHTTP(url string, extract func(string) string) error {
-	return NewHTTPLoader(url, extract, DefaultHTTPTimeout).Load(b)
+	return NewHTTPLoader(url, extract, DefaultTimeout).Load(b)
 }
 
 func (b *Bundle) LoadFromBytes(path string, data []byte) error {
@@ -115,8 +127,20 @@ func (b *Bundle) LoadFromBytes(path string, data []byte) error {
 }
 
 func GetT(lang string) T {
-	i, _ := cc.GetOrSet(lang, L(i18n.NewLocalizer(bb.ib, lang)))
-	return i.Value()
+	return bb.T(lang)
+}
+
+func (b *Bundle) T(lang string) T {
+	return doT(b, lang)
+}
+
+func doT(b *Bundle, lang string) T {
+	i, ok := b.cc.GetOrSet(lang, L(i18n.NewLocalizer(b.ib, lang)))
+	if ok {
+		return i.Value()
+	} else {
+		return noopT
+	}
 }
 
 func Languages() []string {
@@ -132,15 +156,9 @@ func LoadFromFS(fs fs.FS, root string) error {
 }
 
 func LoadFromHTTP(url string, extract func(string) string) error {
-	return NewHTTPLoader(url, extract, DefaultHTTPTimeout).Load(bb)
+	return NewHTTPLoader(url, extract, DefaultTimeout).Load(bb)
 }
 
 func LoadFromBytes(path string, data []byte) error {
 	return NewBytesLoader(path, data).Load(bb)
-}
-
-func SetLogger(l Logger) {
-	if log != nil {
-		log = l
-	}
 }

@@ -59,7 +59,7 @@ require (
 	github.com/quic-go/quic-go v0.40.1
 	github.com/redis/go-redis/extra/rediscmd/v9 v9.0.5
 	github.com/redis/go-redis/v9 v9.3.0
-	github.com/redis/rueidis v1.0.23
+	github.com/redis/rueidis v1.0.25
 	github.com/rs/xid v1.5.0
 	github.com/sanity-io/litter v1.5.5
 	github.com/segmentio/ksuid v1.0.4
@@ -77,7 +77,7 @@ require (
 	github.com/vmihailenco/go-tinylfu v0.2.2
 	github.com/vmihailenco/msgpack/v5 v5.4.1
 	github.com/zeebo/xxh3 v1.0.2
-	gitlab.com/greyxor/slogor v1.2.0
+	gitlab.com/greyxor/slogor v1.2.1
 	go.etcd.io/bbolt v1.3.8
 	go.etcd.io/etcd/client/v3 v3.5.11
 	go.temporal.io/api v1.26.0
@@ -96,7 +96,7 @@ require (
 require (
 	github.com/DATA-DOG/go-sqlmock v1.5.1
 	github.com/VictoriaMetrics/fastcache v1.12.2
-	github.com/XSAM/otelsql v0.26.0
+	github.com/XSAM/otelsql v0.27.0
 	github.com/ahmetb/go-linq/v3 v3.2.0
 	github.com/alicebob/miniredis/v2 v2.31.0
 	github.com/allegro/bigcache/v3 v3.1.0
@@ -226,7 +226,7 @@ require (
 	lukechampine.com/uint128 v1.3.0 // indirect
 	modernc.org/cc/v3 v3.41.0 // indirect
 	modernc.org/ccgo/v3 v3.16.15 // indirect
-	modernc.org/libc v1.37.5 // indirect
+	modernc.org/libc v1.37.6 // indirect
 	modernc.org/mathutil v1.6.0 // indirect
 	modernc.org/memory v1.7.2 // indirect
 	modernc.org/opt v0.1.3 // indirect

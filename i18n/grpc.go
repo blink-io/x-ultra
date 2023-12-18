@@ -4,18 +4,19 @@ import (
 	"context"
 	"time"
 
+	i18ngrpc "github.com/blink-io/x/i18n/grpc"
 	"google.golang.org/grpc"
 )
 
 // grpcLoader loads by GRPC services
 type grpcLoader struct {
-	client    I18NClient
+	client    i18ngrpc.I18NClient
 	endpoint  string
 	languages []string
 }
 
 func NewGRPCLoader(cc grpc.ClientConnInterface, languages []string) Loader {
-	client := NewI18NClient(cc)
+	client := i18ngrpc.NewI18NClient(cc)
 	return &grpcLoader{client: client, languages: languages}
 }
 
@@ -28,7 +29,7 @@ func LoadFromGRPC(cc grpc.ClientConnInterface, languages []string) error {
 }
 
 func (l *grpcLoader) Load(b Bundler) error {
-	req := &ListLanguagesRequest{
+	req := &i18ngrpc.ListLanguagesRequest{
 		Languages: l.languages,
 	}
 	res, err := l.client.ListLanguages(context.Background(), req)
@@ -41,7 +42,7 @@ func (l *grpcLoader) Load(b Bundler) error {
 			continue
 		}
 		if _, verr := b.LoadMessageFileBytes(v.Payload, v.Path); verr != nil {
-			log("[WARN] unable to load message from gRPC: %s, endpoint: %s, reason: %s", v.Path, l.endpoint, verr.Error())
+			log("[WARN] unable to load message from gRPC service: %s, endpoint: %s, reason: %s", v.Path, l.endpoint, verr.Error())
 		}
 	}
 	return nil
@@ -66,8 +67,23 @@ func (f EntryHandlerFunc) Handle(ctx context.Context, languages []string) map[st
 	return f(ctx, languages)
 }
 
+type Entries map[string]*Entry
+
+func (e Entries) Handle(ctx context.Context, languages []string) map[string]*Entry {
+	ne := make(map[string]*Entry)
+	if len(e) == 0 {
+		return ne
+	}
+	for _, l := range languages {
+		if ee, ok := e[l]; ok {
+			ne[l] = ee
+		}
+	}
+	return ne
+}
+
 type grpcServer struct {
-	UnimplementedI18NServer
+	i18ngrpc.UnimplementedI18NServer
 	h EntryHandler
 }
 
@@ -76,14 +92,14 @@ func newGrpcServer(h EntryHandler) *grpcServer {
 	return gsrv
 }
 
-func (s *grpcServer) ListLanguages(ctx context.Context, req *ListLanguagesRequest) (*ListLanguagesResponse, error) {
+func (s *grpcServer) ListLanguages(ctx context.Context, req *i18ngrpc.ListLanguagesRequest) (*i18ngrpc.ListLanguagesResponse, error) {
 	langs := req.Languages
 
-	entries := make(map[string]*LanguageEntry)
+	entries := make(map[string]*i18ngrpc.LanguageEntry)
 	if s.h != nil {
 		em := s.h.Handle(ctx, langs)
 		for _, l := range langs {
-			le := &LanguageEntry{
+			le := &i18ngrpc.LanguageEntry{
 				Language: l,
 			}
 			if e := em[l]; e != nil {
@@ -98,7 +114,7 @@ func (s *grpcServer) ListLanguages(ctx context.Context, req *ListLanguagesReques
 	}
 
 	ts := time.Now().Unix()
-	res := &ListLanguagesResponse{
+	res := &i18ngrpc.ListLanguagesResponse{
 		Entries:   entries,
 		Timestamp: ts,
 	}
@@ -108,10 +124,10 @@ func (s *grpcServer) ListLanguages(ctx context.Context, req *ListLanguagesReques
 
 func RegisterEntryHandler(gsrv *grpc.Server, h EntryHandler) {
 	ss := newGrpcServer(h)
-	RegisterI18NServer(gsrv, ss)
+	i18ngrpc.RegisterI18NServer(gsrv, ss)
 }
 
 func RegisterEntryHandlerFunc(gsrv *grpc.Server, f EntryHandlerFunc) {
 	ss := newGrpcServer(f)
-	RegisterI18NServer(gsrv, ss)
+	i18ngrpc.RegisterI18NServer(gsrv, ss)
 }

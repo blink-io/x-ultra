@@ -1,18 +1,23 @@
 package i18n
 
 import (
-	"context"
-	"fmt"
+	"log/slog"
 	"net"
-	"os"
 	"testing"
 
-	"github.com/blink-io/x/internal/testdata"
+	gslog "github.com/blink-io/x/grpc/slog"
+	"github.com/blink-io/x/internal/testutil"
+
 	"github.com/stretchr/testify/require"
+	"google.golang.org/grpc/grpclog"
 )
 
+func init() {
+	grpclog.SetLoggerV2(gslog.NewLogger(slog.Default()))
+}
+
 func TestGRPC_Server_1(t *testing.T) {
-	gsrv := testdata.CreateGRPCServer(true)
+	gsrv := testutil.CreateGRPCServer(true)
 
 	zhHansJSON := `{"name":"广州", "language":"简体中文"}`
 	enUSJSON := `{"name":"gz", "language":"American English"}`
@@ -38,9 +43,7 @@ func TestGRPC_Server_1(t *testing.T) {
 		},
 	}
 
-	var ff = EntryHandlerFunc(func(ctx context.Context, languages []string) map[string]*Entry {
-		return entries
-	})
+	var ff = Entries(entries)
 
 	RegisterEntryHandler(gsrv, ff)
 
@@ -51,16 +54,9 @@ func TestGRPC_Server_1(t *testing.T) {
 }
 
 func TestNewGRPCLoader_1(t *testing.T) {
-	cc := testdata.CreateGRPCClient(":9999", true)
+	cc := testutil.CreateGRPCClient(":9999", true)
 	ld := NewGRPCLoader(cc, []string{"zh-Hans"})
 	err := ld.Load(bb)
-	require.NoError(t, err)
-}
 
-func TestPB_Desc(t *testing.T) {
-	pbdesc := file_i18n_proto_rawDescGZIP()
-	fmt.Println(string(pbdesc))
-
-	err := os.WriteFile("./i18n.pb.bin", pbdesc, 0544)
 	require.NoError(t, err)
 }

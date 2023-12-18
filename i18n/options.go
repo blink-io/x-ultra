@@ -5,6 +5,7 @@ import (
 )
 
 type Options struct {
+	Cache    bool
 	Language language.Tag
 	Loaders  []Loader
 }
@@ -14,6 +15,7 @@ var (
 	DefaultDir     = "./locales"
 	DefaultLoader  = NewDirLoader(DefaultDir)
 	DefaultOptions = &Options{
+		Cache: true,
 		Loaders: []Loader{
 			DefaultLoader,
 		},

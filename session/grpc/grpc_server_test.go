@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/blink-io/x/internal/testdata"
+	"github.com/blink-io/x/internal/testutil"
 	"github.com/blink-io/x/session"
 	"github.com/stretchr/testify/require"
 	"gitlab.com/greyxor/slogor"
@@ -122,7 +122,7 @@ func (s *statsHandler) HandleConn(ctx context.Context, connStats stats.ConnStats
 func TestGRPC_Server_1(t *testing.T) {
 	svc := &commonService{}
 
-	gsrv := testdata.CreateGRPCServer(true)
+	gsrv := testutil.CreateGRPCServer(true)
 
 	RegisterCommonServer(gsrv, svc)
 	service.RegisterChannelzServiceToServer(gsrv)
