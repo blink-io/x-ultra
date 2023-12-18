@@ -2,6 +2,7 @@ package i18n
 
 import (
 	"context"
+	"log/slog"
 	"net/http"
 	"time"
 
@@ -137,9 +138,9 @@ func NewThriftLoader(addr string, languages []string, ops ...TOption) (Loader, e
 }
 
 func (l *thriftLoader) Load(b Bundler) error {
-	req := &i18nthrift.ListLanguagesRequest{
-		Languages: l.languages,
-	}
+	req := i18nthrift.NewListLanguagesRequest()
+	req.Languages = l.languages
+
 	res, err := l.client.ListLanguages(context.Background(), req)
 	if err != nil {
 		return err
@@ -185,9 +186,8 @@ func (s *thriftHandler) ListLanguages(ctx context.Context, req *i18nthrift.ListL
 	if s.h != nil {
 		em := s.h.Handle(ctx, langs)
 		for _, l := range langs {
-			le := &i18nthrift.LanguageEntry{
-				Language: l,
-			}
+			le := i18nthrift.NewLanguageEntry()
+			le.Language = l
 			if e := em[l]; e != nil {
 				le.Path = e.Path
 				le.Payload = e.Payload
@@ -199,11 +199,9 @@ func (s *thriftHandler) ListLanguages(ctx context.Context, req *i18nthrift.ListL
 		}
 	}
 
-	ts := time.Now().Unix()
-	res := &i18nthrift.ListLanguagesResponse{
-		Timestamp: ts,
-		Entries:   entries,
-	}
+	res := i18nthrift.NewListLanguagesResponse()
+	res.Timestamp = time.Now().Unix()
+	res.Entries = entries
 	return res, nil
 }
 
@@ -213,10 +211,17 @@ func NewTBinaryServer(addr string, h EntryHandler) (*thrift.TSimpleServer, error
 		return nil, err
 	}
 
+	cfg := &thrift.TConfiguration{
+		ConnectTimeout: DefaultTimeout,
+		SocketTimeout:  DefaultTimeout,
+	}
 	transportFactory := thrift.NewTTransportFactory()
-	protocolFactory := thrift.NewTBinaryProtocolFactoryConf(nil)
+	protocolFactory := thrift.NewTBinaryProtocolFactoryConf(cfg)
 
 	processor := i18nthrift.NewI18NProcessor(&thriftHandler{h: h})
 	server := thrift.NewTSimpleServer4(processor, transport, transportFactory, protocolFactory)
+	server.SetLogger(func(msg string) {
+		slog.Default().Info(msg)
+	})
 	return server, nil
 }
