@@ -19,3 +19,7 @@ type Application struct {
 	Code        string         `bun:"code,unique,notnull" db:"code" json:"code,omitempty" toml:"code,omitempty" yaml:"code,omitempty" msgpack:"code,omitempty"`
 	Description sql.NullString `bun:"description" db:"description" json:"description,omitempty" toml:"description,omitempty" yaml:"description,omitempty" msgpack:"description,omitempty"`
 }
+
+func (Application) TableName() string {
+	return "applications"
+}

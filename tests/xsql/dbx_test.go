@@ -2,41 +2,16 @@ package bun
 
 import (
 	"fmt"
-	"log/slog"
-	"path/filepath"
 	"testing"
+	"time"
 
-	xsql "github.com/blink-io/x/sql"
-	"github.com/blink-io/x/sql/hooks"
+	"github.com/blink-io/x/id"
+	"github.com/brianvoe/gofakeit/v6"
 	"github.com/stretchr/testify/require"
 )
 
-func getDBX(t *testing.T) *xsql.DBX {
-	dbPath := filepath.Join(".", "bun_demo.db")
-
-	fmt.Println("db path: ", dbPath)
-
-	db, err1 := xsql.NewDBX(&xsql.Options{
-		Dialect:     xsql.DialectSQLite,
-		Host:        dbPath,
-		DriverHooks: []hooks.Hooks{
-			//timing.New(timing.Logf(func(format string, args ...any) {
-			//	msg := fmt.Sprintf(format, args...)
-			//	slog.Default().Info(msg)
-			//})),
-		},
-	})
-	//db.AddQueryHook(logging.Func(log.Printf))
-	require.NoError(t, err1)
-
-	return db
-}
-
 func TestSQLite3_Select_Funcs_DBX(t *testing.T) {
-	db := getDBX(t)
-	db.LogFunc = func(format string, args ...interface{}) {
-		slog.Default().Info(fmt.Sprintf(format, args...))
-	}
+	db := getDBXWithSQLite()
 
 	sqlF := "select %s as payload"
 	funcs := []string{
@@ -58,4 +33,20 @@ func TestSQLite3_Select_Funcs_DBX(t *testing.T) {
 		require.NoError(t, q.Row(&v))
 		fmt.Println("SQLite func payload:  ", v)
 	}
+}
+
+func TestDBX_Insert_1(t *testing.T) {
+	db := getDBXWithSQLite()
+
+	r1 := new(Application)
+	r1.ID = id.ShortID()
+	r1.Name = gofakeit.Name()
+	r1.Code = gofakeit.Animal()
+	r1.Type = gofakeit.Bird()
+	r1.Status = gofakeit.Cat()
+	r1.CreatedAt = time.Now()
+	r1.UpdatedAt = time.Now()
+
+	err := db.Model(r1).Insert()
+	require.NoError(t, err)
 }

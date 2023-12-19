@@ -2,6 +2,7 @@ package i18n
 
 import (
 	"context"
+	"crypto/tls"
 	"log/slog"
 	"net/http"
 	"time"
@@ -16,6 +17,7 @@ type TOptions struct {
 	framed     bool
 	buffered   bool
 	bufferSize int
+	tlsConfig  *tls.Config
 }
 
 func applyTOptions(ops ...TOption) *TOptions {
@@ -50,6 +52,12 @@ func WithBuffered(bufferSize int) TOption {
 	return func(o *TOptions) {
 		o.buffered = true
 		o.bufferSize = bufferSize
+	}
+}
+
+func WithTLSConfig(tlsConfig *tls.Config) TOption {
+	return func(o *TOptions) {
+		o.tlsConfig = tlsConfig
 	}
 }
 
@@ -205,8 +213,16 @@ func (s *thriftHandler) ListLanguages(ctx context.Context, req *i18nthrift.ListL
 	return res, nil
 }
 
-func NewTBinaryServer(addr string, h EntryHandler) (*thrift.TSimpleServer, error) {
-	transport, err := thrift.NewTServerSocket(addr)
+func NewTBinaryServer(addr string, h EntryHandler, ops ...TOption) (*thrift.TSimpleServer, error) {
+	opt := applyTOptions(ops...)
+
+	var err error
+	var serverTransport thrift.TServerTransport
+	if opt.tlsConfig != nil {
+		serverTransport, err = thrift.NewTSSLServerSocket(addr, opt.tlsConfig)
+	} else {
+		serverTransport, err = thrift.NewTServerSocket(addr)
+	}
 	if err != nil {
 		return nil, err
 	}
@@ -219,7 +235,7 @@ func NewTBinaryServer(addr string, h EntryHandler) (*thrift.TSimpleServer, error
 	protocolFactory := thrift.NewTBinaryProtocolFactoryConf(cfg)
 
 	processor := i18nthrift.NewI18NProcessor(&thriftHandler{h: h})
-	server := thrift.NewTSimpleServer4(processor, transport, transportFactory, protocolFactory)
+	server := thrift.NewTSimpleServer4(processor, serverTransport, transportFactory, protocolFactory)
 	server.SetLogger(func(msg string) {
 		slog.Default().Info(msg)
 	})

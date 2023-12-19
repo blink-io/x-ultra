@@ -15,7 +15,7 @@ func NewDBX(o *Options) (*DBX, error) {
 	o = setupOptions(o)
 	o.accessor = "dbx"
 
-	sqlDB, err := GetSqlDB(o)
+	sqlDB, err := NewSqlDB(o)
 	if err != nil {
 		return nil, err
 	}

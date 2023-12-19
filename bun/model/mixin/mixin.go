@@ -60,7 +60,7 @@ type Model struct {
 	// Optional fields for tables
 	CreatedBy sql.NullString `bun:"created_by,nullzero,skipupdate" db:"created_by" json:"created_by,omitempty" toml:"created_by,omitempty" yaml:"created_by,omitempty" msgpack:"created_by,omitempty"`
 	UpdatedBy sql.NullString `bun:"updated_by,nullzero" db:"updated_by" json:"updated_by,omitempty" toml:"updated_by,omitempty" yaml:"updated_by,omitempty" msgpack:"updated_by,omitempty"`
-	DeletedAt bun.NullTime   `bun:"deleted_at,nullzero,skipupdate" db:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at,omitempty" yaml:"deleted_at,omitempty" msgpack:"deleted_at,omitempty"`
+	DeletedAt sql.NullTime   `bun:"deleted_at,nullzero,skipupdate" db:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at,omitempty" yaml:"deleted_at,omitempty" msgpack:"deleted_at,omitempty"`
 	DeletedBy sql.NullString `bun:"deleted_by,nullzero,skipupdate" db:"deleted_by" json:"deleted_by,omitempty" toml:"deleted_by,omitempty" yaml:"deleted_by,omitempty" msgpack:"deleted_by,omitempty"`
 	IsDeleted sql.NullBool   `bun:"is_deleted,nullzero,skipupdate" db:"is_deleted" json:"is_deleted,omitempty" toml:"is_deleted,omitempty" yaml:"is_deleted,omitempty" msgpack:"is_deleted,omitempty"`
 }
@@ -96,9 +96,8 @@ func handleTSZ(m *Model, query bun.Query) {
 		case "UPDATE":
 			m.UpdatedAt = time.Now()
 		case "DELETE":
-			m.DeletedAt = bun.NullTime{Time: time.Now()}
+			m.DeletedAt = sql.NullTime{Time: time.Now(), Valid: true}
 			m.IsDeleted = sql.NullBool{Bool: true, Valid: true}
-
 		}
 	}
 }

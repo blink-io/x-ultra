@@ -113,10 +113,9 @@ func (s *grpcServer) ListLanguages(ctx context.Context, req *i18ngrpc.ListLangua
 		}
 	}
 
-	ts := time.Now().Unix()
 	res := &i18ngrpc.ListLanguagesResponse{
 		Entries:   entries,
-		Timestamp: ts,
+		Timestamp: time.Now().Unix(),
 	}
 
 	return res, nil

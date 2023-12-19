@@ -1,13 +1,9 @@
 package bun
 
 import (
-	"context"
 	"fmt"
-	"path/filepath"
 	"testing"
 
-	"github.com/blink-io/x/bun/extra/timing"
-	xsql "github.com/blink-io/x/sql"
 	"github.com/blink-io/x/sql/generics"
 	"github.com/blink-io/x/sql/scany/dbscan"
 
@@ -15,35 +11,15 @@ import (
 	"github.com/uptrace/bun"
 )
 
-var (
-	ctx = context.Background()
-)
-
-func getDB(t *testing.T) *xsql.DB {
-	dbPath := filepath.Join(".", "bun_demo.db")
-
-	fmt.Println("db path: ", dbPath)
-
-	db, err1 := xsql.NewDB(&xsql.Options{
-		Dialect: xsql.DialectSQLite,
-		Host:    dbPath,
-	})
-	//db.AddQueryHook(logging.Func(log.Printf))
-	db.AddQueryHook(timing.New())
-	require.NoError(t, err1)
-
-	return db
-}
-
 func TestDB_SQLite_1(t *testing.T) {
-	db := getDB(t)
+	db := getDBWithSQLite()
 	m := (*Application)(nil)
 	_, err := db.NewCreateTable().IfNotExists().Model(m).Exec(ctx)
 	require.NoError(t, err)
 }
 
 func TestSQLite3_Select_Funcs(t *testing.T) {
-	db := getDB(t)
+	db := getDBWithSQLite()
 
 	sqlF := "select %s as payload"
 	funcs := []string{
@@ -68,7 +44,7 @@ func TestSQLite3_Select_Funcs(t *testing.T) {
 }
 
 func TestSQLite3_Delete_1(t *testing.T) {
-	db := getDB(t)
+	db := getDBWithSQLite()
 	gdb := generics.NewDB[Application, string](db)
 	//err := gdb.Delete(ctx, "123456")
 	err := gdb.BulkDelete(ctx, []string{"123456", "888888"})
@@ -76,7 +52,7 @@ func TestSQLite3_Delete_1(t *testing.T) {
 }
 
 func TestSQLite3_Insert_1(t *testing.T) {
-	db := getDB(t)
+	db := getDBWithSQLite()
 	r1 := &Application{}
 	r1.ID = "123456"
 	r1.Name = "app2"
@@ -100,7 +76,7 @@ func TestSQLite3_Insert_1(t *testing.T) {
 }
 
 func TestSQLite_Model_Select_2(t *testing.T) {
-	db := getDB(t)
+	db := getDBWithSQLite()
 
 	qm := &Application{
 		Status: "status3",
@@ -112,7 +88,7 @@ func TestSQLite_Model_Select_2(t *testing.T) {
 }
 
 func TestSQLite_Raw_Select_Model_1(t *testing.T) {
-	db := getDB(t)
+	db := getDBWithSQLite()
 	var rs []*Application
 	_, err := db.NewRaw("select * from applications where ? = ?",
 		bun.Ident("status"), "status1").Exec(ctx, &rs)
@@ -120,7 +96,7 @@ func TestSQLite_Raw_Select_Model_1(t *testing.T) {
 }
 
 func TestSQLite_Raw_Select_Model_2(t *testing.T) {
-	db := getDB(t)
+	db := getDBWithSQLite()
 	var rs []Application
 	_, err := db.NewRaw("select * from applications where ? = ?",
 		bun.Ident("status"), "status1").Exec(ctx, &rs)
@@ -128,7 +104,7 @@ func TestSQLite_Raw_Select_Model_2(t *testing.T) {
 }
 
 func TestSQLite_Raw_Select_2(t *testing.T) {
-	db := getDB(t)
+	db := getDBWithSQLite()
 
 	defer db.Close()
 
@@ -137,7 +113,7 @@ func TestSQLite_Raw_Select_2(t *testing.T) {
 }
 
 func TestSLite_Scan_Slice_1(t *testing.T) {
-	db := getDB(t)
+	db := getDBWithSQLite()
 
 	defer db.Close()
 
@@ -150,7 +126,7 @@ func TestSLite_Scan_Slice_1(t *testing.T) {
 }
 
 func TestSLite_Scan_Slice_2(t *testing.T) {
-	db := getDB(t)
+	db := getDBWithSQLite()
 
 	defer db.Close()
 
@@ -163,7 +139,7 @@ func TestSLite_Scan_Slice_2(t *testing.T) {
 }
 
 func TestSLite_Scan_Slice_3(t *testing.T) {
-	db := getDB(t)
+	db := getDBWithSQLite()
 
 	defer db.Close()
 
@@ -176,7 +152,7 @@ func TestSLite_Scan_Slice_3(t *testing.T) {
 }
 
 func TestSLite_Scan_2(t *testing.T) {
-	db := getDB(t)
+	db := getDBWithSQLite()
 
 	defer db.Close()
 

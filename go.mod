@@ -102,9 +102,12 @@ require (
 	github.com/allegro/bigcache/v3 v3.1.0
 	github.com/ammario/tlru v0.3.0
 	github.com/apache/thrift v0.19.0
+	github.com/brianvoe/gofakeit/v6 v6.26.3
+	github.com/caarlos0/env/v10 v10.0.0
 	github.com/chzyer/readline v1.5.1
 	github.com/dchest/siphash v1.2.3
 	github.com/deckarep/golang-set/v2 v2.5.0
+	github.com/doug-martin/goqu/v9 v9.19.0
 	github.com/emicklei/proto v1.13.0
 	github.com/glebarez/go-sqlite v1.21.2
 	github.com/go-crypt/crypt v0.2.14

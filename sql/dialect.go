@@ -26,7 +26,7 @@ func GetDialect(o *Options) (schema.Dialect, *sql.DB, error) {
 		return nil, nil, fmt.Errorf("unsupoorted dialect: %s", dialect)
 	}
 
-	db, err := GetSqlDB(o)
+	db, err := NewSqlDB(o)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -34,7 +34,7 @@ func GetDialect(o *Options) (schema.Dialect, *sql.DB, error) {
 	return sd, db, nil
 }
 
-func GetSqlDB(o *Options) (*sql.DB, error) {
+func NewSqlDB(o *Options) (*sql.DB, error) {
 	dialect := o.Dialect
 
 	var dsn string
