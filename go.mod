@@ -84,10 +84,10 @@ require (
 	go.temporal.io/sdk v1.25.1
 	go.uber.org/multierr v1.11.0
 	go.uber.org/zap v1.26.0
-	golang.org/x/crypto v0.16.0
+	golang.org/x/crypto v0.17.0
 	golang.org/x/text v0.14.0
 	google.golang.org/genproto/googleapis/api v0.0.0-20231212172506-995d672761c0
-	google.golang.org/grpc v1.60.0
+	google.golang.org/grpc v1.60.1
 	google.golang.org/protobuf v1.31.1-0.20231027082548-f4a6c1f6e5c1
 	gopkg.in/yaml.v3 v3.0.1
 	modernc.org/sqlite v1.28.0
@@ -106,6 +106,7 @@ require (
 	github.com/dchest/siphash v1.2.3
 	github.com/deckarep/golang-set/v2 v2.5.0
 	github.com/emicklei/proto v1.13.0
+	github.com/glebarez/go-sqlite v1.21.2
 	github.com/go-crypt/crypt v0.2.14
 	github.com/go-kit/log v0.2.1
 	github.com/go-slog/otelslog v0.1.0
@@ -121,6 +122,7 @@ require (
 	github.com/panjf2000/ants/v2 v2.9.0
 	github.com/pashagolub/pgxmock/v3 v3.2.0
 	github.com/philhofer/fwd v1.1.2
+	github.com/pocketbase/dbx v1.10.1
 	github.com/qustavo/dotsql v1.2.0
 	github.com/remychantenay/slog-otel v1.2.3
 	github.com/rickar/cal/v2 v2.1.13

@@ -17,13 +17,14 @@ type (
 	}
 )
 
-func NewWithRawDB(sqlDB *sql.DB, dialect schema.Dialect) (*DB, error) {
+func NewFromRawDB(sqlDB *sql.DB, dialect schema.Dialect) (*DB, error) {
 	idb := bun.NewDB(sqlDB, dialect, bun.WithDiscardUnknownColumns())
 	return &DB{idb: idb}, nil
 }
 
 func NewDB(o *Options) (*DB, error) {
 	o = setupOptions(o)
+	o.accessor = "bun " + bun.Version()
 
 	sd, sqlDB, err := GetDialect(o)
 	if err != nil {

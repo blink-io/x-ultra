@@ -3,13 +3,11 @@ package bun
 import (
 	"context"
 	"fmt"
-	"log"
 	"path/filepath"
 	"testing"
 
-	"github.com/blink-io/x/bun/extra/logging"
 	"github.com/blink-io/x/bun/extra/timing"
-	"github.com/blink-io/x/sql"
+	xsql "github.com/blink-io/x/sql"
 	"github.com/blink-io/x/sql/generics"
 	"github.com/blink-io/x/sql/scany/dbscan"
 
@@ -21,16 +19,16 @@ var (
 	ctx = context.Background()
 )
 
-func getDB(t *testing.T) *sql.DB {
+func getDB(t *testing.T) *xsql.DB {
 	dbPath := filepath.Join(".", "bun_demo.db")
 
 	fmt.Println("db path: ", dbPath)
 
-	db, err1 := sql.NewDB(&sql.Options{
-		Dialect: sql.DialectSQLite,
+	db, err1 := xsql.NewDB(&xsql.Options{
+		Dialect: xsql.DialectSQLite,
 		Host:    dbPath,
 	})
-	db.AddQueryHook(logging.Func(log.Printf))
+	//db.AddQueryHook(logging.Func(log.Printf))
 	db.AddQueryHook(timing.New())
 	require.NoError(t, err1)
 
@@ -44,14 +42,29 @@ func TestDB_SQLite_1(t *testing.T) {
 	require.NoError(t, err)
 }
 
-func TestSQLite3_Select_Version(t *testing.T) {
-	ss := "select sqlite_version() as version"
+func TestSQLite3_Select_Funcs(t *testing.T) {
 	db := getDB(t)
-	row := db.QueryRow(ss)
-	var v string
-	require.NoError(t, row.Scan(&v))
 
-	fmt.Println("SQLite version:  ", v)
+	sqlF := "select %s as payload"
+	funcs := []string{
+		"hex(randomblob(32))",
+		"random()",
+		"sqlite_version()",
+		"total_changes()",
+		`lower("HELLO")`,
+		`upper("hello")`,
+		`length("hello")`,
+		`length("我是世界")`,
+		//`concat("Hello", ",", "World")`,
+	}
+
+	for _, fstr := range funcs {
+		ss := fmt.Sprintf(sqlF, fstr)
+		row := db.QueryRow(ss)
+		var v string
+		require.NoError(t, row.Scan(&v))
+		fmt.Println("SQLite func payload:  ", v)
+	}
 }
 
 func TestSQLite3_Delete_1(t *testing.T) {

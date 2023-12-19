@@ -26,10 +26,10 @@ func init() {
 	dsnFuncs[dn] = PostgresDSN
 }
 
-func PostgresDSN(o *Options) string {
+func PostgresDSN(o *Options) (string, error) {
 	cc := ToPGXConfig(o)
 	dsn := stdlib.RegisterConnConfig(cc)
-	return dsn
+	return dsn, nil
 }
 
 func ToPGXConfig(o *Options) *pgx.ConnConfig {

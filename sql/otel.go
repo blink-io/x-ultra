@@ -21,7 +21,7 @@ type otelOptions struct {
 	reportDBStats bool
 }
 
-type OTtelOption func(*otelOptions)
+type OTelOption func(*otelOptions)
 
 func (oo *otelOptions) otelSqlOptions() []otelsql.Option {
 	attrs := oo.createAttrs()
@@ -66,7 +66,7 @@ func (oo *otelOptions) createDBInfoAttrs() []attribute.KeyValue {
 	return attrs
 }
 
-func applyOtelOptions(ops ...OTtelOption) *otelOptions {
+func applyOtelOptions(ops ...OTelOption) *otelOptions {
 	oop := new(otelOptions)
 	for _, oo := range ops {
 		oo(oop)
@@ -74,43 +74,43 @@ func applyOtelOptions(ops ...OTtelOption) *otelOptions {
 	return oop
 }
 
-func OTelDBName(dbName string) OTtelOption {
+func OTelDBName(dbName string) OTelOption {
 	return func(o *otelOptions) {
 		o.dbName = dbName
 	}
 }
 
-func OTelDBSystem(dbName string) OTtelOption {
+func OTelDBSystem(dbName string) OTelOption {
 	return func(o *otelOptions) {
 		o.dbName = dbName
 	}
 }
 
-func OTelDBAccessMethod(dbAccessMethod string) OTtelOption {
+func OTelDBAccessor(dbAccessor string) OTelOption {
 	return func(o *otelOptions) {
-		o.dbAccessor = dbAccessMethod
+		o.dbAccessor = dbAccessor
 	}
 }
 
-func OTelDBHostPort(dbHostPort string) OTtelOption {
+func OTelDBHostPort(dbHostPort string) OTelOption {
 	return func(o *otelOptions) {
 		o.dbHostPort = dbHostPort
 	}
 }
 
-func OTelReportDBStats() OTtelOption {
+func OTelReportDBStats() OTelOption {
 	return func(o *otelOptions) {
 		o.reportDBStats = true
 	}
 }
 
-func OTelAttrs(attrs ...attribute.KeyValue) OTtelOption {
+func OTelAttrs(attrs ...attribute.KeyValue) OTelOption {
 	return func(o *otelOptions) {
 		o.extraAttrs = attrs
 	}
 }
 
-func otelOpenDB(cc driver.Connector, ops ...OTtelOption) *sql.DB {
+func otelOpenDB(cc driver.Connector, ops ...OTelOption) *sql.DB {
 	oop := applyOtelOptions(ops...)
 	db := otelsql.OpenDB(cc, oop.otelSqlOptions()...)
 	if oop.reportDBStats {
@@ -119,15 +119,15 @@ func otelOpenDB(cc driver.Connector, ops ...OTtelOption) *sql.DB {
 	return db
 }
 
-func xotelOpenDB(cc driver.Connector, ops ...OTtelOption) *sql.DB {
+func xotelOpenDB(cc driver.Connector, ops ...OTelOption) *sql.DB {
 	oop := applyOtelOptions(ops...)
 	db := xotelsql.OpenDB(cc, oop.xotelSqlOptions()...)
 	if oop.reportDBStats {
-		xotelsql.RegisterDBStatsMetrics(db)
+		_ = xotelsql.RegisterDBStatsMetrics(db)
 	}
 	return db
 }
 
-func sqlOpenDB(cc driver.Connector, ops ...OTtelOption) *sql.DB {
+func sqlOpenDB(cc driver.Connector, ops ...OTelOption) *sql.DB {
 	return sql.OpenDB(cc)
 }

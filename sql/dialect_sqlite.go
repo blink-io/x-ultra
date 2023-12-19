@@ -5,8 +5,8 @@ package sql
 import (
 	"github.com/blink-io/x/bun/dialect/sqlitedialect"
 
+	"github.com/glebarez/go-sqlite"
 	"github.com/uptrace/bun/schema"
-	"modernc.org/sqlite"
 )
 
 const (
@@ -22,7 +22,7 @@ func init() {
 	dsnFuncs[dn] = SQLiteDSN
 }
 
-func SQLiteDSN(o *Options) string {
+func SQLiteDSN(o *Options) (string, error) {
 	dsn := o.Host
-	return dsn
+	return dsn, nil
 }

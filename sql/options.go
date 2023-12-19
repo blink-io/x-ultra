@@ -40,6 +40,7 @@ type Options struct {
 	WithOTel        bool
 	Attrs           []attribute.KeyValue
 	dsn             string
+	accessor        string
 }
 
 func setupOptions(o *Options) *Options {

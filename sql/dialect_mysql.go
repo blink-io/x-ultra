@@ -5,6 +5,7 @@ import (
 
 	"github.com/blink-io/x/cast"
 	mysqlparams "github.com/blink-io/x/mysql/params"
+
 	"github.com/go-sql-driver/mysql"
 	"github.com/uptrace/bun/dialect/mysqldialect"
 	"github.com/uptrace/bun/schema"
@@ -23,10 +24,10 @@ func init() {
 	dsnFuncs[dn] = MySQLDSN
 }
 
-func MySQLDSN(o *Options) string {
+func MySQLDSN(o *Options) (string, error) {
 	cc := ToMySQLConfig(o)
 	dsn := cc.FormatDSN()
-	return dsn
+	return dsn, nil
 }
 
 func ToMySQLConfig(o *Options) *mysql.Config {

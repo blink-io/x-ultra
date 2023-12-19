@@ -1,7 +1,7 @@
 package errcode
 
 import (
-	"modernc.org/sqlite"
+	"github.com/glebarez/go-sqlite"
 )
 
 var ErrcodeString = sqlite.ErrorCodeString

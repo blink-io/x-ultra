@@ -8,7 +8,7 @@ import (
 
 type DialectFunc = func() schema.Dialect
 
-type DSNFunc = func(*Options) string
+type DSNFunc = func(*Options) (string, error)
 
 var dialectFuncs = make(map[string]DialectFunc)
 

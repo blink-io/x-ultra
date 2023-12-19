@@ -6,6 +6,7 @@ import (
 	"log/slog"
 	"sync"
 	"text/template"
+	"time"
 
 	"github.com/blink-io/x/locale"
 
@@ -18,6 +19,7 @@ import (
 type (
 	// ib is short for i18n.Bundle
 	ib             = i18n.Bundle
+	Message        = i18n.Message
 	MessageFile    = i18n.MessageFile
 	Localizer      = i18n.Localizer
 	LocalizeConfig = i18n.LocalizeConfig
@@ -25,16 +27,20 @@ type (
 
 	LOption func(*LocalizeConfig)
 	// T is short for translation function
-	T func(string, ...LOption) string
+	T func(messageID string, ops ...LOption) string
 
 	MD map[string]any
 
 	Bundle struct {
 		*ib
-		cc    *ttlcache.Cache[string, T]
-		cache bool
-		fm    template.FuncMap
+		cache   *ttlcache.Cache[string, T]
+		noCache bool
+		funcMap template.FuncMap
 	}
+)
+
+const (
+	defaultTTL = 2 * time.Hour
 )
 
 var (
@@ -47,10 +53,6 @@ var (
 		msg := fmt.Sprintf(format, args...)
 		slog.Info(msg)
 	}
-
-	noopT T = func(s string, option ...LOption) string {
-		return s
-	}
 )
 
 func New(o *Options) *Bundle {
@@ -58,6 +60,7 @@ func New(o *Options) *Bundle {
 	lang := o.Language
 	if lang == language.Und {
 		if l, err := locale.Detect(); err != nil {
+			// Use English as default
 			lang = language.English
 		} else {
 			lang = l
@@ -70,13 +73,13 @@ func New(o *Options) *Bundle {
 	}
 
 	b := &Bundle{
-		ib:    ib,
-		cache: o.Cache,
-		fm:    fm,
+		ib:      ib,
+		noCache: o.Cache,
+		funcMap: fm,
 	}
-	if b.cache {
-		b.cc = ttlcache.New[string, T](
-			ttlcache.WithTTL[string, T](ttlcache.DefaultTTL),
+	if !b.noCache {
+		b.cache = ttlcache.New[string, T](
+			ttlcache.WithTTL[string, T](defaultTTL),
 		)
 	}
 	for _, l := range o.Loaders {
@@ -110,6 +113,10 @@ func (b *Bundle) Languages() []string {
 	return langs
 }
 
+func (b *Bundle) Load(l Loader) error {
+	return l.Load(b)
+}
+
 func (b *Bundle) LoadFromDir(dir string) error {
 	return NewDirLoader(dir).Load(b)
 }
@@ -135,11 +142,16 @@ func (b *Bundle) T(lang string) T {
 }
 
 func doT(b *Bundle, lang string) T {
-	i, ok := b.cc.GetOrSet(lang, L(i18n.NewLocalizer(b.ib, lang)))
-	if ok {
+	if b.noCache {
+		tr := Tr(i18n.NewLocalizer(b.ib, lang))
+		return tr
+	}
+	if i := b.cache.Get(lang); i != nil && !i.IsExpired() {
 		return i.Value()
 	} else {
-		return noopT
+		tr := Tr(i18n.NewLocalizer(b.ib, lang))
+		b.cache.Set(lang, tr, defaultTTL)
+		return tr
 	}
 }
 

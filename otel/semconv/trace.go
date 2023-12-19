@@ -9,6 +9,8 @@ const (
 
 	DBHostPortKey = attribute.Key("db.host_port")
 
+	DBDriverName = attribute.Key("db.driver_name")
+
 	DBRegionKey = attribute.Key("db.region")
 
 	DBClientName = attribute.Key("db.client_name")
