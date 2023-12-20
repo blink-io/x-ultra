@@ -58,7 +58,7 @@ require (
 	github.com/pierrec/lz4/v4 v4.1.19
 	github.com/quic-go/quic-go v0.40.1
 	github.com/redis/go-redis/extra/rediscmd/v9 v9.0.5
-	github.com/redis/go-redis/v9 v9.3.0
+	github.com/redis/go-redis/v9 v9.3.1
 	github.com/redis/rueidis v1.0.25
 	github.com/rs/xid v1.5.0
 	github.com/sanity-io/litter v1.5.5
@@ -113,6 +113,7 @@ require (
 	github.com/go-crypt/crypt v0.2.14
 	github.com/go-kit/log v0.2.1
 	github.com/go-slog/otelslog v0.1.0
+	github.com/gocraft/dbr/v2 v2.7.6
 	github.com/golang-cz/devslog v0.0.8
 	github.com/gorilla/websocket v1.5.1
 	github.com/jackc/puddle/v2 v2.2.1
@@ -131,7 +132,7 @@ require (
 	github.com/rickar/cal/v2 v2.1.13
 	github.com/samber/slog-common v0.13.0
 	github.com/samber/slog-multi v1.0.2
-	github.com/samber/slog-nats v0.1.0
+	github.com/samber/slog-nats v0.1.1
 	github.com/samber/slog-sentry/v2 v2.2.1
 	github.com/samber/slog-syslog v1.0.0
 	github.com/samber/slog-webhook v1.0.0
@@ -220,7 +221,7 @@ require (
 	go.opentelemetry.io/otel/sdk v1.21.0 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
 	go.uber.org/mock v0.3.0 // indirect
-	golang.org/x/exp v0.0.0-20231214170342-aacd6d4b4611 // indirect
+	golang.org/x/exp v0.0.0-20231219180239-dc181d75b848 // indirect
 	golang.org/x/mod v0.14.0 // indirect
 	golang.org/x/sync v0.5.0 // indirect
 	golang.org/x/term v0.15.0 // indirect
@@ -231,7 +232,7 @@ require (
 	lukechampine.com/uint128 v1.3.0 // indirect
 	modernc.org/cc/v3 v3.41.0 // indirect
 	modernc.org/ccgo/v3 v3.16.15 // indirect
-	modernc.org/libc v1.37.6 // indirect
+	modernc.org/libc v1.38.0 // indirect
 	modernc.org/mathutil v1.6.0 // indirect
 	modernc.org/memory v1.7.2 // indirect
 	modernc.org/opt v0.1.3 // indirect

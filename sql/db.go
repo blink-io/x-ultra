@@ -1,10 +1,7 @@
 package sql
 
 import (
-	"database/sql"
-
 	"github.com/uptrace/bun"
-	"github.com/uptrace/bun/schema"
 )
 
 type (
@@ -16,11 +13,6 @@ type (
 		*idb
 	}
 )
-
-func NewFromRawDB(sqlDB *sql.DB, dialect schema.Dialect) (*DB, error) {
-	idb := bun.NewDB(sqlDB, dialect, bun.WithDiscardUnknownColumns())
-	return &DB{idb: idb}, nil
-}
 
 func NewDB(o *Options) (*DB, error) {
 	o = setupOptions(o)
