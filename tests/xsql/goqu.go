@@ -16,7 +16,7 @@ func (l logger) Printf(format string, args ...any) {
 
 var _ goqu.Logger = (logger)(nil)
 
-func handleGoqu(db *goqu.Database) {
+func handleDBQ(db *xsql.DBQ) {
 	db.Logger(logger(func(format string, args ...any) {
 		slog.Default().Info(fmt.Sprintf(format, args...))
 	}))

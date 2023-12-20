@@ -16,8 +16,13 @@ const (
 func init() {
 	dn := DialectSQLite
 	drivers[dn] = &sqlite.Driver{}
-	dialectFuncs[dn] = func() schema.Dialect {
-		return sqlitedialect.New()
+	dialectFuncs[dn] = func(ops ...DOption) schema.Dialect {
+		dopt := applyDOptions(ops...)
+		sops := make([]sqlitedialect.Option, 0)
+		if dopt.loc != nil {
+			sops = append(sops, sqlitedialect.Location(dopt.loc))
+		}
+		return sqlitedialect.New(sops...)
 	}
 	dsnFuncs[dn] = SQLiteDSN
 }

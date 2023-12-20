@@ -20,9 +20,11 @@ func NewDBX(o *Options) (*DBX, error) {
 		return nil, err
 	}
 
-	idb := dbx.NewFromDB(sqlDB, o.Dialect)
+	rdb := dbx.NewFromDB(sqlDB, o.Dialect)
+	rdb.LogFunc = o.Logger
+
 	db := &DBX{
-		idbx: idb,
+		idbx: rdb,
 	}
 	return db, nil
 }

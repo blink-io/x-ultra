@@ -18,7 +18,7 @@ const (
 func init() {
 	dn := DialectMySQL
 	drivers[dn] = &mysql.MySQLDriver{}
-	dialectFuncs[dn] = func() schema.Dialect {
+	dialectFuncs[dn] = func(ops ...DOption) schema.Dialect {
 		return mysqldialect.New()
 	}
 	dsnFuncs[dn] = MySQLDSN

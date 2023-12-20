@@ -23,14 +23,14 @@ func NewDB(o *Options) (*DB, error) {
 		return nil, err
 	}
 
-	idb := bun.NewDB(sqlDB, sd, bun.WithDiscardUnknownColumns())
+	rdb := bun.NewDB(sqlDB, sd, bun.WithDiscardUnknownColumns())
 	if queryHooks := o.QueryHooks; len(queryHooks) > 0 {
 		for _, h := range queryHooks {
-			idb.AddQueryHook(h)
+			rdb.AddQueryHook(h)
 		}
 	}
 
-	return &DB{idb: idb}, nil
+	return &DB{idb: rdb}, nil
 }
 
 func (d *DB) RegisterModel(m any) {

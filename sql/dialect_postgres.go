@@ -20,7 +20,7 @@ const (
 func init() {
 	dn := DialectPostgres
 	drivers[dn] = stdlib.GetDefaultDriver()
-	dialectFuncs[dn] = func() schema.Dialect {
+	dialectFuncs[dn] = func(ops ...DOption) schema.Dialect {
 		return pgdialect.New()
 	}
 	dsnFuncs[dn] = PostgresDSN

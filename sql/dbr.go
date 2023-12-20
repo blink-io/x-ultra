@@ -6,37 +6,42 @@ import (
 )
 
 type (
-	dbrc = dbr.Connection
+	dbrs = dbr.Session
+
+	DBR struct {
+		*dbrs
+	}
 )
 
-type DBR struct {
-	*dbrc
-}
-
 func NewDBR(o *Options) (*DBR, error) {
+	o = setupOptions(o)
+	o.accessor = "dbr"
+
 	sqlDB, err := NewSqlDB(o)
 	if err != nil {
 		return nil, err
 	}
 	var d dbr.Dialect
 	switch o.Dialect {
-	case "mysql":
+	case DialectMySQL:
 		d = dialect.MySQL
-	case "postgres", "pgx":
+	case DialectPostgres:
 		d = dialect.PostgreSQL
-	case "sqlite3", "sqlite":
+	case DialectSQLite:
 		d = dialect.SQLite3
-	case "mssql":
+	case DialectMSSQL:
 		d = dialect.MSSQL
 	default:
 		return nil, dbr.ErrNotSupported
 	}
-	cc := &dbrc{
-		DB:      sqlDB,
-		Dialect: d,
+	cc := &dbr.Connection{
+		DB:            sqlDB,
+		Dialect:       d,
+		EventReceiver: new(dbr.NullEventReceiver),
 	}
+	ss := cc.NewSession(nil)
 	db := &DBR{
-		dbrc: cc,
+		dbrs: ss,
 	}
 	return db, nil
 }

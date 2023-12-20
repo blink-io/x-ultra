@@ -41,7 +41,7 @@ func getPgDBX() *xsql.DBX {
 func getPgGoquDB() *goqu.Database {
 	rdb := getPgSqlDB()
 	db := goqu.New(xsql.DialectPostgres, rdb)
-	handleGoqu(db)
+	handleDBQ(db)
 
 	return db
 }

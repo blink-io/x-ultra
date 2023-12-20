@@ -22,10 +22,12 @@ func New(ops ...Option) *Dialect {
 // Let the developers make the decision.
 func (d *Dialect) AppendTime(b []byte, tm time.Time) []byte {
 	b = append(b, '\'')
-	if d.opt.utc {
-		tm = tm.UTC()
+	if loc := d.opt.loc; loc == nil {
+		tm = tm.Local()
+	} else {
+		tm = tm.In(loc)
 	}
-	b = tm.AppendFormat(b, "2006-01-02 15:04:05.999999-07:00")
+	b = tm.AppendFormat(b, time.RFC3339Nano)
 	b = append(b, '\'')
 	return b
 }
