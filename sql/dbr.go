@@ -21,6 +21,7 @@ func NewDBR(o *Options) (*DBR, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	var d dbr.Dialect
 	switch o.Dialect {
 	case DialectMySQL:
@@ -34,6 +35,7 @@ func NewDBR(o *Options) (*DBR, error) {
 	default:
 		return nil, dbr.ErrNotSupported
 	}
+
 	cc := &dbr.Connection{
 		DB:            sqlDB,
 		Dialect:       d,
@@ -41,6 +43,7 @@ func NewDBR(o *Options) (*DBR, error) {
 	}
 	ss := cc.NewSession(nil)
 	ss.Timeout = DefaultTimeout
+
 	db := &DBR{
 		dbrs: ss,
 	}

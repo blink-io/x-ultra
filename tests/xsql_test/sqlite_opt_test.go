@@ -1,4 +1,4 @@
-package xsql_test_test
+package xsql_test
 
 import (
 	"database/sql"
@@ -21,8 +21,6 @@ func getSqliteSqlDB() *sql.DB {
 
 func getSqliteDB() *xsql.DB {
 	db, err := xsql.NewDB(sqliteOpts)
-	//db.AddQueryHook(logging.Func(log.Printf))
-	//db.AddQueryHook(timing.New())
 
 	if err != nil {
 		panic(err)
@@ -33,7 +31,7 @@ func getSqliteDB() *xsql.DB {
 
 func getSqliteDBX() *xsql.DBX {
 	db, err := xsql.NewDBX(sqliteOpts)
-	//db.AddQueryHook(logging.Func(log.Printf))
+
 	if err != nil {
 		panic(err)
 	}

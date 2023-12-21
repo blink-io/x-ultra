@@ -1,4 +1,4 @@
-package xsql_test_test
+package xsql_test
 
 import (
 	"path/filepath"

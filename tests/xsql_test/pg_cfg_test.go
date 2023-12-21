@@ -1,4 +1,4 @@
-package xsql_test_test
+package xsql_test
 
 import (
 	"os"
@@ -37,9 +37,18 @@ func getPgPwd() string {
 
 func getPgFuncsMap() map[string]string {
 	funcsMap := map[string]string{
-		"version":          "version()",
-		"gen_random_uuid":  "gen_random_uuid()",
-		"current_database": "current_database()",
+		"version":                  "version()",
+		"gen_random_uuid":          "gen_random_uuid()",
+		"current_database":         "current_database()",
+		"inet_client_addr":         "inet_client_addr()",
+		"inet_client_port":         "inet_client_port()",
+		"inet_server_addr":         "inet_server_addr()",
+		"inet_server_port":         "inet_server_port()",
+		"pg_backend_pid":           "pg_backend_pid()",
+		"session_user":             "session_user",
+		"current_user":             "current_user",
+		"pg_conf_load_time":        "pg_conf_load_time()",
+		"pg_postmaster_start_time": "pg_postmaster_start_time()",
 	}
 	return funcsMap
 }

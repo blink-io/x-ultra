@@ -1,4 +1,4 @@
-package xsql_test_test
+package xsql_test
 
 import (
 	"context"
@@ -179,11 +179,11 @@ func TestPg_DBR_Select_Funcs(t *testing.T) {
 	sqlF := "select %s as payload"
 	funcs := getPgFuncsMap()
 
-	for _, fstr := range funcs {
+	for k, fstr := range funcs {
 		ss := fmt.Sprintf(sqlF, fstr)
 		var v string
 		r := sess.QueryRow(ss)
 		require.NoError(t, r.Scan(&v))
-		fmt.Println("PG func payload:  ", v)
+		fmt.Println(k, " => ", v)
 	}
 }
