@@ -23,7 +23,5 @@ func handleDBQ(db *xsql.DBQ) {
 }
 
 func handleDBX(db *xsql.DBX) {
-	db.LogFunc = func(format string, args ...interface{}) {
-		slog.Default().Info(fmt.Sprintf(format, args...))
-	}
+
 }

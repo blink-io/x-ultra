@@ -22,3 +22,7 @@ type Application struct {
 func (Application) TableName() string {
 	return "applications"
 }
+
+func (Application) Table() string {
+	return "applications"
+}

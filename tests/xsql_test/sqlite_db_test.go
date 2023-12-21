@@ -212,3 +212,12 @@ sqlite_version() as verinfo;`
 
 	require.NoError(t, db.Ping(ctx))
 }
+
+func TestSqlite_DBM_Insert_1(t *testing.T) {
+	db := getSqliteDBM()
+
+	r1 := newRandomRecordForApp("dbx")
+
+	err := db.Insert(ctx, r1)
+	require.NoError(t, err)
+}
