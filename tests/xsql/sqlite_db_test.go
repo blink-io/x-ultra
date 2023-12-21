@@ -1,4 +1,4 @@
-package bun
+package xsql_test_test
 
 import (
 	"fmt"
@@ -63,7 +63,7 @@ func TestSqlite_DBR_Select_1(t *testing.T) {
 
 func TestSqlite_Goqu_Select_Funcs(t *testing.T) {
 	//Debug = true
-	db := getSqliteGoquDB()
+	db := getSqliteDBQ()
 
 	sqlF := "select %s as payload"
 	funcs := getSqliteFuncMap()
@@ -78,7 +78,7 @@ func TestSqlite_Goqu_Select_Funcs(t *testing.T) {
 }
 
 func TestSqlite_Goqu_Insert_1(t *testing.T) {
-	db := getSqliteGoquDB()
+	db := getSqliteDBQ()
 
 	r1 := newRandomRecordForApp("goqu")
 	ds := db.From(r1.TableName())

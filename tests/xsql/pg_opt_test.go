@@ -1,10 +1,9 @@
-package bun
+package xsql_test_test
 
 import (
 	"database/sql"
 
 	xsql "github.com/blink-io/x/sql"
-	"github.com/doug-martin/goqu/v9"
 )
 
 func getPgSqlDB() *sql.DB {
@@ -38,9 +37,12 @@ func getPgDBX() *xsql.DBX {
 	return db
 }
 
-func getPgGoquDB() *goqu.Database {
-	rdb := getPgSqlDB()
-	db := goqu.New(xsql.DialectPostgres, rdb)
+func getPgDBQ() *xsql.DBQ {
+	db, err := xsql.NewDBQ(pgOpt)
+	if err != nil {
+		panic(err)
+	}
+
 	handleDBQ(db)
 
 	return db

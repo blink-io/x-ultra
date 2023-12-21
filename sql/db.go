@@ -1,7 +1,13 @@
 package sql
 
 import (
+	"time"
+
 	"github.com/uptrace/bun"
+)
+
+const (
+	DefaultTimeout = 15 * time.Second
 )
 
 type (

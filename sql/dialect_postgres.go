@@ -1,6 +1,8 @@
 package sql
 
 import (
+	"context"
+
 	pgparams "github.com/blink-io/x/postgres/params"
 
 	pgxzap "github.com/jackc/pgx-zap"
@@ -20,10 +22,10 @@ const (
 func init() {
 	dn := DialectPostgres
 	drivers[dn] = stdlib.GetDefaultDriver()
-	dialectFuncs[dn] = func(ops ...DOption) schema.Dialect {
+	dialectCreators[dn] = func(ctx context.Context, ops ...DOption) schema.Dialect {
 		return pgdialect.New()
 	}
-	dsnFuncs[dn] = PostgresDSN
+	dsnCreators[dn] = PostgresDSN
 }
 
 func PostgresDSN(o *Options) (string, error) {

@@ -1,4 +1,4 @@
-package bun
+package xsql_test
 
 import (
 	"time"
@@ -19,8 +19,8 @@ func newRandomRecordForApp(from string) *Application {
 	r.IID = int64(gofakeit.Int32())
 	r.CreatedAt = tnow
 	r.UpdatedAt = tnow
-	r.CreatedBy = xsql.NullString(gofakeit.Name())
-	r.UpdatedBy = xsql.NullString(gofakeit.Name())
-	r.DeletedAt = xsql.NullTime(tnow)
+	r.CreatedBy = xsql.ValidString(gofakeit.Name())
+	r.UpdatedBy = xsql.ValidString(gofakeit.Name())
+	r.DeletedAt = xsql.ValidTime(tnow)
 	return r
 }

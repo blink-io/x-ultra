@@ -1,7 +1,8 @@
-package bun
+package xsql_test_test
 
 import (
 	"path/filepath"
+	"time"
 
 	xsql "github.com/blink-io/x/sql"
 )
@@ -9,8 +10,11 @@ import (
 var sqlitePath = filepath.Join(".", "bun_demo.db")
 
 var sqliteOpts = &xsql.Options{
-	Dialect:     xsql.DialectSQLite,
-	Host:        sqlitePath,
+	Dialect: xsql.DialectSQLite,
+	Host:    sqlitePath,
+	DOptions: []xsql.DOption{
+		xsql.WithLocation(time.Local),
+	},
 	DriverHooks: newDriverHooks(),
 }
 

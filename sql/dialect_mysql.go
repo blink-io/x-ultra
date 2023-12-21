@@ -1,6 +1,7 @@
 package sql
 
 import (
+	"context"
 	"net"
 
 	"github.com/blink-io/x/cast"
@@ -18,10 +19,10 @@ const (
 func init() {
 	dn := DialectMySQL
 	drivers[dn] = &mysql.MySQLDriver{}
-	dialectFuncs[dn] = func(ops ...DOption) schema.Dialect {
+	dialectCreators[dn] = func(ctx context.Context, ops ...DOption) schema.Dialect {
 		return mysqldialect.New()
 	}
-	dsnFuncs[dn] = MySQLDSN
+	dsnCreators[dn] = MySQLDSN
 }
 
 func MySQLDSN(o *Options) (string, error) {

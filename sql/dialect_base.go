@@ -1,19 +1,20 @@
 package sql
 
 import (
+	"context"
 	"database/sql/driver"
 	"time"
 
 	"github.com/uptrace/bun/schema"
 )
 
-type DialectFunc = func(...DOption) schema.Dialect
+type DialectCreator = func(context.Context, ...DOption) schema.Dialect
 
-type DSNFunc = func(*Options) (string, error)
+type DSNCreator = func(*Options) (string, error)
 
-var dialectFuncs = make(map[string]DialectFunc)
+var dialectCreators = make(map[string]DialectCreator)
 
-var dsnFuncs = make(map[string]DSNFunc)
+var dsnCreators = make(map[string]DSNCreator)
 
 var drivers = make(map[string]driver.Driver)
 

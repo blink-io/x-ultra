@@ -40,6 +40,7 @@ func NewDBR(o *Options) (*DBR, error) {
 		EventReceiver: new(dbr.NullEventReceiver),
 	}
 	ss := cc.NewSession(nil)
+	ss.Timeout = DefaultTimeout
 	db := &DBR{
 		dbrs: ss,
 	}

@@ -1,4 +1,4 @@
-package bun
+package xsql_test_test
 
 import (
 	"database/sql"
@@ -43,7 +43,7 @@ func getSqliteDBX() *xsql.DBX {
 	return db
 }
 
-func getSqliteGoquDB() *xsql.DBQ {
+func getSqliteDBQ() *xsql.DBQ {
 	sqlgen.SetTimeLocation(time.Local)
 
 	db, err := xsql.NewDBQ(sqliteOpts)

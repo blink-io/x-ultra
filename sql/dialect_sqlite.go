@@ -3,6 +3,8 @@
 package sql
 
 import (
+	"context"
+
 	"github.com/blink-io/x/bun/dialect/sqlitedialect"
 
 	"github.com/glebarez/go-sqlite"
@@ -16,7 +18,7 @@ const (
 func init() {
 	dn := DialectSQLite
 	drivers[dn] = &sqlite.Driver{}
-	dialectFuncs[dn] = func(ops ...DOption) schema.Dialect {
+	dialectCreators[dn] = func(ctx context.Context, ops ...DOption) schema.Dialect {
 		dopt := applyDOptions(ops...)
 		sops := make([]sqlitedialect.Option, 0)
 		if dopt.loc != nil {
@@ -24,7 +26,7 @@ func init() {
 		}
 		return sqlitedialect.New(sops...)
 	}
-	dsnFuncs[dn] = SQLiteDSN
+	dsnCreators[dn] = SQLiteDSN
 }
 
 func SQLiteDSN(o *Options) (string, error) {

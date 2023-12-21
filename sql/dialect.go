@@ -17,11 +17,12 @@ import (
 func GetDialect(o *Options) (schema.Dialect, *sql.DB, error) {
 	o = setupOptions(o)
 
+	ctx := o.Context
 	dialect := o.Dialect
 
 	var sd schema.Dialect
-	if dlaFunc, ok := dialectFuncs[dialect]; ok {
-		sd = dlaFunc()
+	if dfn, ok := dialectCreators[dialect]; ok {
+		sd = dfn(ctx, o.DOptions...)
 	} else {
 		return nil, nil, fmt.Errorf("unsupoorted dialect: %s", dialect)
 	}
@@ -39,8 +40,9 @@ func NewSqlDB(o *Options) (*sql.DB, error) {
 
 	var dsn string
 	var err error
-	if dsnFunc, ok := dsnFuncs[dialect]; ok {
-		dsn, err = dsnFunc(o)
+	if dfn, ok := dsnCreators[dialect]; ok {
+		dsn, err = dfn(o)
+		o.dsn = dsn
 		if err != nil {
 			return nil, err
 		}

@@ -41,9 +41,10 @@ type Options struct {
 	ClientName      string
 	WithOTel        bool
 	Attrs           []attribute.KeyValue
+	Logger          func(format string, args ...any)
+	DOptions        []DOption
 	dsn             string
 	accessor        string
-	Logger          func(format string, args ...any)
 }
 
 func setupOptions(o *Options) *Options {
@@ -57,6 +58,10 @@ func setupOptions(o *Options) *Options {
 func (o *Options) SetDefaults() {
 	if o == nil {
 		return
+	}
+
+	if o.Context == nil {
+		o.Context = context.Background()
 	}
 	if len(o.Network) == 0 {
 		o.Network = "tcp"

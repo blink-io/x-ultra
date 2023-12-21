@@ -1,4 +1,4 @@
-package bun
+package xsql_test
 
 import (
 	"database/sql"
