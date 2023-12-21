@@ -122,6 +122,7 @@ require (
 	github.com/leonelquinteros/gotext v1.5.2
 	github.com/matryer/is v1.4.1
 	github.com/matttproud/golang_protobuf_extensions/v2 v2.0.0
+	github.com/microsoft/go-mssqldb v1.6.0
 	github.com/orcaman/concurrent-map/v2 v2.0.1
 	github.com/panjf2000/ants/v2 v2.9.0
 	github.com/pashagolub/pgxmock/v3 v3.2.0
@@ -141,6 +142,7 @@ require (
 	github.com/segmentio/encoding v0.4.0
 	github.com/smartystreets/goconvey v1.8.1
 	github.com/sourcegraph/conc v0.3.0
+	github.com/uptrace/bun/dialect/mssqldialect v1.1.16
 	github.com/uptrace/opentelemetry-go-extra/otelutil v0.2.3
 	github.com/uptrace/opentelemetry-go-extra/otelzap v0.2.3
 	github.com/xo/dburl v0.20.0
@@ -176,6 +178,8 @@ require (
 	github.com/go-task/slim-sprig v0.0.0-20230315185526-52ccab3ef572 // indirect
 	github.com/gogo/googleapis v1.4.1 // indirect
 	github.com/gogo/status v1.1.1 // indirect
+	github.com/golang-sql/civil v0.0.0-20220223132316-b832511892a9 // indirect
+	github.com/golang-sql/sqlexp v0.1.0 // indirect
 	github.com/golang/mock v1.6.0 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/golang/snappy v0.0.4 // indirect

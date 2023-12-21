@@ -18,7 +18,7 @@ const (
 func init() {
 	dn := DialectSQLite
 	drivers[dn] = &sqlite.Driver{}
-	dialectCreators[dn] = func(ctx context.Context, ops ...DOption) schema.Dialect {
+	dialectors[dn] = func(ctx context.Context, ops ...DOption) schema.Dialect {
 		dopt := applyDOptions(ops...)
 		sops := make([]sqlitedialect.Option, 0)
 		if dopt.loc != nil {
@@ -26,10 +26,10 @@ func init() {
 		}
 		return sqlitedialect.New(sops...)
 	}
-	dsnCreators[dn] = SQLiteDSN
+	dsnors[dn] = SQLiteDSN
 }
 
-func SQLiteDSN(o *Options) (string, error) {
+func SQLiteDSN(ctx context.Context, o *Options) (string, error) {
 	dsn := o.Host
 	return dsn, nil
 }

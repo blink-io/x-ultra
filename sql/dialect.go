@@ -21,7 +21,7 @@ func GetDialect(o *Options) (schema.Dialect, *sql.DB, error) {
 	dialect := o.Dialect
 
 	var sd schema.Dialect
-	if dfn, ok := dialectCreators[dialect]; ok {
+	if dfn, ok := dialectors[dialect]; ok {
 		sd = dfn(ctx, o.DOptions...)
 	} else {
 		return nil, nil, fmt.Errorf("unsupoorted dialect: %s", dialect)
@@ -37,11 +37,12 @@ func GetDialect(o *Options) (schema.Dialect, *sql.DB, error) {
 
 func NewSqlDB(o *Options) (*sql.DB, error) {
 	dialect := o.Dialect
+	ctx := o.Context
 
 	var dsn string
 	var err error
-	if dfn, ok := dsnCreators[dialect]; ok {
-		dsn, err = dfn(o)
+	if dfn, ok := dsnors[dialect]; ok {
+		dsn, err = dfn(ctx, o)
 		o.dsn = dsn
 		if err != nil {
 			return nil, err

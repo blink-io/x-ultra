@@ -19,13 +19,13 @@ const (
 func init() {
 	dn := DialectMySQL
 	drivers[dn] = &mysql.MySQLDriver{}
-	dialectCreators[dn] = func(ctx context.Context, ops ...DOption) schema.Dialect {
+	dialectors[dn] = func(ctx context.Context, ops ...DOption) schema.Dialect {
 		return mysqldialect.New()
 	}
-	dsnCreators[dn] = MySQLDSN
+	dsnors[dn] = MySQLDSN
 }
 
-func MySQLDSN(o *Options) (string, error) {
+func MySQLDSN(ctx context.Context, o *Options) (string, error) {
 	cc := ToMySQLConfig(o)
 	dsn := cc.FormatDSN()
 	return dsn, nil

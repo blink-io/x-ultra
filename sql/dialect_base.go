@@ -8,19 +8,25 @@ import (
 	"github.com/uptrace/bun/schema"
 )
 
-type DialectCreator = func(context.Context, ...DOption) schema.Dialect
+type (
+	Dsnor = func(context.Context, *Options) (string, error)
 
-type DSNCreator = func(*Options) (string, error)
+	Dialector = func(context.Context, ...DOption) schema.Dialect
 
-var dialectCreators = make(map[string]DialectCreator)
+	dOptions struct {
+		loc *time.Location
+	}
 
-var dsnCreators = make(map[string]DSNCreator)
+	DOption func(*dOptions)
+)
 
-var drivers = make(map[string]driver.Driver)
+var (
+	drivers = make(map[string]driver.Driver)
 
-type dOptions struct {
-	loc *time.Location
-}
+	dsnors = make(map[string]Dsnor)
+
+	dialectors = make(map[string]Dialector)
+)
 
 func applyDOptions(ops ...DOption) *dOptions {
 	opt := new(dOptions)
@@ -29,8 +35,6 @@ func applyDOptions(ops ...DOption) *dOptions {
 	}
 	return opt
 }
-
-type DOption func(*dOptions)
 
 func WithLocation(loc *time.Location) DOption {
 	return func(o *dOptions) {

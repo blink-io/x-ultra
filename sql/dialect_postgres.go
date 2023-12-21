@@ -22,13 +22,13 @@ const (
 func init() {
 	dn := DialectPostgres
 	drivers[dn] = stdlib.GetDefaultDriver()
-	dialectCreators[dn] = func(ctx context.Context, ops ...DOption) schema.Dialect {
+	dialectors[dn] = func(ctx context.Context, ops ...DOption) schema.Dialect {
 		return pgdialect.New()
 	}
-	dsnCreators[dn] = PostgresDSN
+	dsnors[dn] = PostgresDSN
 }
 
-func PostgresDSN(o *Options) (string, error) {
+func PostgresDSN(ctx context.Context, o *Options) (string, error) {
 	cc := ToPGXConfig(o)
 	dsn := stdlib.RegisterConnConfig(cc)
 	return dsn, nil
@@ -58,6 +58,7 @@ func ToPGXConfig(o *Options) *pgx.ConnConfig {
 		// This can be happened
 		panic(err)
 	}
+
 	pgcc.Database = name
 	pgcc.Host = host
 	pgcc.Port = uint16(port)
@@ -71,7 +72,7 @@ func ToPGXConfig(o *Options) *pgx.ConnConfig {
 
 	cc, err := pgx.ParseConfig("")
 	if err != nil {
-		// This can be happened
+		// This can't be happened
 		panic(err)
 	}
 	cc.Config = *pgcc

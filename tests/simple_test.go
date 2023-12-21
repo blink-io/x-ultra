@@ -86,3 +86,12 @@ func TestSprint(t *testing.T) {
 
 	fmt.Println(ss)
 }
+
+func TestTime_Util(t *testing.T) {
+	ntm := time.Now()
+	fmt.Println("Time Now: ", ntm)
+
+	var ztm time.Time
+	require.Equal(t, false, ntm.IsZero())
+	require.Equal(t, true, ztm.IsZero())
+}
