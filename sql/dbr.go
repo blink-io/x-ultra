@@ -33,7 +33,7 @@ func NewDBR(o *Options) (*DBR, error) {
 	case DialectMSSQL:
 		d = dialect.MSSQL
 	default:
-		return nil, dbr.ErrNotSupported
+		return nil, ErrUnsupportedDialect
 	}
 
 	cc := &dbr.Connection{

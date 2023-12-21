@@ -9,7 +9,7 @@ import (
 )
 
 type (
-	Dsnor = func(context.Context, *Options) (string, error)
+	Dsner = func(context.Context, *Options) (string, error)
 
 	Dialector = func(context.Context, ...DOption) schema.Dialect
 
@@ -23,7 +23,7 @@ type (
 var (
 	drivers = make(map[string]driver.Driver)
 
-	dsnors = make(map[string]Dsnor)
+	dsnors = make(map[string]Dsner)
 
 	dialectors = make(map[string]Dialector)
 )

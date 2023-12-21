@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
+	"testing"
 
 	xsql "github.com/blink-io/x/sql"
 	"github.com/blink-io/x/sql/hooks"
@@ -30,7 +31,7 @@ func doGoquInit() {
 	goqu.RegisterDialect(xsql.DialectSQLite, sqlite3.DialectOptions())
 	goqu.RegisterDialect(xsql.DialectPostgres, postgres.DialectOptions())
 	goqu.RegisterDialect(xsql.DialectMySQL, mysql.DialectOptions())
-	fmt.Println("Invoke goqu init")
+	//fmt.Println("Invoke goqu init")
 }
 
 func newDriverHooks() []hooks.Hooks {
@@ -43,4 +44,9 @@ func newDriverHooks() []hooks.Hooks {
 		})))
 	}
 	return drvHooks
+}
+
+func TestSlogDef(t *testing.T) {
+	slog.Default().Warn("Slog Warn Level")
+	slog.Default().Info("Slog Info Level")
 }

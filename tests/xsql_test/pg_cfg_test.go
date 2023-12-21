@@ -1,6 +1,8 @@
 package xsql_test
 
 import (
+	"fmt"
+	"log/slog"
 	"os"
 	"path/filepath"
 	"time"
@@ -20,6 +22,10 @@ var pgOpt = &xsql.Options{
 	ClientName:    "blink-dev",
 	Password:      getPgPwd(),
 	DriverHooks:   newDriverHooks(),
+	Logger: func(format string, args ...any) {
+		msg := fmt.Sprintf(format, args...)
+		slog.Default().Info(msg)
+	},
 }
 
 func getPgPwd() string {

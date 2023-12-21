@@ -11,6 +11,7 @@ import (
 	"github.com/blink-io/x/sql/scany/dbscan"
 	"github.com/blink-io/x/sql/scany/pgxscan"
 	"github.com/doug-martin/goqu/v9"
+	"github.com/go-rel/rel"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/qustavo/dotsql"
 	"github.com/stretchr/testify/require"
@@ -185,5 +186,22 @@ func TestPg_DBR_Select_Funcs(t *testing.T) {
 		r := sess.QueryRow(ss)
 		require.NoError(t, r.Scan(&v))
 		fmt.Println(k, " => ", v)
+	}
+}
+
+func TestPg_DBM_Select_Funcs(t *testing.T) {
+	db := getPgDBM()
+
+	type Result struct {
+		Payload string `db:"payload"`
+	}
+
+	sqlF := "select %s as payload"
+	funcs := getPgFuncsMap()
+	rt := new(Result)
+	for k, v := range funcs {
+		ss := rel.SQL(fmt.Sprintf(sqlF, v))
+		require.NoError(t, db.Find(ctx, rt, ss))
+		fmt.Println(k, "=>", rt.Payload)
 	}
 }

@@ -1,6 +1,8 @@
 package xsql_test
 
 import (
+	"fmt"
+	"log/slog"
 	"path/filepath"
 	"time"
 
@@ -16,6 +18,9 @@ var sqliteOpts = &xsql.Options{
 		xsql.WithLocation(time.Local),
 	},
 	DriverHooks: newDriverHooks(),
+	Logger: func(format string, args ...any) {
+		slog.Info(fmt.Sprintf(format, args...))
+	},
 }
 
 func getSqliteFuncMap() map[string]string {

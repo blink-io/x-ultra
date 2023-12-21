@@ -6,6 +6,7 @@ import (
 
 	"github.com/blink-io/x/sql/generics"
 	"github.com/blink-io/x/sql/scany/dbscan"
+	"github.com/go-rel/rel"
 	"github.com/stretchr/testify/require"
 	"github.com/uptrace/bun"
 )
@@ -14,18 +15,7 @@ func TestSqlite_DBX_Select_Funcs(t *testing.T) {
 	db := getSqliteDBX()
 
 	sqlF := "select %s as payload"
-	funcs := []string{
-		"hex(randomblob(32))",
-		"random()",
-		"sqlite_version()",
-		"total_changes()",
-		`lower("HELLO")`,
-		`upper("hello")`,
-		`length("hello")`,
-		`length("我是世界")`,
-		//`concat("Hello", ",", "World")`,
-	}
-
+	funcs := getSqliteFuncMap()
 	for _, fstr := range funcs {
 		ss := fmt.Sprintf(sqlF, fstr)
 		q := db.NewQuery(ss)
@@ -61,7 +51,7 @@ func TestSqlite_DBR_Select_1(t *testing.T) {
 	}
 }
 
-func TestSqlite_Goqu_Select_Funcs(t *testing.T) {
+func TestSqlite_DBQ_Select_Funcs(t *testing.T) {
 	//Debug = true
 	db := getSqliteDBQ()
 
@@ -77,7 +67,7 @@ func TestSqlite_Goqu_Select_Funcs(t *testing.T) {
 	}
 }
 
-func TestSqlite_Goqu_Insert_1(t *testing.T) {
+func TestSqlite_DBQ_Insert_1(t *testing.T) {
 	db := getSqliteDBQ()
 
 	r1 := newRandomRecordForApp("goqu")
@@ -178,4 +168,47 @@ func TestSqlite_DBScan_2(t *testing.T) {
 	require.NoError(t, err)
 	err = dbscan.ScanOne(rs, rows)
 	require.NoError(t, err)
+}
+
+func TestSqlite_DBM_Select_Funcs(t *testing.T) {
+	db := getSqliteDBM()
+
+	type Result struct {
+		Payload string `db:"payload"`
+	}
+
+	sqlF := "select %s as payload"
+	funcs := getSqliteFuncMap()
+	rt := new(Result)
+	for k, v := range funcs {
+		ss := rel.SQL(fmt.Sprintf(sqlF, v))
+		require.NoError(t, db.Find(ctx, rt, ss))
+		fmt.Println(k, "=>", rt.Payload)
+	}
+}
+
+func TestSqlite_DBM_Select_1(t *testing.T) {
+	db := getSqliteDBM()
+
+	type Result struct {
+		Verinfo  string `db:"verinfo"`
+		Rstr     string `db:"rstr"`
+		SourceID string `db:"source_id"`
+	}
+
+	var rtmap Result
+
+	sqlstr := `select
+random() as rstr,
+sqlite_source_id() as source_id, 
+sqlite_version() as verinfo;`
+
+	err := db.Find(ctx, &rtmap, rel.SQL(sqlstr))
+	require.NoError(t, err)
+
+	fmt.Printf("------------------------------------------------------------\n")
+
+	fmt.Println("Sqlite version: ", rtmap)
+
+	require.NoError(t, db.Ping(ctx))
 }

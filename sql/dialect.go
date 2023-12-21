@@ -14,6 +14,12 @@ import (
 	"github.com/uptrace/bun/schema"
 )
 
+var (
+	ErrUnsupportedDialect = errors.New("unsupported dialect")
+
+	ErrUnsupportedDriver = errors.New("unsupported driver")
+)
+
 func GetDialect(o *Options) (schema.Dialect, *sql.DB, error) {
 	o = setupOptions(o)
 
@@ -24,7 +30,7 @@ func GetDialect(o *Options) (schema.Dialect, *sql.DB, error) {
 	if dfn, ok := dialectors[dialect]; ok {
 		sd = dfn(ctx, o.DOptions...)
 	} else {
-		return nil, nil, fmt.Errorf("unsupoorted dialect: %s", dialect)
+		return nil, nil, ErrUnsupportedDialect
 	}
 
 	db, err := NewSqlDB(o)
@@ -48,14 +54,14 @@ func NewSqlDB(o *Options) (*sql.DB, error) {
 			return nil, err
 		}
 	} else {
-		return nil, fmt.Errorf("unsupoorted dsn for dialect: %s", dialect)
+		return nil, ErrUnsupportedDialect
 	}
 
 	var drv driver.Driver
 	if dd, ok := drivers[dialect]; ok {
 		drv = dd
 	} else {
-		return nil, fmt.Errorf("unsupoorted driver for dialect: %s", dialect)
+		return nil, ErrUnsupportedDriver
 	}
 
 	driverHooks := o.DriverHooks

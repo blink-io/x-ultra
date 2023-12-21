@@ -112,6 +112,11 @@ require (
 	github.com/glebarez/go-sqlite v1.21.2
 	github.com/go-crypt/crypt v0.2.14
 	github.com/go-kit/log v0.2.1
+	github.com/go-rel/mssql v0.12.0
+	github.com/go-rel/mysql v0.11.0
+	github.com/go-rel/postgres v0.11.0
+	github.com/go-rel/rel v0.41.0
+	github.com/go-rel/sqlite3 v0.11.0
 	github.com/go-slog/otelslog v0.1.0
 	github.com/gocraft/dbr/v2 v2.7.6
 	github.com/golang-cz/devslog v0.0.8
@@ -170,11 +175,12 @@ require (
 	github.com/go-crypt/x v0.2.8 // indirect
 	github.com/go-kratos/aegis v0.2.0 // indirect
 	github.com/go-logfmt/logfmt v0.6.0 // indirect
-	github.com/go-logr/logr v1.3.0 // indirect
+	github.com/go-logr/logr v1.4.0 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-playground/form/v4 v4.2.1 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
+	github.com/go-rel/sql v0.16.0 // indirect
 	github.com/go-task/slim-sprig v0.0.0-20230315185526-52ccab3ef572 // indirect
 	github.com/gogo/googleapis v1.4.1 // indirect
 	github.com/gogo/status v1.1.1 // indirect
@@ -204,6 +210,7 @@ require (
 	github.com/mattn/go-sqlite3 v1.14.19 // indirect
 	github.com/nats-io/nkeys v0.4.6 // indirect
 	github.com/nats-io/nuid v1.0.1 // indirect
+	github.com/nxadm/tail v1.4.11 // indirect
 	github.com/pborman/uuid v1.2.1 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
@@ -214,6 +221,7 @@ require (
 	github.com/rogpeppe/go-internal v1.12.0 // indirect
 	github.com/samber/lo v1.39.0 // indirect
 	github.com/segmentio/asm v1.2.0 // indirect
+	github.com/serenize/snaker v0.0.0-20201027110005-a7ad2135616e // indirect
 	github.com/smarty/assertions v1.15.1 // indirect
 	github.com/stretchr/objx v0.5.1 // indirect
 	github.com/tmthrgd/go-hex v0.0.0-20190904060850-447a3041c3bc // indirect

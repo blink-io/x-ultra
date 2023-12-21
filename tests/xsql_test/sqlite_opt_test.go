@@ -63,3 +63,13 @@ func getSqliteDBR() *xsql.DBR {
 
 	return db
 }
+
+func getSqliteDBM() *xsql.DBM {
+	db, err := xsql.NewDBM(sqliteOpts)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return db
+}

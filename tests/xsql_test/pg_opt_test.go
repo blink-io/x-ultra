@@ -57,3 +57,13 @@ func getPgDBR() *xsql.DBR {
 
 	return db
 }
+
+func getPgDBM() *xsql.DBM {
+	db, err := xsql.NewDBM(pgOpt)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return db
+}
