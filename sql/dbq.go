@@ -5,14 +5,12 @@ import (
 	"github.com/doug-martin/goqu/v9/dialect/mysql"
 	"github.com/doug-martin/goqu/v9/dialect/postgres"
 	"github.com/doug-martin/goqu/v9/dialect/sqlite3"
-	"github.com/doug-martin/goqu/v9/dialect/sqlserver"
 )
 
 func init() {
 	goqu.RegisterDialect(DialectPostgres, postgres.DialectOptions())
 	goqu.RegisterDialect(DialectMySQL, mysql.DialectOptions())
 	goqu.RegisterDialect(DialectSQLite, sqlite3.DialectOptions())
-	goqu.RegisterDialect(DialectMSSQL, sqlserver.DialectOptions())
 }
 
 type idbq = goqu.Database

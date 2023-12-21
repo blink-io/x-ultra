@@ -1,6 +1,7 @@
-package xsql_test
+package xsql
 
 import (
+	"context"
 	"fmt"
 	"log/slog"
 	"path/filepath"
@@ -9,18 +10,24 @@ import (
 	xsql "github.com/blink-io/x/sql"
 )
 
+var ctx = context.Background()
+
 var sqlitePath = filepath.Join(".", "bun_demo.db")
 
-var sqliteOpts = &xsql.Options{
-	Dialect: xsql.DialectSQLite,
-	Host:    sqlitePath,
-	DOptions: []xsql.DOption{
-		xsql.WithLocation(time.Local),
-	},
-	DriverHooks: newDriverHooks(),
-	Logger: func(format string, args ...any) {
-		slog.Info(fmt.Sprintf(format, args...))
-	},
+func sqliteOpts() *xsql.Options {
+	var opt = &xsql.Options{
+		Dialect: xsql.DialectSQLite,
+		Host:    sqlitePath,
+		DOptions: []xsql.DOption{
+			xsql.WithLocation(time.Local),
+		},
+		//DriverHooks: newDriverHooks(),
+		Logger: func(format string, args ...any) {
+			msg := fmt.Sprintf(format, args...)
+			slog.Default().With("db", "sqlite").Info(msg, "mode", "test")
+		},
+	}
+	return opt
 }
 
 func getSqliteFuncMap() map[string]string {

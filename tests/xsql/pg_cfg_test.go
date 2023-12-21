@@ -1,8 +1,6 @@
-package xsql_test
+package xsql
 
 import (
-	"fmt"
-	"log/slog"
 	"os"
 	"path/filepath"
 	"time"
@@ -10,22 +8,25 @@ import (
 	xsql "github.com/blink-io/x/sql"
 )
 
-var pgOpt = &xsql.Options{
-	Context:       ctx,
-	Dialect:       xsql.DialectPostgres,
-	Name:          "blink",
-	User:          "blinkbot",
-	Port:          15432,
-	Host:          "192.168.11.179",
-	Loc:           time.Local,
-	ValidationSQL: "SELECT 1;",
-	ClientName:    "blink-dev",
-	Password:      getPgPwd(),
-	DriverHooks:   newDriverHooks(),
-	Logger: func(format string, args ...any) {
-		msg := fmt.Sprintf(format, args...)
-		slog.Default().Info(msg)
-	},
+func pgOpt() *xsql.Options {
+	opt := &xsql.Options{
+		Context:       ctx,
+		Dialect:       xsql.DialectPostgres,
+		Name:          "blink",
+		User:          "blinkbot",
+		Port:          15432,
+		Host:          "192.168.11.179",
+		Loc:           time.Local,
+		ValidationSQL: "SELECT 1;",
+		ClientName:    "blink-dev",
+		Password:      getPgPwd(),
+		DriverHooks:   newDriverHooks(),
+		//Logger: func(format string, args ...any) {
+		//	msg := fmt.Sprintf(format, args...)
+		//	slog.Default().Info(msg)
+		//},
+	}
+	return opt
 }
 
 func getPgPwd() string {

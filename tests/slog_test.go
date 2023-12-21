@@ -9,22 +9,26 @@ import (
 	"testing"
 	"time"
 
+	xsql "github.com/blink-io/x/sql"
+	"github.com/blink-io/x/util/random"
 	"github.com/lmittmann/tint"
 	"gitlab.com/greyxor/slogor"
 )
 
 func TestSlog_1(t *testing.T) {
-	arg1 := slog.String("version", "v1.0.0")
-	arg2 := slog.Int("version", 1234)
-	slog.Info("maa", arg1, arg2)
+	//arg1 := slog.String("version", "v1.0.0")
+	//arg2 := slog.Int("version", 1234)
+	for i := 0; i < 20; i++ {
+		slog.Default().Info("[duration] " + random.String(100))
+	}
 }
 
 func TestErrors_1(t *testing.T) {
-	slog.SetDefault(slog.New(slogor.NewHandler(os.Stderr, &slogor.Options{
-		TimeFormat: time.Stamp,
-		Level:      slog.LevelDebug,
-		ShowSource: false,
-	})))
+	//slog.SetDefault(slog.New(slogor.NewHandler(os.Stderr, &slogor.Options{
+	//	TimeFormat: time.Stamp,
+	//	Level:      slog.LevelDebug,
+	//	ShowSource: false,
+	//})))
 
 	slog.Info("I'm an information message, everything's fine")
 	slog.Warn("I'm a warning, that's ok.")
@@ -84,4 +88,14 @@ func TestCtx_1(t *testing.T) {
 	if t, ok := ctx.Value(ctxKey{}).(time.Time); ok {
 		slog.Info("time.....  ", slog.Time("t", t))
 	}
+}
+
+func TestXsqlLog(t *testing.T) {
+	opt := &xsql.Options{
+		Logger: func(format string, args ...any) {
+			slog.Default().Info(fmt.Sprintf(format, args...))
+		},
+	}
+
+	opt.Logger("hello, %s", "world")
 }

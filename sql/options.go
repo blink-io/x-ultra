@@ -3,8 +3,6 @@ package sql
 import (
 	"context"
 	"crypto/tls"
-	"fmt"
-	"log/slog"
 	"time"
 
 	"github.com/blink-io/x/sql/hooks"
@@ -68,11 +66,6 @@ func (o *Options) SetDefaults() {
 	}
 	if o.Loc == nil {
 		o.Loc = time.Local
-	}
-	if o.Logger == nil {
-		o.Logger = func(format string, args ...any) {
-			slog.Default().Info(fmt.Sprintf(format, args...))
-		}
 	}
 }
 

@@ -7,7 +7,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/go-rel/mssql"
 	"github.com/go-rel/mysql"
 	"github.com/go-rel/postgres"
 	"github.com/go-rel/rel"
@@ -38,8 +37,6 @@ func NewDBM(o *Options) (*DBM, error) {
 		d = postgres.New(sqlDB)
 	case DialectSQLite:
 		d = sqlite3.New(sqlDB)
-	case DialectMSSQL:
-		d = mssql.New(sqlDB)
 	default:
 		return nil, ErrUnsupportedDialect
 	}

@@ -1,4 +1,4 @@
-package xsql_test
+package xsql
 
 import (
 	"database/sql"

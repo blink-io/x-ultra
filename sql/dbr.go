@@ -30,8 +30,6 @@ func NewDBR(o *Options) (*DBR, error) {
 		d = dialect.PostgreSQL
 	case DialectSQLite:
 		d = dialect.SQLite3
-	case DialectMSSQL:
-		d = dialect.MSSQL
 	default:
 		return nil, ErrUnsupportedDialect
 	}

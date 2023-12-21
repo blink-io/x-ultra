@@ -1,7 +1,8 @@
-package xsql_test
+package xsql
 
 import (
 	"fmt"
+	"log/slog"
 	"testing"
 
 	"github.com/blink-io/x/sql/generics"
@@ -16,12 +17,12 @@ func TestSqlite_DBX_Select_Funcs(t *testing.T) {
 
 	sqlF := "select %s as payload"
 	funcs := getSqliteFuncMap()
-	for _, fstr := range funcs {
-		ss := fmt.Sprintf(sqlF, fstr)
+	for k, v := range funcs {
+		ss := fmt.Sprintf(sqlF, v)
 		q := db.NewQuery(ss)
-		var v string
-		require.NoError(t, q.Row(&v))
-		fmt.Println("SQLite func payload:  ", v)
+		var s string
+		require.NoError(t, q.Row(&s))
+		slog.Info("result: ", k, s)
 	}
 }
 
@@ -67,16 +68,29 @@ func TestSqlite_DBQ_Select_Funcs(t *testing.T) {
 	}
 }
 
+func TestSqlite_DBQ_Select_1(t *testing.T) {
+	//Debug = true
+	db := getSqliteDBQ()
+
+	sqlF := "select * from applications"
+
+	var v Application
+
+	_, err := db.ScanStruct(&v, sqlF)
+	require.NoError(t, err)
+	fmt.Println("Record: ", v)
+}
+
 func TestSqlite_DBQ_Insert_1(t *testing.T) {
 	db := getSqliteDBQ()
 
 	r1 := newRandomRecordForApp("goqu")
 	ds := db.From(r1.TableName())
-	//_, err := ds.Insert().Rows(r1).
-	//	Executor().Exec()
-	//require.NoError(t, err)
-	insertSQL, args, _ := ds.Insert().Rows(r1).ToSQL()
-	fmt.Println(insertSQL, args)
+	_, err := ds.Insert().Rows(r1).
+		Executor().Exec()
+	require.NoError(t, err)
+	//insertSQL, args, _ := ds.Insert().Rows(r1).ToSQL()
+	//fmt.Println(insertSQL, args)
 }
 
 func TestSqlite_DB_CreateTable_1(t *testing.T) {

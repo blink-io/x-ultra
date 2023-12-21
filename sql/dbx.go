@@ -22,7 +22,6 @@ func NewDBX(o *Options) (*DBX, error) {
 
 	rdb := dbx.NewFromDB(sqlDB, o.Dialect)
 	rdb.LogFunc = o.Logger
-
 	db := &DBX{
 		idbx: rdb,
 	}
