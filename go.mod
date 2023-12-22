@@ -128,7 +128,7 @@ require (
 	github.com/matttproud/golang_protobuf_extensions/v2 v2.0.0
 	github.com/orcaman/concurrent-map/v2 v2.0.1
 	github.com/panjf2000/ants/v2 v2.9.0
-	github.com/pashagolub/pgxmock/v3 v3.2.0
+	github.com/pashagolub/pgxmock/v3 v3.3.0
 	github.com/philhofer/fwd v1.1.2
 	github.com/pocketbase/dbx v1.10.1
 	github.com/proullon/ramsql v0.1.3
@@ -172,7 +172,7 @@ require (
 	github.com/go-crypt/x v0.2.8 // indirect
 	github.com/go-kratos/aegis v0.2.0 // indirect
 	github.com/go-logfmt/logfmt v0.6.0 // indirect
-	github.com/go-logr/logr v1.4.0 // indirect
+	github.com/go-logr/logr v1.4.1 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-playground/form/v4 v4.2.1 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect

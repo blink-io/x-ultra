@@ -1,4 +1,4 @@
-package xsql
+package sqlite
 
 import (
 	"context"
