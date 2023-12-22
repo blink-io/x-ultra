@@ -102,6 +102,7 @@ require (
 	github.com/allegro/bigcache/v3 v3.1.0
 	github.com/ammario/tlru v0.3.0
 	github.com/apache/thrift v0.19.0
+	github.com/bits-and-blooms/bloom/v3 v3.6.0
 	github.com/brianvoe/gofakeit/v6 v6.26.3
 	github.com/caarlos0/env/v10 v10.0.0
 	github.com/chzyer/readline v1.5.1
@@ -122,6 +123,7 @@ require (
 	github.com/gorilla/websocket v1.5.1
 	github.com/jackc/puddle/v2 v2.2.1
 	github.com/jhump/protoreflect v1.15.4
+	github.com/jonboulle/clockwork v0.4.0
 	github.com/kardianos/osext v0.0.0-20190222173326-2bc1f35cddc0
 	github.com/leonelquinteros/gotext v1.5.2
 	github.com/matryer/is v1.4.1
@@ -159,6 +161,7 @@ require (
 	github.com/ProtonMail/go-mime v0.0.0-20230322103455-7d82a3887f2f // indirect
 	github.com/alicebob/gopher-json v0.0.0-20230218143504-906a9b012302 // indirect
 	github.com/armon/go-radix v1.0.0 // indirect
+	github.com/bits-and-blooms/bitset v1.12.0 // indirect
 	github.com/bufbuild/protocompile v0.7.1 // indirect
 	github.com/cloudflare/circl v1.3.6 // indirect
 	github.com/coreos/go-semver v0.3.1 // indirect
