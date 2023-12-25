@@ -1,5 +1,3 @@
-//go:build misc
-
 package sql
 
 import (
@@ -16,5 +14,29 @@ func B() Builder {
 }
 
 func (d *DB) B() Builder {
+	return B()
+}
+
+func (d *DBX) B() Builder {
+	return B()
+}
+
+func (d *DBQ) B() Builder {
+	return B()
+}
+
+func (d *DBW) B() Builder {
+	return B()
+}
+
+func (d *DBR) B() Builder {
+	return B()
+}
+
+func (d *DBP) B() Builder {
+	return B()
+}
+
+func (d *DBM) B() Builder {
 	return B()
 }

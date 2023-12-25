@@ -33,10 +33,8 @@ func NewDB(o *Options) (*DB, error) {
 	}
 
 	rdb := bun.NewDB(sqlDB, sd, bun.WithDiscardUnknownColumns())
-	if queryHooks := o.QueryHooks; len(queryHooks) > 0 {
-		for _, h := range queryHooks {
-			rdb.AddQueryHook(h)
-		}
+	for _, h := range o.QueryHooks {
+		rdb.AddQueryHook(h)
 	}
 
 	db := &DB{

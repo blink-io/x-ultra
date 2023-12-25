@@ -18,11 +18,11 @@ const (
 func init() {
 	dn := DialectSQLite
 	drivers[dn] = &sqlite.Driver{}
-	dialectors[dn] = SQLiteDialector
+	dialectors[dn] = NewSQLiteDialect
 	dsnors[dn] = SQLiteDSN
 }
 
-func SQLiteDialector(ctx context.Context, ops ...DOption) schema.Dialect {
+func NewSQLiteDialect(ctx context.Context, ops ...DOption) schema.Dialect {
 	dopt := applyDOptions(ops...)
 	sops := make([]sqlitedialect.Option, 0)
 	if dopt.loc != nil {
