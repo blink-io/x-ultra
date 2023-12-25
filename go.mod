@@ -110,6 +110,7 @@ require (
 	github.com/deckarep/golang-set/v2 v2.5.0
 	github.com/doug-martin/goqu/v9 v9.19.0
 	github.com/emicklei/proto v1.13.0
+	github.com/gabriel-vasile/mimetype v1.4.3
 	github.com/glebarez/go-sqlite v1.21.2
 	github.com/go-crypt/crypt v0.2.14
 	github.com/go-kit/log v0.2.1
@@ -121,13 +122,17 @@ require (
 	github.com/gocraft/dbr/v2 v2.7.6
 	github.com/golang-cz/devslog v0.0.8
 	github.com/gorilla/websocket v1.5.1
+	github.com/h2non/filetype v1.1.3
 	github.com/jackc/puddle/v2 v2.2.1
 	github.com/jhump/protoreflect v1.15.4
 	github.com/jonboulle/clockwork v0.4.0
 	github.com/kardianos/osext v0.0.0-20190222173326-2bc1f35cddc0
 	github.com/leonelquinteros/gotext v1.5.2
 	github.com/matryer/is v1.4.1
+	github.com/mattn/go-runewidth v0.0.15
 	github.com/matttproud/golang_protobuf_extensions/v2 v2.0.0
+	github.com/mholt/acmez v1.2.0
+	github.com/microcosm-cc/bluemonday v1.0.23
 	github.com/orcaman/concurrent-map/v2 v2.0.1
 	github.com/panjf2000/ants/v2 v2.9.0
 	github.com/pashagolub/pgxmock/v3 v3.3.0
@@ -137,6 +142,7 @@ require (
 	github.com/qustavo/dotsql v1.2.0
 	github.com/remychantenay/slog-otel v1.2.3
 	github.com/rickar/cal/v2 v2.1.13
+	github.com/russross/blackfriday v1.6.0
 	github.com/samber/slog-common v0.13.0
 	github.com/samber/slog-multi v1.0.2
 	github.com/samber/slog-nats v0.1.1
@@ -150,6 +156,7 @@ require (
 	github.com/uptrace/opentelemetry-go-extra/otelutil v0.2.3
 	github.com/uptrace/opentelemetry-go-extra/otelzap v0.2.3
 	github.com/xo/dburl v0.20.0
+	github.com/yuin/goldmark v1.4.13
 	go.opentelemetry.io/otel v1.21.0
 	go.opentelemetry.io/otel/trace v1.21.0
 	golang.org/x/net v0.19.0
@@ -161,6 +168,7 @@ require (
 	github.com/ProtonMail/go-mime v0.0.0-20230322103455-7d82a3887f2f // indirect
 	github.com/alicebob/gopher-json v0.0.0-20230218143504-906a9b012302 // indirect
 	github.com/armon/go-radix v1.0.0 // indirect
+	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/bits-and-blooms/bitset v1.12.0 // indirect
 	github.com/bufbuild/protocompile v0.7.1 // indirect
 	github.com/cloudflare/circl v1.3.6 // indirect
@@ -171,7 +179,6 @@ require (
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/facebookgo/clock v0.0.0-20150410010913-600d898af40a // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
-	github.com/gabriel-vasile/mimetype v1.4.3 // indirect
 	github.com/go-crypt/x v0.2.8 // indirect
 	github.com/go-kratos/aegis v0.2.0 // indirect
 	github.com/go-logfmt/logfmt v0.6.0 // indirect
@@ -191,6 +198,7 @@ require (
 	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/google/pprof v0.0.0-20231212022811-ec68065c825e // indirect
 	github.com/gopherjs/gopherjs v1.17.2 // indirect
+	github.com/gorilla/css v1.0.0 // indirect
 	github.com/gorilla/mux v1.8.1 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0 // indirect
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0 // indirect
@@ -216,6 +224,7 @@ require (
 	github.com/quic-go/qpack v0.4.0 // indirect
 	github.com/quic-go/qtls-go1-20 v0.4.1 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
+	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/robfig/cron v1.2.0 // indirect
 	github.com/rogpeppe/go-internal v1.12.0 // indirect
 	github.com/samber/lo v1.39.0 // indirect
