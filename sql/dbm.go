@@ -13,16 +13,21 @@ import (
 	"github.com/go-rel/sqlite3"
 )
 
+const (
+	AccessorDBM = "dbm"
+)
+
 type (
 	idbm = rel.Repository
 	DBM  struct {
 		idbm
+		accessor string
 	}
 )
 
 func NewDBM(o *Options) (*DBM, error) {
 	o = setupOptions(o)
-	o.accessor = "dbm"
+	o.accessor = AccessorDBM
 
 	sqlDB, err := NewSqlDB(o)
 	if err != nil {
@@ -43,15 +48,20 @@ func NewDBM(o *Options) (*DBM, error) {
 
 	rdb := rel.New(d)
 	if o.Logger != nil {
-		rdb.Instrumentation(DBMLogger(o.Logger))
+		rdb.Instrumentation(dbmLogger(o.Logger))
 	}
 	db := &DBM{
-		idbm: rdb,
+		idbm:     rdb,
+		accessor: o.accessor,
 	}
 	return db, nil
 }
 
-func DBMLogger(logger func(format string, args ...any)) rel.Instrumenter {
+func (d *DBM) Accessor() string {
+	return d.accessor
+}
+
+func dbmLogger(logger func(format string, args ...any)) rel.Instrumenter {
 	return func(ctx context.Context, op string, message string, args ...interface{}) func(err error) {
 		if strings.HasPrefix(op, "rel-") {
 			return func(error) {}

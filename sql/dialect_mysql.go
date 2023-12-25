@@ -3,6 +3,7 @@ package sql
 import (
 	"context"
 	"net"
+	"time"
 
 	"github.com/blink-io/x/cast"
 	mysqlparams "github.com/blink-io/x/mysql/params"
@@ -43,6 +44,10 @@ func ToMySQLConfig(o *Options) *mysql.Config {
 	loc := o.Loc
 	collation := o.Collation
 	params := o.Params
+
+	if loc == nil {
+		loc = time.Local
+	}
 	if params == nil {
 		params = make(map[string]string)
 	}

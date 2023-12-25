@@ -2,6 +2,8 @@ package sqlite
 
 import (
 	"database/sql"
+	"log"
+	"os"
 	"time"
 
 	xsql "github.com/blink-io/x/sql"
@@ -62,6 +64,28 @@ func getSqliteDBR() *xsql.DBR {
 
 func getSqliteDBM() *xsql.DBM {
 	db, err := xsql.NewDBM(sqliteOpts())
+
+	if err != nil {
+		panic(err)
+	}
+
+	return db
+}
+
+func getSqliteDBP() *xsql.DBP {
+	db, err := xsql.NewDBP(sqliteOpts())
+
+	if err != nil {
+		panic(err)
+	}
+
+	db.TraceOn("[gorp]", log.New(os.Stdout, "dbp:", log.Lmicroseconds))
+
+	return db
+}
+
+func getSqliteDBW() *xsql.DBW {
+	db, err := xsql.NewDBW(sqliteOpts())
 
 	if err != nil {
 		panic(err)

@@ -23,7 +23,7 @@ func Test_Loader_1(t *testing.T) {
 	for _, lang := range langs {
 		tr := i18n.GetT(lang)
 
-		msg := tr("hello", i18n.MD{"Name": "兜兜"}.O())
+		msg := tr("hello", i18n.MD{"Accessor": "兜兜"}.O())
 		fmt.Printf("msg: %s\n", msg)
 	}
 }
@@ -52,7 +52,7 @@ func TestBytesLoader_1(t *testing.T) {
 		i18n.NewBytesLoader(apath, bytes).Load(bundle),
 	)
 	tr := i18n.GetT("zh-Hans")
-	msg := tr("hello", i18n.MD{"Name": "兜兜", "PhoneCount": 18}.O())
+	msg := tr("hello", i18n.MD{"Accessor": "兜兜", "PhoneCount": 18}.O())
 	fmt.Println("translated:  ", msg)
 }
 

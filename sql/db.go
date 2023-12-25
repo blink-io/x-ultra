@@ -7,6 +7,8 @@ import (
 )
 
 const (
+	AccessorDB = "db(bun)"
+
 	DefaultTimeout = 15 * time.Second
 )
 
@@ -17,12 +19,13 @@ type (
 
 	DB struct {
 		*idb
+		accessor string
 	}
 )
 
 func NewDB(o *Options) (*DB, error) {
 	o = setupOptions(o)
-	o.accessor = "bun " + bun.Version()
+	o.accessor = AccessorDB
 
 	sd, sqlDB, err := GetDialect(o)
 	if err != nil {
@@ -36,7 +39,16 @@ func NewDB(o *Options) (*DB, error) {
 		}
 	}
 
-	return &DB{idb: rdb}, nil
+	db := &DB{
+		idb:      rdb,
+		accessor: o.accessor,
+	}
+
+	return db, nil
+}
+
+func (d *DB) Accessor() string {
+	return d.accessor
 }
 
 func (d *DB) RegisterModel(m any) {

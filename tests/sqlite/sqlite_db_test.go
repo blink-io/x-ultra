@@ -4,9 +4,12 @@ import (
 	"fmt"
 	"log/slog"
 	"testing"
+	"time"
 
+	"github.com/blink-io/x/id"
 	"github.com/blink-io/x/sql/generics"
 	"github.com/blink-io/x/sql/scany/dbscan"
+	"github.com/brianvoe/gofakeit/v6"
 	"github.com/go-rel/rel"
 	"github.com/stretchr/testify/require"
 	"github.com/uptrace/bun"
@@ -35,20 +38,29 @@ func TestSqlite_DBX_Insert_1(t *testing.T) {
 	require.NoError(t, err)
 }
 
-func TestSqlite_DBR_Select_1(t *testing.T) {
+func TestSqlite_DBR_Insert_1(t *testing.T) {
 	db := getSqliteDBR()
 
-	sess := db.NewSession(nil)
+	r1 := newRandomRecordForApp("dbr")
+	_, err := db.InsertInto(r1.Table()).
+		Columns(r1.Columns()...).
+		Record(r1).
+		Exec()
+	require.NoError(t, err)
+}
+
+func TestSqlite_DBR_Select_Funcs(t *testing.T) {
+	db := getSqliteDBR()
 
 	sqlF := "select %s as payload"
 	funcs := getSqliteFuncMap()
 
-	for _, fstr := range funcs {
-		ss := fmt.Sprintf(sqlF, fstr)
-		var v string
-		r := sess.QueryRow(ss)
-		require.NoError(t, r.Scan(&v))
-		fmt.Println("SQLite func payload:  ", v)
+	for k, v := range funcs {
+		ss := fmt.Sprintf(sqlF, v)
+		var rt string
+		r := db.QueryRow(ss)
+		require.NoError(t, r.Scan(&rt))
+		fmt.Println(k, "=>", rt)
 	}
 }
 
@@ -84,13 +96,23 @@ func TestSqlite_DBQ_Select_1(t *testing.T) {
 func TestSqlite_DBQ_Insert_1(t *testing.T) {
 	db := getSqliteDBQ()
 
-	r1 := newRandomRecordForApp("goqu")
+	r1 := newRandomRecordForApp("dbq")
 	ds := db.From(r1.TableName())
 	_, err := ds.Insert().Rows(r1).
 		Executor().Exec()
 	require.NoError(t, err)
 	//insertSQL, args, _ := ds.Insert().Rows(r1).ToSQL()
 	//fmt.Println(insertSQL, args)
+}
+
+func TestSqlite_DBQ_Insert_SQLGen(t *testing.T) {
+	db := getSqliteDBQ()
+
+	r1 := newRandomRecordForApp("dbq")
+	ds := db.From(r1.TableName())
+
+	insertSQL, args, _ := ds.Insert().Rows(r1).ToSQL()
+	fmt.Println(insertSQL, args)
 }
 
 func TestSqlite_DB_CreateTable_1(t *testing.T) {
@@ -230,8 +252,80 @@ sqlite_version() as verinfo;`
 func TestSqlite_DBM_Insert_1(t *testing.T) {
 	db := getSqliteDBM()
 
-	r1 := newRandomRecordForApp("dbx")
+	r1 := newRandomRecordForApp(db.Accessor())
 
 	err := db.Insert(ctx, r1)
 	require.NoError(t, err)
+}
+
+func TestSqlite_DBP_Insert_1(t *testing.T) {
+	db := getSqliteDBP()
+	db.AddTableWithName(Application{}, "applications").SetKeys(false, "ID")
+
+	r1 := newRandomRecordForApp("dbp")
+
+	err := db.Insert(r1)
+	require.NoError(t, err)
+}
+
+func TestSqlite_DBP_Select_1(t *testing.T) {
+	db := getSqliteDBP()
+
+	var rt = new(Application)
+
+	sqlF := "select * from applications limit 1"
+
+	err1 := db.SelectOne(rt, sqlF)
+	require.NoError(t, err1)
+	fmt.Println("Result => ", rt)
+}
+
+func TestSqlite_DBP_Select_Funcs(t *testing.T) {
+	db := getSqliteDBP()
+
+	sqlF := "select %s as payload"
+	funcs := getSqliteFuncMap()
+
+	for k, v := range funcs {
+		ss := fmt.Sprintf(sqlF, v)
+		rt, err1 := db.SelectNullStr(ss)
+		require.NoError(t, err1)
+		fmt.Println(k, "=>", rt.String)
+	}
+}
+
+func TestSqlite_DBW_Insert_1(t *testing.T) {
+	db := getSqliteDBW()
+
+	sql := "insert into applications (id, iid, name,status, code, type, created_at, updated_at) values ($1,$2,$3,$4,$5,$6,$7,$8)"
+
+	args := []any{
+		id.ShortUUID(),
+		gofakeit.Int32(),
+		"from-" + db.Accessor() + "-" + gofakeit.Name(),
+		"ok",
+		"001-" + id.ShortID(),
+		"type-01",
+		time.Now(),
+		time.Now(),
+	}
+	//r1 := newRandomRecordForApp("dbp")
+
+	_, err := db.ExecContext(ctx, sql, args...)
+	require.NoError(t, err)
+}
+
+func TestSqlite_DBW_Select_Funcs(t *testing.T) {
+	db := getSqliteDBW()
+
+	sqlF := "select %s as payload"
+	funcs := getSqliteFuncMap()
+
+	for k, v := range funcs {
+		ss := fmt.Sprintf(sqlF, v)
+		var rt string
+		err1 := db.GetContext(ctx, &rt, ss)
+		require.NoError(t, err1)
+		fmt.Println(k, "=>", rt)
+	}
 }

@@ -4,16 +4,22 @@ import (
 	"github.com/pocketbase/dbx"
 )
 
+const (
+	AccessorDBX = "dbx"
+)
+
 type (
 	idbx = dbx.DB
-	DBX  struct {
+
+	DBX struct {
 		*idbx
+		accessor string
 	}
 )
 
 func NewDBX(o *Options) (*DBX, error) {
 	o = setupOptions(o)
-	o.accessor = "dbx"
+	o.accessor = AccessorDBX
 
 	sqlDB, err := NewSqlDB(o)
 	if err != nil {
@@ -23,7 +29,12 @@ func NewDBX(o *Options) (*DBX, error) {
 	rdb := dbx.NewFromDB(sqlDB, o.Dialect)
 	rdb.LogFunc = o.Logger
 	db := &DBX{
-		idbx: rdb,
+		idbx:     rdb,
+		accessor: o.accessor,
 	}
 	return db, nil
+}
+
+func (d *DBX) Accessor() string {
+	return d.accessor
 }

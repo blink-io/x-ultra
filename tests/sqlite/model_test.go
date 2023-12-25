@@ -26,3 +26,19 @@ func (Application) TableName() string {
 func (Application) Table() string {
 	return "applications"
 }
+
+func (Application) Columns() []string {
+	return columns
+}
+
+var columns = []string{
+	"id",
+	"iid",
+	"status",
+	"name",
+	"code",
+	"type",
+	"created_at",
+	"updated_at",
+	"deleted_at",
+}

@@ -53,7 +53,8 @@ type Generator func() string
 var _ bun.BeforeAppendModelHook = (*Model)(nil)
 
 type Model struct {
-	ig        Generator // ID generator for a single model
+	// ID generator for a single model
+	ig        Generator `bun:"-" db:"-" json:"-" toml:"-" yaml:"-" msgpack:"-"`
 	ID        string    `bun:"id,pk,type:varchar(60)" db:"id" json:"id,omitempty" toml:"id,omitempty" yaml:"id,omitempty" msgpack:"id,omitempty"`
 	CreatedAt time.Time `bun:"created_at,notnull,skipupdate" db:"created_at" json:"created_at,omitempty" toml:"created_at,omitempty" yaml:"created_at,omitempty" msgpack:"created_at,omitempty"`
 	UpdatedAt time.Time `bun:"updated_at,notnull" db:"updated_at" json:"updated_at,omitempty" toml:"updated_at,omitempty" yaml:"updated_at,omitempty" msgpack:"updated_at,omitempty"`

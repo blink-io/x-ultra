@@ -1,21 +1,25 @@
 package sql
 
 import (
+	"github.com/blink-io/x/sql/dbr/dialect"
+
 	"github.com/gocraft/dbr/v2"
-	"github.com/gocraft/dbr/v2/dialect"
 )
 
+const AccessorDBR = "dbr"
+
 type (
-	dbrs = dbr.Session
+	idbr = dbr.Session
 
 	DBR struct {
-		*dbrs
+		*idbr
+		accessor string
 	}
 )
 
 func NewDBR(o *Options) (*DBR, error) {
 	o = setupOptions(o)
-	o.accessor = "dbr"
+	o.accessor = AccessorDBR
 
 	sqlDB, err := NewSqlDB(o)
 	if err != nil {
@@ -27,7 +31,7 @@ func NewDBR(o *Options) (*DBR, error) {
 	case DialectMySQL:
 		d = dialect.MySQL
 	case DialectPostgres:
-		d = dialect.PostgreSQL
+		d = dialect.Postgres
 	case DialectSQLite:
 		d = dialect.SQLite3
 	default:
@@ -39,11 +43,16 @@ func NewDBR(o *Options) (*DBR, error) {
 		Dialect:       d,
 		EventReceiver: new(dbr.NullEventReceiver),
 	}
-	ss := cc.NewSession(nil)
-	ss.Timeout = DefaultTimeout
+	rdb := cc.NewSession(nil)
+	rdb.Timeout = DefaultTimeout
 
 	db := &DBR{
-		dbrs: ss,
+		idbr:     rdb,
+		accessor: o.accessor,
 	}
 	return db, nil
+}
+
+func (d *DBR) Accessor() string {
+	return d.accessor
 }

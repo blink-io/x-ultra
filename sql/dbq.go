@@ -7,21 +7,28 @@ import (
 	"github.com/doug-martin/goqu/v9/dialect/sqlite3"
 )
 
+const (
+	AccessorDBQ = "dbq"
+)
+
 func init() {
 	goqu.RegisterDialect(DialectPostgres, postgres.DialectOptions())
 	goqu.RegisterDialect(DialectMySQL, mysql.DialectOptions())
 	goqu.RegisterDialect(DialectSQLite, sqlite3.DialectOptions())
 }
 
-type idbq = goqu.Database
+type (
+	idbq = goqu.Database
 
-type DBQ struct {
-	*idbq
-}
+	DBQ struct {
+		*idbq
+		accessor string
+	}
+)
 
 func NewDBQ(o *Options) (*DBQ, error) {
 	o = setupOptions(o)
-	o.accessor = "dbq"
+	o.accessor = AccessorDBQ
 
 	sqlDB, err := NewSqlDB(o)
 	if err != nil {
@@ -30,17 +37,19 @@ func NewDBQ(o *Options) (*DBQ, error) {
 
 	rdb := goqu.New(o.Dialect, sqlDB)
 	if o.Logger != nil {
-		rdb.Logger(dbqLogger(o.Logger))
+		rdb.Logger(PrintfLogger(o.Logger))
+	}
+	if o.Loc != nil {
+		goqu.SetTimeLocation(o.Loc)
 	}
 
 	db := &DBQ{
-		idbq: rdb,
+		idbq:     rdb,
+		accessor: o.accessor,
 	}
 	return db, nil
 }
 
-type dbqLogger func(format string, args ...any)
-
-func (l dbqLogger) Printf(format string, args ...any) {
-	l(format, args)
+func (d *DBQ) Accessor() string {
+	return d.accessor
 }
