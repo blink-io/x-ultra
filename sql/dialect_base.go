@@ -17,6 +17,7 @@ type (
 		loc *time.Location
 	}
 
+	// DOption defines option for dialect
 	DOption func(*dOptions)
 )
 

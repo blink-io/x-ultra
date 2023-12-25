@@ -26,6 +26,7 @@ func sqliteOpts() *xsql.Options {
 			msg := fmt.Sprintf(format, args...)
 			slog.Default().With("db", "sqlite").Info(msg, "mode", "test")
 		},
+		Loc: time.Local,
 	}
 	return opt
 }

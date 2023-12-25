@@ -20,10 +20,12 @@ const (
 func init() {
 	dn := DialectMySQL
 	drivers[dn] = &mysql.MySQLDriver{}
-	dialectors[dn] = func(ctx context.Context, ops ...DOption) schema.Dialect {
-		return mysqldialect.New()
-	}
+	dialectors[dn] = MySQLDialector
 	dsnors[dn] = MySQLDSN
+}
+
+func MySQLDialector(ctx context.Context, ops ...DOption) schema.Dialect {
+	return mysqldialect.New()
 }
 
 func MySQLDSN(ctx context.Context, o *Options) (string, error) {

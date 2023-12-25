@@ -4,11 +4,8 @@ import (
 	"database/sql"
 	"log"
 	"os"
-	"time"
 
 	xsql "github.com/blink-io/x/sql"
-
-	"github.com/doug-martin/goqu/v9/sqlgen"
 )
 
 func getSqliteSqlDB() *sql.DB {
@@ -42,8 +39,6 @@ func getSqliteDBX() *xsql.DBX {
 }
 
 func getSqliteDBQ() *xsql.DBQ {
-	sqlgen.SetTimeLocation(time.Local)
-
 	db, err := xsql.NewDBQ(sqliteOpts())
 	if err != nil {
 		panic(err)

@@ -18,15 +18,17 @@ const (
 func init() {
 	dn := DialectSQLite
 	drivers[dn] = &sqlite.Driver{}
-	dialectors[dn] = func(ctx context.Context, ops ...DOption) schema.Dialect {
-		dopt := applyDOptions(ops...)
-		sops := make([]sqlitedialect.Option, 0)
-		if dopt.loc != nil {
-			sops = append(sops, sqlitedialect.Location(dopt.loc))
-		}
-		return sqlitedialect.New(sops...)
-	}
+	dialectors[dn] = SQLiteDialector
 	dsnors[dn] = SQLiteDSN
+}
+
+func SQLiteDialector(ctx context.Context, ops ...DOption) schema.Dialect {
+	dopt := applyDOptions(ops...)
+	sops := make([]sqlitedialect.Option, 0)
+	if dopt.loc != nil {
+		sops = append(sops, sqlitedialect.Location(dopt.loc))
+	}
+	return sqlitedialect.New(sops...)
 }
 
 func SQLiteDSN(ctx context.Context, o *Options) (string, error) {

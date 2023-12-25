@@ -22,10 +22,12 @@ const (
 func init() {
 	dn := DialectPostgres
 	drivers[dn] = stdlib.GetDefaultDriver()
-	dialectors[dn] = func(ctx context.Context, ops ...DOption) schema.Dialect {
-		return pgdialect.New()
-	}
+	dialectors[dn] = PostgresDialector
 	dsnors[dn] = PostgresDSN
+}
+
+func PostgresDialector(ctx context.Context, ops ...DOption) schema.Dialect {
+	return pgdialect.New()
 }
 
 func PostgresDSN(ctx context.Context, o *Options) (string, error) {
