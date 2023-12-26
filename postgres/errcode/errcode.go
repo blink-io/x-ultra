@@ -2,6 +2,7 @@ package errcode
 
 // https://www.postgresql.org/docs/current/errcodes-appendix.html
 // "github.com/jackc/pgerrcode"
+// Source code from https://github.com/jackc/pgerrcode/blob/master/errcode.go
 // See gen.rb for script that can convert the error code table to Go code.
 
 const (

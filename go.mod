@@ -104,12 +104,15 @@ require (
 	github.com/apache/thrift v0.19.0
 	github.com/bits-and-blooms/bloom/v3 v3.6.0
 	github.com/brianvoe/gofakeit/v6 v6.26.3
+	github.com/bwmarrin/snowflake v0.3.0
 	github.com/caarlos0/env/v10 v10.0.0
 	github.com/chzyer/readline v1.5.1
 	github.com/dchest/siphash v1.2.3
 	github.com/deckarep/golang-set/v2 v2.5.0
 	github.com/doug-martin/goqu/v9 v9.19.0
 	github.com/emicklei/proto v1.13.0
+	github.com/exaring/otelpgx v0.5.2
+	github.com/expr-lang/expr v1.15.7
 	github.com/gabriel-vasile/mimetype v1.4.3
 	github.com/glebarez/go-sqlite v1.21.2
 	github.com/go-crypt/crypt v0.2.14
@@ -124,6 +127,7 @@ require (
 	github.com/golang-cz/devslog v0.0.8
 	github.com/gorilla/websocket v1.5.1
 	github.com/h2non/filetype v1.1.3
+	github.com/jackc/chunkreader/v2 v2.0.1
 	github.com/jackc/puddle/v2 v2.2.1
 	github.com/jhump/protoreflect v1.15.4
 	github.com/jmoiron/sqlx v1.3.5
@@ -135,6 +139,7 @@ require (
 	github.com/matttproud/golang_protobuf_extensions/v2 v2.0.0
 	github.com/mholt/acmez v1.2.0
 	github.com/microcosm-cc/bluemonday v1.0.26
+	github.com/montanaflynn/stats v0.7.1
 	github.com/orcaman/concurrent-map/v2 v2.0.1
 	github.com/panjf2000/ants/v2 v2.9.0
 	github.com/pashagolub/pgxmock/v3 v3.3.0
@@ -145,16 +150,18 @@ require (
 	github.com/remychantenay/slog-otel v1.2.3
 	github.com/rickar/cal/v2 v2.1.13
 	github.com/russross/blackfriday v1.6.0
-	github.com/samber/slog-common v0.13.0
+	github.com/samber/slog-common v0.15.0
 	github.com/samber/slog-multi v1.0.2
 	github.com/samber/slog-nats v0.1.1
-	github.com/samber/slog-sentry/v2 v2.2.1
+	github.com/samber/slog-sentry/v2 v2.3.0
 	github.com/samber/slog-syslog v1.0.0
 	github.com/samber/slog-webhook v1.0.0
-	github.com/samber/slog-zap/v2 v2.1.0
+	github.com/samber/slog-zap/v2 v2.2.0
 	github.com/segmentio/encoding v0.4.0
+	github.com/shopspring/decimal v1.3.1
 	github.com/smartystreets/goconvey v1.8.1
 	github.com/sourcegraph/conc v0.3.0
+	github.com/thanhpk/randstr v1.0.6
 	github.com/uptrace/opentelemetry-go-extra/otelutil v0.2.3
 	github.com/uptrace/opentelemetry-go-extra/otelzap v0.2.3
 	github.com/xo/dburl v0.20.0
@@ -244,7 +251,7 @@ require (
 	go.opentelemetry.io/otel/sdk v1.21.0 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
 	go.uber.org/mock v0.4.0 // indirect
-	golang.org/x/exp v0.0.0-20231219180239-dc181d75b848 // indirect
+	golang.org/x/exp v0.0.0-20231226003508-02704c960a9b // indirect
 	golang.org/x/mod v0.14.0 // indirect
 	golang.org/x/sync v0.5.0 // indirect
 	golang.org/x/term v0.15.0 // indirect
