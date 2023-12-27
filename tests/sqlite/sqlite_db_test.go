@@ -10,7 +10,10 @@ import (
 	"github.com/blink-io/x/sql/generics"
 	"github.com/blink-io/x/sql/scany/dbscan"
 	"github.com/brianvoe/gofakeit/v6"
+	"github.com/doug-martin/goqu/v9"
 	"github.com/go-rel/rel"
+	"github.com/go-rel/rel/where"
+	"github.com/sanity-io/litter"
 	"github.com/stretchr/testify/require"
 	"github.com/uptrace/bun"
 )
@@ -64,6 +67,19 @@ func TestSqlite_DBR_Select_Funcs(t *testing.T) {
 	}
 }
 
+func TestSqlite_DBR_Select_1(t *testing.T) {
+	db := getSqliteDBR()
+
+	rt := new(Application)
+
+	_, err := db.Select("*").From(rt.Table()).
+		Where("type like ?", "%type-01%").
+		Where("? = ?", 1, 1).Load(rt)
+	require.NoError(t, err)
+	fmt.Println("Result ==================>")
+	litter.Dump(rt)
+}
+
 func TestSqlite_DBQ_Select_Funcs(t *testing.T) {
 	//Debug = true
 	db := getSqliteDBQ()
@@ -84,13 +100,29 @@ func TestSqlite_DBQ_Select_1(t *testing.T) {
 	//Debug = true
 	db := getSqliteDBQ()
 
-	sqlF := "select * from applications"
+	sqlF := "select * from applications where type like ? limit 1"
 
 	var v Application
 
-	_, err := db.ScanStruct(&v, sqlF)
+	_, err := db.ScanStruct(&v, sqlF, "%type-01%")
 	require.NoError(t, err)
 	fmt.Println("Record: ", v)
+}
+
+func TestSqlite_DBQ_Select_2(t *testing.T) {
+	//Debug = true
+	db := getSqliteDBQ()
+
+	ds := db.From("applications")
+
+	var rt = new(Application)
+
+	sel := ds.Select(ToAnySlice[string](appColumns)...).Where(goqu.L("type like ?", "%type-01%"))
+
+	_, err := sel.ScanStruct(rt)
+	require.NoError(t, err)
+	fmt.Println("Result ==================>")
+	litter.Dump(rt)
 }
 
 func TestSqlite_DBQ_Insert_1(t *testing.T) {
@@ -163,13 +195,13 @@ func TestSqlite_DB_BulkInsert_1(t *testing.T) {
 func TestSqlite_DB_SelectModel_1(t *testing.T) {
 	db := getSqliteDB()
 
-	qm := &Application{
-		Status: "status3",
-	}
-	_, err := db.NewSelect().Model(qm).
-		Where("status = ?", "status3").
-		Exec(ctx)
+	rt := new(Application)
+
+	err := db.NewSelect().Model(rt).
+		Where("type like ?", "%type-01%").
+		Scan(ctx)
 	require.NoError(t, err)
+	litter.Dump(rt)
 }
 
 func TestSqlite_DB_SelectModel_2(t *testing.T) {
@@ -249,6 +281,26 @@ sqlite_version() as verinfo;`
 	require.NoError(t, db.Ping(ctx))
 }
 
+func TestSqlite_DBM_Select_2(t *testing.T) {
+	db := getSqliteDBM()
+	rt := new(Application)
+
+	sqlF := "select * from applications where type like ? limit 1"
+	ss := rel.SQL(sqlF, "%type-01%")
+	require.NoError(t, db.Find(ctx, rt, ss))
+	fmt.Println("Result ==================>")
+	litter.Dump(rt)
+}
+
+func TestSqlite_DBM_Select_3(t *testing.T) {
+	db := getSqliteDBM()
+	rt := new(Application)
+
+	require.NoError(t, db.Find(ctx, rt, where.Like("type", "%type-01%")))
+	fmt.Println("Result ==================>")
+	litter.Dump(rt)
+}
+
 func TestSqlite_DBM_Insert_1(t *testing.T) {
 	db := getSqliteDBM()
 
@@ -273,11 +325,12 @@ func TestSqlite_DBP_Select_1(t *testing.T) {
 
 	var rt = new(Application)
 
-	sqlF := "select * from applications limit 1"
+	sqlF := "select * from applications where type like ? limit 1"
 
-	err1 := db.SelectOne(rt, sqlF)
+	err1 := db.SelectOne(rt, sqlF, "%type-01%")
 	require.NoError(t, err1)
-	fmt.Println("Result => ", rt)
+	fmt.Println("Result ======================> ")
+	litter.Dump(rt)
 }
 
 func TestSqlite_DBP_Select_Funcs(t *testing.T) {
@@ -311,20 +364,20 @@ func TestSqlite_DBW_Insert_1(t *testing.T) {
 	}
 	//r1 := newRandomRecordForApp("dbp")
 
-	_, err := db.ExecContext(ctx, sql, args...)
+	_, err := db.Exec(sql, args...)
 	require.NoError(t, err)
 }
 
 func TestSqlite_DBW_Select_Funcs(t *testing.T) {
 	db := getSqliteDBW()
 
-	sqlF := "select %s as payload"
+	sqlF := "select %s as payload where ? = ?"
 	funcs := getSqliteFuncMap()
 
 	for k, v := range funcs {
 		ss := fmt.Sprintf(sqlF, v)
 		var rt string
-		err1 := db.GetContext(ctx, &rt, ss)
+		err1 := db.Get(&rt, ss, 1, 1)
 		require.NoError(t, err1)
 		fmt.Println(k, "=>", rt)
 	}

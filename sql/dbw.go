@@ -1,7 +1,7 @@
 package sql
 
 import (
-	"github.com/jmoiron/sqlx"
+	"github.com/ilibs/gosql/v2"
 )
 
 const (
@@ -9,7 +9,7 @@ const (
 )
 
 type (
-	idbw = sqlx.DB
+	idbw = gosql.DB
 
 	DBW struct {
 		*idbw
@@ -26,7 +26,7 @@ func NewDBW(o *Options) (*DBW, error) {
 		return nil, err
 	}
 
-	rdb := sqlx.NewDb(sqlDB, o.Dialect)
+	rdb := gosql.OpenWithDB(o.Dialect, sqlDB)
 
 	db := &DBW{
 		idbw:     rdb,

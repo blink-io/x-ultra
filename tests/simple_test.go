@@ -5,6 +5,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/k0kubun/pp/v3"
 	"github.com/stretchr/testify/require"
 )
 
@@ -94,4 +95,9 @@ func TestTime_Util(t *testing.T) {
 	var ztm time.Time
 	require.Equal(t, false, ntm.IsZero())
 	require.Equal(t, true, ztm.IsZero())
+}
+
+func TestColorPrint(t *testing.T) {
+	m := map[string]string{"foo": "bar", "hello": "world"}
+	pp.Print(m)
 }

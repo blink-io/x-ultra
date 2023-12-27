@@ -8,6 +8,8 @@ import (
 	"time"
 
 	xsql "github.com/blink-io/x/sql"
+	"github.com/blink-io/x/sql/hooks"
+	logginghook "github.com/blink-io/x/sql/hooks/logging"
 )
 
 var ctx = context.Background()
@@ -21,7 +23,7 @@ func sqliteOpts() *xsql.Options {
 		DOptions: []xsql.DOption{
 			xsql.WithLocation(time.Local),
 		},
-		//DriverHooks: newDriverHooks(),
+		DriverHooks: newDriverHooks(),
 		Logger: func(format string, args ...any) {
 			msg := fmt.Sprintf(format, args...)
 			slog.Default().With("db", "sqlite").Info(msg, "mode", "test")
@@ -29,6 +31,15 @@ func sqliteOpts() *xsql.Options {
 		Loc: time.Local,
 	}
 	return opt
+}
+
+func newDriverHooks() []hooks.Hooks {
+	hs := []hooks.Hooks{
+		logginghook.Func(func(format string, args ...any) {
+			slog.Default().Info(fmt.Sprintf(format, args...))
+		}),
+	}
+	return hs
 }
 
 func getSqliteFuncMap() map[string]string {

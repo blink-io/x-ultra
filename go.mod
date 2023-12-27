@@ -19,7 +19,7 @@ require (
 	github.com/go-chi/chi/v5 v5.0.11
 	github.com/go-kratos/kratos/v2 v2.7.2
 	github.com/go-playground/validator/v10 v10.16.0
-	github.com/go-resty/resty/v2 v2.10.0
+	github.com/go-resty/resty/v2 v2.11.0
 	github.com/go-sql-driver/mysql v1.7.1
 	github.com/go-task/slim-sprig/v3 v3.0.0
 	github.com/goccy/go-json v0.10.2
@@ -117,6 +117,8 @@ require (
 	github.com/gabriel-vasile/mimetype v1.4.3
 	github.com/glebarez/go-sqlite v1.21.2
 	github.com/go-crypt/crypt v0.2.14
+	github.com/go-faster/city v1.0.1
+	github.com/go-faster/xor v1.0.0
 	github.com/go-gorp/gorp/v3 v3.1.0
 	github.com/go-kit/log v0.2.1
 	github.com/go-rel/mysql v0.11.0
@@ -124,16 +126,17 @@ require (
 	github.com/go-rel/rel v0.41.0
 	github.com/go-rel/sqlite3 v0.11.0
 	github.com/go-slog/otelslog v0.1.0
-	github.com/gobwas/glob v0.0.0-00010101000000-000000000000
+	github.com/gobwas/glob v0.2.3
 	github.com/gocraft/dbr/v2 v2.7.6
 	github.com/golang-cz/devslog v0.0.8
 	github.com/gorilla/websocket v1.5.1
 	github.com/h2non/filetype v1.1.3
+	github.com/ilibs/gosql/v2 v2.1.4
 	github.com/jackc/chunkreader/v2 v2.0.1
 	github.com/jackc/puddle/v2 v2.2.1
 	github.com/jhump/protoreflect v1.15.4
-	github.com/jmoiron/sqlx v1.3.5
 	github.com/jonboulle/clockwork v0.4.0
+	github.com/k0kubun/pp/v3 v3.2.0
 	github.com/kardianos/osext v0.0.0-20190222173326-2bc1f35cddc0
 	github.com/leonelquinteros/gotext v1.5.2
 	github.com/matryer/is v1.4.1
@@ -219,6 +222,7 @@ require (
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20231201235250-de7065d80cb9 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
+	github.com/jmoiron/sqlx v1.3.5 // indirect
 	github.com/jtolds/gls v4.20.0+incompatible // indirect
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.6 // indirect
@@ -228,6 +232,7 @@ require (
 	github.com/lann/ps v0.0.0-20150810152359-62de8c46ede0 // indirect
 	github.com/leodido/go-urn v1.2.4 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
+	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-sqlite3 v1.14.19 // indirect
 	github.com/nats-io/nkeys v0.4.6 // indirect

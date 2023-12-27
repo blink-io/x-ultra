@@ -28,10 +28,10 @@ func (Application) Table() string {
 }
 
 func (Application) Columns() []string {
-	return columns
+	return appColumns
 }
 
-var columns = []string{
+var appColumns = []string{
 	"id",
 	"iid",
 	"status",
@@ -41,4 +41,12 @@ var columns = []string{
 	"created_at",
 	"updated_at",
 	"deleted_at",
+}
+
+func ToAnySlice[T any](a []T) []any {
+	t := make([]any, 0, len(a))
+	for _, v := range a {
+		t = append(t, v)
+	}
+	return t
 }
