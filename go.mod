@@ -1,8 +1,8 @@
 module github.com/blink-io/x
 
-go 1.21.0
+go 1.21.5
 
-toolchain go1.21.5
+replace github.com/gobwas/glob => github.com/blink-io/glob v0.0.0-20231227024915-2e8bc4bf1fee
 
 require (
 	github.com/Masterminds/squirrel v1.5.4
@@ -103,12 +103,13 @@ require (
 	github.com/ammario/tlru v0.3.0
 	github.com/apache/thrift v0.19.0
 	github.com/bits-and-blooms/bloom/v3 v3.6.0
+	github.com/bmatcuk/doublestar/v4 v4.6.1
 	github.com/brianvoe/gofakeit/v6 v6.26.3
 	github.com/bwmarrin/snowflake v0.3.0
 	github.com/caarlos0/env/v10 v10.0.0
 	github.com/chzyer/readline v1.5.1
 	github.com/dchest/siphash v1.2.3
-	github.com/deckarep/golang-set/v2 v2.5.0
+	github.com/deckarep/golang-set/v2 v2.6.0
 	github.com/doug-martin/goqu/v9 v9.19.0
 	github.com/emicklei/proto v1.13.0
 	github.com/exaring/otelpgx v0.5.2
@@ -123,6 +124,7 @@ require (
 	github.com/go-rel/rel v0.41.0
 	github.com/go-rel/sqlite3 v0.11.0
 	github.com/go-slog/otelslog v0.1.0
+	github.com/gobwas/glob v0.0.0-00010101000000-000000000000
 	github.com/gocraft/dbr/v2 v2.7.6
 	github.com/golang-cz/devslog v0.0.8
 	github.com/gorilla/websocket v1.5.1
@@ -164,6 +166,7 @@ require (
 	github.com/thanhpk/randstr v1.0.6
 	github.com/uptrace/opentelemetry-go-extra/otelutil v0.2.3
 	github.com/uptrace/opentelemetry-go-extra/otelzap v0.2.3
+	github.com/wk8/go-ordered-map/v2 v2.1.8
 	github.com/xo/dburl v0.20.0
 	github.com/yuin/goldmark v1.6.0
 	go.opentelemetry.io/otel v1.21.0
@@ -178,8 +181,10 @@ require (
 	github.com/alicebob/gopher-json v0.0.0-20230218143504-906a9b012302 // indirect
 	github.com/armon/go-radix v1.0.0 // indirect
 	github.com/aymerick/douceur v0.2.0 // indirect
-	github.com/bits-and-blooms/bitset v1.12.0 // indirect
+	github.com/bahlo/generic-list-go v0.2.0 // indirect
+	github.com/bits-and-blooms/bitset v1.13.0 // indirect
 	github.com/bufbuild/protocompile v0.7.1 // indirect
+	github.com/buger/jsonparser v1.1.1 // indirect
 	github.com/cloudflare/circl v1.3.6 // indirect
 	github.com/coreos/go-semver v0.3.1 // indirect
 	github.com/coreos/go-systemd/v22 v22.5.0 // indirect
@@ -222,6 +227,7 @@ require (
 	github.com/lann/builder v0.0.0-20180802200727-47ae307949d0 // indirect
 	github.com/lann/ps v0.0.0-20150810152359-62de8c46ede0 // indirect
 	github.com/leodido/go-urn v1.2.4 // indirect
+	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-sqlite3 v1.14.19 // indirect
 	github.com/nats-io/nkeys v0.4.6 // indirect
