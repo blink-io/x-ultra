@@ -2,8 +2,12 @@ package sqlite
 
 import (
 	"database/sql"
+	"fmt"
+	"testing"
 
 	"github.com/blink-io/x/bun/model/mixin"
+
+	"github.com/sanity-io/litter"
 	"github.com/uptrace/bun"
 )
 
@@ -41,6 +45,15 @@ var appColumns = []string{
 	"created_at",
 	"updated_at",
 	"deleted_at",
+}
+
+func printApp(r *Application) string {
+	return litter.Sdump(r)
+}
+
+func TestPrintApp(t *testing.T) {
+	r := newRandomRecordForApp("test")
+	fmt.Println("App: ", printApp(r))
 }
 
 func ToAnySlice[T any](a []T) []any {
