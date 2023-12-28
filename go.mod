@@ -129,6 +129,7 @@ require (
 	github.com/gobwas/glob v0.2.3
 	github.com/gocraft/dbr/v2 v2.7.6
 	github.com/golang-cz/devslog v0.0.8
+	github.com/gorilla/mux v1.8.1
 	github.com/gorilla/websocket v1.5.1
 	github.com/h2non/filetype v1.1.3
 	github.com/ilibs/gosql/v2 v2.1.4
@@ -218,7 +219,6 @@ require (
 	github.com/google/pprof v0.0.0-20231212022811-ec68065c825e // indirect
 	github.com/gopherjs/gopherjs v1.17.2 // indirect
 	github.com/gorilla/css v1.0.1 // indirect
-	github.com/gorilla/mux v1.8.1 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0 // indirect
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect

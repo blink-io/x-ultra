@@ -2,125 +2,209 @@ package http3
 
 import (
 	"context"
-	"crypto/rand"
-	"crypto/rsa"
 	"crypto/tls"
-	"crypto/x509"
-	"encoding/pem"
-	"math/big"
+	"errors"
 	"net/http"
 	"net/url"
-	"strings"
 	"time"
+
+	"github.com/blink-io/x/kratos/internal/endpoint"
+	"github.com/blink-io/x/kratos/internal/host"
+	"github.com/blink-io/x/kratos/internal/matcher"
+	"github.com/gorilla/mux"
+	"github.com/quic-go/quic-go"
+	"github.com/quic-go/quic-go/http3"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware"
-	khttp "github.com/go-kratos/kratos/v2/transport/http"
-
 	"github.com/go-kratos/kratos/v2/transport"
-	"github.com/gorilla/mux"
-	"github.com/quic-go/quic-go/http3"
 )
 
 var (
 	_ transport.Server     = (*Server)(nil)
 	_ transport.Endpointer = (*Server)(nil)
+	_ http.Handler         = (*Server)(nil)
 )
 
-type Server struct {
-	*http3.Server
+// ServerOption is an HTTP server option.
+type ServerOption func(*Server)
 
-	tlsConf  *tls.Config
-	timeout  time.Duration
-	endpoint *url.URL
-
-	err error
-
-	filters []khttp.FilterFunc
-	ms      []middleware.Middleware
-	dec     khttp.DecodeRequestFunc
-	enc     khttp.EncodeResponseFunc
-	ene     khttp.EncodeErrorFunc
-
-	router      *mux.Router
-	strictSlash bool
+// Network with server network.
+func Network(network string) ServerOption {
+	return func(s *Server) {
+		s.network = network
+	}
 }
 
+// Address with server address.
+func Address(addr string) ServerOption {
+	return func(s *Server) {
+		s.address = addr
+	}
+}
+
+// Endpoint with server address.
+func Endpoint(endpoint *url.URL) ServerOption {
+	return func(s *Server) {
+		s.endpoint = endpoint
+	}
+}
+
+// Timeout with server timeout.
+func Timeout(timeout time.Duration) ServerOption {
+	return func(s *Server) {
+		s.timeout = timeout
+	}
+}
+
+// Logger with server logger.
+// Deprecated: use global logger instead.
+func Logger(_ log.Logger) ServerOption {
+	return func(s *Server) {}
+}
+
+// Middleware with service middleware option.
+func Middleware(m ...middleware.Middleware) ServerOption {
+	return func(o *Server) {
+		o.middleware.Use(m...)
+	}
+}
+
+// Filter with HTTP middleware option.
+func Filter(filters ...FilterFunc) ServerOption {
+	return func(o *Server) {
+		o.filters = filters
+	}
+}
+
+// RequestVarsDecoder with request decoder.
+func RequestVarsDecoder(dec DecodeRequestFunc) ServerOption {
+	return func(o *Server) {
+		o.decVars = dec
+	}
+}
+
+// RequestQueryDecoder with request decoder.
+func RequestQueryDecoder(dec DecodeRequestFunc) ServerOption {
+	return func(o *Server) {
+		o.decQuery = dec
+	}
+}
+
+// RequestDecoder with request decoder.
+func RequestDecoder(dec DecodeRequestFunc) ServerOption {
+	return func(o *Server) {
+		o.decBody = dec
+	}
+}
+
+// ResponseEncoder with response encoder.
+func ResponseEncoder(en EncodeResponseFunc) ServerOption {
+	return func(o *Server) {
+		o.enc = en
+	}
+}
+
+// ErrorEncoder with error encoder.
+func ErrorEncoder(en EncodeErrorFunc) ServerOption {
+	return func(o *Server) {
+		o.ene = en
+	}
+}
+
+// TLSConfig with TLS config.
+func TLSConfig(c *tls.Config) ServerOption {
+	return func(o *Server) {
+		o.tlsConf = c
+	}
+}
+
+// StrictSlash is with mux's StrictSlash
+// If true, when the path pattern is "/path/", accessing "/path" will
+// redirect to the former and vice versa.
+func StrictSlash(strictSlash bool) ServerOption {
+	return func(o *Server) {
+		o.strictSlash = strictSlash
+	}
+}
+
+// PathPrefix with mux's PathPrefix, router will replaced by a subrouter that start with prefix.
+func PathPrefix(prefix string) ServerOption {
+	return func(s *Server) {
+		s.router = s.router.PathPrefix(prefix).Subrouter()
+	}
+}
+
+// Server is an HTTP server wrapper.
+type Server struct {
+	*http3.Server
+	lis         http3.QUICEarlyListener
+	tlsConf     *tls.Config
+	endpoint    *url.URL
+	err         error
+	network     string
+	address     string
+	timeout     time.Duration
+	filters     []FilterFunc
+	middleware  matcher.Matcher
+	decVars     DecodeRequestFunc
+	decQuery    DecodeRequestFunc
+	decBody     DecodeRequestFunc
+	enc         EncodeResponseFunc
+	ene         EncodeErrorFunc
+	strictSlash bool
+	router      *mux.Router
+}
+
+// NewServer creates an HTTP server by options.
 func NewServer(opts ...ServerOption) *Server {
 	srv := &Server{
+		network:     "tcp",
+		address:     ":0",
 		timeout:     1 * time.Second,
-		dec:         khttp.DefaultRequestDecoder,
-		enc:         khttp.DefaultResponseEncoder,
-		ene:         khttp.DefaultErrorEncoder,
+		middleware:  matcher.New(),
+		decVars:     DefaultRequestVars,
+		decQuery:    DefaultRequestQuery,
+		decBody:     DefaultRequestDecoder,
+		enc:         DefaultResponseEncoder,
+		ene:         DefaultErrorEncoder,
 		strictSlash: true,
+		router:      mux.NewRouter(),
+	}
+	for _, o := range opts {
+		o(srv)
 	}
 
-	srv.init(opts...)
+	if srv.tlsConf == nil {
+		srv.tlsConf = GenerateTLSConfig()
+	}
 
+	srv.router.StrictSlash(srv.strictSlash)
+	srv.router.NotFoundHandler = http.DefaultServeMux
+	srv.router.MethodNotAllowedHandler = http.DefaultServeMux
+	srv.router.Use(srv.filter())
+	srv.Server = &http3.Server{
+		Handler:   FilterChain(srv.filters...)(srv.router),
+		TLSConfig: srv.tlsConf,
+	}
 	return srv
 }
 
 func (s *Server) init(opts ...ServerOption) {
-	s.Server = &http3.Server{
-		Addr: ":443",
-	}
 
-	for _, o := range opts {
-		o(s)
-	}
-
-	if s.tlsConf == nil {
-		s.tlsConf = GenerateTLSConfig()
-	}
-	s.Server.TLSConfig = s.tlsConf
-
-	s.router = mux.NewRouter().StrictSlash(s.strictSlash)
-	s.router.NotFoundHandler = http.DefaultServeMux
-	s.router.MethodNotAllowedHandler = http.DefaultServeMux
-
-	s.Server.Handler = khttp.FilterChain(s.filters...)(s.router)
-
-	_, _ = s.Endpoint()
 }
 
-func (s *Server) Endpoint() (*url.URL, error) {
-	addr := s.Addr
-
-	prefix := "http://"
-	if s.tlsConf == nil {
-		if !strings.HasPrefix(addr, "http://") {
-			prefix = "http://"
-		}
-	} else {
-		if !strings.HasPrefix(addr, "https://") {
-			prefix = "https://"
-		}
-	}
-	addr = prefix + addr
-
-	s.endpoint, s.err = url.Parse(addr)
-
-	return s.endpoint, s.err
-}
-
-func (s *Server) Start(ctx context.Context) error {
-	log.Infof("[HTTP3] server listening on: %s", s.Addr)
-
-	if err := s.ListenAndServe(); err != nil {
-		log.Errorf("[HTTP3] start server failed: %s", err.Error())
-		return err
-	}
-
-	return nil
-}
-
-func (s *Server) Stop(ctx context.Context) error {
-	log.Info("[HTTP3] server stopping")
-	return s.Close()
+// Use uses a service middleware with selector.
+// selector:
+//   - '/*'
+//   - '/helloworld.v1.Greeter/*'
+//   - '/helloworld.v1.Greeter/SayHello'
+func (s *Server) Use(selector string, m ...middleware.Middleware) {
+	s.middleware.Add(selector, m...)
 }
 
 // WalkRoute walks the router and all its sub-routers, calling walkFn for each route in the tree.
-func (s *Server) WalkRoute(fn khttp.WalkRouteFunc) error {
+func (s *Server) WalkRoute(fn WalkRouteFunc) error {
 	return s.router.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
 		methods, err := route.GetMethods()
 		if err != nil {
@@ -131,7 +215,7 @@ func (s *Server) WalkRoute(fn khttp.WalkRouteFunc) error {
 			return err
 		}
 		for _, method := range methods {
-			if err := fn(khttp.RouteInfo{Method: method, Path: path}); err != nil {
+			if err := fn(RouteInfo{Method: method, Path: path}); err != nil {
 				return err
 			}
 		}
@@ -141,32 +225,38 @@ func (s *Server) WalkRoute(fn khttp.WalkRouteFunc) error {
 
 // WalkHandle walks the router and all its sub-routers, calling walkFn for each route in the tree.
 func (s *Server) WalkHandle(handle func(method, path string, handler http.HandlerFunc)) error {
-	return s.WalkRoute(func(r khttp.RouteInfo) error {
+	return s.WalkRoute(func(r RouteInfo) error {
 		handle(r.Method, r.Path, s.ServeHTTP)
 		return nil
 	})
 }
 
-func (s *Server) Route(prefix string, filters ...khttp.FilterFunc) *Router {
+// Route registers an HTTP router.
+func (s *Server) Route(prefix string, filters ...FilterFunc) *Router {
 	return newRouter(prefix, s, filters...)
 }
 
+// Handle registers a new route with a matcher for the URL path.
 func (s *Server) Handle(path string, h http.Handler) {
 	s.router.Handle(path, h)
 }
 
+// HandlePrefix registers a new route with a matcher for the URL path prefix.
 func (s *Server) HandlePrefix(prefix string, h http.Handler) {
 	s.router.PathPrefix(prefix).Handler(h)
 }
 
+// HandleFunc registers a new route with a matcher for the URL path.
 func (s *Server) HandleFunc(path string, h http.HandlerFunc) {
 	s.router.HandleFunc(path, h)
 }
 
+// HandleHeader registers a new route with a matcher for the header.
 func (s *Server) HandleHeader(key, val string, h http.HandlerFunc) {
 	s.router.Headers(key, val).Handler(h)
 }
 
+// ServeHTTP should write reply headers and data to the ResponseWriter and then return.
 func (s *Server) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 	s.Handler.ServeHTTP(res, req)
 }
@@ -192,39 +282,82 @@ func (s *Server) filter() mux.MiddlewareFunc {
 			}
 
 			tr := &Transport{
-				endpoint:     s.endpoint.String(),
 				operation:    pathTemplate,
+				pathTemplate: pathTemplate,
 				reqHeader:    headerCarrier(req.Header),
 				replyHeader:  headerCarrier(w.Header()),
 				request:      req,
-				pathTemplate: pathTemplate,
 			}
-
+			if s.endpoint != nil {
+				tr.endpoint = s.endpoint.String()
+			}
 			tr.request = req.WithContext(transport.NewServerContext(ctx, tr))
 			next.ServeHTTP(w, tr.request)
 		})
 	}
 }
 
-func GenerateTLSConfig() *tls.Config {
-	key, err := rsa.GenerateKey(rand.Reader, 1024)
-	if err != nil {
-		panic(err)
+// Endpoint return a real address to registry endpoint.
+// examples:
+//
+//	https://127.0.0.1:8000
+//	Legacy: http://127.0.0.1:8000?isSecure=false
+func (s *Server) Endpoint() (*url.URL, error) {
+	if err := s.listenAndEndpoint(); err != nil {
+		return nil, err
 	}
-	template := x509.Certificate{SerialNumber: big.NewInt(1)}
-	certDER, err := x509.CreateCertificate(rand.Reader, &template, &template, &key.PublicKey, key)
-	if err != nil {
-		panic(err)
-	}
-	keyPEM := pem.EncodeToMemory(&pem.Block{Type: "RSA PRIVATE KEY", Bytes: x509.MarshalPKCS1PrivateKey(key)})
-	certPEM := pem.EncodeToMemory(&pem.Block{Type: "CERTIFICATE", Bytes: certDER})
+	return s.endpoint, nil
+}
 
-	tlsCert, err := tls.X509KeyPair(certPEM, keyPEM)
-	if err != nil {
-		panic(err)
+// Start start the HTTP server.
+func (s *Server) Start(ctx context.Context) error {
+	if err := s.listenAndEndpoint(); err != nil {
+		return err
 	}
-	return &tls.Config{
-		Certificates: []tls.Certificate{tlsCert},
-		NextProtos:   []string{"kratos-quic-server"},
+
+	log.Infof("[HTTP3] server listening on: %s", s.lis.Addr().String())
+	var err error
+	// TODO
+	if !errors.Is(err, http.ErrServerClosed) {
+		return err
 	}
+	return nil
+}
+
+// Stop stops the HTTP server.
+func (s *Server) Stop(ctx context.Context) error {
+	log.Info("[HTTP3] server stopping")
+	return s.Close()
+}
+
+func (s *Server) listenAndEndpoint() error {
+	if s.lis == nil {
+		lis, err := quic.ListenAddrEarly(s.address, http3.ConfigureTLSConfig(s.tlsConf), s.QuicConfig)
+		if err != nil {
+			s.err = err
+			return err
+		}
+		s.lis = lis
+	}
+	if s.endpoint == nil {
+		addr, err := host.Extract(s.address, s.lis)
+		if err != nil {
+			s.err = err
+			return err
+		}
+		s.endpoint = endpoint.NewEndpoint(endpoint.Scheme("http", s.tlsConf != nil), addr)
+	}
+	return s.err
+}
+
+func (s *Server) handleEndpoint(ln host.Listener) error {
+	if s.endpoint == nil {
+		addr, err := host.Extract(s.address, ln)
+		if err != nil {
+			s.err = err
+			return err
+		}
+		s.endpoint = endpoint.NewEndpoint(endpoint.Scheme("http", s.tlsConf != nil), addr)
+	}
+	return nil
 }
