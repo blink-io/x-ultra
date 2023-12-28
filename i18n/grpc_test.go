@@ -5,7 +5,7 @@ import (
 	"net"
 	"testing"
 
-	gslog "github.com/blink-io/x/grpc/slog"
+	gslog "github.com/blink-io/x/grpc/logger/slog"
 	"github.com/blink-io/x/internal/testutil"
 
 	"github.com/stretchr/testify/require"

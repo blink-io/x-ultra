@@ -1,9 +1,9 @@
 package grpc
 
 import (
-	kgrpc "github.com/go-kratos/kratos/v2/transport/grpc"
+	"google.golang.org/grpc"
 )
 
 type Handler interface {
-	HandleGRPC(*kgrpc.Server)
+	HandleGRPC(grpc.ServiceRegistrar)
 }

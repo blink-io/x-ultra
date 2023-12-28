@@ -6,13 +6,25 @@ import (
 	khttp "github.com/go-kratos/kratos/v2/transport/http"
 )
 
-type Handler interface {
-	HandleHTTP(*khttp.Server)
+type RouteRegistrar interface {
+	Route(prefix string, filters ...khttp.FilterFunc) *khttp.Router
+
+	Handle(path string, h http.Handler)
+
+	HandlePrefix(prefix string, h http.Handler)
+
+	HandleFunc(path string, h http.HandlerFunc)
+
+	HandleHeader(key, val string, h http.HandlerFunc)
 }
 
-type StdHandlerFunc http.HandlerFunc
+type Handler interface {
+	HandleHTTP(RouteRegistrar)
+}
 
-func (h StdHandlerFunc) Handle(ctx khttp.Context) error {
+type HandlerFunc http.HandlerFunc
+
+func (h HandlerFunc) Handle(ctx khttp.Context) error {
 	w := ctx.Response()
 	r := ctx.Request()
 	h(w, r)

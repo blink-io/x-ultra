@@ -115,7 +115,7 @@ require (
 	github.com/exaring/otelpgx v0.5.2
 	github.com/expr-lang/expr v1.15.7
 	github.com/gabriel-vasile/mimetype v1.4.3
-	github.com/glebarez/go-sqlite v1.21.2
+	github.com/glebarez/go-sqlite v1.22.0
 	github.com/go-crypt/crypt v0.2.14
 	github.com/go-faster/city v1.0.1
 	github.com/go-faster/xor v1.0.0
@@ -153,6 +153,7 @@ require (
 	github.com/proullon/ramsql v0.1.3
 	github.com/qustavo/dotsql v1.2.0
 	github.com/remychantenay/slog-otel v1.2.3
+	github.com/reugn/go-streams v0.9.0
 	github.com/rickar/cal/v2 v2.1.13
 	github.com/russross/blackfriday v1.6.0
 	github.com/samber/slog-common v0.15.0

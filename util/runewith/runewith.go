@@ -5,7 +5,7 @@ import (
 )
 
 var (
-	RuneWith = runewidth.RuneWidth
+	RuneWidth = runewidth.RuneWidth
 
 	StringWidth = runewidth.StringWidth
 )
