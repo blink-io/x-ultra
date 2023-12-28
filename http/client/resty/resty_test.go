@@ -8,7 +8,7 @@ import (
 )
 
 func TestHTTP3Client_1(t *testing.T) {
-	ctls := testdata.CreateClientTLSConfig()
+	ctls := testdata.GetClientTLSConfig()
 	h3c := HTTP3Client(ctls)
 	require.NotNil(t, h3c)
 }

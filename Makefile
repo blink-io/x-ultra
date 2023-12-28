@@ -30,3 +30,9 @@ test:
 # Run mod list
 mod-list:
 	go list -u -mod=mod -f '{{if (and (not (or .Main .Indirect)) .Update)}}{{.Path}}: {{.Version}} -> {{.Update.Version}}{{end}}' -m all
+
+.PHONY: fix-udp
+# Run fix UDP
+fix-udp:
+	sudo sysctl -w net.core.rmem_max=2500000
+	sudo sysctl -w net.core.wmem_max=2500000

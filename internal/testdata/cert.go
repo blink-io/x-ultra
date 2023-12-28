@@ -3,6 +3,7 @@ package testdata
 import (
 	"crypto/tls"
 	"crypto/x509"
+	"log"
 	"os"
 	"path"
 	"runtime"
@@ -23,6 +24,24 @@ func init() {
 func GetCertificatePaths() (string, string) {
 	return path.Join(certPath, "cert.pem"), path.Join(certPath, "privkey.pem")
 }
+
+func GetClientTLSConfig() *tls.Config {
+	pool, err := x509.SystemCertPool()
+	if err != nil {
+		log.Fatal(err)
+	}
+	AddRootCA(pool)
+
+	tlsConf := &tls.Config{
+		RootCAs:            pool,
+		InsecureSkipVerify: true,
+		//KeyLogWriter:       keyLog,
+		MinVersion: tls.VersionTLS13,
+	}
+	return tlsConf
+}
+
+var GetServerTLSConfig = GetTLSConfig
 
 // GetTLSConfig returns a tls config for quic.clemente.io
 func GetTLSConfig() *tls.Config {

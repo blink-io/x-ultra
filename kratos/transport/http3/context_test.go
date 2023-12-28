@@ -12,7 +12,9 @@ import (
 	"time"
 )
 
-var testRouter = &Router{srv: NewServer()}
+var testRouter = &Router{srv: NewServer(
+	TLSConfigServerOption(),
+)}
 
 func TestContextHeader(t *testing.T) {
 	w := wrapper{

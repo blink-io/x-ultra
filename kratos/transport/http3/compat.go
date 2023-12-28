@@ -4,10 +4,14 @@ import (
 	khttp "github.com/go-kratos/kratos/v2/transport/http"
 )
 
-// Context is an HTTP Context.
-type Context = khttp.Context
-
 type (
+	// Context is an HTTP Context.
+	Context = khttp.Context
+
+	ClientOption = khttp.ClientOption
+
+	FilterFunc = khttp.FilterFunc
+
 	DecodeRequestFunc  = khttp.DecodeRequestFunc
 	EncodeResponseFunc = khttp.EncodeResponseFunc
 	EncodeErrorFunc    = khttp.EncodeErrorFunc
@@ -27,4 +31,8 @@ var (
 	WithEndpoint = khttp.WithEndpoint
 
 	WithTransport = khttp.WithTransport
+
+	WithTLSConfig = khttp.WithTLSConfig
+
+	FilterChain = khttp.FilterChain
 )

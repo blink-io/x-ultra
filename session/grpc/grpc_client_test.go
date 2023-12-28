@@ -16,7 +16,7 @@ import (
 )
 
 func createGRPCClient() *grpc.ClientConn {
-	creds := credentials.NewTLS(testdata.CreateClientTLSConfig())
+	creds := credentials.NewTLS(testdata.GetClientTLSConfig())
 	ops := []grpc.DialOption{
 		grpc.WithTransportCredentials(creds),
 	}

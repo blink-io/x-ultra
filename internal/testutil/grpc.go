@@ -15,7 +15,7 @@ import (
 func CreateGRPCClient(target string, secure bool, ops ...grpc.DialOption) *grpc.ClientConn {
 	var creds credentials.TransportCredentials
 	if secure {
-		creds = credentials.NewTLS(testdata.CreateClientTLSConfig())
+		creds = credentials.NewTLS(testdata.GetClientTLSConfig())
 	} else {
 		creds = insecure.NewCredentials()
 	}

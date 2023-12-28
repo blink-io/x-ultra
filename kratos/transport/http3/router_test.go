@@ -19,6 +19,13 @@ import (
 
 const appJSONStr = "application/json"
 
+func init() {
+	http.DefaultClient = &http.Client{
+		Timeout:   5 * time.Second,
+		Transport: RoundTripper(clientTlsConf),
+	}
+}
+
 type User struct {
 	Name string `json:"name"`
 }
@@ -52,9 +59,10 @@ func loggingFilter(next http.Handler) http.Handler {
 	})
 }
 
-func TestRoute(t *testing.T) {
+func TestRouteHTTP3(t *testing.T) {
 	ctx := context.Background()
 	srv := NewServer(
+		TLSConfigServerOption(),
 		Filter(corsFilter, loggingFilter),
 	)
 	route := srv.Route("/v1")
@@ -99,7 +107,7 @@ func testRoute(t *testing.T, srv *Server) {
 	if !ok {
 		t.Fatalf("extract port error: %v", srv.lis)
 	}
-	base := fmt.Sprintf("http://127.0.0.1:%d/v1", port)
+	base := fmt.Sprintf("https://127.0.0.1:%d/v1", port)
 	// GET
 	resp, err := http.Get(base + "/users/foo")
 	if err != nil {
@@ -183,7 +191,7 @@ func TestRouter_Group(t *testing.T) {
 }
 
 func TestHandle(_ *testing.T) {
-	r := newRouter("/", NewServer())
+	r := newRouter("/", NewServer(TLSConfigServerOption()))
 	h := func(i Context) error {
 		return nil
 	}
@@ -202,11 +210,15 @@ func TestRouter_ContextDataRace(t *testing.T) {
 	ctx := context.Background()
 	srvPort := 38888
 	srvAddr := fmt.Sprintf(":%d", srvPort)
-	srv := NewServer(Timeout(time.Millisecond*50), Address(srvAddr))
+	srv := NewServer(
+		TLSConfigServerOption(),
+		Timeout(time.Millisecond*50),
+		Address(srvAddr),
+	)
 
 	router := srv.Route("/")
 	router.GET("/ping", func(ctx Context) error {
-		req, _ := http.NewRequestWithContext(ctx, http.MethodGet, "http://www.baidu.com", nil)
+		req, _ := http.NewRequestWithContext(ctx, http.MethodGet, "https://www.baidu.com", nil)
 		resp, err := http.DefaultClient.Do(req)
 		if err != nil {
 			return ctx.String(200, err.Error())

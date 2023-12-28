@@ -3,15 +3,7 @@ package http3
 import (
 	"net/http"
 	"path"
-
-	khttp "github.com/go-kratos/kratos/v2/transport/http"
 )
-
-type (
-	FilterFunc = khttp.FilterFunc
-)
-
-var FilterChain = khttp.FilterChain
 
 // WalkRouteFunc is the type of the function called for each route visited by Walk.
 type WalkRouteFunc func(RouteInfo) error

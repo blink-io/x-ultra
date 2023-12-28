@@ -11,13 +11,13 @@ import (
 	"github.com/blink-io/x/kratos/internal/endpoint"
 	"github.com/blink-io/x/kratos/internal/host"
 	"github.com/blink-io/x/kratos/internal/matcher"
-	"github.com/gorilla/mux"
-	"github.com/quic-go/quic-go"
-	"github.com/quic-go/quic-go/http3"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware"
 	"github.com/go-kratos/kratos/v2/transport"
+	"github.com/gorilla/mux"
+	"github.com/quic-go/quic-go"
+	"github.com/quic-go/quic-go/http3"
 )
 
 var (
@@ -135,6 +135,13 @@ func PathPrefix(prefix string) ServerOption {
 	}
 }
 
+// Listener with http3 server listener
+func Listener(lis http3.QUICEarlyListener) ServerOption {
+	return func(s *Server) {
+		s.lis = lis
+	}
+}
+
 // Server is an HTTP server wrapper.
 type Server struct {
 	*http3.Server
@@ -188,10 +195,6 @@ func NewServer(opts ...ServerOption) *Server {
 		TLSConfig: srv.tlsConf,
 	}
 	return srv
-}
-
-func (s *Server) init(opts ...ServerOption) {
-
 }
 
 // Use uses a service middleware with selector.
@@ -309,22 +312,22 @@ func (s *Server) Endpoint() (*url.URL, error) {
 	return s.endpoint, nil
 }
 
-// Start start the HTTP server.
+// Start starts the HTTP3 server.
 func (s *Server) Start(ctx context.Context) error {
 	if err := s.listenAndEndpoint(); err != nil {
 		return err
 	}
 
 	log.Infof("[HTTP3] server listening on: %s", s.lis.Addr().String())
-	var err error
-	// TODO
+
+	err := s.ServeListener(s.lis)
 	if !errors.Is(err, http.ErrServerClosed) {
 		return err
 	}
 	return nil
 }
 
-// Stop stops the HTTP server.
+// Stop stops the HTTP3 server.
 func (s *Server) Stop(ctx context.Context) error {
 	log.Info("[HTTP3] server stopping")
 	return s.Close()
@@ -345,19 +348,7 @@ func (s *Server) listenAndEndpoint() error {
 			s.err = err
 			return err
 		}
-		s.endpoint = endpoint.NewEndpoint(endpoint.Scheme("http", s.tlsConf != nil), addr)
+		s.endpoint = endpoint.NewEndpoint("https", addr)
 	}
 	return s.err
-}
-
-func (s *Server) handleEndpoint(ln host.Listener) error {
-	if s.endpoint == nil {
-		addr, err := host.Extract(s.address, ln)
-		if err != nil {
-			s.err = err
-			return err
-		}
-		s.endpoint = endpoint.NewEndpoint(endpoint.Scheme("http", s.tlsConf != nil), addr)
-	}
-	return nil
 }
