@@ -32,7 +32,19 @@ var (
 
 	WithTransport = khttp.WithTransport
 
+	WithTimeout = khttp.WithTimeout
+
+	WithMiddleware = khttp.WithMiddleware
+
 	WithTLSConfig = khttp.WithTLSConfig
+
+	WithRequestEncoder = khttp.WithRequestEncoder
+
+	WithResponseDecoder = khttp.WithResponseDecoder
+
+	WithErrorDecoder = khttp.WithErrorDecoder
+
+	WithUserAgent = khttp.WithUserAgent
 
 	FilterChain = khttp.FilterChain
 )

@@ -28,7 +28,16 @@ var (
 	h = func(w http.ResponseWriter, r *http.Request) {
 		_ = json.NewEncoder(w).Encode(testData{Path: r.RequestURI})
 	}
+
+	HTTP3Client = &http.Client{
+		Timeout:   5 * time.Second,
+		Transport: RoundTripper(clientTlsConf),
+	}
 )
+
+func init() {
+	http.DefaultClient = HTTP3Client
+}
 
 type testKey struct{}
 

@@ -11,6 +11,9 @@ echo "GOPROXY => ${GOPROXY}"
 GREEN="\e[32m"
 
 tools=(
+  'connectrpc.com/connect/cmd/protoc-gen-connect-go@latest'
+  'github.com/bufbuild/buf/cmd/buf@latest'
+  'github.com/fullstorydev/grpcurl/cmd/grpcurl@latest'
   'google.golang.org/protobuf/cmd/protoc-gen-go@latest'
   'google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest'
   'github.com/go-kratos/kratos/cmd/kratos/v2@latest'

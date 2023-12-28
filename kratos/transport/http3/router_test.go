@@ -19,13 +19,6 @@ import (
 
 const appJSONStr = "application/json"
 
-func init() {
-	http.DefaultClient = &http.Client{
-		Timeout:   5 * time.Second,
-		Transport: RoundTripper(clientTlsConf),
-	}
-}
-
 type User struct {
 	Name string `json:"name"`
 }
