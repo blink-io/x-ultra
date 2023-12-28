@@ -83,7 +83,7 @@ func TestContextRequest(t *testing.T) {
 func TestContextResponse(t *testing.T) {
 	res := httptest.NewRecorder()
 	w := wrapper{
-		router: &Router{srv: &Server{enc: DefaultResponseEncoder}},
+		router: &Router{srv: &Server{encResp: DefaultResponseEncoder}},
 		req:    &http.Request{Method: http.MethodPost},
 		res:    res,
 		w:      responseWriter{200, res},
@@ -201,7 +201,7 @@ func TestContextCtx(t *testing.T) {
 	}
 
 	w = wrapper{
-		router: &Router{srv: &Server{enc: DefaultResponseEncoder}},
+		router: &Router{srv: &Server{encResp: DefaultResponseEncoder}},
 		req:    nil,
 		res:    nil,
 		w:      responseWriter{},

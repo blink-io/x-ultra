@@ -101,14 +101,14 @@ func RequestDecoder(dec DecodeRequestFunc) ServerOption {
 // ResponseEncoder with response encoder.
 func ResponseEncoder(en EncodeResponseFunc) ServerOption {
 	return func(o *Server) {
-		o.enc = en
+		o.encResp = en
 	}
 }
 
 // ErrorEncoder with error encoder.
 func ErrorEncoder(en EncodeErrorFunc) ServerOption {
 	return func(o *Server) {
-		o.ene = en
+		o.encErr = en
 	}
 }
 
@@ -157,8 +157,8 @@ type Server struct {
 	decVars     DecodeRequestFunc
 	decQuery    DecodeRequestFunc
 	decBody     DecodeRequestFunc
-	enc         EncodeResponseFunc
-	ene         EncodeErrorFunc
+	encResp     EncodeResponseFunc
+	encErr      EncodeErrorFunc
 	strictSlash bool
 	router      *mux.Router
 }
@@ -166,15 +166,15 @@ type Server struct {
 // NewServer creates an HTTP server by options.
 func NewServer(opts ...ServerOption) *Server {
 	srv := &Server{
-		network:     "tcp",
+		network:     "udp",
 		address:     ":0",
 		timeout:     1 * time.Second,
 		middleware:  matcher.New(),
 		decVars:     DefaultRequestVars,
 		decQuery:    DefaultRequestQuery,
 		decBody:     DefaultRequestDecoder,
-		enc:         DefaultResponseEncoder,
-		ene:         DefaultErrorEncoder,
+		encResp:     DefaultResponseEncoder,
+		encErr:      DefaultErrorEncoder,
 		strictSlash: true,
 		router:      mux.NewRouter(),
 	}

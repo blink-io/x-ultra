@@ -80,12 +80,12 @@ func (c *wrapper) Returns(v interface{}, err error) error {
 	if err != nil {
 		return err
 	}
-	return c.router.srv.enc(&c.w, c.req, v)
+	return c.router.srv.encResp(&c.w, c.req, v)
 }
 
 func (c *wrapper) Result(code int, v interface{}) error {
 	c.w.WriteHeader(code)
-	return c.router.srv.enc(&c.w, c.req, v)
+	return c.router.srv.encResp(&c.w, c.req, v)
 }
 
 func (c *wrapper) JSON(code int, v interface{}) error {

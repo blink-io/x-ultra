@@ -102,8 +102,8 @@ func TestResponseEncoder(t *testing.T) {
 	o := &Server{}
 	v := func(http.ResponseWriter, *http.Request, interface{}) error { return nil }
 	ResponseEncoder(v)(o)
-	if o.enc == nil {
-		t.Errorf("expected nil got %v", o.enc)
+	if o.encResp == nil {
+		t.Errorf("expected nil got %v", o.encResp)
 	}
 }
 
@@ -111,8 +111,8 @@ func TestErrorEncoder(t *testing.T) {
 	o := &Server{}
 	v := func(http.ResponseWriter, *http.Request, error) {}
 	ErrorEncoder(v)(o)
-	if o.ene == nil {
-		t.Errorf("expected nil got %v", o.ene)
+	if o.encErr == nil {
+		t.Errorf("expected nil got %v", o.encErr)
 	}
 }
 

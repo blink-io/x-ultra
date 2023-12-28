@@ -47,7 +47,7 @@ func (r *Router) Handle(method, relativePath string, h HandlerFunc, filters ...F
 		ctx := &wrapper{router: r}
 		ctx.Reset(res, req)
 		if err := h(ctx); err != nil {
-			r.srv.ene(res, req, err)
+			r.srv.encErr(res, req, err)
 		}
 	}))
 	next = FilterChain(filters...)(next)
