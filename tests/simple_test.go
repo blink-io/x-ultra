@@ -1,10 +1,14 @@
 package tests
 
 import (
+	"context"
 	"fmt"
 	"testing"
 	"time"
 
+	"github.com/blink-io/x/internal/testdata"
+	xquic "github.com/blink-io/x/quic"
+	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/k0kubun/pp/v3"
 	"github.com/stretchr/testify/require"
 )
@@ -100,4 +104,14 @@ func TestTime_Util(t *testing.T) {
 func TestColorPrint(t *testing.T) {
 	m := map[string]string{"foo": "bar", "hello": "world"}
 	pp.Print(m)
+}
+
+func TestKratosServer(t *testing.T) {
+	serverTlsConf := testdata.GetServerTLSConfig()
+	ln, err := xquic.Listen("tcp", ":8800", serverTlsConf, nil)
+	require.NoError(t, err)
+
+	srv := http.NewServer(http.Listener(ln))
+	err = srv.Start(context.Background())
+	require.NotNil(t, err)
 }
