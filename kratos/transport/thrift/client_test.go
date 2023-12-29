@@ -4,10 +4,11 @@ import (
 	"context"
 	"testing"
 
-	api "github.com/blink-io/x/internal/testing/api/thrift/gen-go/hygrothermograph"
+	i18nthrift "github.com/blink-io/x/i18n/thrift"
 )
 
 func TestClient(t *testing.T) {
+	ctx := context.Background()
 	conn, err := Dial(
 		WithEndpoint("localhost:7700"),
 	)
@@ -16,12 +17,15 @@ func TestClient(t *testing.T) {
 	}
 	defer conn.Close()
 
-	client := api.NewHygrothermographServiceClient(conn.Client)
+	client := i18nthrift.NewI18NClient(conn.Client)
 
-	reply, err := client.GetHygrothermograph(context.Background())
+	req := &i18nthrift.ListLanguagesRequest{
+		Languages: []string{"zh-Hans"},
+	}
+	reply, err := client.ListLanguages(ctx, req)
 	//t.Log(err)
 	if err != nil {
 		t.Errorf("failed to call: %v", err)
 	}
-	t.Log(*reply.Humidity, *reply.Temperature)
+	t.Log(reply.Timestamp, reply.Entries)
 }

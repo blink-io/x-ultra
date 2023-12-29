@@ -11,7 +11,7 @@ type Listener interface {
 	Addr() net.Addr
 }
 
-type addrport interface {
+type addrPort interface {
 	AddrPort() netip.AddrPort
 }
 
@@ -33,7 +33,7 @@ func isValidIP(addr string) bool {
 
 // Port return a real port.
 func Port(lis Listener) (int, bool) {
-	if addr, ok := lis.Addr().(addrport); ok {
+	if addr, ok := lis.Addr().(addrPort); ok {
 		return int(addr.AddrPort().Port()), true
 	}
 	return 0, false

@@ -2,33 +2,14 @@ package thrift
 
 import (
 	"context"
-	"fmt"
-	"math/rand"
 	"os"
 	"os/signal"
 	"syscall"
 	"testing"
 
-	api "github.com/blink-io/x/internal/testing/api/thrift/gen-go/hygrothermograph"
+	"github.com/blink-io/x/i18n"
+	i18nthrift "github.com/blink-io/x/i18n/thrift"
 )
-
-type HygrothermographHandler struct {
-}
-
-func NewHygrothermographHandler() *HygrothermographHandler {
-	return &HygrothermographHandler{}
-}
-
-func (p *HygrothermographHandler) GetHygrothermograph(_ context.Context) (_r *api.Hygrothermograph, _err error) {
-	var Humidity = float64(rand.Intn(100))
-	var Temperature = float64(rand.Intn(100))
-	_r = &api.Hygrothermograph{
-		Humidity:    &Humidity,
-		Temperature: &Temperature,
-	}
-	fmt.Println("Humidity:", Humidity, "Temperature:", Temperature)
-	return
-}
 
 func TestServer(t *testing.T) {
 	interrupt := make(chan os.Signal, 1)
@@ -36,9 +17,34 @@ func TestServer(t *testing.T) {
 
 	ctx := context.Background()
 
+	zhHansJSON := `{"name":"广州", "language":"简体中文", "from":"测试模式"}`
+	enUSJSON := `{"name":"gz", "language":"American English", "from":"TestMode"}`
+
+	entries := map[string]*i18n.Entry{
+		"zh-Hans": {
+			Path:     "zh-Hans.json",
+			Language: "zh-Hans",
+			Valid:    true,
+			Payload:  []byte(zhHansJSON),
+		},
+		"en-US": {
+			Path:     "en-US.json",
+			Language: "en-US",
+			Valid:    true,
+			Payload:  []byte(enUSJSON),
+		},
+		"en-UK": {
+			Path:     "en-UK.json",
+			Language: "en-UK",
+			Valid:    false,
+			Payload:  []byte(""),
+		},
+	}
+
+	th := i18n.NewThriftHandler(i18n.Entries(entries))
 	srv := NewServer(
 		WithAddress(":7700"),
-		WithProcessor(api.NewHygrothermographServiceProcessor(NewHygrothermographHandler())),
+		WithProcessor(i18nthrift.NewI18NProcessor(th)),
 	)
 
 	if err := srv.Start(ctx); err != nil {

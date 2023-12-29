@@ -85,7 +85,7 @@ func TestThriftServer_1(t *testing.T) {
 	addr := "localhost:19099"
 	useHTTP := true
 
-	p := i18nthrift.NewI18NProcessor(&thriftHandler{h: ff})
+	p := i18nthrift.NewI18NProcessor(&ThriftHandler{h: ff})
 
 	trans, err := thrift.NewTServerSocket(addr)
 	require.NoError(t, err)

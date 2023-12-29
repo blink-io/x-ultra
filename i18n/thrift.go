@@ -181,13 +181,17 @@ func LoadFromThrift(addr string, languages []string, ops ...TOption) error {
 	return ld.Load(bb)
 }
 
-var _ i18nthrift.I18N = (*thriftHandler)(nil)
+var _ i18nthrift.I18N = (*ThriftHandler)(nil)
 
-type thriftHandler struct {
+type ThriftHandler struct {
 	h EntryHandler
 }
 
-func (s *thriftHandler) ListLanguages(ctx context.Context, req *i18nthrift.ListLanguagesRequest) (*i18nthrift.ListLanguagesResponse, error) {
+func NewThriftHandler(h EntryHandler) *ThriftHandler {
+	return &ThriftHandler{h: h}
+}
+
+func (s *ThriftHandler) ListLanguages(ctx context.Context, req *i18nthrift.ListLanguagesRequest) (*i18nthrift.ListLanguagesResponse, error) {
 	langs := req.Languages
 
 	entries := make(map[string]*i18nthrift.LanguageEntry)
@@ -234,7 +238,7 @@ func NewTBinaryServer(addr string, h EntryHandler, ops ...TOption) (*thrift.TSim
 	transportFactory := thrift.NewTTransportFactory()
 	protocolFactory := thrift.NewTBinaryProtocolFactoryConf(cfg)
 
-	processor := i18nthrift.NewI18NProcessor(&thriftHandler{h: h})
+	processor := i18nthrift.NewI18NProcessor(NewThriftHandler(h))
 	server := thrift.NewTSimpleServer4(processor, serverTransport, transportFactory, protocolFactory)
 	server.SetLogger(func(msg string) {
 		slog.Default().Info(msg)

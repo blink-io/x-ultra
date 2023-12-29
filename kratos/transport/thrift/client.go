@@ -2,6 +2,7 @@ package thrift
 
 import (
 	"crypto/tls"
+	"fmt"
 
 	"github.com/apache/thrift/lib/go/thrift"
 	"github.com/go-kratos/kratos/v2/log"
@@ -34,7 +35,7 @@ func (c *Connection) Close() {
 	if c.Transport != nil {
 		err := c.Transport.Close()
 		if err != nil {
-			log.Error("failed to close transport: %v", err)
+			log.Error(fmt.Sprintf("failed to close transport: %v", err))
 		}
 	}
 }
