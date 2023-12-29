@@ -28,27 +28,17 @@ func TestCtxKeyTxID(t *testing.T) {
 	assert.EqualValues(t, bus.CtxKeyTxID, 116)
 }
 
-func TestVersion(t *testing.T) {
-	assert.Equal(t, bus.Version, "3.0.3")
-}
-
 func TestNew(t *testing.T) {
 	var fn bus.Next = func() string { return "afakeid" }
 
 	t.Run("with valid generator", func(t *testing.T) {
-		b, err := bus.NewBus(fn)
-		require.Nil(t, err)
+		b := bus.NewBus(fn)
 		assert.IsType(t, &bus.Bus{}, b)
 	})
 
 	t.Run("with invalid generator", func(t *testing.T) {
-		b, err := bus.NewBus(nil)
-		require.Nil(t, b)
-		assert.NotNil(t, err)
-		if assert.Error(t, err) {
-			want := "bus: Next() id generator func can't be nil"
-			assert.Equal(t, want, err.Error())
-		}
+		b := bus.NewBus(nil)
+		require.NotNil(t, b)
 	})
 }
 
@@ -281,7 +271,7 @@ func TestDeregisterHandler(t *testing.T) {
 
 func setup(topicNames ...string) *bus.Bus {
 	var fn bus.Next = func() string { return "fakeid" }
-	b, _ := bus.NewBus(fn)
+	b := bus.NewBus(fn)
 	b.RegisterTopics(topicNames...)
 	return b
 }

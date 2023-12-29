@@ -236,7 +236,7 @@ func (s *Server) WalkHandle(handle func(method, path string, handler http.Handle
 
 // Route registers an HTTP router.
 func (s *Server) Route(prefix string, filters ...FilterFunc) *Router {
-	return newRouter(prefix, s, filters...)
+	return NewRouter(prefix, s, filters...)
 }
 
 // Handle registers a new route with a matcher for the URL path.

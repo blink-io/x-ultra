@@ -45,6 +45,22 @@ type testData struct {
 	Path string `json:"path"`
 }
 
+func TLSConfigClientOption() ClientOption {
+	return WithTLSConfig(clientTlsConf)
+}
+
+func TLSConfigServerOption() ServerOption {
+	return TLSConfig(serverTlsConf)
+}
+
+func CreateListener() *quic.EarlyListener {
+	ln, err := quic.ListenAddrEarly(":0", http3.ConfigureTLSConfig(serverTlsConf), nil)
+	if err != nil {
+		panic(err)
+	}
+	return ln
+}
+
 // handleFuncWrapper is a wrapper for http.HandlerFunc to implement http.Handler
 type handleFuncWrapper struct {
 	fn http.HandlerFunc
@@ -402,20 +418,4 @@ func TestListenerHTTP3(t *testing.T) {
 	if e, err := s.Endpoint(); err != nil || e == nil {
 		t.Errorf("expected not empty")
 	}
-}
-
-func TLSConfigClientOption() ClientOption {
-	return WithTLSConfig(clientTlsConf)
-}
-
-func TLSConfigServerOption() ServerOption {
-	return TLSConfig(serverTlsConf)
-}
-
-func CreateListener() *quic.EarlyListener {
-	ln, err := quic.ListenAddrEarly(":0", http3.ConfigureTLSConfig(serverTlsConf), nil)
-	if err != nil {
-		panic(err)
-	}
-	return ln
 }

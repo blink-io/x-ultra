@@ -10,6 +10,17 @@ type options struct {
 
 type Option func(*options)
 
+func applyOptions(ops ...Option) *options {
+	opt := new(options)
+	for _, o := range ops {
+		o(opt)
+	}
+	if len(opt.method) == 0 {
+		opt.method = http.MethodGet
+	}
+	return opt
+}
+
 func GET() Option {
 	return func(o *options) {
 		o.method = http.MethodGet

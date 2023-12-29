@@ -10,6 +10,8 @@ import (
 	"regexp"
 	"sync"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 type (
@@ -63,23 +65,20 @@ const (
 	// CtxKeySource source context key
 	CtxKeySource = ctxKey(117)
 
-	// Version syncs with package version
-	Version = "3.0.3"
-
 	empty = ""
 )
 
 // NewBus inits a new bus
-func NewBus(g IDGenerator) (*Bus, error) {
+func NewBus(g IDGenerator) *Bus {
 	if g == nil {
-		return nil, fmt.Errorf("bus: Next() id generator func can't be nil")
+		g = Next(uuid.NewString)
 	}
 
 	return &Bus{
 		idgen:    g.Generate,
 		topics:   make(map[string][]Handler),
 		handlers: make(map[string]Handler),
-	}, nil
+	}
 }
 
 // WithID returns an option to set event's id field

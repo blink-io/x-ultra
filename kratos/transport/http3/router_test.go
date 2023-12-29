@@ -184,7 +184,7 @@ func TestRouter_Group(t *testing.T) {
 }
 
 func TestHandle(_ *testing.T) {
-	r := newRouter("/", NewServer(TLSConfigServerOption()))
+	r := NewRouter("/", NewServer(TLSConfigServerOption()))
 	h := func(i Context) error {
 		return nil
 	}
@@ -252,4 +252,7 @@ func TestRouter_ContextDataRace(t *testing.T) {
 	wg.Wait()
 	_ = srv.Stop(ctx)
 	t.Log("test end")
+}
+
+func TestHandleHTTP(t *testing.T) {
 }

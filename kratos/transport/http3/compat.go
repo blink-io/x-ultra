@@ -12,6 +12,15 @@ type (
 
 	FilterFunc = khttp.FilterFunc
 
+	// HandlerFunc defines a function to serve HTTP requests.
+	HandlerFunc = khttp.HandlerFunc
+
+	// RouteInfo is an HTTP route info.
+	RouteInfo = khttp.RouteInfo
+
+	// WalkRouteFunc is the type of the function called for each route visited by Walk.
+	WalkRouteFunc = khttp.WalkRouteFunc
+
 	DecodeRequestFunc  = khttp.DecodeRequestFunc
 	EncodeResponseFunc = khttp.EncodeResponseFunc
 	EncodeErrorFunc    = khttp.EncodeErrorFunc

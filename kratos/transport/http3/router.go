@@ -5,18 +5,6 @@ import (
 	"path"
 )
 
-// WalkRouteFunc is the type of the function called for each route visited by Walk.
-type WalkRouteFunc func(RouteInfo) error
-
-// RouteInfo is an HTTP route info.
-type RouteInfo struct {
-	Path   string
-	Method string
-}
-
-// HandlerFunc defines a function to serve HTTP requests.
-type HandlerFunc func(Context) error
-
 // Router is an HTTP router.
 type Router struct {
 	prefix  string
@@ -24,7 +12,7 @@ type Router struct {
 	filters []FilterFunc
 }
 
-func newRouter(prefix string, srv *Server, filters ...FilterFunc) *Router {
+func NewRouter(prefix string, srv *Server, filters ...FilterFunc) *Router {
 	r := &Router{
 		prefix:  prefix,
 		srv:     srv,
@@ -33,12 +21,24 @@ func newRouter(prefix string, srv *Server, filters ...FilterFunc) *Router {
 	return r
 }
 
+func (r *Router) Server() *Server {
+	return r.srv
+}
+
+func (r *Router) Prefix() string {
+	return r.prefix
+}
+
+func (r *Router) Filters() []FilterFunc {
+	return r.filters
+}
+
 // Group returns a new router group.
 func (r *Router) Group(prefix string, filters ...FilterFunc) *Router {
 	var newFilters []FilterFunc
 	newFilters = append(newFilters, r.filters...)
 	newFilters = append(newFilters, filters...)
-	return newRouter(path.Join(r.prefix, prefix), r.srv, newFilters...)
+	return NewRouter(path.Join(r.prefix, prefix), r.srv, newFilters...)
 }
 
 // Handle registers a new route with a matcher for the URL path and method.

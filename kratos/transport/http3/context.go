@@ -68,24 +68,24 @@ func (c *wrapper) Request() *http.Request        { return c.req }
 func (c *wrapper) Response() http.ResponseWriter { return c.res }
 func (c *wrapper) Middleware(h middleware.Handler) middleware.Handler {
 	if tr, ok := transport.FromServerContext(c.req.Context()); ok {
-		return middleware.Chain(c.router.srv.middleware.Match(tr.Operation())...)(h)
+		return middleware.Chain(c.router.Server().Middleware().Match(tr.Operation())...)(h)
 	}
-	return middleware.Chain(c.router.srv.middleware.Match(c.req.URL.Path)...)(h)
+	return middleware.Chain(c.router.Server().Middleware().Match(c.req.URL.Path)...)(h)
 }
-func (c *wrapper) Bind(v interface{}) error      { return c.router.srv.decBody(c.req, v) }
-func (c *wrapper) BindVars(v interface{}) error  { return c.router.srv.decVars(c.req, v) }
-func (c *wrapper) BindQuery(v interface{}) error { return c.router.srv.decQuery(c.req, v) }
+func (c *wrapper) Bind(v interface{}) error      { return c.router.Server().DecodeBody()(c.req, v) }
+func (c *wrapper) BindVars(v interface{}) error  { return c.router.Server().DecodeVars()(c.req, v) }
+func (c *wrapper) BindQuery(v interface{}) error { return c.router.Server().DecodeQuery()(c.req, v) }
 func (c *wrapper) BindForm(v interface{}) error  { return binding.BindForm(c.req, v) }
 func (c *wrapper) Returns(v interface{}, err error) error {
 	if err != nil {
 		return err
 	}
-	return c.router.srv.encResp(&c.w, c.req, v)
+	return c.router.Server().EncodeResponse()(&c.w, c.req, v)
 }
 
 func (c *wrapper) Result(code int, v interface{}) error {
 	c.w.WriteHeader(code)
-	return c.router.srv.encResp(&c.w, c.req, v)
+	return c.router.Server().EncodeResponse()(&c.w, c.req, v)
 }
 
 func (c *wrapper) JSON(code int, v interface{}) error {

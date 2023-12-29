@@ -9,37 +9,37 @@ import (
 
 func Handle[Req any, Res any](
 	operation string,
-	dlr func(context.Context, *Req) (*Res, error),
+	handle func(context.Context, *Req) (*Res, error),
 	ops ...Option,
 ) khttp.HandlerFunc {
 	return func(kctx khttp.Context) error {
-		opts := new(options)
-		for _, o := range ops {
-			o(opts)
-		}
+		opts := applyOptions(ops...)
 		var in Req
-		if opts.method == http.MethodPost ||
-			opts.method == http.MethodPut ||
+		switch opts.method {
+		case http.MethodPost,
+			http.MethodPut,
 			// HTTP DELETE Maybe has payload
 			// https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Methods/DELETE
-			opts.method == http.MethodDelete ||
-			opts.method == http.MethodPatch {
+			http.MethodDelete,
+			http.MethodPatch:
 			if err := kctx.Bind(&in); err != nil {
 				return err
 			}
+		default:
 		}
+
 		if err := kctx.BindQuery(&in); err != nil {
 			return err
 		}
 		khttp.SetOperation(kctx, operation)
-		mdlr := kctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return dlr(kctx, req.(*Req))
+		mHandle := kctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return handle(kctx, req.(*Req))
 		})
-		out, err := mdlr(kctx, &in)
+		out, err := mHandle(kctx, &in)
 		if err != nil {
 			return err
 		}
 		reply := out.(*Res)
-		return kctx.Result(200, reply)
+		return kctx.Result(http.StatusOK, reply)
 	}
 }
