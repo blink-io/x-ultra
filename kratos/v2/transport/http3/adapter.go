@@ -34,8 +34,8 @@ var DefaultOptions = newDefaultOptions()
 
 func newDefaultOptions() *Options {
 	opts := httpbase.ApplyAdapterOptions(
-		httpbase.AdaptNetwork("udp"),
-		httpbase.AdaptAddress(":0"),
+		httpbase.AdapterNetwork("udp"),
+		httpbase.AdapterAddress(":0"),
 	)
 	return opts
 }

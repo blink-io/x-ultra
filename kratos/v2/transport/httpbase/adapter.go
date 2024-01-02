@@ -10,9 +10,9 @@ import (
 )
 
 type ServerAdapter interface {
-	Handler() http.Handler
+	transport.Endpointer
 
-	Endpoint() (*url.URL, error)
+	Handler() http.Handler
 
 	Start(context.Context) error
 
@@ -23,7 +23,7 @@ type ServerAdapter interface {
 	Listener() Listener
 }
 
-type AdapterInit interface {
+type AdapterInitializer interface {
 	Init(context.Context, *AdapterOptions)
 }
 
@@ -69,26 +69,32 @@ func ApplyAdapterOptions(ops ...AdapterOption) *AdapterOptions {
 	return opts
 }
 
-func AdaptNetwork(network string) AdapterOption {
+func AdapterNetwork(network string) AdapterOption {
 	return func(o *AdapterOptions) {
 		o.network = network
 	}
 }
 
-func AdaptAddress(address string) AdapterOption {
+func AdapterAddress(address string) AdapterOption {
 	return func(o *AdapterOptions) {
 		o.address = address
 	}
 }
 
-func AdaptTLSConfig(tlsConf *tls.Config) AdapterOption {
+func AdapterTLSConfig(tlsConf *tls.Config) AdapterOption {
 	return func(o *AdapterOptions) {
 		o.tlsConf = tlsConf
 	}
 }
 
-func AdaptHandler(handler http.Handler) AdapterOption {
+func AdapterHandler(handler http.Handler) AdapterOption {
 	return func(o *AdapterOptions) {
 		o.handler = handler
+	}
+}
+
+func AdapterEndpoint(endpoint *url.URL) AdapterOption {
+	return func(o *AdapterOptions) {
+		o.endpoint = endpoint
 	}
 }

@@ -33,8 +33,8 @@ var DefaultOptions = newDefaultOptions()
 
 func newDefaultOptions() *Options {
 	opts := httpbase.ApplyAdapterOptions(
-		httpbase.AdaptNetwork("tcp"),
-		httpbase.AdaptAddress(":0"),
+		httpbase.AdapterNetwork("tcp"),
+		httpbase.AdapterAddress(":0"),
 	)
 	return opts
 }

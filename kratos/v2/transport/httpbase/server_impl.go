@@ -8,11 +8,11 @@ import (
 	"time"
 
 	"github.com/blink-io/x/kratos/v2/internal/matcher"
-	"github.com/gorilla/mux"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware"
 	"github.com/go-kratos/kratos/v2/transport"
+	"github.com/gorilla/mux"
 )
 
 var (
@@ -181,7 +181,7 @@ func NewServer(opts ...ServerOption) Server {
 	srv.router.MethodNotAllowedHandler = http.DefaultServeMux
 	srv.router.Use(srv.filter())
 
-	if iadapter, ok := srv.adapter.(AdapterInit); ok {
+	if iadapter, ok := srv.adapter.(AdapterInitializer); ok {
 		aopts := &AdapterOptions{
 			network:  srv.network,
 			address:  srv.address,
