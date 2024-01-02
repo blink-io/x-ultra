@@ -59,7 +59,7 @@ require (
 	github.com/quic-go/quic-go v0.40.1
 	github.com/redis/go-redis/extra/rediscmd/v9 v9.0.5
 	github.com/redis/go-redis/v9 v9.3.1
-	github.com/redis/rueidis v1.0.25
+	github.com/redis/rueidis v1.0.26
 	github.com/rs/xid v1.5.0
 	github.com/sanity-io/litter v1.5.5
 	github.com/segmentio/ksuid v1.0.4
@@ -121,6 +121,7 @@ require (
 	github.com/go-faster/xor v1.0.0
 	github.com/go-gorp/gorp/v3 v3.1.0
 	github.com/go-kit/log v0.2.1
+	github.com/go-kratos/aegis v0.2.0
 	github.com/go-rel/mysql v0.11.0
 	github.com/go-rel/postgres v0.11.0
 	github.com/go-rel/rel v0.41.0
@@ -200,7 +201,6 @@ require (
 	github.com/facebookgo/clock v0.0.0-20150410010913-600d898af40a // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/go-crypt/x v0.2.8 // indirect
-	github.com/go-kratos/aegis v0.2.0 // indirect
 	github.com/go-logfmt/logfmt v0.6.0 // indirect
 	github.com/go-logr/logr v1.4.1 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
@@ -216,7 +216,7 @@ require (
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
-	github.com/google/pprof v0.0.0-20231229022155-5aaadb5f27d9 // indirect
+	github.com/google/pprof v0.0.0-20231229205709-960ae82b1e42 // indirect
 	github.com/gopherjs/gopherjs v1.17.2 // indirect
 	github.com/gorilla/css v1.0.1 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0 // indirect
