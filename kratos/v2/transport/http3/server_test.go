@@ -13,6 +13,7 @@ import (
 
 	"github.com/blink-io/x/internal/testdata"
 	"github.com/blink-io/x/kratos/v2/internal/host"
+	"github.com/blink-io/x/kratos/v2/transport/httpbase"
 	"github.com/stretchr/testify/require"
 
 	kerrors "github.com/go-kratos/kratos/v2/errors"
@@ -340,8 +341,15 @@ func BenchmarkServerHTTP3(b *testing.B) {
 	_ = srv.Stop(ctx)
 }
 
-func TestStartServer(t *testing.T) {
+func TestNewServer(t *testing.T) {
 	srv := NewServer(TLSConfigServerOption(), Address(":9999"))
+	require.Error(t, validateServer(srv))
+}
+
+func TestStartServer(t *testing.T) {
+	srv := DefaultServer(TLSConfigServerOption(), Address(":9999"))
+
+	require.NoError(t, validateServer(srv))
 
 	srv.Handle("/hello", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
@@ -370,4 +378,11 @@ func TestStartClient(t *testing.T) {
 	require.NoError(t, err)
 
 	fmt.Println("res: ", string(data))
+}
+
+func validateServer(srv Server) error {
+	if vsrv, ok := srv.(httpbase.Validator); ok {
+		return vsrv.Validate(context.Background())
+	}
+	return nil
 }

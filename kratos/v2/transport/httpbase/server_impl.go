@@ -3,6 +3,7 @@ package httpbase
 import (
 	"context"
 	"crypto/tls"
+	"errors"
 	"net/http"
 	"net/url"
 	"time"
@@ -20,6 +21,7 @@ var (
 	_ transport.Endpointer = (*server)(nil)
 	_ http.Handler         = (*server)(nil)
 	_ Server               = (*server)(nil)
+	_ Validator            = (*server)(nil)
 )
 
 // ServerOption is an HTTP server option.
@@ -185,14 +187,26 @@ func NewServer(opts ...ServerOption) Server {
 		aopts := &AdapterOptions{
 			network:  srv.network,
 			address:  srv.address,
-			tlsConf:  srv.tlsConf,
 			endpoint: srv.endpoint,
+			tlsConf:  srv.tlsConf,
 			handler:  FilterChain(srv.filters...)(srv.router),
 		}
 		iadapter.Init(srv.cxt, aopts)
 	}
 
 	return srv
+}
+
+func (s *server) Validate(ctx context.Context) error {
+	if s.adapter == nil {
+		return errors.New("server: adapter is required")
+	}
+	if v, ok := (s.adapter).(Validator); ok {
+		if err := v.Validate(ctx); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func (s *server) DecodeVars() DecodeRequestFunc {
@@ -221,15 +235,6 @@ func (s *server) Middleware() matcher.Matcher {
 
 func (s *server) Router() *mux.Router {
 	return s.router
-}
-
-func (s *server) Validate(ctx context.Context) error {
-	if v, ok := (s.adapter).(Validator); ok {
-		if err := v.Validate(ctx); err != nil {
-			return err
-		}
-	}
-	return nil
 }
 
 // Use uses a service middleware with selector.
