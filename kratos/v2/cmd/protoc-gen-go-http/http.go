@@ -55,9 +55,10 @@ func generateFileContent(gen *protogen.Plugin, file *protogen.File, g *protogen.
 	g.P("// is compatible with the kratos package it is being compiled against.")
 	g.P("var _ = new(", contextPackage.Ident("Context"), ")")
 	g.P("var _ = ", bindingPackage.Ident("EncodeURL"))
-	transImportPath := *httpTransportImportPath
-	if len(transImportPath) > 0 {
-		g.P("const _ = ", protogen.GoImportPath(transImportPath).Ident("SupportPackageIsVersion1"))
+	transPath := *transportPath
+	fmt.Fprintf(os.Stderr, "transport path=%s\n", transPath)
+	if len(transPath) > 0 {
+		g.P("const _ = ", protogen.GoImportPath(transPath).Ident("SupportPackageIsVersion1"))
 	} else {
 		g.P("const _ = ", transportHTTPPackage.Ident("SupportPackageIsVersion1"))
 	}
@@ -98,6 +99,7 @@ func genService(_ *protogen.Plugin, file *protogen.File, g *protogen.GeneratedFi
 		if data, err := os.ReadFile(externTemplate); err == nil {
 			g.P(sd.execute(string(data)))
 		} else {
+			dprintf("Parse template file error: %s\n", err.Error())
 			g.P(sd.execute(httpTemplate))
 		}
 	}
