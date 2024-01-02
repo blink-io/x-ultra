@@ -139,6 +139,24 @@ func Adapter(adapter ServerAdapter) ServerOption {
 	}
 }
 
+type serverOptions struct {
+	cxt         context.Context
+	tlsConf     *tls.Config
+	endpoint    *url.URL
+	network     string
+	address     string
+	timeout     time.Duration
+	filters     []FilterFunc
+	middleware  matcher.Matcher
+	decVars     DecodeRequestFunc
+	decQuery    DecodeRequestFunc
+	decBody     DecodeRequestFunc
+	encResp     EncodeResponseFunc
+	encErr      EncodeErrorFunc
+	strictSlash bool
+	router      *mux.Router
+}
+
 // server is an HTTP server wrapper.
 type server struct {
 	cxt         context.Context
