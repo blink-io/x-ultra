@@ -36,3 +36,8 @@ mod-list:
 fix-udp:
 	sudo sysctl -w net.core.rmem_max=2500000
 	sudo sysctl -w net.core.wmem_max=2500000
+
+.PHONY: install-tools
+# Run fix UDP
+install-tools:
+	go install github.com/blink-io/x/kratos/v2/cmd/protoc-gen-go-http@latest
