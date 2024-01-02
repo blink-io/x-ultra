@@ -20,9 +20,17 @@ var (
 	Timeout = httpbase.Timeout
 
 	Middleware = httpbase.Middleware
+
+	Adapter = httpbase.Adapter
 )
 
 func NewServer(opts ...ServerOption) Server {
+	s := httpbase.NewServer(opts...)
+	return s
+}
+
+// DefaultServer has an HTTP adapter with default options
+func DefaultServer(opts ...ServerOption) Server {
 	a := NewAdapter(DefaultOptions)
 	opts = append(opts, httpbase.Adapter(a))
 	s := httpbase.NewServer(opts...)

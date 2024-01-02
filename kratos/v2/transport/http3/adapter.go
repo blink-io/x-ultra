@@ -20,6 +20,20 @@ type server = http3.Server
 
 type Options = httpbase.AdapterOptions
 
+type ExtraOption func(*adapter)
+
+func Listener(ln http3.QUICEarlyListener) ExtraOption {
+	return func(a *adapter) {
+		a.ln = ln
+	}
+}
+
+func QConfig(qconf *quic.Config) ExtraOption {
+	return func(a *adapter) {
+		a.qconf = qconf
+	}
+}
+
 type adapter struct {
 	srv      *server
 	network  string
@@ -40,8 +54,11 @@ func newDefaultOptions() *Options {
 	return opts
 }
 
-func NewAdapter(opts *Options) httpbase.ServerAdapter {
+func NewAdapter(opts *Options, eops ...ExtraOption) httpbase.ServerAdapter {
 	a := new(adapter)
+	for _, o := range eops {
+		o(a)
+	}
 	a.Init(context.Background(), opts)
 	return a
 }

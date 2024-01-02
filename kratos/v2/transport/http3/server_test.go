@@ -13,6 +13,7 @@ import (
 
 	"github.com/blink-io/x/internal/testdata"
 	"github.com/blink-io/x/kratos/v2/internal/host"
+	"github.com/stretchr/testify/require"
 
 	kerrors "github.com/go-kratos/kratos/v2/errors"
 	"github.com/quic-go/quic-go"
@@ -52,7 +53,7 @@ func TLSConfigServerOption() ServerOption {
 	return TLSConfig(serverTlsConf)
 }
 
-func CreateListener() *quic.EarlyListener {
+func CreateListener() http3.QUICEarlyListener {
 	ln, err := quic.ListenAddrEarly(":0", http3.ConfigureTLSConfig(serverTlsConf), nil)
 	if err != nil {
 		panic(err)
@@ -76,7 +77,13 @@ func newHandleFuncWrapper(fn http.HandlerFunc) http.Handler {
 func TestServeHTTP3(t *testing.T) {
 	ln := CreateListener()
 
-	mux := NewServer()
+	adp := NewAdapter(DefaultOptions,
+		Listener(ln),
+		QConfig(new(quic.Config)),
+	)
+	mux := NewServer(
+		Adapter(adp),
+	)
 	mux.HandleFunc("/index", h)
 	mux.Route("/errors").GET("/cause", func(ctx Context) error {
 		return kerrors.BadRequest("xxx", "zzz").
@@ -331,4 +338,36 @@ func BenchmarkServerHTTP3(b *testing.B) {
 		}
 	}
 	_ = srv.Stop(ctx)
+}
+
+func TestStartServer(t *testing.T) {
+	srv := NewServer(TLSConfigServerOption(), Address(":9999"))
+
+	srv.Handle("/hello", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		w.Header().Set("Content-Type", "plain/text")
+		w.Write([]byte("Are you OK?"))
+	}))
+	srv.Start(context.Background())
+}
+
+func TestStartClient(t *testing.T) {
+	cc, err := NewClient(context.Background(),
+		WithTransport(RoundTripperConf(clientTlsConf, nil)),
+		WithEndpoint("https://localhost:9999"),
+	)
+	require.NoError(t, err)
+
+	req, err := http.NewRequest(http.MethodGet, "https://localhost:9999/hello", nil)
+	require.NoError(t, err)
+
+	res, err := cc.Do(req)
+	require.NoError(t, err)
+
+	defer res.Body.Close()
+
+	data, err := io.ReadAll(res.Body)
+	require.NoError(t, err)
+
+	fmt.Println("res: ", string(data))
 }

@@ -39,20 +39,30 @@ func newHandleFuncWrapper(fn http.HandlerFunc) http.Handler {
 	return &handleFuncWrapper{fn: fn}
 }
 
-func TestServeHTTP(t *testing.T) {
+func CreateListener() net.Listener {
 	ln, err := net.Listen("tcp", ":0")
 	if err != nil {
-		t.Fatal(err)
+		panic(err)
 	}
+	return ln
+}
 
-	mux := NewServer()
+func TestServeHTTP(t *testing.T) {
+	ln := CreateListener()
+
+	adp := NewAdapter(DefaultOptions,
+		Listener(ln),
+	)
+	mux := NewServer(
+		Adapter(adp),
+	)
 	mux.HandleFunc("/index", h)
 	mux.Route("/errors").GET("/cause", func(ctx Context) error {
 		return kerrors.BadRequest("xxx", "zzz").
 			WithMetadata(map[string]string{"foo": "bar"}).
 			WithCause(errors.New("error cause"))
 	})
-	if err = mux.WalkRoute(func(r RouteInfo) error {
+	if err := mux.WalkRoute(func(r RouteInfo) error {
 		t.Logf("WalkRoute: %+v", r)
 		return nil
 	}); err != nil {

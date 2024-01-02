@@ -11,7 +11,6 @@ import (
 	"github.com/blink-io/x/kratos/v2/internal/endpoint"
 	"github.com/blink-io/x/kratos/v2/internal/host"
 	"github.com/blink-io/x/kratos/v2/transport/httpbase"
-
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/transport"
 )
@@ -19,6 +18,14 @@ import (
 type server = http.Server
 
 type Options = httpbase.AdapterOptions
+
+type ExtraOption func(*adapter)
+
+func Listener(ln net.Listener) ExtraOption {
+	return func(a *adapter) {
+		a.ln = ln
+	}
+}
 
 type adapter struct {
 	srv      *server
@@ -39,8 +46,11 @@ func newDefaultOptions() *Options {
 	return opts
 }
 
-func NewAdapter(opts *Options) httpbase.ServerAdapter {
+func NewAdapter(opts *Options, eops ...ExtraOption) httpbase.ServerAdapter {
 	a := new(adapter)
+	for _, o := range eops {
+		o(a)
+	}
 	a.Init(context.Background(), opts)
 	return a
 }

@@ -24,9 +24,17 @@ var (
 	TLSConfig = httpbase.TLSConfig
 
 	StrictSlash = httpbase.StrictSlash
+
+	Adapter = httpbase.Adapter
 )
 
 func NewServer(opts ...ServerOption) Server {
+	s := httpbase.NewServer(opts...)
+	return s
+}
+
+// DefaultServer has an HTTP3 adapter with default options
+func DefaultServer(opts ...ServerOption) Server {
 	a := NewAdapter(DefaultOptions)
 	opts = append(opts, httpbase.Adapter(a))
 	s := httpbase.NewServer(opts...)
