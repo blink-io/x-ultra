@@ -57,6 +57,8 @@ type ServerRouter interface {
 
 type Validator = util.Validator
 
+type Listener = adapter.Listener
+
 type Server interface {
 	ServerRouter
 
@@ -68,7 +70,9 @@ type Server interface {
 
 	http.Handler
 
-	Listener() adapter.Listener
+	Validator
+
+	Listener() Listener
 
 	Router() *mux.Router
 }

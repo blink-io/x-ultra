@@ -14,6 +14,7 @@ import (
 
 	"github.com/blink-io/x/kratos/v2/internal/host"
 	hadapter "github.com/blink-io/x/kratos/v2/transport/http/adapter/http"
+	"github.com/stretchr/testify/require"
 
 	kerrors "github.com/go-kratos/kratos/v2/errors"
 )
@@ -268,4 +269,18 @@ func BenchmarkServer(b *testing.B) {
 		}
 	}
 	_ = srv.Stop(ctx)
+}
+
+func TestHTTP_StartServer(t *testing.T) {
+	srv := NewHTTPServer(TLSConfigServerOption(), Address(":9999"))
+
+	require.NoError(t, validateServer(srv))
+
+	srv.Handle("/hello", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		w.Header().Set("Content-Type", "plain/text")
+		w.Write([]byte("Are you OK?"))
+	}))
+	err := srv.Start(context.Background())
+	require.NoError(t, err)
 }

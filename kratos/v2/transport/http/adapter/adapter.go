@@ -12,11 +12,9 @@ import (
 type Adapter interface {
 	transport.Endpointer
 
+	transport.Server
+
 	Handler() http.Handler
-
-	Start(context.Context) error
-
-	Stop(context.Context) error
 
 	Kind() transport.Kind
 

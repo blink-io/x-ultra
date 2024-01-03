@@ -14,7 +14,6 @@ import (
 	"github.com/blink-io/x/internal/testdata"
 	"github.com/blink-io/x/kratos/v2/internal/host"
 	h3adapter "github.com/blink-io/x/kratos/v2/transport/http/adapter/http3"
-	"github.com/blink-io/x/kratos/v2/util"
 	"github.com/stretchr/testify/require"
 
 	kerrors "github.com/go-kratos/kratos/v2/errors"
@@ -324,7 +323,10 @@ func TestHTTP3_NewServerWithError(t *testing.T) {
 }
 
 func TestHTTP3_StartServer(t *testing.T) {
-	srv := NewHTTP3Server(TLSConfigServerOption(), Address(":9999"))
+	srv := NewHTTP3Server(
+		TLSConfigServerOption(),
+		Address(":9999"),
+	)
 
 	require.NoError(t, validateServer(srv))
 
@@ -359,8 +361,8 @@ func TestHTT3_StartClient(t *testing.T) {
 }
 
 func validateServer(srv Server) error {
-	if vv, ok := srv.(util.Validator); ok {
-		return vv.Validate(context.Background())
+	if srv != nil {
+		return srv.Validate(context.Background())
 	}
 	return nil
 }

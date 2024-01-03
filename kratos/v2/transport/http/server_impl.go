@@ -160,6 +160,7 @@ type server struct {
 	encResp     EncodeResponseFunc
 	encErr      EncodeErrorFunc
 	strictSlash bool
+	kind        transport.Kind
 	router      *mux.Router
 }
 
@@ -188,10 +189,12 @@ func NewServer(opts ...ServerOption) Server {
 		encErr:      DefaultErrorEncoder,
 		strictSlash: true,
 		router:      mux.NewRouter(),
+		adapter:     hadapter.NewDefault(),
 	}
 	for _, o := range opts {
 		o(srv)
 	}
+	srv.kind = srv.adapter.Kind()
 	srv.router.StrictSlash(srv.strictSlash)
 	srv.router.NotFoundHandler = http.DefaultServeMux
 	srv.router.MethodNotAllowedHandler = http.DefaultServeMux
@@ -343,7 +346,7 @@ func (s *server) filter() mux.MiddlewareFunc {
 				reqHeader:    headerCarrier(req.Header),
 				replyHeader:  headerCarrier(w.Header()),
 				request:      req,
-				kind:         s.adapter.Kind(),
+				kind:         s.kind,
 			}
 			if s.endpoint != nil {
 				tr.endpoint = s.endpoint.String()
