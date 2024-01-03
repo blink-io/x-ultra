@@ -7,8 +7,11 @@ import (
 )
 
 const (
-	KindHTTP3 transport.Kind = "http3"
+	KindHTTP  Kind = transport.KindHTTP
+	KindHTTP3 Kind = "http3"
 )
+
+type Kind = transport.Kind
 
 type Validator interface {
 	Validate(context.Context) error

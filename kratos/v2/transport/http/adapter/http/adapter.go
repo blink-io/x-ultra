@@ -10,16 +10,15 @@ import (
 
 	"github.com/blink-io/x/kratos/v2/internal/endpoint"
 	"github.com/blink-io/x/kratos/v2/internal/host"
-	xadapter "github.com/blink-io/x/kratos/v2/transport/http/adapter"
-
-	"github.com/go-kratos/kratos/v2/log"
-	"github.com/go-kratos/kratos/v2/transport"
+	"github.com/blink-io/x/kratos/v2/transport"
+	xa "github.com/blink-io/x/kratos/v2/transport/http/adapter"
+	"github.com/blink-io/x/log"
 )
 
 type (
 	server = http.Server
 
-	Options = xadapter.Options
+	Options = xa.Options
 
 	ExtraOption func(*adapter)
 )
@@ -44,11 +43,11 @@ var DefaultOptions = Options{
 	Address: ":0",
 }
 
-func NewDefault() xadapter.Adapter {
+func NewDefault() xa.Adapter {
 	return NewAdapter(DefaultOptions)
 }
 
-func NewAdapter(opts Options, eops ...ExtraOption) xadapter.Adapter {
+func NewAdapter(opts Options, eops ...ExtraOption) xa.Adapter {
 	a := new(adapter)
 	a.Init(context.Background(), opts)
 	for _, o := range eops {
@@ -133,6 +132,6 @@ func (s *adapter) Kind() transport.Kind {
 	return transport.KindHTTP
 }
 
-func (s *adapter) Listener() xadapter.Listener {
+func (s *adapter) Listener() xa.Listener {
 	return s.ln
 }
