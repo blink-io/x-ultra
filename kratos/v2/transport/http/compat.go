@@ -27,6 +27,8 @@ type (
 	EncodeErrorFunc = khttp.EncodeErrorFunc
 )
 
+const SupportPackageIsVersion1 = khttp.SupportPackageIsVersion1
+
 var (
 	FilterChain = khttp.FilterChain
 
