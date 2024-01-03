@@ -24,7 +24,6 @@ var debug = (func() bool {
 func main() {
 	flag.Parse()
 	if *showVersion {
-		dprintf("invoke show version\n")
 		fmt.Printf("protoc-gen-go-http %v\n", release)
 		return
 	}
@@ -33,7 +32,6 @@ func main() {
 		ParamFunc: flag.CommandLine.Set,
 	}.Run(func(gen *protogen.Plugin) error {
 		etpl := *externTemplate
-		dprintf("Template Path: %s\n", etpl)
 
 		gen.SupportedFeatures = uint64(pluginpb.CodeGeneratorResponse_FEATURE_PROTO3_OPTIONAL)
 
