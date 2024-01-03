@@ -1,38 +1,74 @@
 package http
 
 import (
-	"github.com/blink-io/x/kratos/v2/transport/httpbase"
+	"net/http"
+
+	"github.com/blink-io/x/kratos/v2/internal/matcher"
+	"github.com/blink-io/x/kratos/v2/transport/http/adapter"
+	"github.com/blink-io/x/kratos/v2/util"
+
+	"github.com/go-kratos/kratos/v2/transport"
+	"github.com/gorilla/mux"
 )
 
-type (
-	Server = httpbase.Server
+type ServerCodec interface {
+	//DecodeVars defines decoding request function
+	DecodeVars() DecodeRequestFunc
 
-	ServerOption = httpbase.ServerOption
-)
+	//DecodeQuery defines decoding query strings function
+	DecodeQuery() DecodeRequestFunc
 
-var (
-	Endpoint = httpbase.Endpoint
+	//DecodeBody defines decoding request's body function
+	DecodeBody() DecodeRequestFunc
 
-	Network = httpbase.Network
+	//EncodeResponse defines encoding response function
+	EncodeResponse() EncodeResponseFunc
 
-	Address = httpbase.Address
+	//EncodeError defines encoding error function
+	EncodeError() EncodeErrorFunc
 
-	Timeout = httpbase.Timeout
-
-	Middleware = httpbase.Middleware
-
-	Adapter = httpbase.Adapter
-)
-
-func NewServer(opts ...ServerOption) Server {
-	s := httpbase.NewServer(opts...)
-	return s
+	//Middleware defines middlewares
+	Middleware() matcher.Matcher
 }
 
-// DefaultServer has an HTTP adapter with default options
-func DefaultServer(opts ...ServerOption) Server {
-	a := NewAdapter(DefaultOptions)
-	opts = append(opts, httpbase.Adapter(a))
-	s := httpbase.NewServer(opts...)
-	return s
+type ServerRouter interface {
+
+	// Route registers an HTTP router.
+	Route(prefix string, filters ...FilterFunc) Router
+
+	// Handle registers a new route with a matcher for the URL path.
+	Handle(path string, h http.Handler)
+
+	// HandlePrefix registers a new route with a matcher for the URL path prefix.
+	HandlePrefix(prefix string, h http.Handler)
+
+	// HandleFunc registers a new route with a matcher for the URL path.
+	HandleFunc(path string, h http.HandlerFunc)
+
+	// HandleHeader registers a new route with a matcher for the header.
+	HandleHeader(key, val string, h http.HandlerFunc)
+
+	// WalkRoute walks the router and all its sub-routers, calling walkFn for each route in the tree.
+	WalkRoute(fn WalkRouteFunc) error
+
+	// WalkHandle walks the router and all its sub-routers, calling walkFn for each route in the tree.
+	WalkHandle(handle func(method, path string, handler http.HandlerFunc)) error
+}
+
+type Validator = util.Validator
+
+type Server interface {
+	ServerRouter
+
+	ServerCodec
+
+	transport.Server
+
+	transport.Endpointer
+
+	http.Handler
+
+	Listener() adapter.Listener
+
+	Router() *mux.Router
 }

@@ -9,7 +9,9 @@ import (
 
 	"github.com/blink-io/x/kratos/v2/internal/endpoint"
 	"github.com/blink-io/x/kratos/v2/internal/host"
-	"github.com/blink-io/x/kratos/v2/transport/httpbase"
+	xtransport "github.com/blink-io/x/kratos/v2/transport"
+	xadapter "github.com/blink-io/x/kratos/v2/transport/http/adapter"
+
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/transport"
 	"github.com/quic-go/quic-go"
@@ -18,7 +20,7 @@ import (
 
 type server = http3.Server
 
-type Options = httpbase.AdapterOptions
+type Options = xadapter.Options
 
 type ExtraOption func(*adapter)
 
@@ -44,17 +46,16 @@ type adapter struct {
 	qconf    *quic.Config
 }
 
-var DefaultOptions = newDefaultOptions()
-
-func newDefaultOptions() *Options {
-	opts := httpbase.ApplyAdapterOptions(
-		httpbase.AdapterNetwork("udp"),
-		httpbase.AdapterAddress(":0"),
-	)
-	return opts
+var DefaultOptions = Options{
+	Network: "udp",
+	Address: ":0",
 }
 
-func NewAdapter(opts *Options, eops ...ExtraOption) httpbase.ServerAdapter {
+func NewDefault() xadapter.Adapter {
+	return NewAdapter(DefaultOptions)
+}
+
+func NewAdapter(opts Options, eops ...ExtraOption) xadapter.Adapter {
 	a := new(adapter)
 	for _, o := range eops {
 		o(a)
@@ -63,17 +64,17 @@ func NewAdapter(opts *Options, eops ...ExtraOption) httpbase.ServerAdapter {
 	return a
 }
 
-func (s *adapter) Init(ctx context.Context, opts *Options) {
-	s.network = opts.Network()
-	s.address = opts.Address()
-	s.tlsConf = opts.TLSConfig()
-	s.endpoint = opts.Endpoint()
+func (s *adapter) Init(ctx context.Context, opts Options) {
+	s.network = opts.Network
+	s.address = opts.Address
+	s.tlsConf = opts.TLSConf
+	s.endpoint = opts.Endpoint
 	s.qconf = new(quic.Config)
 	s.srv = &http3.Server{
 		Addr:       s.address,
 		TLSConfig:  s.tlsConf,
 		QuicConfig: s.qconf,
-		Handler:    opts.Handler(),
+		Handler:    opts.Handler,
 	}
 }
 
@@ -89,7 +90,7 @@ func (s *adapter) Handler() http.Handler {
 }
 
 func (s *adapter) Kind() transport.Kind {
-	return httpbase.KindHTTP3
+	return xtransport.KindHTTP3
 }
 
 // Start start the HTTP server.
@@ -138,6 +139,6 @@ func (s *adapter) Endpoint() (*url.URL, error) {
 	return s.endpoint, nil
 }
 
-func (s *adapter) Listener() httpbase.Listener {
+func (s *adapter) Listener() xadapter.Listener {
 	return s.ln
 }

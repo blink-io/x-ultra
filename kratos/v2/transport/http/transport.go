@@ -1,14 +1,16 @@
-package httpbase
+package http
 
 import (
 	"context"
 	"net/http"
 
+	xtransport "github.com/blink-io/x/kratos/v2/transport"
+
 	"github.com/go-kratos/kratos/v2/transport"
 )
 
 const (
-	KindHTTP3 transport.Kind = "http3"
+	KindHTTP3 = xtransport.KindHTTP3
 )
 
 var _ Transporter = (*Transport)(nil)

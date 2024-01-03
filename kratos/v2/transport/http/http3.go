@@ -1,11 +1,17 @@
-package http3
+package http
 
 import (
 	"crypto/tls"
+	"net/http"
 
 	"github.com/quic-go/quic-go"
 	"github.com/quic-go/quic-go/http3"
 )
+
+func IsHTTP3Transport(trans http.RoundTripper) bool {
+	_, ok := trans.(*http3.RoundTripper)
+	return ok
+}
 
 func RoundTripper(tlsConf *tls.Config) *http3.RoundTripper {
 	qconf := new(quic.Config)
@@ -18,4 +24,8 @@ func RoundTripperConf(tlsConf *tls.Config, qconf *quic.Config) *http3.RoundTripp
 		QuicConfig:      qconf,
 	}
 	return rt
+}
+
+func WithHTTP3RoundTripper(tlsConf *tls.Config) ClientOption {
+	return WithTransport(RoundTripper(tlsConf))
 }

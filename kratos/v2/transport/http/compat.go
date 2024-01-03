@@ -1,25 +1,46 @@
 package http
 
 import (
-	"github.com/blink-io/x/kratos/v2/transport/httpbase"
+	"net/http"
+
+	khttp "github.com/go-kratos/kratos/v2/transport/http"
 )
 
 type (
-	Client = httpbase.Client
+	Context = khttp.Context
 
-	ClientOption = httpbase.ClientOption
+	FilterFunc = khttp.FilterFunc
 
-	Context = httpbase.Context
+	// Request type net/http.
+	Request = http.Request
 
-	RouteInfo = httpbase.RouteInfo
+	// ResponseWriter type net/http.
+	ResponseWriter = http.ResponseWriter
+
+	// Flusher type net/http
+	Flusher = http.Flusher
+
+	DecodeRequestFunc = khttp.DecodeRequestFunc
+
+	EncodeResponseFunc = khttp.EncodeResponseFunc
+
+	EncodeErrorFunc = khttp.EncodeErrorFunc
 )
 
 var (
-	NewClient = httpbase.NewClient
+	FilterChain = khttp.FilterChain
 
-	WithTLSConfig = httpbase.WithTLSConfig
+	NewRedirect = khttp.NewRedirect
 
-	WithEndpoint = httpbase.WithEndpoint
+	DefaultRequestVars = khttp.DefaultRequestVars
 
-	WithTransport = httpbase.WithTransport
+	DefaultRequestQuery = khttp.DefaultRequestQuery
+
+	DefaultRequestDecoder = khttp.DefaultRequestDecoder
+
+	DefaultResponseEncoder = khttp.DefaultResponseEncoder
+
+	DefaultErrorEncoder = khttp.DefaultErrorEncoder
+
+	CodecForRequest = khttp.CodecForRequest
 )

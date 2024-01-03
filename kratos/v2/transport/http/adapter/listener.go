@@ -1,4 +1,4 @@
-package httpbase
+package adapter
 
 import (
 	"io"

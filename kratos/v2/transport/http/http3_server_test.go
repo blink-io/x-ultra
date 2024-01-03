@@ -1,4 +1,4 @@
-package http3
+package http
 
 import (
 	"context"
@@ -13,7 +13,8 @@ import (
 
 	"github.com/blink-io/x/internal/testdata"
 	"github.com/blink-io/x/kratos/v2/internal/host"
-	"github.com/blink-io/x/kratos/v2/transport/httpbase"
+	h3adapter "github.com/blink-io/x/kratos/v2/transport/http/adapter/http3"
+	"github.com/blink-io/x/kratos/v2/util"
 	"github.com/stretchr/testify/require"
 
 	kerrors "github.com/go-kratos/kratos/v2/errors"
@@ -26,10 +27,6 @@ var (
 
 	serverTlsConf = testdata.GetServerTLSConfig()
 
-	h = func(w http.ResponseWriter, r *http.Request) {
-		_ = json.NewEncoder(w).Encode(testData{Path: r.RequestURI})
-	}
-
 	HTTP3Client = &http.Client{
 		Timeout:   5 * time.Second,
 		Transport: RoundTripper(clientTlsConf),
@@ -40,12 +37,6 @@ func init() {
 	http.DefaultClient = HTTP3Client
 }
 
-type testKey struct{}
-
-type testData struct {
-	Path string `json:"path"`
-}
-
 func TLSConfigClientOption() ClientOption {
 	return WithTLSConfig(clientTlsConf)
 }
@@ -54,7 +45,7 @@ func TLSConfigServerOption() ServerOption {
 	return TLSConfig(serverTlsConf)
 }
 
-func CreateListener() http3.QUICEarlyListener {
+func CreateHTTP3Listener() http3.QUICEarlyListener {
 	ln, err := quic.ListenAddrEarly(":0", http3.ConfigureTLSConfig(serverTlsConf), nil)
 	if err != nil {
 		panic(err)
@@ -62,25 +53,11 @@ func CreateListener() http3.QUICEarlyListener {
 	return ln
 }
 
-// handleFuncWrapper is a wrapper for http.HandlerFunc to implement http.Handler
-type handleFuncWrapper struct {
-	fn http.HandlerFunc
-}
-
-func (x *handleFuncWrapper) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
-	x.fn.ServeHTTP(writer, request)
-}
-
-func newHandleFuncWrapper(fn http.HandlerFunc) http.Handler {
-	return &handleFuncWrapper{fn: fn}
-}
-
-func TestServeHTTP3(t *testing.T) {
-	ln := CreateListener()
-
-	adp := NewAdapter(DefaultOptions,
-		Listener(ln),
-		QConfig(new(quic.Config)),
+func TestHTTP3_Serve(t *testing.T) {
+	ln := CreateHTTP3Listener()
+	adp := h3adapter.NewAdapter(h3adapter.DefaultOptions,
+		h3adapter.Listener(ln),
+		h3adapter.QConfig(new(quic.Config)),
 	)
 	mux := NewServer(
 		Adapter(adp),
@@ -115,9 +92,9 @@ func TestServeHTTP3(t *testing.T) {
 	}
 }
 
-func TestServerHTTP3(t *testing.T) {
+func TestHTTP3_NewDefaultServer(t *testing.T) {
 	ctx := context.Background()
-	srv := NewServer(TLSConfigServerOption())
+	srv := NewHTTP3Server(TLSConfigServerOption())
 	srv.Handle("/index", newHandleFuncWrapper(h))
 	srv.HandleFunc("/index/{id:[0-9]+}", h)
 	srv.HandlePrefix("/test/prefix", newHandleFuncWrapper(h))
@@ -140,9 +117,9 @@ func TestServerHTTP3(t *testing.T) {
 		}
 	}()
 	time.Sleep(time.Second)
-	testHeaderHTTP3(t, srv)
-	testClientHTTP3(t, srv)
-	testAcceptHTTP3(t, srv)
+	testHTTP3Header(t, srv)
+	testHTTP3Client(t, srv)
+	testHTTP3Accept(t, srv)
 	time.Sleep(time.Second)
 
 	if srv.Stop(ctx) != nil {
@@ -150,7 +127,7 @@ func TestServerHTTP3(t *testing.T) {
 	}
 }
 
-func testAcceptHTTP3(t *testing.T, srv Server) {
+func testHTTP3Accept(t *testing.T, srv Server) {
 	tests := []struct {
 		method      string
 		path        string
@@ -187,7 +164,7 @@ func testAcceptHTTP3(t *testing.T, srv Server) {
 	}
 }
 
-func testHeaderHTTP3(t *testing.T, srv Server) {
+func testHTTP3Header(t *testing.T, srv Server) {
 	e, err := srv.Endpoint()
 	if err != nil {
 		t.Errorf("expected nil got %v", err)
@@ -215,7 +192,7 @@ func testHeaderHTTP3(t *testing.T, srv Server) {
 	resp.Body.Close()
 }
 
-func testClientHTTP3(t *testing.T, srv Server) {
+func testHTTP3Client(t *testing.T, srv Server) {
 	tests := []struct {
 		method string
 		path   string
@@ -298,7 +275,7 @@ func testClientHTTP3(t *testing.T, srv Server) {
 	}
 }
 
-func BenchmarkServerHTTP3(b *testing.B) {
+func BenchmarkHTTP3_Server(b *testing.B) {
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		data := &testData{Path: r.RequestURI}
 		_ = json.NewEncoder(w).Encode(data)
@@ -341,13 +318,13 @@ func BenchmarkServerHTTP3(b *testing.B) {
 	_ = srv.Stop(ctx)
 }
 
-func TestNewServer(t *testing.T) {
+func TestHTTP3_NewServerWithError(t *testing.T) {
 	srv := NewServer(TLSConfigServerOption(), Address(":9999"))
 	require.Error(t, validateServer(srv))
 }
 
-func TestStartServer(t *testing.T) {
-	srv := DefaultServer(TLSConfigServerOption(), Address(":9999"))
+func TestHTTP3_StartServer(t *testing.T) {
+	srv := NewHTTP3Server(TLSConfigServerOption(), Address(":9999"))
 
 	require.NoError(t, validateServer(srv))
 
@@ -356,12 +333,13 @@ func TestStartServer(t *testing.T) {
 		w.Header().Set("Content-Type", "plain/text")
 		w.Write([]byte("Are you OK?"))
 	}))
-	srv.Start(context.Background())
+	err := srv.Start(context.Background())
+	require.NoError(t, err)
 }
 
-func TestStartClient(t *testing.T) {
+func TestHTT3_StartClient(t *testing.T) {
 	cc, err := NewClient(context.Background(),
-		WithTransport(RoundTripperConf(clientTlsConf, nil)),
+		WithTransport(RoundTripper(clientTlsConf)),
 		WithEndpoint("https://localhost:9999"),
 	)
 	require.NoError(t, err)
@@ -381,8 +359,8 @@ func TestStartClient(t *testing.T) {
 }
 
 func validateServer(srv Server) error {
-	if vsrv, ok := srv.(httpbase.Validator); ok {
-		return vsrv.Validate(context.Background())
+	if vv, ok := srv.(util.Validator); ok {
+		return vv.Validate(context.Background())
 	}
 	return nil
 }

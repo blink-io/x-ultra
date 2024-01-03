@@ -10,14 +10,15 @@ import (
 
 	"github.com/blink-io/x/kratos/v2/internal/endpoint"
 	"github.com/blink-io/x/kratos/v2/internal/host"
-	"github.com/blink-io/x/kratos/v2/transport/httpbase"
+	xadapter "github.com/blink-io/x/kratos/v2/transport/http/adapter"
+
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/transport"
 )
 
 type server = http.Server
 
-type Options = httpbase.AdapterOptions
+type Options = xadapter.Options
 
 type ExtraOption func(*adapter)
 
@@ -36,17 +37,16 @@ type adapter struct {
 	endpoint *url.URL
 }
 
-var DefaultOptions = newDefaultOptions()
-
-func newDefaultOptions() *Options {
-	opts := httpbase.ApplyAdapterOptions(
-		httpbase.AdapterNetwork("tcp"),
-		httpbase.AdapterAddress(":0"),
-	)
-	return opts
+var DefaultOptions = Options{
+	Network: "tcp",
+	Address: ":0",
 }
 
-func NewAdapter(opts *Options, eops ...ExtraOption) httpbase.ServerAdapter {
+func NewDefault() xadapter.Adapter {
+	return NewAdapter(DefaultOptions)
+}
+
+func NewAdapter(opts Options, eops ...ExtraOption) xadapter.Adapter {
 	a := new(adapter)
 	for _, o := range eops {
 		o(a)
@@ -55,15 +55,15 @@ func NewAdapter(opts *Options, eops ...ExtraOption) httpbase.ServerAdapter {
 	return a
 }
 
-func (s *adapter) Init(ctx context.Context, opts *Options) {
-	s.network = opts.Network()
-	s.address = opts.Address()
-	s.tlsConf = opts.TLSConfig()
-	s.endpoint = opts.Endpoint()
+func (s *adapter) Init(ctx context.Context, opts Options) {
+	s.network = opts.Network
+	s.address = opts.Address
+	s.tlsConf = opts.TLSConf
+	s.endpoint = opts.Endpoint
 	s.srv = &http.Server{
 		Addr:      s.address,
 		TLSConfig: s.tlsConf,
-		Handler:   opts.Handler(),
+		Handler:   opts.Handler,
 	}
 }
 
@@ -131,6 +131,6 @@ func (s *adapter) Kind() transport.Kind {
 	return transport.KindHTTP
 }
 
-func (s *adapter) Listener() httpbase.Listener {
+func (s *adapter) Listener() xadapter.Listener {
 	return s.ln
 }

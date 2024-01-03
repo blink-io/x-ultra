@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/blink-io/x/id"
+	xsql "github.com/blink-io/x/sql"
 	"github.com/blink-io/x/sql/generics"
 	"github.com/blink-io/x/sql/scany/dbscan"
 	"github.com/brianvoe/gofakeit/v6"
@@ -381,4 +382,18 @@ func TestSqlite_DBW_Select_Funcs(t *testing.T) {
 		require.NoError(t, err1)
 		fmt.Println(k, "=>", rt)
 	}
+}
+
+func TestSqlOptions(t *testing.T) {
+	opts := &xsql.Options{
+		Dialect: "abc",
+	}
+
+	opts1 := new(xsql.Options)
+	opts1 = opts
+
+	opts.Name = "kkk"
+	opts.Dialect = "ccc"
+
+	require.NotNil(t, opts1)
 }

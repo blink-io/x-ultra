@@ -1,4 +1,4 @@
-package httpbase
+package http
 
 import (
 	"context"
@@ -9,6 +9,10 @@ import (
 	"time"
 
 	"github.com/blink-io/x/kratos/v2/internal/matcher"
+	"github.com/blink-io/x/kratos/v2/transport/http/adapter"
+	hadapter "github.com/blink-io/x/kratos/v2/transport/http/adapter/http"
+	h3adapter "github.com/blink-io/x/kratos/v2/transport/http/adapter/http3"
+	"github.com/blink-io/x/kratos/v2/util"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware"
@@ -133,14 +137,16 @@ func PathPrefix(prefix string) ServerOption {
 	}
 }
 
-func Adapter(adapter ServerAdapter) ServerOption {
+func Adapter(adapter adapter.Adapter) ServerOption {
 	return func(s *server) {
 		s.adapter = adapter
 	}
 }
 
-type serverOptions struct {
+// server is an HTTP server wrapper.
+type server struct {
 	cxt         context.Context
+	adapter     adapter.Adapter
 	tlsConf     *tls.Config
 	endpoint    *url.URL
 	network     string
@@ -157,24 +163,14 @@ type serverOptions struct {
 	router      *mux.Router
 }
 
-// server is an HTTP server wrapper.
-type server struct {
-	cxt         context.Context
-	adapter     ServerAdapter
-	tlsConf     *tls.Config
-	endpoint    *url.URL
-	network     string
-	address     string
-	timeout     time.Duration
-	filters     []FilterFunc
-	middleware  matcher.Matcher
-	decVars     DecodeRequestFunc
-	decQuery    DecodeRequestFunc
-	decBody     DecodeRequestFunc
-	encResp     EncodeResponseFunc
-	encErr      EncodeErrorFunc
-	strictSlash bool
-	router      *mux.Router
+func NewHTTPServer(opts ...ServerOption) Server {
+	opts = append(opts, Adapter(hadapter.NewDefault()))
+	return NewServer(opts...)
+}
+
+func NewHTTP3Server(opts ...ServerOption) Server {
+	opts = append(opts, Adapter(h3adapter.NewDefault()))
+	return NewServer(opts...)
 }
 
 // NewServer creates an HTTP server by options.
@@ -201,15 +197,14 @@ func NewServer(opts ...ServerOption) Server {
 	srv.router.MethodNotAllowedHandler = http.DefaultServeMux
 	srv.router.Use(srv.filter())
 
-	if iadapter, ok := srv.adapter.(AdapterInitializer); ok {
-		aopts := &AdapterOptions{
-			network:  srv.network,
-			address:  srv.address,
-			endpoint: srv.endpoint,
-			tlsConf:  srv.tlsConf,
-			handler:  FilterChain(srv.filters...)(srv.router),
-		}
-		iadapter.Init(srv.cxt, aopts)
+	if na, ok := srv.adapter.(adapter.Initializer); ok {
+		na.Init(srv.cxt, adapter.Options{
+			Network:  srv.network,
+			Address:  srv.address,
+			Endpoint: srv.endpoint,
+			TLSConf:  srv.tlsConf,
+			Handler:  FilterChain(srv.filters...)(srv.router),
+		})
 	}
 
 	return srv
@@ -219,7 +214,7 @@ func (s *server) Validate(ctx context.Context) error {
 	if s.adapter == nil {
 		return errors.New("server: adapter is required")
 	}
-	if v, ok := (s.adapter).(Validator); ok {
+	if v, ok := (s.adapter).(util.Validator); ok {
 		if err := v.Validate(ctx); err != nil {
 			return err
 		}
@@ -381,6 +376,6 @@ func (s *server) Stop(ctx context.Context) error {
 	return s.adapter.Stop(ctx)
 }
 
-func (s *server) Listener() Listener {
+func (s *server) Listener() adapter.Listener {
 	return s.adapter.Listener()
 }
