@@ -47,7 +47,9 @@ type ServerRouter interface {
 
 	// HandleHeader registers a new route with a matcher for the header.
 	HandleHeader(key, val string, h http.HandlerFunc)
+}
 
+type ServerRouteWalker interface {
 	// WalkRoute walks the router and all its sub-routers, calling walkFn for each route in the tree.
 	WalkRoute(fn WalkRouteFunc) error
 
@@ -55,24 +57,32 @@ type ServerRouter interface {
 	WalkHandle(handle func(method, path string, handler http.HandlerFunc)) error
 }
 
-type Validator = util.Validator
+type (
+	Listener = adapter.Listener
 
-type Listener = adapter.Listener
+	ServerValidator = util.Validator
+
+	ServerListener interface {
+		Listener() Listener
+	}
+)
 
 type Server interface {
+	ServerCodec
+
+	ServerValidator
+
+	ServerListener
+
 	ServerRouter
 
-	ServerCodec
+	ServerRouteWalker
 
 	transport.Server
 
 	transport.Endpointer
 
 	http.Handler
-
-	Validator
-
-	Listener() Listener
 
 	Router() *mux.Router
 }

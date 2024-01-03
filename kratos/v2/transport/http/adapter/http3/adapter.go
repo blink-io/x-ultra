@@ -18,11 +18,13 @@ import (
 	"github.com/quic-go/quic-go/http3"
 )
 
-type server = http3.Server
+type (
+	server = http3.Server
 
-type Options = xadapter.Options
+	Options = xadapter.Options
 
-type ExtraOption func(*adapter)
+	ExtraOption func(*adapter)
+)
 
 func Listener(ln http3.QUICEarlyListener) ExtraOption {
 	return func(a *adapter) {
@@ -57,10 +59,10 @@ func NewDefault() xadapter.Adapter {
 
 func NewAdapter(opts Options, eops ...ExtraOption) xadapter.Adapter {
 	a := new(adapter)
+	a.Init(context.Background(), opts)
 	for _, o := range eops {
 		o(a)
 	}
-	a.Init(context.Background(), opts)
 	return a
 }
 

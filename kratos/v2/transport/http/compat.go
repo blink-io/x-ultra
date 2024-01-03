@@ -9,6 +9,11 @@ import (
 type (
 	Context = khttp.Context
 
+	// HandlerFunc defines a function to serve HTTP requests.
+	HandlerFunc = khttp.HandlerFunc
+
+	WalkRouteFunc = khttp.WalkRouteFunc
+
 	FilterFunc = khttp.FilterFunc
 
 	// Request type net/http.
@@ -25,6 +30,8 @@ type (
 	EncodeResponseFunc = khttp.EncodeResponseFunc
 
 	EncodeErrorFunc = khttp.EncodeErrorFunc
+
+	RouteInfo = khttp.RouteInfo
 )
 
 const SupportPackageIsVersion1 = khttp.SupportPackageIsVersion1

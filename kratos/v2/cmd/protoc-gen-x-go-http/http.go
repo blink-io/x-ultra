@@ -16,8 +16,9 @@ import (
 )
 
 const (
-	contextPackage       = protogen.GoImportPath("context")
-	transportHTTPPackage = protogen.GoImportPath("github.com/go-kratos/kratos/v2/transport/http")
+	contextPackage = protogen.GoImportPath("context")
+	//transportHTTPPackage = protogen.GoImportPath("github.com/go-kratos/kratos/v2/transport/http")
+	transportHTTPPackage = protogen.GoImportPath("github.com/blink-io/x/kratos/v2/transport/http")
 	bindingPackage       = protogen.GoImportPath("github.com/go-kratos/kratos/v2/transport/http/binding")
 )
 

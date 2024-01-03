@@ -4,22 +4,22 @@ import (
 	"context"
 	"net/http"
 
-	khttp "github.com/go-kratos/kratos/v2/transport/http"
+	khttp "github.com/blink-io/x/kratos/v2/transport/http"
 )
 
-func Handle[Req any, Res any](
+func Handle[Request any, Response any](
 	operation string,
-	handle func(context.Context, *Req) (*Res, error),
+	handle func(context.Context, *Request) (*Response, error),
 	ops ...Option,
 ) khttp.HandlerFunc {
 	return func(kctx khttp.Context) error {
 		opts := applyOptions(ops...)
-		var in Req
+		var in Request
 		switch opts.method {
 		case http.MethodPost,
 			http.MethodPut,
 			// HTTP DELETE Maybe has payload
-			// https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Methods/DELETE
+			// https://developer.mozilla.org/docs/Web/HTTP/Methods/DELETE
 			http.MethodDelete,
 			http.MethodPatch:
 			if err := kctx.Bind(&in); err != nil {
@@ -32,14 +32,14 @@ func Handle[Req any, Res any](
 			return err
 		}
 		khttp.SetOperation(kctx, operation)
-		mHandle := kctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return handle(kctx, req.(*Req))
+		mwHandle := kctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return handle(kctx, req.(*Request))
 		})
-		out, err := mHandle(kctx, &in)
+		out, err := mwHandle(kctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*Res)
+		reply := out.(*Response)
 		return kctx.Result(http.StatusOK, reply)
 	}
 }

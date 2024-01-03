@@ -155,12 +155,6 @@ func WithTLSConfig(c *tls.Config) ClientOption {
 	}
 }
 
-//func WithKind(k transport.Kind) ClientOption {
-//	return func(o *clientOptions) {
-//		o.kind = k
-//	}
-//}
-
 // Client is an HTTP client.
 type Client struct {
 	opts     clientOptions

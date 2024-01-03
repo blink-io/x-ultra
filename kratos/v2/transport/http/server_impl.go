@@ -25,7 +25,7 @@ var (
 	_ transport.Endpointer = (*server)(nil)
 	_ http.Handler         = (*server)(nil)
 	_ Server               = (*server)(nil)
-	_ Validator            = (*server)(nil)
+	_ ServerValidator      = (*server)(nil)
 )
 
 // ServerOption is an HTTP server option.

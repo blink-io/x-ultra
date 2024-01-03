@@ -16,11 +16,13 @@ import (
 	"github.com/go-kratos/kratos/v2/transport"
 )
 
-type server = http.Server
+type (
+	server = http.Server
 
-type Options = xadapter.Options
+	Options = xadapter.Options
 
-type ExtraOption func(*adapter)
+	ExtraOption func(*adapter)
+)
 
 func Listener(ln net.Listener) ExtraOption {
 	return func(a *adapter) {
@@ -48,10 +50,10 @@ func NewDefault() xadapter.Adapter {
 
 func NewAdapter(opts Options, eops ...ExtraOption) xadapter.Adapter {
 	a := new(adapter)
+	a.Init(context.Background(), opts)
 	for _, o := range eops {
 		o(a)
 	}
-	a.Init(context.Background(), opts)
 	return a
 }
 
