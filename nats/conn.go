@@ -9,13 +9,13 @@ import (
 	"github.com/nats-io/nats.go"
 )
 
+var _ IConn = (*nats.Conn)(nil)
+
 // IConn is extracted from nats.Conn struct.
 type IConn interface {
 	RequestMsgWithContext(ctx context.Context, msg *nats.Msg) (*nats.Msg, error)
 	RequestWithContext(ctx context.Context, subj string, data []byte) (*nats.Msg, error)
 	FlushWithContext(ctx context.Context) error
-	RemoveMsgFilter(subject string)
-	CloseTCPConn()
 	JetStream(opts ...nats.JSOpt) (nats.JetStreamContext, error)
 	SetDisconnectHandler(dcb nats.ConnHandler)
 	SetDisconnectErrHandler(dcb nats.ConnErrHandler)

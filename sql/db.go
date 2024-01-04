@@ -19,9 +19,23 @@ type (
 
 	DB struct {
 		*idb
+		info     DBInfo
 		accessor string
+		name     string
+	}
+
+	DBInfo struct {
+		Name    string
+		Dialect string
 	}
 )
+
+func newDBInfo(o *Options) DBInfo {
+	return DBInfo{
+		Name:    o.Name,
+		Dialect: o.Dialect,
+	}
+}
 
 func NewDB(o *Options) (*DB, error) {
 	o = setupOptions(o)
@@ -40,6 +54,7 @@ func NewDB(o *Options) (*DB, error) {
 	db := &DB{
 		idb:      rdb,
 		accessor: o.accessor,
+		info:     newDBInfo(o),
 	}
 
 	return db, nil
@@ -47,6 +62,12 @@ func NewDB(o *Options) (*DB, error) {
 
 func (d *DB) Accessor() string {
 	return d.accessor
+}
+
+func (d *DB) DBInfo() DBInfo {
+	return DBInfo{
+		Name: d.name,
+	}
 }
 
 func (d *DB) RegisterModel(m any) {

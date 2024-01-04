@@ -21,6 +21,7 @@ type (
 	idbm = rel.Repository
 	DBM  struct {
 		idbm
+		info     DBInfo
 		accessor string
 	}
 )

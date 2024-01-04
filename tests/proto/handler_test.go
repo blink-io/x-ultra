@@ -47,7 +47,10 @@ var _ MetadataXHTTPServer = (*service)(nil)
 
 func TestHandler_GRPC_Server_1(t *testing.T) {
 	s := new(service)
-	h := grpcg.NewHandler[MetadataXServer](s, RegisterMetadataXServer)
+	CtxRegisterMetadataXServer := func(ctx context.Context, s grpc.ServiceRegistrar, srv MetadataXServer) {
+		RegisterMetadataXServer(s, srv)
+	}
+	h := grpcg.NewCtxHandler[MetadataXServer](s, CtxRegisterMetadataXServer)
 	require.NotNil(t, h)
 
 	ln, err := net.Listen("tcp", ":9997")
@@ -60,7 +63,7 @@ func TestHandler_GRPC_Server_1(t *testing.T) {
 		),
 	)
 
-	h.HandleGRPC(gsrv)
+	h.HandleGRPC(context.Background(), gsrv)
 
 	require.NoError(t, gsrv.Start(context.Background()))
 
@@ -90,7 +93,7 @@ func TestHandler_HTTP_Server_1(t *testing.T) {
 		khttp.Address(":9996"),
 	)
 
-	h.HandleHTTP(hsrv)
+	h.HandleHTTP(context.Background(), hsrv)
 
 	require.NoError(t, hsrv.Start(context.Background()))
 
@@ -106,7 +109,7 @@ func TestHandler_HTTP_Server_2(t *testing.T) {
 		khttp.Address(":9996"),
 	)
 
-	h.HandleHTTP(hsrv)
+	h.HandleHTTP(context.Background(), hsrv)
 
 	require.NoError(t, hsrv.Start(context.Background()))
 
@@ -135,12 +138,12 @@ type compose struct {
 	ghdlr
 }
 
-func (c *compose) HandleHTTP(r khttp.ServerRouter) {
-	c.hhdlr.HandleHTTP(r)
+func (c *compose) HandleHTTP(ctx context.Context, r khttp.ServerRouter) {
+	c.hhdlr.HandleHTTP(ctx, r)
 }
 
-func (c *compose) HandleGRPC(r grpc.ServiceRegistrar) {
-	c.ghdlr.HandleGRPC(r)
+func (c *compose) HandleGRPC(ctx context.Context, r grpc.ServiceRegistrar) {
+	c.ghdlr.HandleGRPC(ctx, r)
 }
 
 type mmm struct {
@@ -193,7 +196,10 @@ func TestInit_1(t *testing.T) {
 
 func TestHandler_Compose_1(t *testing.T) {
 	s := new(service)
-	hh := httpg.NewHandler[MetadataXHTTPServer](s, RegisterMetadataXHTTPServer)
+	CtxRegisterMetadataXHTTPServer := func(ctx context.Context, s khttp.ServerRouter, srv MetadataXHTTPServer) {
+		RegisterMetadataXHTTPServer(s, srv)
+	}
+	hh := httpg.NewCtxHandler[MetadataXHTTPServer](s, CtxRegisterMetadataXHTTPServer)
 	gh := grpcg.NewHandler[MetadataXServer](s, RegisterMetadataXServer)
 
 	co := &compose{
@@ -201,11 +207,12 @@ func TestHandler_Compose_1(t *testing.T) {
 		ghdlr: gh,
 	}
 
+	ctx := context.Background()
 	hsrv := khttp.NewServer()
 	gsrv := kgrpc.NewServer()
 
-	co.HandleHTTP(hsrv)
-	co.HandleGRPC(gsrv)
+	co.HandleHTTP(ctx, hsrv)
+	co.HandleGRPC(ctx, gsrv)
 
 	fmt.Println("done")
 }

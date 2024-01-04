@@ -13,6 +13,7 @@ type (
 
 	DBP struct {
 		*idbp
+		info     DBInfo
 		accessor string
 	}
 )
