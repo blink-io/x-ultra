@@ -7,14 +7,14 @@ import (
 	"net/http"
 	"testing"
 
+	kgrpc "github.com/blink-io/x/kratos/v2/transport/grpc"
 	grpcg "github.com/blink-io/x/kratos/v2/transport/grpc/g"
 	khttp "github.com/blink-io/x/kratos/v2/transport/http"
 	httpg "github.com/blink-io/x/kratos/v2/transport/http/g"
+
+	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
-
-	kgrpc "github.com/go-kratos/kratos/v2/transport/grpc"
-	"github.com/stretchr/testify/require"
 )
 
 type service struct {
