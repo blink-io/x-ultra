@@ -4,10 +4,10 @@ import (
 	"net/http"
 
 	"github.com/blink-io/x/kratos/v2/internal/matcher"
+	"github.com/blink-io/x/kratos/v2/transport"
 	"github.com/blink-io/x/kratos/v2/transport/http/adapter"
 	"github.com/blink-io/x/kratos/v2/util"
 
-	"github.com/go-kratos/kratos/v2/transport"
 	"github.com/gorilla/mux"
 )
 

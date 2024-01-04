@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/go-kratos/kratos/v2/transport"
+	"github.com/blink-io/x/kratos/v2/transport"
 )
 
 type Adapter interface {
@@ -29,6 +29,6 @@ type Options struct {
 	Network  string
 	Address  string
 	Endpoint *url.URL
-	TLSConf  *tls.Config
+	TlsConf  *tls.Config
 	Handler  http.Handler
 }

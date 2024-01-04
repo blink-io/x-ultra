@@ -9,14 +9,14 @@ import (
 	"time"
 
 	"github.com/blink-io/x/kratos/v2/internal/matcher"
+	"github.com/blink-io/x/kratos/v2/transport"
 	"github.com/blink-io/x/kratos/v2/transport/http/adapter"
-	hadapter "github.com/blink-io/x/kratos/v2/transport/http/adapter/http"
-	h3adapter "github.com/blink-io/x/kratos/v2/transport/http/adapter/http3"
+	ha "github.com/blink-io/x/kratos/v2/transport/http/adapter/http"
+	h3a "github.com/blink-io/x/kratos/v2/transport/http/adapter/http3"
 	"github.com/blink-io/x/kratos/v2/util"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware"
-	"github.com/go-kratos/kratos/v2/transport"
 	"github.com/gorilla/mux"
 )
 
@@ -165,12 +165,12 @@ type server struct {
 }
 
 func NewHTTPServer(opts ...ServerOption) Server {
-	opts = append(opts, Adapter(hadapter.NewDefault()))
+	opts = append(opts, Adapter(ha.NewDefault()))
 	return NewServer(opts...)
 }
 
 func NewHTTP3Server(opts ...ServerOption) Server {
-	opts = append(opts, Adapter(h3adapter.NewDefault()))
+	opts = append(opts, Adapter(h3a.NewDefault()))
 	return NewServer(opts...)
 }
 
@@ -189,7 +189,7 @@ func NewServer(opts ...ServerOption) Server {
 		encErr:      DefaultErrorEncoder,
 		strictSlash: true,
 		router:      mux.NewRouter(),
-		adapter:     hadapter.NewDefault(),
+		adapter:     ha.NewDefault(),
 	}
 	for _, o := range opts {
 		o(srv)
@@ -205,7 +205,7 @@ func NewServer(opts ...ServerOption) Server {
 			Network:  srv.network,
 			Address:  srv.address,
 			Endpoint: srv.endpoint,
-			TLSConf:  srv.tlsConf,
+			TlsConf:  srv.tlsConf,
 			Handler:  FilterChain(srv.filters...)(srv.router),
 		})
 	}

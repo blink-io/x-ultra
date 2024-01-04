@@ -3,7 +3,8 @@ package i18n
 import (
 	stdhttp "net/http"
 
-	"github.com/go-kratos/kratos/v2/transport"
+	"github.com/blink-io/x/kratos/v2/transport"
+
 	khttp "github.com/go-kratos/kratos/v2/transport/http"
 	"golang.org/x/text/language"
 )

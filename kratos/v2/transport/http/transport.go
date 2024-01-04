@@ -4,13 +4,7 @@ import (
 	"context"
 	"net/http"
 
-	xtransport "github.com/blink-io/x/kratos/v2/transport"
-
-	"github.com/go-kratos/kratos/v2/transport"
-)
-
-const (
-	KindHTTP3 = xtransport.KindHTTP3
+	"github.com/blink-io/x/kratos/v2/transport"
 )
 
 var _ Transporter = (*Transport)(nil)

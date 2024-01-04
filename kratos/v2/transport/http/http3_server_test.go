@@ -14,6 +14,7 @@ import (
 	"github.com/blink-io/x/internal/testdata"
 	"github.com/blink-io/x/kratos/v2/internal/host"
 	h3adapter "github.com/blink-io/x/kratos/v2/transport/http/adapter/http3"
+	"github.com/blink-io/x/kratos/v2/util/tlsutil"
 	"github.com/stretchr/testify/require"
 
 	kerrors "github.com/go-kratos/kratos/v2/errors"
@@ -25,6 +26,8 @@ var (
 	clientTlsConf = testdata.GetClientTLSConfig()
 
 	serverTlsConf = testdata.GetServerTLSConfig()
+
+	commonTlsConf = tlsutil.GenerateTLSConfig()
 
 	HTTP3Client = &http.Client{
 		Timeout:   5 * time.Second,
@@ -325,6 +328,7 @@ func TestHTTP3_NewServerWithError(t *testing.T) {
 func TestHTTP3_StartServer(t *testing.T) {
 	srv := NewHTTP3Server(
 		TLSConfigServerOption(),
+		//TLSConfig(commonTlsConf),
 		Address(":9999"),
 	)
 
@@ -340,8 +344,11 @@ func TestHTTP3_StartServer(t *testing.T) {
 }
 
 func TestHTT3_StartClient(t *testing.T) {
+	tlsConf, err := tlsutil.InscureTLSConfig()
+	require.NoError(t, err)
+
 	cc, err := NewClient(context.Background(),
-		WithTransport(RoundTripper(clientTlsConf)),
+		WithTransport(RoundTripper(tlsConf)),
 		WithEndpoint("https://localhost:9999"),
 	)
 	require.NoError(t, err)

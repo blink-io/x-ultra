@@ -20,6 +20,24 @@ func TestReq_Get_1(t *testing.T) {
 	cc.Get("https://httpbin.org/uuid")
 }
 
+func TestReq_Head_1(t *testing.T) {
+	cc := xreq.NewClient().R().
+		MustHead("https://httpbin.org/uuid")
+	res := cc.String()
+	status := cc.Status
+
+	fmt.Println("status: ", status, ",  res body: ", res)
+}
+
+func TestReq_Get_2(t *testing.T) {
+	cc := xreq.NewClient().R().
+		MustGet("https://httpbin.org/uuid")
+	res := cc.String()
+	status := cc.Status
+
+	fmt.Println("status: ", status, ",  res body: ", res)
+}
+
 func TestReq_H3_1(t *testing.T) {
 	cc := xreq.NewClient().
 		DevMode().

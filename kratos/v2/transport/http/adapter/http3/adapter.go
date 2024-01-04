@@ -59,16 +59,30 @@ func NewDefault() xa.Adapter {
 func NewAdapter(opts Options, eops ...ExtraOption) xa.Adapter {
 	a := new(adapter)
 	a.Init(context.Background(), opts)
-	for _, o := range eops {
-		o(a)
-	}
+	a.ApplyExtraOptions(eops...)
 	return a
 }
 
+func (s *adapter) ApplyExtraOptions(ops ...ExtraOption) {
+	applyExtraOptions(s, ops...)
+}
+
+func applyExtraOptions(a *adapter, ops ...ExtraOption) {
+	if a == nil {
+		return
+	}
+	for _, o := range ops {
+		o(a)
+	}
+}
+
 func (s *adapter) Init(ctx context.Context, opts Options) {
+	if s == nil {
+		return
+	}
 	s.network = opts.Network
 	s.address = opts.Address
-	s.tlsConf = opts.TLSConf
+	s.tlsConf = opts.TlsConf
 	s.endpoint = opts.Endpoint
 	s.qconf = new(quic.Config)
 	s.srv = &http3.Server{
@@ -115,6 +129,17 @@ func (s *adapter) Stop(ctx context.Context) error {
 	return s.srv.Close()
 }
 
+func (s *adapter) Endpoint() (*url.URL, error) {
+	if err := s.listenAndEndpoint(); err != nil {
+		return nil, err
+	}
+	return s.endpoint, nil
+}
+
+func (s *adapter) Listener() xa.Listener {
+	return s.ln
+}
+
 func (s *adapter) listenAndEndpoint() error {
 	if s.ln == nil {
 		ln, err := quic.ListenAddrEarly(s.address, http3.ConfigureTLSConfig(s.tlsConf), s.qconf)
@@ -131,15 +156,4 @@ func (s *adapter) listenAndEndpoint() error {
 		s.endpoint = endpoint.NewEndpoint("https", addr)
 	}
 	return nil
-}
-
-func (s *adapter) Endpoint() (*url.URL, error) {
-	if err := s.listenAndEndpoint(); err != nil {
-		return nil, err
-	}
-	return s.endpoint, nil
-}
-
-func (s *adapter) Listener() xa.Listener {
-	return s.ln
 }

@@ -4,7 +4,7 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/go-kratos/kratos/v2/transport"
+	"github.com/blink-io/x/kratos/v2/transport"
 )
 
 const (

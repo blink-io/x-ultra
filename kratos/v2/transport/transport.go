@@ -11,7 +11,27 @@ const (
 	KindHTTP3 Kind = "http3"
 )
 
-type Kind = transport.Kind
+var (
+	NewClientContext = transport.NewClientContext
+
+	FromClientContext = transport.FromClientContext
+
+	NewServerContext = transport.NewServerContext
+
+	FromServerContext = transport.FromServerContext
+)
+
+type (
+	Kind = transport.Kind
+
+	Server = transport.Server
+
+	Transporter = transport.Transporter
+
+	Endpointer = transport.Endpointer
+
+	Header = transport.Header
+)
 
 type Validator interface {
 	Validate(context.Context) error

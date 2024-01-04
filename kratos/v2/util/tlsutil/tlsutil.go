@@ -31,3 +31,15 @@ func GenerateTLSConfig() *tls.Config {
 		NextProtos:   []string{"kratos-quic-server"},
 	}
 }
+
+func InscureTLSConfig() (*tls.Config, error) {
+	if pool, err := x509.SystemCertPool(); err != nil {
+		return nil, err
+	} else {
+		tlsConf := &tls.Config{
+			InsecureSkipVerify: true,
+			RootCAs:            pool,
+		}
+		return tlsConf, nil
+	}
+}

@@ -50,16 +50,27 @@ func NewDefault() xa.Adapter {
 func NewAdapter(opts Options, eops ...ExtraOption) xa.Adapter {
 	a := new(adapter)
 	a.Init(context.Background(), opts)
-	for _, o := range eops {
+	a.ApplyExtraOptions(eops...)
+	return a
+}
+
+func (s *adapter) ApplyExtraOptions(ops ...ExtraOption) {
+	applyExtraOptions(s, ops...)
+}
+
+func applyExtraOptions(a *adapter, ops ...ExtraOption) {
+	if a == nil {
+		return
+	}
+	for _, o := range ops {
 		o(a)
 	}
-	return a
 }
 
 func (s *adapter) Init(ctx context.Context, opts Options) {
 	s.network = opts.Network
 	s.address = opts.Address
-	s.tlsConf = opts.TLSConf
+	s.tlsConf = opts.TlsConf
 	s.endpoint = opts.Endpoint
 	s.srv = &http.Server{
 		Addr:      s.address,

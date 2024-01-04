@@ -11,6 +11,7 @@ import (
 
 	"github.com/blink-io/x/kratos/v2/internal/host"
 	"github.com/blink-io/x/kratos/v2/internal/httputil"
+	"github.com/blink-io/x/kratos/v2/transport"
 
 	"github.com/go-kratos/kratos/v2/encoding"
 	"github.com/go-kratos/kratos/v2/errors"
@@ -18,7 +19,6 @@ import (
 	"github.com/go-kratos/kratos/v2/registry"
 	"github.com/go-kratos/kratos/v2/selector"
 	"github.com/go-kratos/kratos/v2/selector/wrr"
-	"github.com/go-kratos/kratos/v2/transport"
 )
 
 func init() {
@@ -71,7 +71,7 @@ func WithTransport(trans http.RoundTripper) ClientOption {
 	return func(o *clientOptions) {
 		o.transport = trans
 		if IsHTTP3Transport(trans) {
-			o.kind = KindHTTP3
+			o.kind = transport.KindHTTP3
 		} else {
 			o.kind = transport.KindHTTP
 		}
