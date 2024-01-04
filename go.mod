@@ -107,6 +107,7 @@ require (
 	github.com/brianvoe/gofakeit/v6 v6.26.3
 	github.com/bwmarrin/snowflake v0.3.0
 	github.com/caarlos0/env/v10 v10.0.0
+	github.com/carlmjohnson/requests v0.23.5
 	github.com/chzyer/readline v1.5.1
 	github.com/dchest/siphash v1.2.3
 	github.com/deckarep/golang-set/v2 v2.6.0
@@ -142,6 +143,7 @@ require (
 	github.com/k0kubun/pp/v3 v3.2.0
 	github.com/kardianos/osext v0.0.0-20190222173326-2bc1f35cddc0
 	github.com/leonelquinteros/gotext v1.5.2
+	github.com/lesismal/nbio v1.3.21
 	github.com/matryer/is v1.4.1
 	github.com/mattn/go-runewidth v0.0.15
 	github.com/matttproud/golang_protobuf_extensions/v2 v2.0.0

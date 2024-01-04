@@ -12,32 +12,32 @@ option objc_class_prefix = "KratosAPI";
 
 
 // Metadata is api definition metadata service.
-service Metadata {
+service MetadataX {
   // ListServices list the full name of all services.
-  rpc ListServices (ListServicesRequest) returns (ListServicesReply)  {
+  rpc ListServices (XListServicesRequest) returns (XListServicesReply)  {
       option (google.api.http) = {
-        get: "/services",
+        get: "/x/services",
       };
   }
   // GetServiceDesc get the full fileDescriptorSet of service.
-  rpc GetServiceDesc (GetServiceDescRequest) returns (GetServiceDescReply)  {
+  rpc GetServiceDesc (XGetServiceDescRequest) returns (XGetServiceDescReply)  {
       option (google.api.http) = {
-        get: "/services/{name}",
+        get: "/x/services/{name}",
       };
   }
 }
 
-message ListServicesRequest {}
-message ListServicesReply {
+message XListServicesRequest {}
+message XListServicesReply {
   repeated string services = 1;
   repeated string methods = 2;
 }
 
-message GetServiceDescRequest {
+message XGetServiceDescRequest {
   string name = 1;
 }
 
-message GetServiceDescReply {
+message XGetServiceDescReply {
   google.protobuf.FileDescriptorSet file_desc_set = 1;
 }
 

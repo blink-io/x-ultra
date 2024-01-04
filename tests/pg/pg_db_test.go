@@ -7,7 +7,7 @@ import (
 	"testing"
 
 	xsql "github.com/blink-io/x/sql"
-	"github.com/blink-io/x/sql/generics"
+	"github.com/blink-io/x/sql/g"
 	"github.com/blink-io/x/sql/scany/dbscan"
 	"github.com/blink-io/x/sql/scany/pgxscan"
 	"github.com/doug-martin/goqu/v9"
@@ -92,7 +92,7 @@ func TestPg_DB_DropTable_1(t *testing.T) {
 func TestPg_DB_Insert_1(t *testing.T) {
 	db := getPgDB()
 	r := newRandomRecordForApp("bun")
-	txdb, err := generics.NewDB[Application, string](db).Tx()
+	txdb, err := g.NewDB[Application, string](db).Tx()
 	require.NoError(t, err)
 
 	err1 := txdb.BulkInsert(ctx, []*Application{r})

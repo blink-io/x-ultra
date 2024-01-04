@@ -19,81 +19,81 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const OperationMetadataGetServiceDesc = "/kratos.api.Metadata/GetServiceDesc"
-const OperationMetadataListServices = "/kratos.api.Metadata/ListServices"
+const OperationMetadataXGetServiceDesc = "/kratos.api.MetadataX/GetServiceDesc"
+const OperationMetadataXListServices = "/kratos.api.MetadataX/ListServices"
 
-type MetadataHTTPServer interface {
+type MetadataXHTTPServer interface {
 	// GetServiceDesc GetServiceDesc get the full fileDescriptorSet of service.
-	GetServiceDesc(context.Context, *GetServiceDescRequest) (*GetServiceDescReply, error)
+	GetServiceDesc(context.Context, *XGetServiceDescRequest) (*XGetServiceDescReply, error)
 	// ListServices ListServices list the full name of all services.
-	ListServices(context.Context, *ListServicesRequest) (*ListServicesReply, error)
+	ListServices(context.Context, *XListServicesRequest) (*XListServicesReply, error)
 }
 
-func RegisterMetadataHTTPServer(s http.Server, srv MetadataHTTPServer) {
+func RegisterMetadataXHTTPServer(s http.ServerRouter, srv MetadataXHTTPServer) {
 	r := s.Route("/")
-	r.GET("/services", _Metadata_ListServices0_HTTP_Handler(srv))
-	r.GET("/services/{name}", _Metadata_GetServiceDesc0_HTTP_Handler(srv))
+	r.GET("/x/services", _MetadataX_ListServices0_HTTP_Handler(srv))
+	r.GET("/x/services/{name}", _MetadataX_GetServiceDesc0_HTTP_Handler(srv))
 }
 
-func _Metadata_ListServices0_HTTP_Handler(srv MetadataHTTPServer) func(ctx http.Context) error {
+func _MetadataX_ListServices0_HTTP_Handler(srv MetadataXHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in ListServicesRequest
+		var in XListServicesRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationMetadataListServices)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.ListServices(ctx, req.(*ListServicesRequest))
+		http.SetOperation(ctx, OperationMetadataXListServices)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.ListServices(ctx, req.(*XListServicesRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*ListServicesReply)
+		reply := out.(*XListServicesReply)
 		return ctx.Result(200, reply)
 	}
 }
 
-func _Metadata_GetServiceDesc0_HTTP_Handler(srv MetadataHTTPServer) func(ctx http.Context) error {
+func _MetadataX_GetServiceDesc0_HTTP_Handler(srv MetadataXHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in GetServiceDescRequest
+		var in XGetServiceDescRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindVars(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationMetadataGetServiceDesc)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.GetServiceDesc(ctx, req.(*GetServiceDescRequest))
+		http.SetOperation(ctx, OperationMetadataXGetServiceDesc)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.GetServiceDesc(ctx, req.(*XGetServiceDescRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*GetServiceDescReply)
+		reply := out.(*XGetServiceDescReply)
 		return ctx.Result(200, reply)
 	}
 }
 
-type MetadataHTTPClient interface {
-	GetServiceDesc(ctx context.Context, req *GetServiceDescRequest, opts ...http.CallOption) (rsp *GetServiceDescReply, err error)
-	ListServices(ctx context.Context, req *ListServicesRequest, opts ...http.CallOption) (rsp *ListServicesReply, err error)
+type MetadataXHTTPClient interface {
+	GetServiceDesc(ctx context.Context, req *XGetServiceDescRequest, opts ...http.CallOption) (rsp *XGetServiceDescReply, err error)
+	ListServices(ctx context.Context, req *XListServicesRequest, opts ...http.CallOption) (rsp *XListServicesReply, err error)
 }
 
-type MetadataHTTPClientImpl struct {
+type MetadataXHTTPClientImpl struct {
 	cc *http.Client
 }
 
-func NewMetadataHTTPClient(client *http.Client) MetadataHTTPClient {
-	return &MetadataHTTPClientImpl{client}
+func NewMetadataXHTTPClient(client *http.Client) MetadataXHTTPClient {
+	return &MetadataXHTTPClientImpl{client}
 }
 
-func (c *MetadataHTTPClientImpl) GetServiceDesc(ctx context.Context, in *GetServiceDescRequest, opts ...http.CallOption) (*GetServiceDescReply, error) {
-	var out GetServiceDescReply
-	pattern := "/services/{name}"
+func (c *MetadataXHTTPClientImpl) GetServiceDesc(ctx context.Context, in *XGetServiceDescRequest, opts ...http.CallOption) (*XGetServiceDescReply, error) {
+	var out XGetServiceDescReply
+	pattern := "/x/services/{name}"
 	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationMetadataGetServiceDesc))
+	opts = append(opts, http.Operation(OperationMetadataXGetServiceDesc))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
@@ -102,11 +102,11 @@ func (c *MetadataHTTPClientImpl) GetServiceDesc(ctx context.Context, in *GetServ
 	return &out, err
 }
 
-func (c *MetadataHTTPClientImpl) ListServices(ctx context.Context, in *ListServicesRequest, opts ...http.CallOption) (*ListServicesReply, error) {
-	var out ListServicesReply
-	pattern := "/services"
+func (c *MetadataXHTTPClientImpl) ListServices(ctx context.Context, in *XListServicesRequest, opts ...http.CallOption) (*XListServicesReply, error) {
+	var out XListServicesReply
+	pattern := "/x/services"
 	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationMetadataListServices))
+	opts = append(opts, http.Operation(OperationMetadataXListServices))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {

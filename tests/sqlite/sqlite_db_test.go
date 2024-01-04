@@ -8,7 +8,7 @@ import (
 
 	"github.com/blink-io/x/id"
 	xsql "github.com/blink-io/x/sql"
-	"github.com/blink-io/x/sql/generics"
+	"github.com/blink-io/x/sql/g"
 	"github.com/blink-io/x/sql/scany/dbscan"
 	"github.com/brianvoe/gofakeit/v6"
 	"github.com/doug-martin/goqu/v9"
@@ -172,7 +172,7 @@ func TestSqlite_DB_CreateTable_Funcs(t *testing.T) {
 
 func TestSqlite_DB_Delete_1(t *testing.T) {
 	db := getSqliteDB()
-	gdb := generics.NewDB[Application, string](db)
+	gdb := g.NewDB[Application, string](db)
 	//err := gdb.Delete(ctx, "123456")
 	err := gdb.BulkDelete(ctx, []string{"123456", "888888"})
 	require.NoError(t, err)
@@ -184,7 +184,7 @@ func TestSqlite_DB_BulkInsert_1(t *testing.T) {
 	r2 := newRandomRecordForApp("bun")
 	r3 := newRandomRecordForApp("bun")
 
-	tdb, err := generics.NewDB[Application, string](db).Tx()
+	tdb, err := g.NewDB[Application, string](db).Tx()
 	require.NoError(t, err)
 
 	err1 := tdb.BulkInsert(ctx, []*Application{r1, r2, r3})

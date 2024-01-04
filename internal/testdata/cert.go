@@ -21,8 +21,10 @@ func init() {
 }
 
 // GetCertificatePaths returns the paths to certificate and key
-func GetCertificatePaths() (string, string) {
-	return path.Join(certPath, "cert.pem"), path.Join(certPath, "privkey.pem")
+func GetCertificatePaths() (certFile string, keyFile string) {
+	certFile = path.Join(certPath, "cert.pem")
+	keyFile = path.Join(certPath, "privkey.pem")
+	return
 }
 
 func GetClientTLSConfig() *tls.Config {

@@ -13,7 +13,7 @@ import (
 	"time"
 
 	"github.com/blink-io/x/kratos/v2/internal/host"
-	hadapter "github.com/blink-io/x/kratos/v2/transport/http/adapter/http"
+	ha "github.com/blink-io/x/kratos/v2/transport/http/adapter/http"
 	"github.com/stretchr/testify/require"
 
 	kerrors "github.com/go-kratos/kratos/v2/errors"
@@ -30,8 +30,11 @@ func CreateListener() net.Listener {
 func TestServeHTTP(t *testing.T) {
 	ln := CreateListener()
 
-	adp := hadapter.NewAdapter(hadapter.DefaultOptions,
-		hadapter.Listener(ln),
+	adp := ha.NewAdapter(ha.DefaultOptions,
+		ha.Listener(ln),
+		ha.RegisterOnShutdown(func() {
+			fmt.Println("Invoked on shutdown ")
+		}),
 	)
 	mux := NewServer(
 		Adapter(adp),

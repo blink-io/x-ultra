@@ -1,4 +1,4 @@
-package generics
+package g
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestGenerics_Handle_1(t *testing.T) {
+func TestDo(t *testing.T) {
 	methods := []string{
 		http.MethodGet,
 		http.MethodDelete,

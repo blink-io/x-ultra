@@ -1,12 +1,15 @@
 package tests
 
 import (
+	"context"
 	"fmt"
 	"testing"
 
 	xreq "github.com/blink-io/x/http/client/req"
-	"github.com/blink-io/x/http/client/resty"
+	xrequests "github.com/blink-io/x/http/client/requests"
+	xresty "github.com/blink-io/x/http/client/resty"
 	"github.com/blink-io/x/internal/testdata"
+	"github.com/blink-io/x/kratos/v2/util/tlsutil"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/zap"
 )
@@ -52,11 +55,22 @@ func TestReq_H3_1(t *testing.T) {
 }
 
 func TestHTTP3Client_1(t *testing.T) {
-	cc := resty.HTTP3Client(testdata.GetClientTLSConfig())
+	cc := xresty.HTTP3Client(testdata.GetClientTLSConfig())
 	require.NotNil(t, cc)
 
 	res, err := cc.R().Get("https://localhost:9999/hello")
 	require.NoError(t, err)
 
 	fmt.Println("Res body: ", res.String())
+}
+
+func TestRequests_H3_1(t *testing.T) {
+	var res string
+	err := xrequests.HTTP3(tlsutil.MustInsecureTLSConfig()).
+		BaseURL("https://localhost:9999/hello").
+		ToString(&res).
+		Fetch(context.Background())
+	require.NoError(t, err)
+
+	fmt.Println("res body: ", res)
 }

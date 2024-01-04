@@ -15,6 +15,7 @@ import (
 	"github.com/blink-io/x/kratos/v2/internal/host"
 	h3adapter "github.com/blink-io/x/kratos/v2/transport/http/adapter/http3"
 	"github.com/blink-io/x/kratos/v2/util/tlsutil"
+	"github.com/go-chi/chi/v5"
 	"github.com/stretchr/testify/require"
 
 	kerrors "github.com/go-kratos/kratos/v2/errors"
@@ -31,7 +32,7 @@ var (
 
 	HTTP3Client = &http.Client{
 		Timeout:   5 * time.Second,
-		Transport: RoundTripper(clientTlsConf),
+		Transport: HTTP3Transport(clientTlsConf),
 	}
 )
 
@@ -145,7 +146,7 @@ func testHTTP3Accept(t *testing.T, srv Server) {
 	client, err := NewClient(
 		context.Background(),
 		WithEndpoint(e.Host),
-		WithTransport(RoundTripper(clientTlsConf)),
+		WithTransport(HTTP3Transport(clientTlsConf)),
 		WithTLSConfig(clientTlsConf))
 	if err != nil {
 		t.Errorf("expected nil got %v", err)
@@ -174,7 +175,7 @@ func testHTTP3Header(t *testing.T, srv Server) {
 	client, err := NewClient(
 		context.Background(),
 		WithEndpoint(e.Host),
-		WithTransport(RoundTripper(clientTlsConf)),
+		WithTransport(HTTP3Transport(clientTlsConf)),
 		WithTLSConfig(clientTlsConf),
 	)
 	if err != nil {
@@ -223,7 +224,8 @@ func testHTTP3Client(t *testing.T, srv Server) {
 	client, err := NewClient(
 		context.Background(),
 		WithEndpoint(e.Host),
-		WithTransport(RoundTripperConf(clientTlsConf, nil)),
+		//WithTransport(HTTP3TransportConf(clientTlsConf, nil)),
+		WithHTTP3Transport(clientTlsConf),
 		WithTLSConfig(clientTlsConf),
 	)
 	if err != nil {
@@ -303,7 +305,7 @@ func BenchmarkHTTP3_Server(b *testing.B) {
 	client, err := NewClient(
 		context.Background(),
 		WithEndpoint(fmt.Sprintf("127.0.0.1:%d", port)),
-		WithTransport(RoundTripperConf(clientTlsConf, nil)),
+		WithTransport(HTTP3TransportConf(clientTlsConf, nil)),
 		WithTLSConfig(clientTlsConf))
 	if err != nil {
 		b.Errorf("expected nil got %v", err)
@@ -343,12 +345,24 @@ func TestHTTP3_StartServer(t *testing.T) {
 	require.NoError(t, err)
 }
 
-func TestHTT3_StartClient(t *testing.T) {
-	tlsConf, err := tlsutil.InscureTLSConfig()
+func TestHTTP3_Raw_Server(t *testing.T) {
+	router := chi.NewRouter()
+	router.Get("/hello", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		w.Header().Set("Content-Type", "plain/text")
+		w.Write([]byte("Hello, 你好, Bonju"))
+	})
+
+	certFile, keyFile := testdata.GetCertificatePaths()
+	err := http3.ListenAndServe(":9998", certFile, keyFile, router)
 	require.NoError(t, err)
+}
+
+func TestHTT3_StartClient(t *testing.T) {
+	tlsConf := tlsutil.MustInsecureTLSConfig()
 
 	cc, err := NewClient(context.Background(),
-		WithTransport(RoundTripper(tlsConf)),
+		WithTransport(HTTP3Transport(tlsConf)),
 		WithEndpoint("https://localhost:9999"),
 	)
 	require.NoError(t, err)

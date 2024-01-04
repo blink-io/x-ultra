@@ -29,6 +29,12 @@ func Listener(ln net.Listener) ExtraOption {
 	}
 }
 
+func RegisterOnShutdown(fn func()) ExtraOption {
+	return func(a *adapter) {
+		a.srv.RegisterOnShutdown(fn)
+	}
+}
+
 type adapter struct {
 	srv      *server
 	network  string

@@ -32,7 +32,15 @@ func GenerateTLSConfig() *tls.Config {
 	}
 }
 
-func InscureTLSConfig() (*tls.Config, error) {
+func MustInsecureTLSConfig() *tls.Config {
+	tlsConf, err := InsecureTLSConfig()
+	if err != nil {
+		panic(err)
+	}
+	return tlsConf
+}
+
+func InsecureTLSConfig() (*tls.Config, error) {
 	if pool, err := x509.SystemCertPool(); err != nil {
 		return nil, err
 	} else {
