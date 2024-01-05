@@ -10,13 +10,7 @@ type RegistrarFunc[S any] func(khttp.ServerRouter, S)
 
 type CtxRegistrarFunc[S any] func(context.Context, khttp.ServerRouter, S)
 
-type WithHandler interface {
-	HTTPHandler() Handler
-}
-
-type Handler interface {
-	HandleHTTP(context.Context, khttp.ServerRouter)
-}
+type Handler = khttp.Handler
 
 type handler[S any] struct {
 	s S

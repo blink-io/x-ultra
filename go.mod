@@ -163,6 +163,7 @@ require (
 	github.com/reugn/go-streams v0.9.0
 	github.com/rickar/cal/v2 v2.1.13
 	github.com/russross/blackfriday v1.6.0
+	github.com/samber/do/v2 v2.0.0-beta.2
 	github.com/samber/slog-common v0.15.0
 	github.com/samber/slog-multi v1.0.2
 	github.com/samber/slog-nats v0.1.1
@@ -258,7 +259,6 @@ require (
 	github.com/rivo/uniseg v0.4.4 // indirect
 	github.com/robfig/cron v1.2.0 // indirect
 	github.com/rogpeppe/go-internal v1.12.0 // indirect
-	github.com/samber/do/v2 v2.0.0-beta.2 // indirect
 	github.com/samber/go-type-to-string v1.2.0 // indirect
 	github.com/samber/lo v1.39.0 // indirect
 	github.com/segmentio/asm v1.2.0 // indirect
