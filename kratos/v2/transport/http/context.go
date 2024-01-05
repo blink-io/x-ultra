@@ -160,3 +160,8 @@ func (c *wrapper) Value(key interface{}) interface{} {
 	}
 	return c.req.Context().Value(key)
 }
+
+func Unwrap(ctx context.Context) (Context, bool) {
+	nctx, ok := ctx.(Context)
+	return nctx, ok
+}

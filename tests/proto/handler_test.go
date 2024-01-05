@@ -130,8 +130,8 @@ func TestHandler_HTTP_Client_1(t *testing.T) {
 	fmt.Println("Reply: ", reply)
 }
 
-type hhdlr = httpg.Handler[MetadataXHTTPServer]
-type ghdlr = grpcg.Handler[MetadataXServer]
+type hhdlr = httpg.Handler
+type ghdlr = grpcg.Handler
 
 type compose struct {
 	hhdlr
@@ -184,8 +184,8 @@ func (h *mmm) PostMyTime() khttp.HandlerFunc {
 func RegisterMMM(r khttp.ServerRouter, h *mmm) {
 	sr := r.Route("/mmm")
 	sr.POST("/do-my-time", h.PostMyTime())
-	sr.POST("/do-my-time", h.GetMyTime())
-	sr.GET("/do-my-time/v2", httpg.Func[Req, Res](handleMyTime).Do(http.MethodGet, "get/do-my-time/v2"))
+	sr.GET("/do-my-time", h.GetMyTime())
+	sr.GET("/do-my-time/v2", httpg.Func[Req, Res](handleMyTime).Do(http.MethodGet, "get:do-my-time/v2"))
 }
 
 func TestInit_1(t *testing.T) {

@@ -6,10 +6,6 @@ import (
 	khttp "github.com/go-kratos/kratos/v2/transport/http"
 )
 
-type Handler interface {
-	HandleHTTP(ServerRouter)
-}
-
 type StdHandlerFunc http.HandlerFunc
 
 func (h StdHandlerFunc) Handle(ctx khttp.Context) error {

@@ -10,7 +10,7 @@ type RegistrarFunc[S any] func(khttp.ServerRouter, S)
 
 type CtxRegistrarFunc[S any] func(context.Context, khttp.ServerRouter, S)
 
-type Handler[S any] interface {
+type Handler interface {
 	HandleHTTP(context.Context, khttp.ServerRouter)
 }
 
@@ -19,9 +19,9 @@ type handler[S any] struct {
 	f CtxRegistrarFunc[S]
 }
 
-var _ Handler[any] = (*handler[any])(nil)
+var _ Handler = (*handler[any])(nil)
 
-func NewHandler[S any](s S, f RegistrarFunc[S]) Handler[S] {
+func NewHandler[S any](s S, f RegistrarFunc[S]) Handler {
 	cf := func(ctx context.Context, r khttp.ServerRouter, s S) {
 		f(r, s)
 	}
@@ -32,7 +32,7 @@ func NewHandler[S any](s S, f RegistrarFunc[S]) Handler[S] {
 	return h
 }
 
-func NewCtxHandler[S any](s S, f CtxRegistrarFunc[S]) Handler[S] {
+func NewCtxHandler[S any](s S, f CtxRegistrarFunc[S]) Handler {
 	h := &handler[S]{
 		s: s,
 		f: f,
