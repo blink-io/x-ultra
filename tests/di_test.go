@@ -22,6 +22,19 @@ func TestDo_1(t *testing.T) {
 	do.Provide[*xsql.DBP](i, NewDBPWithErr)
 	do.Provide[*xsql.Options](i, NewOptions)
 
+	uname := "uni-opts"
+	do.ProvideNamedTransient(i, uname, NewOptions)
+
+	opt1 := do.MustInvoke[*xsql.Options](i)
+	opt2 := do.MustInvoke[*xsql.Options](i)
+	require.NotNil(t, opt1)
+	require.NotNil(t, opt2)
+
+	uopt1 := do.MustInvokeNamed[*xsql.Options](i, uname)
+	uopt2 := do.MustInvokeNamed[*xsql.Options](i, uname)
+	require.NotNil(t, uopt1)
+	require.NotNil(t, uopt2)
+
 	db, err := do.Invoke[*xsql.DB](i)
 	require.NoError(t, err)
 

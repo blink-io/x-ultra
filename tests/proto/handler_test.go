@@ -8,9 +8,9 @@ import (
 	"testing"
 
 	kgrpc "github.com/blink-io/x/kratos/v2/transport/grpc"
-	grpcg "github.com/blink-io/x/kratos/v2/transport/grpc/g"
+	kgrpcg "github.com/blink-io/x/kratos/v2/transport/grpc/g"
 	khttp "github.com/blink-io/x/kratos/v2/transport/http"
-	httpg "github.com/blink-io/x/kratos/v2/transport/http/g"
+	khttpg "github.com/blink-io/x/kratos/v2/transport/http/g"
 
 	"connectrpc.com/grpchealth"
 	"connectrpc.com/grpcreflect"
@@ -55,8 +55,8 @@ func TestHandler_GRPC_Server_1(t *testing.T) {
 	CtxRegisterMetadataXServer := func(ctx context.Context, s grpc.ServiceRegistrar, srv MetadataXServer) {
 		RegisterMetadataXServer(s, srv)
 	}
-	mh := grpcg.NewCtxHandler[MetadataXServer](s, CtxRegisterMetadataXServer)
-	hh := grpcg.NewHandler[grpc_health_v1.HealthServer](health.NewServer(), grpc_health_v1.RegisterHealthServer)
+	mh := kgrpcg.NewCtxHandler[MetadataXServer](s, CtxRegisterMetadataXServer)
+	hh := kgrpcg.NewHandler[grpc_health_v1.HealthServer](health.NewServer(), grpc_health_v1.RegisterHealthServer)
 
 	ln, err := net.Listen("tcp", ":9997")
 	require.NoError(t, err)
@@ -98,7 +98,7 @@ func TestHandler_GRPC_Client_1(t *testing.T) {
 
 func TestHandler_HTTP_Server_1(t *testing.T) {
 	s := new(service)
-	h := httpg.NewHandler[MetadataXHTTPServer](s, RegisterMetadataXHTTPServer)
+	h := khttpg.NewHandler[MetadataXHTTPServer](s, RegisterMetadataXHTTPServer)
 	require.NotNil(t, h)
 
 	hsrv := khttp.NewServer(
@@ -114,7 +114,7 @@ func TestHandler_HTTP_Server_1(t *testing.T) {
 
 func TestHandler_HTTP_Server_2(t *testing.T) {
 	s := new(MyTimeSvc)
-	//h := httpg.NewHandler[*MyTimeSvc](s, RegisterMyTimeSvc)
+	//h := khttpg.NewHandler[*MyTimeSvc](s, RegisterMyTimeSvc)
 	//require.NotNil(t, h)
 
 	hsrv := khttp.NewServer(
@@ -142,8 +142,8 @@ func TestHandler_HTTP_Client_1(t *testing.T) {
 	fmt.Println("Reply: ", reply)
 }
 
-type hhdlr = httpg.Handler
-type ghdlr = grpcg.Handler
+type hhdlr = khttpg.Handler
+type ghdlr = kgrpcg.Handler
 
 type compose struct {
 	hhdlr
@@ -158,13 +158,13 @@ func (c *compose) HandleGRPC(ctx context.Context, r kgrpc.ServiceRegistrar) {
 	c.ghdlr.HandleGRPC(ctx, r)
 }
 
-var _ httpg.WithHandler = (*MyTimeSvc)(nil)
+var _ khttp.WithHandler = (*MyTimeSvc)(nil)
 
 type MyTimeSvc struct {
 }
 
-func (h *MyTimeSvc) HTTPHandler() httpg.Handler {
-	return httpg.NewHandler(h, RegisterMyTimeSvc)
+func (h *MyTimeSvc) HTTPHandler() khttpg.Handler {
+	return khttpg.NewHandler(h, RegisterMyTimeSvc)
 }
 
 type Req struct {
@@ -190,12 +190,12 @@ func handleMyTime(ctx context.Context, r *Req) (*Res, error) {
 }
 
 func (h *MyTimeSvc) GetMyTime() khttp.HandlerFunc {
-	f := httpg.GET[Req, Res]("get/do-my-time", handleMyTime)
+	f := khttpg.GET[Req, Res]("get/do-my-time", handleMyTime)
 	return f
 }
 
 func (h *MyTimeSvc) PostMyTime() khttp.HandlerFunc {
-	f := httpg.POST[Req, Res]("post/do-my-time", handleMyTime)
+	f := khttpg.POST[Req, Res]("post/do-my-time", handleMyTime)
 	return f
 }
 
@@ -203,7 +203,7 @@ func RegisterMyTimeSvc(r khttp.ServerRouter, h *MyTimeSvc) {
 	sr := r.Route("/MyTimeSvc")
 	sr.POST("/do-my-time", h.PostMyTime())
 	sr.GET("/do-my-time", h.GetMyTime())
-	sr.GET("/do-my-time/v2", httpg.Func[Req, Res](handleMyTime).Do(http.MethodGet, "get:do-my-time/v2"))
+	sr.GET("/do-my-time/v2", khttpg.Func[Req, Res](handleMyTime).Do(http.MethodGet, "get:do-my-time/v2"))
 
 	checker := grpchealth.NewStaticChecker(
 		"acme.user.v1.UserService",
@@ -234,8 +234,8 @@ func TestHandler_Compose_1(t *testing.T) {
 	CtxRegisterMetadataXHTTPServer := func(ctx context.Context, s khttp.ServerRouter, srv MetadataXHTTPServer) {
 		RegisterMetadataXHTTPServer(s, srv)
 	}
-	hh := httpg.NewCtxHandler[MetadataXHTTPServer](s, CtxRegisterMetadataXHTTPServer)
-	gh := grpcg.NewHandler[MetadataXServer](s, RegisterMetadataXServer)
+	hh := khttpg.NewCtxHandler[MetadataXHTTPServer](s, CtxRegisterMetadataXHTTPServer)
+	gh := kgrpcg.NewHandler[MetadataXServer](s, RegisterMetadataXServer)
 
 	co := &compose{
 		hhdlr: hh,
