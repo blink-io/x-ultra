@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-var sqlitePath = filepath.Join(".", "xsql", "bun_demo.db")
+var sqlitePath = filepath.Join(".", "sqlite", "bun_demo.db")
 
 func sqliteOpts() *xsql.Options {
 	var opt = &xsql.Options{

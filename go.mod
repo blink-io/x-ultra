@@ -94,6 +94,8 @@ require (
 )
 
 require (
+	connectrpc.com/grpchealth v1.3.0
+	connectrpc.com/grpcreflect v1.2.0
 	github.com/DATA-DOG/go-sqlmock v1.5.1
 	github.com/VictoriaMetrics/fastcache v1.12.2
 	github.com/XSAM/otelsql v0.27.0
@@ -135,7 +137,7 @@ require (
 	github.com/gorilla/websocket v1.5.1
 	github.com/h2non/filetype v1.1.3
 	github.com/ilibs/gosql/v2 v2.1.4
-	github.com/imroc/req/v3 v3.42.2
+	github.com/imroc/req/v3 v3.42.3
 	github.com/jackc/chunkreader/v2 v2.0.1
 	github.com/jackc/puddle/v2 v2.2.1
 	github.com/jhump/protoreflect v1.15.4
@@ -186,6 +188,7 @@ require (
 )
 
 require (
+	connectrpc.com/connect v1.14.0 // indirect
 	github.com/ProtonMail/go-crypto v0.0.0-20230923063757-afb1ddc0824c // indirect
 	github.com/ProtonMail/go-mime v0.0.0-20230322103455-7d82a3887f2f // indirect
 	github.com/alicebob/gopher-json v0.0.0-20230218143504-906a9b012302 // indirect
@@ -255,6 +258,8 @@ require (
 	github.com/rivo/uniseg v0.4.4 // indirect
 	github.com/robfig/cron v1.2.0 // indirect
 	github.com/rogpeppe/go-internal v1.12.0 // indirect
+	github.com/samber/do/v2 v2.0.0-beta.2 // indirect
+	github.com/samber/go-type-to-string v1.2.0 // indirect
 	github.com/samber/lo v1.39.0 // indirect
 	github.com/segmentio/asm v1.2.0 // indirect
 	github.com/serenize/snaker v0.0.0-20201027110005-a7ad2135616e // indirect

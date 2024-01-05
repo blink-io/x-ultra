@@ -161,7 +161,11 @@ func (c *wrapper) Value(key interface{}) interface{} {
 	return c.req.Context().Value(key)
 }
 
-func Unwrap(ctx context.Context) (Context, bool) {
+// Unwrap Context from context.Context, returns nil if it is NOT a Context.
+func Unwrap(ctx context.Context) Context {
 	nctx, ok := ctx.(Context)
-	return nctx, ok
+	if ok {
+		return nctx
+	}
+	return nil
 }

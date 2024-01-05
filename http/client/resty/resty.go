@@ -13,10 +13,10 @@ func HTTP3Client(tlsConf *tls.Config) *resty.Client {
 }
 
 func HTTP3ClientConf(tlsConf *tls.Config, qconf *quic.Config) *resty.Client {
-	c := resty.New()
-	c.SetTransport(&http3.RoundTripper{
+	cc := resty.New()
+	cc.SetTransport(&http3.RoundTripper{
 		TLSClientConfig: tlsConf,
 		QuicConfig:      qconf,
 	})
-	return c
+	return cc
 }

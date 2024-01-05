@@ -384,16 +384,18 @@ func TestSqlite_DBW_Select_Funcs(t *testing.T) {
 	}
 }
 
-func TestSqlOptions(t *testing.T) {
+func getXSqlOpts(d, n string) *xsql.Options {
 	opts := &xsql.Options{
-		Dialect: "abc",
+		Dialect: d,
+		Name:    n,
 	}
+	return opts
+}
 
-	opts1 := new(xsql.Options)
-	opts1 = opts
-
-	opts.Name = "kkk"
-	opts.Dialect = "ccc"
+func TestSqlOptions(t *testing.T) {
+	opts1 := getXSqlOpts("ddd", "nnnn")
+	opts2 := getXSqlOpts("ddd", "nnnn")
 
 	require.NotNil(t, opts1)
+	require.NotNil(t, opts2)
 }

@@ -164,11 +164,13 @@ type server struct {
 	router      *mux.Router
 }
 
+// NewHTTPServer creates an HTTP server
 func NewHTTPServer(opts ...ServerOption) Server {
 	opts = append(opts, Adapter(ha.NewDefault()))
 	return NewServer(opts...)
 }
 
+// NewHTTP3Server creates an HTTP3 server
 func NewHTTP3Server(opts ...ServerOption) Server {
 	opts = append(opts, Adapter(h3a.NewDefault()))
 	return NewServer(opts...)

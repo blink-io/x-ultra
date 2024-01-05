@@ -10,6 +10,10 @@ type RegistrarFunc[S any] func(kgrpc.ServiceRegistrar, S)
 
 type CtxRegistrarFunc[S any] func(context.Context, kgrpc.ServiceRegistrar, S)
 
+type WithHandler interface {
+	GRPCHandler() Handler
+}
+
 type Handler interface {
 	HandleGRPC(context.Context, kgrpc.ServiceRegistrar)
 }

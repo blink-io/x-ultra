@@ -2,12 +2,9 @@ package grpc
 
 import (
 	kgrpc "github.com/go-kratos/kratos/v2/transport/grpc"
-	"google.golang.org/grpc"
 )
 
 type (
-	ServiceRegistrar = grpc.ServiceRegistrar
-
 	ServerOption = kgrpc.ServerOption
 )
 

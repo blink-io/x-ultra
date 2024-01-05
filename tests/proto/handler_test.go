@@ -12,9 +12,14 @@ import (
 	khttp "github.com/blink-io/x/kratos/v2/transport/http"
 	httpg "github.com/blink-io/x/kratos/v2/transport/http/g"
 
+	"connectrpc.com/grpchealth"
+	"connectrpc.com/grpcreflect"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/health"
+	"google.golang.org/grpc/health/grpc_health_v1"
+	profilingsvc "google.golang.org/grpc/profiling/service"
 )
 
 type service struct {
@@ -50,8 +55,8 @@ func TestHandler_GRPC_Server_1(t *testing.T) {
 	CtxRegisterMetadataXServer := func(ctx context.Context, s grpc.ServiceRegistrar, srv MetadataXServer) {
 		RegisterMetadataXServer(s, srv)
 	}
-	h := grpcg.NewCtxHandler[MetadataXServer](s, CtxRegisterMetadataXServer)
-	require.NotNil(t, h)
+	mh := grpcg.NewCtxHandler[MetadataXServer](s, CtxRegisterMetadataXServer)
+	hh := grpcg.NewHandler[grpc_health_v1.HealthServer](health.NewServer(), grpc_health_v1.RegisterHealthServer)
 
 	ln, err := net.Listen("tcp", ":9997")
 	require.NoError(t, err)
@@ -63,7 +68,14 @@ func TestHandler_GRPC_Server_1(t *testing.T) {
 		),
 	)
 
-	h.HandleGRPC(context.Background(), gsrv)
+	mh.HandleGRPC(context.Background(), gsrv)
+	hh.HandleGRPC(context.Background(), gsrv)
+
+	err2 := profilingsvc.Init(&profilingsvc.ProfilingConfig{
+		Enabled: true,
+		Server:  gsrv.Raw(),
+	})
+	require.NoError(t, err2)
 
 	require.NoError(t, gsrv.Start(context.Background()))
 
@@ -101,15 +113,15 @@ func TestHandler_HTTP_Server_1(t *testing.T) {
 }
 
 func TestHandler_HTTP_Server_2(t *testing.T) {
-	s := new(mmm)
-	h := httpg.NewHandler[*mmm](s, RegisterMMM)
-	require.NotNil(t, h)
+	s := new(MyTimeSvc)
+	//h := httpg.NewHandler[*MyTimeSvc](s, RegisterMyTimeSvc)
+	//require.NotNil(t, h)
 
 	hsrv := khttp.NewServer(
 		khttp.Address(":9996"),
 	)
 
-	h.HandleHTTP(context.Background(), hsrv)
+	s.HTTPHandler().HandleHTTP(context.Background(), hsrv)
 
 	require.NoError(t, hsrv.Start(context.Background()))
 
@@ -142,11 +154,17 @@ func (c *compose) HandleHTTP(ctx context.Context, r khttp.ServerRouter) {
 	c.hhdlr.HandleHTTP(ctx, r)
 }
 
-func (c *compose) HandleGRPC(ctx context.Context, r grpc.ServiceRegistrar) {
+func (c *compose) HandleGRPC(ctx context.Context, r kgrpc.ServiceRegistrar) {
 	c.ghdlr.HandleGRPC(ctx, r)
 }
 
-type mmm struct {
+var _ httpg.WithHandler = (*MyTimeSvc)(nil)
+
+type MyTimeSvc struct {
+}
+
+func (h *MyTimeSvc) HTTPHandler() httpg.Handler {
+	return httpg.NewHandler(h, RegisterMyTimeSvc)
 }
 
 type Req struct {
@@ -171,21 +189,38 @@ func handleMyTime(ctx context.Context, r *Req) (*Res, error) {
 	return res, nil
 }
 
-func (h *mmm) GetMyTime() khttp.HandlerFunc {
+func (h *MyTimeSvc) GetMyTime() khttp.HandlerFunc {
 	f := httpg.GET[Req, Res]("get/do-my-time", handleMyTime)
 	return f
 }
 
-func (h *mmm) PostMyTime() khttp.HandlerFunc {
+func (h *MyTimeSvc) PostMyTime() khttp.HandlerFunc {
 	f := httpg.POST[Req, Res]("post/do-my-time", handleMyTime)
 	return f
 }
 
-func RegisterMMM(r khttp.ServerRouter, h *mmm) {
-	sr := r.Route("/mmm")
+func RegisterMyTimeSvc(r khttp.ServerRouter, h *MyTimeSvc) {
+	sr := r.Route("/MyTimeSvc")
 	sr.POST("/do-my-time", h.PostMyTime())
 	sr.GET("/do-my-time", h.GetMyTime())
 	sr.GET("/do-my-time/v2", httpg.Func[Req, Res](handleMyTime).Do(http.MethodGet, "get:do-my-time/v2"))
+
+	checker := grpchealth.NewStaticChecker(
+		"acme.user.v1.UserService",
+		"acme.group.v1.GroupService",
+		// protoc-gen-connect-go generates package-level constants
+		// for these fully-qualified protobuf service names, so you'd more likely
+	)
+	r.HandlePrefix(grpchealth.NewHandler(checker))
+
+	reflector := grpcreflect.NewStaticReflector(
+		"acme.user.v1.UserService",
+		"acme.group.v1.GroupService",
+		// protoc-gen-connect-go generates package-level constants
+		// for these fully-qualified protobuf service names, so you'd more likely
+		// reference userv1.UserServiceName and groupv1.GroupServiceName.
+	)
+	r.HandlePrefix(grpcreflect.NewHandlerV1(reflector))
 }
 
 func TestInit_1(t *testing.T) {
