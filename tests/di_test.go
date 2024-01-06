@@ -51,6 +51,8 @@ func TestDo_1(t *testing.T) {
 	require.NoError(t, row.Scan(&str))
 
 	fmt.Println("Result: ", str)
+
+	i.Shutdown()
 }
 
 func NewDBPWithErr(i do.Injector) (*xsql.DBP, error) {

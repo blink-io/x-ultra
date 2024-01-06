@@ -14,6 +14,7 @@ import (
 	"github.com/doug-martin/goqu/v9"
 	"github.com/go-rel/rel"
 	"github.com/go-rel/rel/where"
+	"github.com/huandu/go-sqlbuilder"
 	"github.com/sanity-io/litter"
 	"github.com/stretchr/testify/require"
 	"github.com/uptrace/bun"
@@ -398,4 +399,27 @@ func TestSqlOptions(t *testing.T) {
 
 	require.NotNil(t, opts1)
 	require.NotNil(t, opts2)
+}
+
+func TestSBB_1(t *testing.T) {
+	var appStruct = sqlbuilder.NewStruct(new(Application))
+
+	sb := appStruct.SelectFrom("applications")
+	sb.Where(sb.Equal("id", "GY7hPxdSg"))
+
+	// Execute the query.
+	sql, args := sb.Build()
+	//rows, _ := db.Query(sql, args...)
+
+	fmt.Println("SQL: ", sql)
+	fmt.Println("Args: ", args)
+
+	db := getSqliteSqlDB()
+	rows, err := db.Query(sql, args...)
+	require.NoError(t, err)
+
+	var rs []*Application
+	require.NoError(t, dbscan.ScanAll(&rs, rows))
+
+	fmt.Println("done")
 }

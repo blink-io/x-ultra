@@ -306,6 +306,12 @@ github.com/hashicorp/go-multierror v1.1.1 h1:H5DkEtf6CXdFp0N0Em5UCwQpXMWke8IA0+l
 github.com/hashicorp/go-multierror v1.1.1/go.mod h1:iw975J/qwKPdAO1clOe2L8331t/9/fmwbPZ6JB6eMoM=
 github.com/hashicorp/golang-lru/v2 v2.0.7 h1:a+bsQ5rvGLjzHuww6tVxozPZFVghXaHOwFs4luLUK2k=
 github.com/hashicorp/golang-lru/v2 v2.0.7/go.mod h1:QeFd9opnmA6QUJc5vARoKUSoFhyfM2/ZepoAG6RGpeM=
+github.com/huandu/go-assert v1.1.5 h1:fjemmA7sSfYHJD7CUqs9qTwwfdNAx7/j2/ZlHXzNB3c=
+github.com/huandu/go-assert v1.1.5/go.mod h1:yOLvuqZwmcHIC5rIzrBhT7D3Q9c3GFnd0JrPVhn/06U=
+github.com/huandu/go-sqlbuilder v1.25.0 h1:h1l+6CqeCviPJCnkEZoRGNdfZ5RO9BKMvG3A+1VuKNM=
+github.com/huandu/go-sqlbuilder v1.25.0/go.mod h1:nUVmMitjOmn/zacMLXT0d3Yd3RHoO2K+vy906JzqxMI=
+github.com/huandu/xstrings v1.3.2 h1:L18LIDzqlW6xN2rEkpdV8+oL/IXWJ1APd+vsdYy4Wdw=
+github.com/huandu/xstrings v1.3.2/go.mod h1:y5/lhBue+AyNmUVz9RLU9xbLR0o4KIIExikq4ovT0aE=
 github.com/ilibs/gosql/v2 v2.1.4 h1:CFn21d67OKX4ofZcnKne90meopoLnmp9LI/HFpFPKL8=
 github.com/ilibs/gosql/v2 v2.1.4/go.mod h1:eHKamW5v/ZGwE6mDpUE6OVgmu+6GfKdbXzHPLANYxhQ=
 github.com/imroc/req/v3 v3.42.3 h1:ryPG2AiwouutAopwPxKpWKyxgvO8fB3hts4JXlh3PaE=

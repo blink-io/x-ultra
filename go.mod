@@ -136,6 +136,7 @@ require (
 	github.com/gorilla/mux v1.8.1
 	github.com/gorilla/websocket v1.5.1
 	github.com/h2non/filetype v1.1.3
+	github.com/huandu/go-sqlbuilder v1.25.0
 	github.com/ilibs/gosql/v2 v2.1.4
 	github.com/imroc/req/v3 v3.42.3
 	github.com/jackc/chunkreader/v2 v2.0.1
@@ -230,6 +231,7 @@ require (
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
+	github.com/huandu/xstrings v1.3.2 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20231201235250-de7065d80cb9 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
