@@ -25,8 +25,8 @@ func DBLoc(loc *time.Location) DBOption {
 	}
 }
 
-func DBQueryHook(h QueryHook) DBOption {
+func DBQueryHooks(hooks ...QueryHook) DBOption {
 	return func(o *dbOptions) {
-		o.queryHooks = append(o.queryHooks, h)
+		o.queryHooks = append(o.queryHooks, hooks...)
 	}
 }
