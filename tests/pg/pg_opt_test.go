@@ -7,7 +7,7 @@ import (
 )
 
 func getPgSqlDB() *sql.DB {
-	db, err1 := xsql.NewSqlDB(pgOpt())
+	db, err1 := xsql.NewSqlDB(pgCfg())
 
 	if err1 != nil {
 		panic(err1)
@@ -17,7 +17,7 @@ func getPgSqlDB() *sql.DB {
 }
 
 func getPgDB() *xsql.DB {
-	db, err1 := xsql.NewDB(pgOpt())
+	db, err1 := xsql.NewDB(pgCfg(), dbOpts()...)
 	if err1 != nil {
 		panic(err1)
 	}
@@ -26,7 +26,7 @@ func getPgDB() *xsql.DB {
 }
 
 func getPgDBX() *xsql.DBX {
-	db, err1 := xsql.NewDBX(pgOpt())
+	db, err1 := xsql.NewDBX(pgCfg())
 	//db.AddQueryHook(logging.Func(log.Printf))
 	if err1 != nil {
 		panic(err1)
@@ -38,7 +38,7 @@ func getPgDBX() *xsql.DBX {
 }
 
 func getPgDBQ() *xsql.DBQ {
-	db, err := xsql.NewDBQ(pgOpt())
+	db, err := xsql.NewDBQ(pgCfg())
 	if err != nil {
 		panic(err)
 	}
@@ -49,7 +49,7 @@ func getPgDBQ() *xsql.DBQ {
 }
 
 func getPgDBR() *xsql.DBR {
-	db, err := xsql.NewDBR(pgOpt())
+	db, err := xsql.NewDBR(pgCfg())
 
 	if err != nil {
 		panic(err)
@@ -59,7 +59,7 @@ func getPgDBR() *xsql.DBR {
 }
 
 func getPgDBM() *xsql.DBM {
-	db, err := xsql.NewDBM(pgOpt())
+	db, err := xsql.NewDBM(pgCfg())
 
 	if err != nil {
 		panic(err)

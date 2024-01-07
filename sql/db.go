@@ -1,6 +1,8 @@
 package sql
 
 import (
+	"context"
+	"database/sql"
 	"time"
 
 	"github.com/uptrace/bun"
@@ -8,6 +10,7 @@ import (
 
 const (
 	AccessorDB = "db(bun)"
+	RawNameDB  = "bun"
 
 	DefaultTimeout = 15 * time.Second
 )
@@ -19,64 +22,65 @@ type (
 
 	DB struct {
 		*idb
+		sqlDB    *sql.DB
 		info     DBInfo
 		accessor string
-		name     string
-	}
-
-	DBInfo struct {
-		Name    string
-		Dialect string
+		rawName  string
 	}
 )
 
-func newDBInfo(o *Options) DBInfo {
-	return DBInfo{
-		Name:    o.Name,
-		Dialect: o.Dialect,
+var _ HealthChecker = (*DB)(nil)
+
+func NewDB(c *Config, ops ...DBOption) (*DB, error) {
+	c = setupConfig(c)
+	c.accessor = AccessorDB
+
+	dialectOpts := make([]DialectOption, 0)
+	if c.Loc != nil {
+		dialectOpts = append(dialectOpts, DialectWithLoc(c.Loc))
 	}
-}
-
-func NewDB(o *Options) (*DB, error) {
-	o = setupOptions(o)
-	o.accessor = AccessorDB
-
-	sd, sqlDB, err := GetDialect(o)
+	sd, sqlDB, err := GetDialect(c, dialectOpts...)
 	if err != nil {
 		return nil, err
 	}
 
 	rdb := bun.NewDB(sqlDB, sd, bun.WithDiscardUnknownColumns())
-	for _, h := range o.QueryHooks {
+
+	dbOpts := applyDBOptions(ops...)
+	for _, h := range dbOpts.queryHooks {
 		rdb.AddQueryHook(h)
 	}
 
 	db := &DB{
 		idb:      rdb,
-		accessor: o.accessor,
-		info:     newDBInfo(o),
+		sqlDB:    sqlDB,
+		accessor: c.accessor,
+		rawName:  RawNameDB,
+		info:     newDBInfo(c),
 	}
 
 	return db, nil
 }
 
-func (d *DB) Accessor() string {
-	return d.accessor
+func (db *DB) Accessor() string {
+	return db.accessor
 }
 
-func (d *DB) DBInfo() DBInfo {
-	return DBInfo{
-		Name: d.name,
-	}
+func (db *DB) DBInfo() DBInfo {
+	return db.info
 }
 
-func (d *DB) RegisterModel(m any) {
-	d.idb.RegisterModel(m)
+func (db *DB) RegisterModel(m any) {
+	db.idb.RegisterModel(m)
 }
 
-func (d *DB) Close() error {
-	if d.idb != nil {
-		return d.idb.Close()
+func (db *DB) Close() error {
+	if db.idb != nil {
+		return db.idb.Close()
 	}
 	return nil
+}
+
+func (db *DB) HealthCheck(ctx context.Context) error {
+	return doPingFunc(ctx, db.sqlDB.PingContext)
 }

@@ -19,11 +19,11 @@ func init() {
 	dn := DialectSQLite
 	drivers[dn] = &sqlite.Driver{}
 	dialectors[dn] = NewSQLiteDialect
-	dsnors[dn] = SQLiteDSN
+	dsners[dn] = SQLiteDSN
 }
 
-func NewSQLiteDialect(ctx context.Context, ops ...DOption) schema.Dialect {
-	dopt := applyDOptions(ops...)
+func NewSQLiteDialect(ctx context.Context, ops ...DialectOption) schema.Dialect {
+	dopt := applyDialectOptions(ops...)
 	sops := make([]sqlitedialect.Option, 0)
 	if dopt.loc != nil {
 		sops = append(sops, sqlitedialect.Location(dopt.loc))
@@ -31,7 +31,7 @@ func NewSQLiteDialect(ctx context.Context, ops ...DOption) schema.Dialect {
 	return sqlitedialect.New(sops...)
 }
 
-func SQLiteDSN(ctx context.Context, o *Options) (string, error) {
-	dsn := o.Host
+func SQLiteDSN(ctx context.Context, c *Config) (string, error) {
+	dsn := c.Host
 	return dsn, nil
 }

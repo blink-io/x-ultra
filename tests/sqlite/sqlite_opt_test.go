@@ -9,7 +9,7 @@ import (
 )
 
 func getSqliteSqlDB() *sql.DB {
-	db, err := xsql.NewSqlDB(sqliteOpts())
+	db, err := xsql.NewSqlDB(sqliteCfg())
 	//db.AddQueryHook(logging.Func(log.Printf))
 	if err != nil {
 		panic(err)
@@ -19,7 +19,7 @@ func getSqliteSqlDB() *sql.DB {
 }
 
 func getSqliteDB() *xsql.DB {
-	db, err := xsql.NewDB(sqliteOpts())
+	db, err := xsql.NewDB(sqliteCfg(), dbOpts()...)
 
 	if err != nil {
 		panic(err)
@@ -29,7 +29,7 @@ func getSqliteDB() *xsql.DB {
 }
 
 func getSqliteDBX() *xsql.DBX {
-	db, err := xsql.NewDBX(sqliteOpts())
+	db, err := xsql.NewDBX(sqliteCfg())
 
 	if err != nil {
 		panic(err)
@@ -39,7 +39,7 @@ func getSqliteDBX() *xsql.DBX {
 }
 
 func getSqliteDBQ() *xsql.DBQ {
-	db, err := xsql.NewDBQ(sqliteOpts())
+	db, err := xsql.NewDBQ(sqliteCfg())
 	if err != nil {
 		panic(err)
 	}
@@ -48,7 +48,7 @@ func getSqliteDBQ() *xsql.DBQ {
 }
 
 func getSqliteDBR() *xsql.DBR {
-	db, err := xsql.NewDBR(sqliteOpts())
+	db, err := xsql.NewDBR(sqliteCfg())
 
 	if err != nil {
 		panic(err)
@@ -58,7 +58,7 @@ func getSqliteDBR() *xsql.DBR {
 }
 
 func getSqliteDBM() *xsql.DBM {
-	db, err := xsql.NewDBM(sqliteOpts())
+	db, err := xsql.NewDBM(sqliteCfg())
 
 	if err != nil {
 		panic(err)
@@ -68,7 +68,7 @@ func getSqliteDBM() *xsql.DBM {
 }
 
 func getSqliteDBP() *xsql.DBP {
-	db, err := xsql.NewDBP(sqliteOpts())
+	db, err := xsql.NewDBP(sqliteCfg())
 
 	if err != nil {
 		panic(err)
@@ -80,7 +80,7 @@ func getSqliteDBP() *xsql.DBP {
 }
 
 func getSqliteDBW() *xsql.DBW {
-	db, err := xsql.NewDBW(sqliteOpts())
+	db, err := xsql.NewDBW(sqliteCfg())
 
 	if err != nil {
 		panic(err)

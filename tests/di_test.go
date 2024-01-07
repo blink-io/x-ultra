@@ -20,18 +20,18 @@ func TestDo_1(t *testing.T) {
 	// inject both services into DI container
 	do.Provide[*xsql.DB](i, NewDB)
 	do.Provide[*xsql.DBP](i, NewDBPWithErr)
-	do.Provide[*xsql.Options](i, NewOptions)
+	do.Provide[*xsql.Config](i, NewOptions)
 
 	uname := "uni-opts"
 	do.ProvideNamedTransient(i, uname, NewOptions)
 
-	opt1 := do.MustInvoke[*xsql.Options](i)
-	opt2 := do.MustInvoke[*xsql.Options](i)
+	opt1 := do.MustInvoke[*xsql.Config](i)
+	opt2 := do.MustInvoke[*xsql.Config](i)
 	require.NotNil(t, opt1)
 	require.NotNil(t, opt2)
 
-	uopt1 := do.MustInvokeNamed[*xsql.Options](i, uname)
-	uopt2 := do.MustInvokeNamed[*xsql.Options](i, uname)
+	uopt1 := do.MustInvokeNamed[*xsql.Config](i, uname)
+	uopt2 := do.MustInvokeNamed[*xsql.Config](i, uname)
 	require.NotNil(t, uopt1)
 	require.NotNil(t, uopt2)
 
@@ -60,15 +60,15 @@ func NewDBPWithErr(i do.Injector) (*xsql.DBP, error) {
 }
 
 func NewDB(i do.Injector) (*xsql.DB, error) {
-	return xsql.NewDB(do.MustInvoke[*xsql.Options](i))
+	return xsql.NewDB(do.MustInvoke[*xsql.Config](i))
 }
 
-func NewOptions(i do.Injector) (*xsql.Options, error) {
-	var opt = &xsql.Options{
+func NewOptions(i do.Injector) (*xsql.Config, error) {
+	var opt = &xsql.Config{
 		Dialect: xsql.DialectSQLite,
 		Host:    sqlitePath,
-		DOptions: []xsql.DOption{
-			xsql.WithLocation(time.Local),
+		DOptions: []xsql.DialectOption{
+			xsql.DialectWithLoc(time.Local),
 		},
 		Loc: time.Local,
 	}

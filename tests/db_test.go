@@ -13,12 +13,12 @@ import (
 
 var sqlitePath = filepath.Join(".", "sqlite", "bun_demo.db")
 
-func sqliteOpts() *xsql.Options {
-	var opt = &xsql.Options{
+func sqliteOpts() *xsql.Config {
+	var opt = &xsql.Config{
 		Dialect: xsql.DialectSQLite,
 		Host:    sqlitePath,
-		DOptions: []xsql.DOption{
-			xsql.WithLocation(time.Local),
+		DOptions: []xsql.DialectOption{
+			xsql.DialectWithLoc(time.Local),
 		},
 		//DriverHooks: newDriverHooks(),
 		Logger: func(format string, args ...any) {

@@ -2,6 +2,7 @@ package sql
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"log/slog"
 	"strings"
@@ -15,28 +16,33 @@ import (
 
 const (
 	AccessorDBM = "dbm"
+	RawNameDBM  = "go-rel"
 )
 
 type (
 	idbm = rel.Repository
 	DBM  struct {
 		idbm
+		sqlDB    *sql.DB
 		info     DBInfo
 		accessor string
+		rawName  string
 	}
 )
 
-func NewDBM(o *Options) (*DBM, error) {
-	o = setupOptions(o)
-	o.accessor = AccessorDBM
+var _ HealthChecker = (*DBM)(nil)
 
-	sqlDB, err := NewSqlDB(o)
+func NewDBM(c *Config) (*DBM, error) {
+	c = setupConfig(c)
+	c.accessor = AccessorDBM
+
+	sqlDB, err := NewSqlDB(c)
 	if err != nil {
 		return nil, err
 	}
 
 	var d rel.Adapter
-	switch o.Dialect {
+	switch c.Dialect {
 	case DialectMySQL:
 		d = mysql.New(sqlDB)
 	case DialectPostgres:
@@ -48,18 +54,24 @@ func NewDBM(o *Options) (*DBM, error) {
 	}
 
 	rdb := rel.New(d)
-	if o.Logger != nil {
-		rdb.Instrumentation(dbmLogger(o.Logger))
+	if c.Logger != nil {
+		rdb.Instrumentation(dbmLogger(c.Logger))
 	}
 	db := &DBM{
 		idbm:     rdb,
-		accessor: o.accessor,
+		sqlDB:    sqlDB,
+		accessor: c.accessor,
+		rawName:  RawNameDBM,
 	}
 	return db, nil
 }
 
-func (d *DBM) Accessor() string {
-	return d.accessor
+func (db *DBM) Accessor() string {
+	return db.accessor
+}
+
+func (db *DBM) HealthCheck(ctx context.Context) error {
+	return doPingFunc(ctx, db.sqlDB.PingContext)
 }
 
 func dbmLogger(logger func(format string, args ...any)) rel.Instrumenter {

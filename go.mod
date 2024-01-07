@@ -58,7 +58,7 @@ require (
 	github.com/pierrec/lz4/v4 v4.1.19
 	github.com/quic-go/quic-go v0.40.1
 	github.com/redis/go-redis/extra/rediscmd/v9 v9.0.5
-	github.com/redis/go-redis/v9 v9.3.1
+	github.com/redis/go-redis/v9 v9.4.0
 	github.com/redis/rueidis v1.0.26
 	github.com/rs/xid v1.5.0
 	github.com/sanity-io/litter v1.5.5
@@ -77,7 +77,7 @@ require (
 	github.com/vmihailenco/go-tinylfu v0.2.2
 	github.com/vmihailenco/msgpack/v5 v5.4.1
 	github.com/zeebo/xxh3 v1.0.2
-	gitlab.com/greyxor/slogor v1.2.1
+	gitlab.com/greyxor/slogor v1.2.2
 	go.etcd.io/bbolt v1.3.8
 	go.etcd.io/etcd/client/v3 v3.5.11
 	go.temporal.io/api v1.26.0
@@ -288,7 +288,7 @@ require (
 	lukechampine.com/uint128 v1.3.0 // indirect
 	modernc.org/cc/v3 v3.41.0 // indirect
 	modernc.org/ccgo/v3 v3.16.15 // indirect
-	modernc.org/libc v1.38.0 // indirect
+	modernc.org/libc v1.38.1 // indirect
 	modernc.org/mathutil v1.6.0 // indirect
 	modernc.org/memory v1.7.2 // indirect
 	modernc.org/opt v0.1.3 // indirect

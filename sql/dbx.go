@@ -1,11 +1,15 @@
 package sql
 
 import (
+	"context"
+	"database/sql"
+
 	"github.com/pocketbase/dbx"
 )
 
 const (
 	AccessorDBX = "dbx"
+	RawNameDBX  = "dbx"
 )
 
 type (
@@ -13,28 +17,40 @@ type (
 
 	DBX struct {
 		*idbx
+		sqlDB    *sql.DB
 		accessor string
+		rawName  string
+		info     DBInfo
 	}
 )
 
-func NewDBX(o *Options) (*DBX, error) {
-	o = setupOptions(o)
-	o.accessor = AccessorDBX
+var _ HealthChecker = (*DBX)(nil)
 
-	sqlDB, err := NewSqlDB(o)
+func NewDBX(c *Config) (*DBX, error) {
+	c = setupConfig(c)
+	c.accessor = AccessorDBX
+
+	sqlDB, err := NewSqlDB(c)
 	if err != nil {
 		return nil, err
 	}
 
-	rdb := dbx.NewFromDB(sqlDB, o.Dialect)
-	rdb.LogFunc = o.Logger
+	rdb := dbx.NewFromDB(sqlDB, c.Dialect)
+	rdb.LogFunc = c.Logger
 	db := &DBX{
 		idbx:     rdb,
-		accessor: o.accessor,
+		sqlDB:    sqlDB,
+		accessor: c.accessor,
+		rawName:  RawNameDBX,
+		info:     newDBInfo(c),
 	}
 	return db, nil
 }
 
-func (d *DBX) Accessor() string {
-	return d.accessor
+func (db *DBX) Accessor() string {
+	return db.accessor
+}
+
+func (db *DBX) HealthCheck(ctx context.Context) error {
+	return doPingFunc(ctx, db.sqlDB.PingContext)
 }

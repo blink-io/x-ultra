@@ -1,11 +1,15 @@
 package sql
 
 import (
+	"context"
+	"database/sql"
+
 	"github.com/go-gorp/gorp/v3"
 )
 
 const (
 	AccessorDBP = "dbp"
+	RawNameDBP  = "gorp"
 )
 
 type (
@@ -13,17 +17,21 @@ type (
 
 	DBP struct {
 		*idbp
+		sqlDB    *sql.DB
 		info     DBInfo
 		accessor string
+		rawName  string
 	}
 )
 
-func NewDBP(o *Options) (*DBP, error) {
-	o = setupOptions(o)
-	o.accessor = AccessorDBP
+var _ HealthChecker = (*DBP)(nil)
+
+func NewDBP(c *Config) (*DBP, error) {
+	c = setupConfig(c)
+	c.accessor = AccessorDBP
 
 	var d gorp.Dialect
-	switch o.Dialect {
+	switch c.Dialect {
 	case DialectMySQL:
 		d = gorp.MySQLDialect{}
 	case DialectPostgres:
@@ -34,7 +42,7 @@ func NewDBP(o *Options) (*DBP, error) {
 		return nil, ErrUnsupportedDialect
 	}
 
-	sqlDB, err := NewSqlDB(o)
+	sqlDB, err := NewSqlDB(c)
 	if err != nil {
 		return nil, err
 	}
@@ -46,11 +54,17 @@ func NewDBP(o *Options) (*DBP, error) {
 
 	db := &DBP{
 		idbp:     rdb,
-		accessor: o.accessor,
+		sqlDB:    sqlDB,
+		accessor: c.accessor,
+		rawName:  RawNameDBP,
 	}
 	return db, nil
 }
 
-func (d *DBP) Accessor() string {
-	return d.accessor
+func (db *DBP) Accessor() string {
+	return db.accessor
+}
+
+func (db *DBP) HealthCheck(ctx context.Context) error {
+	return doPingFunc(ctx, db.sqlDB.PingContext)
 }

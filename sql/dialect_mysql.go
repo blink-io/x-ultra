@@ -21,31 +21,31 @@ func init() {
 	dn := DialectMySQL
 	drivers[dn] = &mysql.MySQLDriver{}
 	dialectors[dn] = NewMySQLDialect
-	dsnors[dn] = MySQLDSN
+	dsners[dn] = MySQLDSN
 }
 
-func NewMySQLDialect(ctx context.Context, ops ...DOption) schema.Dialect {
+func NewMySQLDialect(ctx context.Context, ops ...DialectOption) schema.Dialect {
 	return mysqldialect.New()
 }
 
-func MySQLDSN(ctx context.Context, o *Options) (string, error) {
-	cc := ToMySQLConfig(o)
+func MySQLDSN(ctx context.Context, c *Config) (string, error) {
+	cc := ToMySQLConfig(c)
 	dsn := cc.FormatDSN()
 	return dsn, nil
 }
 
-func ToMySQLConfig(o *Options) *mysql.Config {
-	network := o.Network
-	name := o.Name
-	host := o.Host
-	port := o.Port
-	user := o.User
-	password := o.Password
-	dialTimeout := o.DialTimeout
-	tlsConfig := o.TLSConfig
-	loc := o.Loc
-	collation := o.Collation
-	params := o.Params
+func ToMySQLConfig(c *Config) *mysql.Config {
+	network := c.Network
+	name := c.Name
+	host := c.Host
+	port := c.Port
+	user := c.User
+	password := c.Password
+	dialTimeout := c.DialTimeout
+	tlsConfig := c.TLSConfig
+	loc := c.Loc
+	collation := c.Collation
+	params := c.Params
 
 	if loc == nil {
 		loc = time.Local
@@ -53,11 +53,11 @@ func ToMySQLConfig(o *Options) *mysql.Config {
 	if params == nil {
 		params = make(map[string]string)
 	}
-	if len(o.ClientName) > 0 {
-		params[mysqlparams.ProgramName] = o.ClientName
+	if len(c.ClientName) > 0 {
+		params[mysqlparams.ProgramName] = c.ClientName
 	}
-	if len(o.Collation) > 0 {
-		params[mysqlparams.Collation] = o.Collation
+	if len(c.Collation) > 0 {
+		params[mysqlparams.Collation] = c.Collation
 	}
 
 	// Restful TLS Params

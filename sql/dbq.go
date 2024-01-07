@@ -1,6 +1,9 @@
 package sql
 
 import (
+	"context"
+	"database/sql"
+
 	"github.com/doug-martin/goqu/v9"
 	"github.com/doug-martin/goqu/v9/dialect/mysql"
 	"github.com/doug-martin/goqu/v9/dialect/postgres"
@@ -9,6 +12,7 @@ import (
 
 const (
 	AccessorDBQ = "dbq"
+	RawNameDBQ  = "goqu"
 )
 
 func init() {
@@ -22,34 +26,44 @@ type (
 
 	DBQ struct {
 		*idbq
+		sqlDB    *sql.DB
 		accessor string
+		rawName  string
 	}
 )
 
-func NewDBQ(o *Options) (*DBQ, error) {
-	o = setupOptions(o)
-	o.accessor = AccessorDBQ
+var _ HealthChecker = (*DBQ)(nil)
 
-	sqlDB, err := NewSqlDB(o)
+func NewDBQ(c *Config) (*DBQ, error) {
+	c = setupConfig(c)
+	c.accessor = AccessorDBQ
+
+	sqlDB, err := NewSqlDB(c)
 	if err != nil {
 		return nil, err
 	}
 
-	rdb := goqu.New(o.Dialect, sqlDB)
-	if o.Logger != nil {
-		rdb.Logger(PrintfLogger(o.Logger))
+	rdb := goqu.New(c.Dialect, sqlDB)
+	if c.Logger != nil {
+		rdb.Logger(PrintfLogger(c.Logger))
 	}
-	if o.Loc != nil {
-		goqu.SetTimeLocation(o.Loc)
+	if c.Loc != nil {
+		goqu.SetTimeLocation(c.Loc)
 	}
 
 	db := &DBQ{
 		idbq:     rdb,
-		accessor: o.accessor,
+		sqlDB:    sqlDB,
+		accessor: c.accessor,
+		rawName:  RawNameDBQ,
 	}
 	return db, nil
 }
 
-func (d *DBQ) Accessor() string {
-	return d.accessor
+func (db *DBQ) Accessor() string {
+	return db.accessor
+}
+
+func (db *DBQ) HealthCheck(ctx context.Context) error {
+	return doPingFunc(ctx, db.sqlDB.PingContext)
 }

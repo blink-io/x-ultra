@@ -20,20 +20,20 @@ var (
 	ErrUnsupportedDriver = errors.New("unsupported driver")
 )
 
-func GetDialect(o *Options) (schema.Dialect, *sql.DB, error) {
-	o = setupOptions(o)
+func GetDialect(c *Config, ops ...DialectOption) (schema.Dialect, *sql.DB, error) {
+	c = setupConfig(c)
 
-	ctx := o.Context
-	dialect := o.Dialect
+	ctx := c.Context
+	dialect := c.Dialect
 
 	var sd schema.Dialect
 	if dfn, ok := dialectors[dialect]; ok {
-		sd = dfn(ctx, o.DOptions...)
+		sd = dfn(ctx, ops...)
 	} else {
 		return nil, nil, ErrUnsupportedDialect
 	}
 
-	db, err := NewSqlDB(o)
+	db, err := NewSqlDB(c)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -41,15 +41,15 @@ func GetDialect(o *Options) (schema.Dialect, *sql.DB, error) {
 	return sd, db, nil
 }
 
-func NewSqlDB(o *Options) (*sql.DB, error) {
-	dialect := o.Dialect
-	ctx := o.Context
+func NewSqlDB(c *Config) (*sql.DB, error) {
+	dialect := c.Dialect
+	ctx := c.Context
 
 	var dsn string
 	var err error
-	if dfn, ok := dsnors[dialect]; ok {
-		dsn, err = dfn(ctx, o)
-		o.dsn = dsn
+	if dfn, ok := dsners[dialect]; ok {
+		dsn, err = dfn(ctx, c)
+		c.dsn = dsn
 		if err != nil {
 			return nil, err
 		}
@@ -64,24 +64,24 @@ func NewSqlDB(o *Options) (*sql.DB, error) {
 		return nil, ErrUnsupportedDriver
 	}
 
-	driverHooks := o.DriverHooks
+	driverHooks := c.DriverHooks
 	if len(driverHooks) > 0 {
 		drv = hooks.Wrap(drv, hooks.Compose(driverHooks...))
 	}
 
 	conn := &dsnConnector{dsn: dsn, driver: drv}
-	hostPort := net.JoinHostPort(o.Host, cast.ToString(o.Port))
+	hostPort := net.JoinHostPort(c.Host, cast.ToString(c.Port))
 	var db *sql.DB
-	if o.WithOTel {
+	if c.WithOTel {
 		otelOps := []OTelOption{
-			OTelDBName(o.Name),
-			OTelDBSystem(o.Dialect),
+			OTelDBName(c.Name),
+			OTelDBSystem(c.Dialect),
 			OTelDBHostPort(hostPort),
 			OTelReportDBStats(),
-			OTelAttrs(o.Attrs...),
+			OTelAttrs(c.Attrs...),
 		}
-		if len(o.accessor) > 0 {
-			otelOps = append(otelOps, OTelDBAccessor(o.accessor))
+		if len(c.accessor) > 0 {
+			otelOps = append(otelOps, OTelDBAccessor(c.accessor))
 		}
 		db = otelOpenDB(conn, otelOps...)
 	} else {
@@ -93,8 +93,8 @@ func NewSqlDB(o *Options) (*sql.DB, error) {
 		return nil, err
 	}
 
-	connInitSQL := o.ConnInitSQL
-	validationSQL := o.ValidationSQL
+	connInitSQL := c.ConnInitSQL
+	validationSQL := c.ValidationSQL
 	if len(connInitSQL) > 0 {
 		if _, err := db.Exec(connInitSQL); err != nil {
 			return nil, fmt.Errorf("unable to exec conn_init_sql: %s, reason: %s", connInitSQL, err)
@@ -108,10 +108,10 @@ func NewSqlDB(o *Options) (*sql.DB, error) {
 	}
 
 	// Reference: https://bun.uptrace.dev/guide/running-bun-in-production.html
-	maxIdleConns := o.MaxIdleConns
-	maxOpenConns := o.MaxOpenConns
-	connMaxLifetime := o.ConnMaxLifetime
-	connMaxIdleTime := o.ConnMaxIdleTime
+	maxIdleConns := c.MaxIdleConns
+	maxOpenConns := c.MaxOpenConns
+	connMaxLifetime := c.ConnMaxLifetime
+	connMaxIdleTime := c.ConnMaxIdleTime
 	if maxOpenConns > 0 {
 		db.SetMaxOpenConns(maxOpenConns)
 	} else {

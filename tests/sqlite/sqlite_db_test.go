@@ -385,8 +385,8 @@ func TestSqlite_DBW_Select_Funcs(t *testing.T) {
 	}
 }
 
-func getXSqlOpts(d, n string) *xsql.Options {
-	opts := &xsql.Options{
+func getXSqlOpts(d, n string) *xsql.Config {
+	opts := &xsql.Config{
 		Dialect: d,
 		Name:    n,
 	}

@@ -13,30 +13,30 @@ func B() Builder {
 	return sb
 }
 
-func (d *DB) B() Builder {
+func (db *DB) B() Builder {
 	return B()
 }
 
-func (d *DBX) B() Builder {
+func (db *DBX) B() Builder {
 	return B()
 }
 
-func (d *DBQ) B() Builder {
+func (db *DBQ) B() Builder {
 	return B()
 }
 
-func (d *DBW) B() Builder {
+func (db *DBW) B() Builder {
 	return B()
 }
 
-func (d *DBR) B() Builder {
+func (db *DBR) B() Builder {
 	return B()
 }
 
-func (d *DBP) B() Builder {
+func (db *DBP) B() Builder {
 	return B()
 }
 
-func (d *DBM) B() Builder {
+func (db *DBM) B() Builder {
 	return B()
 }

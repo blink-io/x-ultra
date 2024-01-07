@@ -1,33 +1,44 @@
 package sql
 
 import (
+	"context"
+	"database/sql"
+
 	"github.com/blink-io/x/sql/dbr/dialect"
 
 	"github.com/gocraft/dbr/v2"
 )
 
-const AccessorDBR = "dbr"
+const (
+	AccessorDBR = "dbr"
+	RawNameDBR  = "dbr"
+)
 
 type (
 	idbr = dbr.Session
 
 	DBR struct {
 		*idbr
+		sqlDB    *sql.DB
 		accessor string
+		rawName  string
+		info     DBInfo
 	}
 )
 
-func NewDBR(o *Options) (*DBR, error) {
-	o = setupOptions(o)
-	o.accessor = AccessorDBR
+var _ HealthChecker = (*DBR)(nil)
 
-	sqlDB, err := NewSqlDB(o)
+func NewDBR(c *Config) (*DBR, error) {
+	c = setupConfig(c)
+	c.accessor = AccessorDBR
+
+	sqlDB, err := NewSqlDB(c)
 	if err != nil {
 		return nil, err
 	}
 
 	var d dbr.Dialect
-	switch o.Dialect {
+	switch c.Dialect {
 	case DialectMySQL:
 		d = dialect.MySQL
 	case DialectPostgres:
@@ -48,11 +59,18 @@ func NewDBR(o *Options) (*DBR, error) {
 
 	db := &DBR{
 		idbr:     rdb,
-		accessor: o.accessor,
+		sqlDB:    sqlDB,
+		accessor: c.accessor,
+		rawName:  RawNameDBR,
+		info:     newDBInfo(c),
 	}
 	return db, nil
 }
 
-func (d *DBR) Accessor() string {
-	return d.accessor
+func (db *DBR) Accessor() string {
+	return db.accessor
+}
+
+func (db *DBR) HealthCheck(ctx context.Context) error {
+	return doPingFunc(ctx, db.sqlDB.PingContext)
 }

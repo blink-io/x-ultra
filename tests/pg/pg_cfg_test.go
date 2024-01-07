@@ -8,8 +8,15 @@ import (
 	xsql "github.com/blink-io/x/sql"
 )
 
-func pgOpt() *xsql.Options {
-	opt := &xsql.Options{
+func dbOpts() []xsql.DBOption {
+	opts := []xsql.DBOption{
+		xsql.DBLoc(time.Local),
+	}
+	return opts
+}
+
+func pgCfg() *xsql.Config {
+	cfg := &xsql.Config{
 		Context:       ctx,
 		Dialect:       xsql.DialectPostgres,
 		Name:          "blink",
@@ -21,12 +28,8 @@ func pgOpt() *xsql.Options {
 		ClientName:    "blink-dev",
 		Password:      getPgPwd(),
 		DriverHooks:   newDriverHooks(),
-		//Logger: func(format string, args ...any) {
-		//	msg := fmt.Sprintf(format, args...)
-		//	slog.Default().Info(msg)
-		//},
 	}
-	return opt
+	return cfg
 }
 
 func getPgPwd() string {

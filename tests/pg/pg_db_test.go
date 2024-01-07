@@ -135,7 +135,7 @@ func TestPg_DBX_Insert_1(t *testing.T) {
 
 func TestPg_PGX_Pool_1(t *testing.T) {
 	ctx := context.Background()
-	cc := xsql.ToPGXConfig(pgOpt())
+	cc := xsql.ToPGXConfig(pgCfg())
 	cfg, err := pgxpool.ParseConfig("")
 	require.NoError(t, err)
 

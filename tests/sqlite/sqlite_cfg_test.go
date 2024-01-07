@@ -16,13 +16,17 @@ var ctx = context.Background()
 
 var sqlitePath = filepath.Join(".", "bun_demo.db")
 
-func sqliteOpts() *xsql.Options {
-	var opt = &xsql.Options{
-		Dialect: xsql.DialectSQLite,
-		Host:    sqlitePath,
-		DOptions: []xsql.DOption{
-			xsql.WithLocation(time.Local),
-		},
+func dbOpts() []xsql.DBOption {
+	opts := []xsql.DBOption{
+		xsql.DBLoc(time.Local),
+	}
+	return opts
+}
+
+func sqliteCfg() *xsql.Config {
+	var cfg = &xsql.Config{
+		Dialect:     xsql.DialectSQLite,
+		Host:        sqlitePath,
 		DriverHooks: newDriverHooks(),
 		Logger: func(format string, args ...any) {
 			msg := fmt.Sprintf(format, args...)
@@ -30,7 +34,7 @@ func sqliteOpts() *xsql.Options {
 		},
 		Loc: time.Local,
 	}
-	return opt
+	return cfg
 }
 
 func newDriverHooks() []hooks.Hooks {

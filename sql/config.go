@@ -13,7 +13,7 @@ import (
 
 type QueryHook = bun.QueryHook
 
-type Options struct {
+type Config struct {
 	Context         context.Context
 	Dialect         string
 	Network         string
@@ -32,43 +32,49 @@ type Options struct {
 	MaxIdleConns    int
 	ValidationSQL   string
 	DriverHooks     []hooks.Hooks
-	QueryHooks      []QueryHook
-	Loc             *time.Location
-	Debug           bool
-	Collation       string
-	ClientName      string
-	WithOTel        bool
-	Attrs           []attribute.KeyValue
-	Logger          func(format string, args ...any)
-	DOptions        []DOption
-	dsn             string
-	accessor        string
+
+	Loc        *time.Location
+	Debug      bool
+	Collation  string
+	ClientName string
+	WithOTel   bool
+	Attrs      []attribute.KeyValue
+	Logger     func(format string, args ...any)
+	dsn        string
+	accessor   string
 }
 
-func setupOptions(o *Options) *Options {
-	if o == nil {
-		o = new(Options)
+func setupConfig(c *Config) *Config {
+	if c == nil {
+		c = new(Config)
 	}
-	o.SetDefaults()
-	return o
+	c.SetDefaults()
+	return c
 }
 
-func (o *Options) SetDefaults() {
-	if o == nil {
+func (c *Config) SetDefaults() {
+	if c == nil {
 		return
 	}
 
-	if o.Context == nil {
-		o.Context = context.Background()
+	if c.Context == nil {
+		c.Context = context.Background()
 	}
-	if len(o.Network) == 0 {
-		o.Network = "tcp"
+	if len(c.Network) == 0 {
+		c.Network = "tcp"
 	}
-	if o.Loc == nil {
-		o.Loc = time.Local
+	if c.Loc == nil {
+		c.Loc = time.Local
 	}
 }
 
-func (o *Options) Validate() error {
+func (c *Config) Validate(ctx context.Context) error {
 	return nil
+}
+
+func newDBInfo(c *Config) DBInfo {
+	return DBInfo{
+		Name:    c.Name,
+		Dialect: c.Dialect,
+	}
 }

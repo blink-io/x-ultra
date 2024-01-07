@@ -24,7 +24,7 @@ func TestSlog_1(t *testing.T) {
 }
 
 func TestErrors_1(t *testing.T) {
-	//slog.SetDefault(slog.New(slogor.NewHandler(os.Stderr, &slogor.Options{
+	//slog.SetDefault(slog.New(slogor.NewHandler(os.Stderr, &slogor.Config{
 	//	TimeFormat: time.Stamp,
 	//	Level:      slog.LevelDebug,
 	//	ShowSource: false,
@@ -91,7 +91,7 @@ func TestCtx_1(t *testing.T) {
 }
 
 func TestXsqlLog(t *testing.T) {
-	opt := &xsql.Options{
+	opt := &xsql.Config{
 		Logger: func(format string, args ...any) {
 			slog.Default().Info(fmt.Sprintf(format, args...))
 		},

@@ -23,36 +23,36 @@ func init() {
 	dn := DialectPostgres
 	drivers[dn] = stdlib.GetDefaultDriver()
 	dialectors[dn] = NewPostgresDialect
-	dsnors[dn] = PostgresDSN
+	dsners[dn] = PostgresDSN
 }
 
-func NewPostgresDialect(ctx context.Context, ops ...DOption) schema.Dialect {
+func NewPostgresDialect(ctx context.Context, ops ...DialectOption) schema.Dialect {
 	return pgdialect.New()
 }
 
-func PostgresDSN(ctx context.Context, o *Options) (string, error) {
-	cc := ToPGXConfig(o)
+func PostgresDSN(ctx context.Context, c *Config) (string, error) {
+	cc := ToPGXConfig(c)
 	dsn := stdlib.RegisterConnConfig(cc)
 	return dsn, nil
 }
 
-func ToPGXConfig(o *Options) *pgx.ConnConfig {
-	name := o.Name
-	host := o.Host
-	port := o.Port
-	user := o.User
-	password := o.Password
-	dialTimeout := o.DialTimeout
-	tlsConfig := o.TLSConfig
-	params := o.Params
+func ToPGXConfig(c *Config) *pgx.ConnConfig {
+	name := c.Name
+	host := c.Host
+	port := c.Port
+	user := c.User
+	password := c.Password
+	dialTimeout := c.DialTimeout
+	tlsConfig := c.TLSConfig
+	params := c.Params
 	if params == nil {
 		params = make(map[string]string)
 	}
-	if len(o.ClientName) > 0 {
-		params[pgparams.ApplicationName] = o.ClientName
+	if len(c.ClientName) > 0 {
+		params[pgparams.ApplicationName] = c.ClientName
 	}
-	if len(o.Collation) > 0 {
-		params[pgparams.ClientEncoding] = o.Collation
+	if len(c.Collation) > 0 {
+		params[pgparams.ClientEncoding] = c.Collation
 	}
 
 	pgcc, err := pgconn.ParseConfig("")
@@ -79,7 +79,7 @@ func ToPGXConfig(o *Options) *pgx.ConnConfig {
 	}
 	cc.Config = *pgcc
 	traceLogLevel := tracelog.LogLevelInfo
-	if o.Debug {
+	if c.Debug {
 		traceLogLevel = tracelog.LogLevelDebug
 	}
 	cc.Tracer = &tracelog.TraceLog{Logger: pgxzap.NewLogger(zap.L()), LogLevel: traceLogLevel}

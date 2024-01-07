@@ -9,36 +9,36 @@ import (
 )
 
 type (
-	Dsner = func(context.Context, *Options) (string, error)
+	Dsner = func(context.Context, *Config) (string, error)
 
-	Dialector = func(context.Context, ...DOption) schema.Dialect
+	Dialector = func(context.Context, ...DialectOption) schema.Dialect
 
-	dOptions struct {
+	dialectOptions struct {
 		loc *time.Location
 	}
 
-	// DOption defines option for dialect
-	DOption func(*dOptions)
+	// DialectOption defines option for dialect
+	DialectOption func(*dialectOptions)
 )
 
 var (
 	drivers = make(map[string]driver.Driver)
 
-	dsnors = make(map[string]Dsner)
+	dsners = make(map[string]Dsner)
 
 	dialectors = make(map[string]Dialector)
 )
 
-func applyDOptions(ops ...DOption) *dOptions {
-	opt := new(dOptions)
+func applyDialectOptions(ops ...DialectOption) *dialectOptions {
+	opt := new(dialectOptions)
 	for _, o := range ops {
 		o(opt)
 	}
 	return opt
 }
 
-func WithLocation(loc *time.Location) DOption {
-	return func(o *dOptions) {
+func DialectWithLoc(loc *time.Location) DialectOption {
+	return func(o *dialectOptions) {
 		o.loc = loc
 	}
 }

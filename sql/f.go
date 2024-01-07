@@ -8,6 +8,6 @@ func F() f.F {
 	return f.New()
 }
 
-func (d *DB) F() f.F {
+func (db *DB) F() f.F {
 	return F()
 }
