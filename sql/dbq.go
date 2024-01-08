@@ -43,14 +43,14 @@ func NewDBQ(c *Config) (*DBQ, error) {
 		return nil, err
 	}
 
-	rdb := goqu.New(c.Dialect, sqlDB)
-	if c.Logger != nil {
-		rdb.Logger(PrintfLogger(c.Logger))
-	}
 	if c.Loc != nil {
 		goqu.SetTimeLocation(c.Loc)
 	}
 
+	rdb := goqu.New(c.Dialect, sqlDB)
+	if c.Logger != nil {
+		rdb.Logger(PrintfLogger(c.Logger))
+	}
 	db := &DBQ{
 		idbq:     rdb,
 		sqlDB:    sqlDB,
