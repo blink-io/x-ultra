@@ -3,7 +3,7 @@ package logging
 import (
 	"context"
 
-	"github.com/blink-io/x/sql/hooks"
+	"github.com/blink-io/x/sql/driver/hooks"
 )
 
 type Func func(format string, args ...any)

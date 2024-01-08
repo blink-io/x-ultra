@@ -153,6 +153,7 @@ require (
 	github.com/matttproud/golang_protobuf_extensions/v2 v2.0.0
 	github.com/mholt/acmez v1.2.0
 	github.com/microcosm-cc/bluemonday v1.0.26
+	github.com/mileusna/useragent v1.3.4
 	github.com/montanaflynn/stats v0.7.1
 	github.com/orcaman/concurrent-map/v2 v2.0.1
 	github.com/panjf2000/ants/v2 v2.9.0

@@ -9,7 +9,7 @@ import (
 	"runtime"
 
 	"github.com/blink-io/x/cast"
-	"github.com/blink-io/x/sql/hooks"
+	"github.com/blink-io/x/sql/driver/hooks"
 
 	"github.com/uptrace/bun/schema"
 )

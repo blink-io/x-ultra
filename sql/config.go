@@ -5,7 +5,7 @@ import (
 	"crypto/tls"
 	"time"
 
-	"github.com/blink-io/x/sql/hooks"
+	"github.com/blink-io/x/sql/driver/hooks"
 	"go.opentelemetry.io/otel/attribute"
 
 	"github.com/uptrace/bun"

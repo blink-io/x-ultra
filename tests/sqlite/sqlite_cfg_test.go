@@ -7,9 +7,10 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/blink-io/x/bun/extra/timing"
 	xsql "github.com/blink-io/x/sql"
-	"github.com/blink-io/x/sql/hooks"
-	logginghook "github.com/blink-io/x/sql/hooks/logging"
+	"github.com/blink-io/x/sql/driver/hooks"
+	logginghook "github.com/blink-io/x/sql/driver/hooks/logging"
 )
 
 var ctx = context.Background()
@@ -19,6 +20,7 @@ var sqlitePath = filepath.Join(".", "bun_demo.db")
 func dbOpts() []xsql.DBOption {
 	opts := []xsql.DBOption{
 		xsql.DBLoc(time.Local),
+		xsql.DBQueryHooks(timing.New()),
 	}
 	return opts
 }

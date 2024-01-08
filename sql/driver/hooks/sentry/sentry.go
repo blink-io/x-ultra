@@ -3,7 +3,7 @@ package sentry
 import (
 	"context"
 
-	"github.com/blink-io/x/sql/hooks"
+	"github.com/blink-io/x/sql/driver/hooks"
 	"github.com/getsentry/sentry-go"
 )
 

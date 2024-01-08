@@ -5,7 +5,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/blink-io/x/sql/hooks"
+	"github.com/blink-io/x/sql/driver/hooks"
 )
 
 type ctxKey struct{}

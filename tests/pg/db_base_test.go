@@ -6,8 +6,8 @@ import (
 	"log/slog"
 	"testing"
 
-	"github.com/blink-io/x/sql/hooks"
-	"github.com/blink-io/x/sql/hooks/timing"
+	"github.com/blink-io/x/sql/driver/hooks"
+	"github.com/blink-io/x/sql/driver/hooks/timing"
 )
 
 var ctx = context.Background()
