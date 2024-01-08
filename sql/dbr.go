@@ -28,7 +28,7 @@ type (
 
 var _ HealthChecker = (*DBR)(nil)
 
-func NewDBR(c *Config) (*DBR, error) {
+func NewDBR(c *Config, ops ...DBROption) (*DBR, error) {
 	c = setupConfig(c)
 	c.accessor = AccessorDBR
 
@@ -49,12 +49,19 @@ func NewDBR(c *Config) (*DBR, error) {
 		return nil, ErrUnsupportedDialect
 	}
 
+	opts := applyDBROptions(ops...)
+
+	var er dbr.EventReceiver
+	if er = opts.er; er == nil {
+		er = new(dbr.NullEventReceiver)
+	}
+
 	cc := &dbr.Connection{
 		DB:            sqlDB,
 		Dialect:       d,
-		EventReceiver: new(dbr.NullEventReceiver),
+		EventReceiver: er,
 	}
-	rdb := cc.NewSession(nil)
+	rdb := cc.NewSession(er)
 	rdb.Timeout = DefaultTimeout
 
 	db := &DBR{

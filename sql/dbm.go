@@ -66,6 +66,10 @@ func NewDBM(c *Config) (*DBM, error) {
 	return db, nil
 }
 
+func (db *DBM) SqlDB() *sql.DB {
+	return db.sqlDB
+}
+
 func (db *DBM) Accessor() string {
 	return db.accessor
 }

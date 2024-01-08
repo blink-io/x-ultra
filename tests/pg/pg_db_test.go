@@ -6,6 +6,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/blink-io/x/postgres"
 	xsql "github.com/blink-io/x/sql"
 	"github.com/blink-io/x/sql/g"
 	"github.com/blink-io/x/sql/scany/dbscan"
@@ -124,6 +125,13 @@ func TestPg_DBQ_Select_1(t *testing.T) {
 	fmt.Println("SQL Generated: ", sql)
 }
 
+func TestPg_DBQ_Select_Version(t *testing.T) {
+	db := getPgDBQ()
+
+	ver := postgres.QueryVersion(ctx, db.QueryRowContext)
+	fmt.Println("Version: ", ver)
+}
+
 func TestPg_DBX_Insert_1(t *testing.T) {
 	db := getPgDBX()
 	r := newRandomRecordForApp("dbx")
@@ -168,6 +176,13 @@ func TestPg_DBX_Select_Funcs(t *testing.T) {
 	}
 }
 
+func TestPg_DBX_Select_Version(t *testing.T) {
+	db := getPgDBX()
+
+	ver := postgres.QueryVersion(ctx, db.DB().QueryRowContext)
+	fmt.Println("Version: ", ver)
+}
+
 func TestPg_DBR_Select_Funcs(t *testing.T) {
 	db := getPgDBR()
 
@@ -185,6 +200,13 @@ func TestPg_DBR_Select_Funcs(t *testing.T) {
 	}
 }
 
+func TestPg_DBR_Select_Version(t *testing.T) {
+	db := getPgDBR()
+
+	ver := postgres.QueryVersion(ctx, db.QueryRowContext)
+	fmt.Println("Version: ", ver)
+}
+
 func TestPg_DBM_Select_Funcs(t *testing.T) {
 	db := getPgDBM()
 
@@ -200,4 +222,10 @@ func TestPg_DBM_Select_Funcs(t *testing.T) {
 		require.NoError(t, db.Find(ctx, rt, ss))
 		fmt.Println(k, "=>", rt.Payload)
 	}
+}
+
+func TestPg_DBM_Select_Version(t *testing.T) {
+	db := getPgDBM().SqlDB()
+	ver := postgres.QueryVersion(ctx, db.QueryRowContext)
+	fmt.Println("Version: ", ver)
 }

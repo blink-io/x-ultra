@@ -10,6 +10,7 @@ import (
 	xsql "github.com/blink-io/x/sql"
 	"github.com/blink-io/x/sql/g"
 	"github.com/blink-io/x/sql/scany/dbscan"
+	"github.com/blink-io/x/sqlite"
 	"github.com/brianvoe/gofakeit/v6"
 	"github.com/doug-martin/goqu/v9"
 	"github.com/go-rel/rel"
@@ -125,6 +126,13 @@ func TestSqlite_DBQ_Select_2(t *testing.T) {
 	require.NoError(t, err)
 	fmt.Println("Result ==================>")
 	litter.Dump(rt)
+}
+
+func TestSqlite_DBQ_Select_Version(t *testing.T) {
+	db := getSqliteDBQ()
+
+	ver := sqlite.QueryVersion(ctx, db.QueryRowContext)
+	fmt.Println("Version: ", ver)
 }
 
 func TestSqlite_DBQ_Insert_1(t *testing.T) {
@@ -303,6 +311,12 @@ func TestSqlite_DBM_Select_3(t *testing.T) {
 	litter.Dump(rt)
 }
 
+func TestSqlite_DBM_Select_Version(t *testing.T) {
+	db := getSqliteDBM().SqlDB()
+	ver := sqlite.QueryVersion(ctx, db.QueryRowContext)
+	fmt.Println("Version: ", ver)
+}
+
 func TestSqlite_DBM_Insert_1(t *testing.T) {
 	db := getSqliteDBM()
 
@@ -401,7 +415,7 @@ func TestSqlOptions(t *testing.T) {
 	require.NotNil(t, opts2)
 }
 
-func TestSBB_1(t *testing.T) {
+func TestSqlite_GoSqlBuilder_1(t *testing.T) {
 	var appStruct = sqlbuilder.NewStruct(new(Application))
 
 	sb := appStruct.SelectFrom("applications")

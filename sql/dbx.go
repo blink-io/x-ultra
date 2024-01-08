@@ -26,7 +26,7 @@ type (
 
 var _ HealthChecker = (*DBX)(nil)
 
-func NewDBX(c *Config) (*DBX, error) {
+func NewDBX(c *Config, ops ...DBXOption) (*DBX, error) {
 	c = setupConfig(c)
 	c.accessor = AccessorDBX
 
@@ -35,8 +35,16 @@ func NewDBX(c *Config) (*DBX, error) {
 		return nil, err
 	}
 
+	opts := applyDBXOptions(ops...)
+
 	rdb := dbx.NewFromDB(sqlDB, c.Dialect)
 	rdb.LogFunc = c.Logger
+	if opts.queryLogFunc != nil {
+		rdb.QueryLogFunc = opts.queryLogFunc
+	}
+	if opts.queryLogFunc != nil {
+		rdb.ExecLogFunc = opts.execLogFunc
+	}
 	db := &DBX{
 		idbx:     rdb,
 		sqlDB:    sqlDB,

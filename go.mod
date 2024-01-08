@@ -104,6 +104,7 @@ require (
 	github.com/allegro/bigcache/v3 v3.1.0
 	github.com/ammario/tlru v0.3.0
 	github.com/apache/thrift v0.19.0
+	github.com/beevik/guid v1.0.0
 	github.com/bits-and-blooms/bloom/v3 v3.6.0
 	github.com/bmatcuk/doublestar/v4 v4.6.1
 	github.com/brianvoe/gofakeit/v6 v6.26.3
@@ -116,7 +117,7 @@ require (
 	github.com/doug-martin/goqu/v9 v9.19.0
 	github.com/emicklei/proto v1.13.0
 	github.com/exaring/otelpgx v0.5.2
-	github.com/expr-lang/expr v1.15.7
+	github.com/expr-lang/expr v1.15.8
 	github.com/gabriel-vasile/mimetype v1.4.3
 	github.com/glebarez/go-sqlite v1.22.0
 	github.com/go-crypt/crypt v0.2.14
@@ -288,7 +289,7 @@ require (
 	lukechampine.com/uint128 v1.3.0 // indirect
 	modernc.org/cc/v3 v3.41.0 // indirect
 	modernc.org/ccgo/v3 v3.16.15 // indirect
-	modernc.org/libc v1.38.1 // indirect
+	modernc.org/libc v1.39.0 // indirect
 	modernc.org/mathutil v1.6.0 // indirect
 	modernc.org/memory v1.7.2 // indirect
 	modernc.org/opt v0.1.3 // indirect

@@ -5,7 +5,6 @@ import (
 	"log/slog"
 	"path/filepath"
 	"testing"
-	"time"
 
 	xsql "github.com/blink-io/x/sql"
 	"github.com/stretchr/testify/require"
@@ -17,9 +16,6 @@ func sqliteOpts() *xsql.Config {
 	var opt = &xsql.Config{
 		Dialect: xsql.DialectSQLite,
 		Host:    sqlitePath,
-		DOptions: []xsql.DialectOption{
-			xsql.DialectWithLoc(time.Local),
-		},
 		//DriverHooks: newDriverHooks(),
 		Logger: func(format string, args ...any) {
 			//slog.SetDefault(custLogger)

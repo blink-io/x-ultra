@@ -1,7 +1,10 @@
 package pg
 
 import (
+	"context"
 	"database/sql"
+	"log/slog"
+	"time"
 
 	xsql "github.com/blink-io/x/sql"
 )
@@ -26,7 +29,20 @@ func getPgDB() *xsql.DB {
 }
 
 func getPgDBX() *xsql.DBX {
-	db, err1 := xsql.NewDBX(pgCfg())
+	db, err1 := xsql.NewDBX(pgCfg(),
+		xsql.DBXExecLogFunc(func(ctx context.Context, t time.Duration, sql string, result sql.Result, err error) {
+			slog.Default().Info("dbx exec log",
+				slog.String("sql", sql),
+				slog.Duration("time", t),
+			)
+		}),
+		xsql.DBXQueryLogFunc(func(ctx context.Context, t time.Duration, sql string, rows *sql.Rows, err error) {
+			slog.Default().Info("dbx query log",
+				slog.String("sql", sql),
+				slog.Duration("time", t),
+			)
+		}),
+	)
 	//db.AddQueryHook(logging.Func(log.Printf))
 	if err1 != nil {
 		panic(err1)

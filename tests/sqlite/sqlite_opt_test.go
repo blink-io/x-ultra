@@ -1,11 +1,15 @@
 package sqlite
 
 import (
+	"context"
 	"database/sql"
 	"log"
+	"log/slog"
 	"os"
+	"time"
 
 	xsql "github.com/blink-io/x/sql"
+	"github.com/blink-io/x/sql/dbr"
 )
 
 func getSqliteSqlDB() *sql.DB {
@@ -29,7 +33,20 @@ func getSqliteDB() *xsql.DB {
 }
 
 func getSqliteDBX() *xsql.DBX {
-	db, err := xsql.NewDBX(sqliteCfg())
+	db, err := xsql.NewDBX(sqliteCfg(),
+		xsql.DBXExecLogFunc(func(ctx context.Context, t time.Duration, sql string, result sql.Result, err error) {
+			slog.Default().Info("dbx exec log",
+				slog.String("sql", sql),
+				slog.Duration("time", t),
+			)
+		}),
+		xsql.DBXQueryLogFunc(func(ctx context.Context, t time.Duration, sql string, rows *sql.Rows, err error) {
+			slog.Default().Info("dbx query log",
+				slog.String("sql", sql),
+				slog.Duration("time", t),
+			)
+		}),
+	)
 
 	if err != nil {
 		panic(err)
@@ -48,7 +65,9 @@ func getSqliteDBQ() *xsql.DBQ {
 }
 
 func getSqliteDBR() *xsql.DBR {
-	db, err := xsql.NewDBR(sqliteCfg())
+	db, err := xsql.NewDBR(sqliteCfg(),
+		xsql.DBREventReceiver(dbr.NewTimingEventReceiver()),
+	)
 
 	if err != nil {
 		panic(err)
