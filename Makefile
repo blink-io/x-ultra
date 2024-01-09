@@ -7,7 +7,7 @@ tidy:
 .PHONY: upgrade
 # Upgrade packages
 upgrade:
-	go get -u -v ./...
+	go get -u -v -t ./...
 	$(MAKE) tidy
 
 .PHONY: upgrade2

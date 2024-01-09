@@ -8,6 +8,7 @@ import (
 type Router interface {
 	Group(prefix string, filters ...FilterFunc) Router
 	Handle(method, relativePath string, h HandlerFunc, filters ...FilterFunc)
+	HandlePrefix(method, relativePath string, h HandlerFunc, filters ...FilterFunc)
 
 	CONNECT(path string, h HandlerFunc, m ...FilterFunc)
 	PATCH(path string, h HandlerFunc, m ...FilterFunc)
@@ -64,6 +65,14 @@ func (r *router) Group(prefix string, filters ...FilterFunc) Router {
 
 // Handle registers a new route with a matcher for the URL path and method.
 func (r *router) Handle(method, relativePath string, h HandlerFunc, filters ...FilterFunc) {
+	r.doHandle(false, method, relativePath, h, filters...)
+}
+
+func (r *router) HandlePrefix(method, relativePath string, h HandlerFunc, filters ...FilterFunc) {
+	r.doHandle(true, method, relativePath, h, filters...)
+}
+
+func (r *router) doHandle(pathPrefix bool, method, relativePath string, h HandlerFunc, filters ...FilterFunc) {
 	next := http.Handler(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 		ctx := &wrapper{router: r}
 		ctx.Reset(res, req)
@@ -73,7 +82,12 @@ func (r *router) Handle(method, relativePath string, h HandlerFunc, filters ...F
 	}))
 	next = FilterChain(filters...)(next)
 	next = FilterChain(r.filters...)(next)
-	r.srv.Router().Handle(path.Join(r.prefix, relativePath), next).Methods(method)
+	rpath := path.Join(r.prefix, relativePath)
+	if pathPrefix {
+		r.srv.Router().PathPrefix(rpath).Handler(next).Methods(method)
+	} else {
+		r.srv.Router().Handle(rpath, next).Methods(method)
+	}
 }
 
 // GET registers a new GET route for a path with matching handler in the router.
