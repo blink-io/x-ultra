@@ -15,13 +15,13 @@ type Handler interface {
 	HandleHTTP(context.Context, ServerRouter)
 }
 
-type StdHandlerFunc http.HandlerFunc
-
-func (h StdHandlerFunc) Handle(ctx khttp.Context) error {
-	w := ctx.Response()
-	r := ctx.Request()
-	h(w, r)
-	return nil
+func StdHandlerFunc(h http.HandlerFunc) khttp.HandlerFunc {
+	return func(ctx khttp.Context) error {
+		w := ctx.Response()
+		r := ctx.Request()
+		h(w, r)
+		return nil
+	}
 }
 
 func StdHandler(h http.Handler) khttp.HandlerFunc {
