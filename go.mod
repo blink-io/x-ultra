@@ -93,6 +93,7 @@ require (
 )
 
 require (
+	connectrpc.com/connect v1.14.0
 	connectrpc.com/grpchealth v1.3.0
 	connectrpc.com/grpcreflect v1.2.0
 	github.com/DATA-DOG/go-sqlmock v1.5.2
@@ -191,7 +192,6 @@ require (
 )
 
 require (
-	connectrpc.com/connect v1.14.0 // indirect
 	github.com/ProtonMail/go-crypto v0.0.0-20230923063757-afb1ddc0824c // indirect
 	github.com/ProtonMail/go-mime v0.0.0-20230322103455-7d82a3887f2f // indirect
 	github.com/alicebob/gopher-json v0.0.0-20230218143504-906a9b012302 // indirect

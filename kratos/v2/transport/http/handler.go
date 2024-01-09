@@ -23,3 +23,12 @@ func (h StdHandlerFunc) Handle(ctx khttp.Context) error {
 	h(w, r)
 	return nil
 }
+
+func StdHandler(h http.Handler) khttp.HandlerFunc {
+	return func(ctx khttp.Context) error {
+		w := ctx.Response()
+		r := ctx.Request()
+		h.ServeHTTP(w, r)
+		return nil
+	}
+}
