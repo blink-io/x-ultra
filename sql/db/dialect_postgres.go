@@ -1,31 +1,37 @@
-package sql
+package db
 
 import (
 	"context"
 
 	pgparams "github.com/blink-io/x/postgres/params"
+	"github.com/blink-io/x/sql"
+	xsql "github.com/blink-io/x/sql"
 
 	pgxzap "github.com/jackc/pgx-zap"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/stdlib"
 	"github.com/jackc/pgx/v5/tracelog"
+	"github.com/uptrace/bun/dialect/pgdialect"
+	"github.com/uptrace/bun/schema"
 	"go.uber.org/zap"
 )
 
 func init() {
-	dn := DialectPostgres
-	drivers[dn] = stdlib.GetDefaultDriver()
-	dsners[dn] = PostgresDSN
+	dialectors[xsql.DialectPostgres] = NewPostgresDialect
 }
 
-func PostgresDSN(ctx context.Context, c *Config) (string, error) {
+func NewPostgresDialect(ctx context.Context, ops ...DialectOption) schema.Dialect {
+	return pgdialect.New()
+}
+
+func PostgresDSN(ctx context.Context, c *sql.Config) (string, error) {
 	cc := ToPGXConfig(c)
 	dsn := stdlib.RegisterConnConfig(cc)
 	return dsn, nil
 }
 
-func ToPGXConfig(c *Config) *pgx.ConnConfig {
+func ToPGXConfig(c *sql.Config) *pgx.ConnConfig {
 	name := c.Name
 	host := c.Host
 	port := c.Port

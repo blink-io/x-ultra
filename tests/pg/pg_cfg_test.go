@@ -6,12 +6,11 @@ import (
 	"time"
 
 	xsql "github.com/blink-io/x/sql"
+	"github.com/blink-io/x/sql/db"
 )
 
-func dbOpts() []xsql.DBOption {
-	opts := []xsql.DBOption{
-		xsql.DBLoc(time.Local),
-	}
+func dbOpts() []db.Option {
+	opts := []db.Option{}
 	return opts
 }
 

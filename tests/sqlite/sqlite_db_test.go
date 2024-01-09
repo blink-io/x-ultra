@@ -8,9 +8,10 @@ import (
 
 	"github.com/blink-io/x/id"
 	xsql "github.com/blink-io/x/sql"
-	"github.com/blink-io/x/sql/g"
+	"github.com/blink-io/x/sql/db/g"
 	"github.com/blink-io/x/sql/scany/dbscan"
 	"github.com/blink-io/x/sqlite"
+
 	"github.com/brianvoe/gofakeit/v6"
 	"github.com/doug-martin/goqu/v9"
 	"github.com/go-rel/rel"

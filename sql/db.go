@@ -3,84 +3,138 @@ package sql
 import (
 	"context"
 	"database/sql"
-	"time"
+	"database/sql/driver"
+	"errors"
+	"fmt"
+	"net"
+	"runtime"
 
-	"github.com/uptrace/bun"
+	"github.com/blink-io/x/cast"
+	"github.com/blink-io/x/sql/driver/hooks"
 )
 
 const (
-	AccessorDB = "db(bun)"
-	RawNameDB  = "bun"
+	// DialectMySQL defines MySQL dialect
+	DialectMySQL = "mysql"
+	// DialectPostgres defines PostgreSQL dialect
+	DialectPostgres = "postgres"
+	// DialectSQLite defines SQLite dialect
+	DialectSQLite = "sqlite"
+)
 
-	DefaultTimeout = 15 * time.Second
+var (
+	ErrUnsupportedDialect = errors.New("unsupported dialect")
+
+	ErrUnsupportedDriver = errors.New("unsupported driver")
 )
 
 type (
-	idb = bun.DB
+	HealthChecker interface {
+		HealthCheck(context.Context) error
+	}
 
-	IDB = bun.IDB
-
-	DB struct {
-		*idb
-		sqlDB    *sql.DB
-		info     DBInfo
-		accessor string
-		rawName  string
+	DBInfo struct {
+		Name    string
+		Dialect string
 	}
 )
 
-var _ HealthChecker = (*DB)(nil)
+func NewSqlDB(c *Config) (*sql.DB, error) {
+	dialect := c.Dialect
+	ctx := c.Context
 
-func NewDB(c *Config, ops ...DBOption) (*DB, error) {
-	c = setupConfig(c)
-	c.accessor = AccessorDB
-
-	dialectOpts := make([]DialectOption, 0)
-	if c.Loc != nil {
-		dialectOpts = append(dialectOpts, DialectWithLoc(c.Loc))
+	var dsn string
+	var err error
+	if dfn, ok := dsners[dialect]; ok {
+		dsn, err = dfn(ctx, c)
+		c.dsn = dsn
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		return nil, ErrUnsupportedDialect
 	}
-	sd, sqlDB, err := GetDialect(c, dialectOpts...)
-	if err != nil {
+
+	var drv driver.Driver
+	if dd, ok := drivers[dialect]; ok {
+		drv = dd
+	} else {
+		return nil, ErrUnsupportedDriver
+	}
+
+	driverHooks := c.DriverHooks
+	if len(driverHooks) > 0 {
+		drv = hooks.Wrap(drv, hooks.Compose(driverHooks...))
+	}
+
+	conn := &dsnConnector{dsn: dsn, driver: drv}
+	hostPort := net.JoinHostPort(c.Host, cast.ToString(c.Port))
+	var db *sql.DB
+	if c.WithOTel {
+		otelOps := []OTelOption{
+			OTelDBName(c.Name),
+			OTelDBSystem(c.Dialect),
+			OTelDBHostPort(hostPort),
+			OTelReportDBStats(),
+			OTelAttrs(c.Attrs...),
+		}
+		if len(c.accessor) > 0 {
+			otelOps = append(otelOps, OTelDBAccessor(c.accessor))
+		}
+		db = otelOpenDB(conn, otelOps...)
+	} else {
+		db = sqlOpenDB(conn)
+	}
+
+	// Ignore driver.ErrSkip when the Conn does not implement driver.Pinger interface
+	if err := db.Ping(); err != nil && !errors.Is(err, driver.ErrSkip) {
 		return nil, err
 	}
 
-	rdb := bun.NewDB(sqlDB, sd, bun.WithDiscardUnknownColumns())
-
-	dbOpts := applyDBOptions(ops...)
-	for _, h := range dbOpts.queryHooks {
-		rdb.AddQueryHook(h)
+	connInitSQL := c.ConnInitSQL
+	validationSQL := c.ValidationSQL
+	if len(connInitSQL) > 0 {
+		if _, err := db.Exec(connInitSQL); err != nil {
+			return nil, fmt.Errorf("unable to exec conn_init_sql: %s, reason: %s", connInitSQL, err)
+		}
+	}
+	// Execute validation SQL after bun.DB is initialized
+	if len(validationSQL) > 0 {
+		if _, err := db.Exec(validationSQL); err != nil {
+			return nil, fmt.Errorf("unable to exec validation_sql: %s, reason: %s", validationSQL, err)
+		}
 	}
 
-	db := &DB{
-		idb:      rdb,
-		sqlDB:    sqlDB,
-		accessor: c.accessor,
-		rawName:  RawNameDB,
-		info:     newDBInfo(c),
+	// Reference: https://bun.uptrace.dev/guide/running-bun-in-production.html
+	maxIdleConns := c.MaxIdleConns
+	maxOpenConns := c.MaxOpenConns
+	connMaxLifetime := c.ConnMaxLifetime
+	connMaxIdleTime := c.ConnMaxIdleTime
+	if maxOpenConns > 0 {
+		db.SetMaxOpenConns(maxOpenConns)
+	} else {
+		// TODO In Docker how we should do?
+		maxOpenConns = 4 * runtime.GOMAXPROCS(0)
+		db.SetMaxOpenConns(maxOpenConns)
+	}
+	if maxIdleConns > 0 {
+		db.SetMaxIdleConns(maxIdleConns)
+	} else {
+		db.SetMaxIdleConns(maxOpenConns)
+	}
+	if connMaxIdleTime > 0 {
+		db.SetConnMaxIdleTime(connMaxIdleTime)
+	}
+	if connMaxLifetime > 0 {
+		db.SetConnMaxLifetime(connMaxLifetime)
 	}
 
 	return db, nil
 }
 
-func (db *DB) Accessor() string {
-	return db.accessor
-}
-
-func (db *DB) DBInfo() DBInfo {
-	return db.info
-}
-
-func (db *DB) RegisterModel(m any) {
-	db.idb.RegisterModel(m)
-}
-
-func (db *DB) Close() error {
-	if db.idb != nil {
-		return db.idb.Close()
+func NewDBInfo(c *Config) DBInfo {
+	return DBInfo{
+		Name:    c.Name,
+		Dialect: c.Dialect,
 	}
-	return nil
-}
-
-func (db *DB) HealthCheck(ctx context.Context) error {
-	return doPingFunc(ctx, db.sqlDB.PingContext)
 }

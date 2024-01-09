@@ -1,4 +1,4 @@
-package sql
+package db
 
 import (
 	"context"
@@ -7,23 +7,29 @@ import (
 
 	"github.com/blink-io/x/cast"
 	mysqlparams "github.com/blink-io/x/mysql/params"
+	"github.com/blink-io/x/sql"
+	xsql "github.com/blink-io/x/sql"
 
 	"github.com/go-sql-driver/mysql"
+	"github.com/uptrace/bun/dialect/mysqldialect"
+	"github.com/uptrace/bun/schema"
 )
 
 func init() {
-	dn := DialectMySQL
-	drivers[dn] = &mysql.MySQLDriver{}
-	dsners[dn] = MySQLDSN
+	dialectors[xsql.DialectMySQL] = NewMySQLDialect
 }
 
-func MySQLDSN(ctx context.Context, c *Config) (string, error) {
+func NewMySQLDialect(ctx context.Context, ops ...DialectOption) schema.Dialect {
+	return mysqldialect.New()
+}
+
+func MySQLDSN(ctx context.Context, c *sql.Config) (string, error) {
 	cc := ToMySQLConfig(c)
 	dsn := cc.FormatDSN()
 	return dsn, nil
 }
 
-func ToMySQLConfig(c *Config) *mysql.Config {
+func ToMySQLConfig(c *sql.Config) *mysql.Config {
 	network := c.Network
 	name := c.Name
 	host := c.Host
@@ -79,7 +85,7 @@ func ToMySQLConfig(c *Config) *mysql.Config {
 }
 
 func mysqlTLSKeyName(name string) string {
-	return DialectMySQL + "_" + name
+	return xsql.DialectMySQL + "_" + name
 }
 
 func handleMySQLParams(params map[string]string) map[string]string {

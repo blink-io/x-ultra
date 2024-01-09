@@ -7,6 +7,11 @@ import (
 	"time"
 
 	xsql "github.com/blink-io/x/sql"
+	xdb "github.com/blink-io/x/sql/db"
+	"github.com/blink-io/x/sql/dbm"
+	"github.com/blink-io/x/sql/dbq"
+	"github.com/blink-io/x/sql/dbr"
+	"github.com/blink-io/x/sql/dbx"
 )
 
 func getPgSqlDB() *sql.DB {
@@ -19,8 +24,8 @@ func getPgSqlDB() *sql.DB {
 	return db
 }
 
-func getPgDB() *xsql.DB {
-	db, err1 := xsql.NewDB(pgCfg(), dbOpts()...)
+func getPgDB() *xdb.DB {
+	db, err1 := xdb.New(pgCfg(), dbOpts()...)
 	if err1 != nil {
 		panic(err1)
 	}
@@ -28,15 +33,15 @@ func getPgDB() *xsql.DB {
 	return db
 }
 
-func getPgDBX() *xsql.DBX {
-	db, err1 := xsql.NewDBX(pgCfg(),
-		xsql.DBXExecLogFunc(func(ctx context.Context, t time.Duration, sql string, result sql.Result, err error) {
+func getPgDBX() *dbx.DB {
+	db, err1 := dbx.New(pgCfg(),
+		dbx.WithExecLogFunc(func(ctx context.Context, t time.Duration, sql string, result sql.Result, err error) {
 			slog.Default().Info("dbx exec log",
 				slog.String("sql", sql),
 				slog.Duration("time", t),
 			)
 		}),
-		xsql.DBXQueryLogFunc(func(ctx context.Context, t time.Duration, sql string, rows *sql.Rows, err error) {
+		dbx.WithQueryLogFunc(func(ctx context.Context, t time.Duration, sql string, rows *sql.Rows, err error) {
 			slog.Default().Info("dbx query log",
 				slog.String("sql", sql),
 				slog.Duration("time", t),
@@ -53,8 +58,8 @@ func getPgDBX() *xsql.DBX {
 	return db
 }
 
-func getPgDBQ() *xsql.DBQ {
-	db, err := xsql.NewDBQ(pgCfg())
+func getPgDBQ() *dbq.DB {
+	db, err := dbq.New(pgCfg())
 	if err != nil {
 		panic(err)
 	}
@@ -64,8 +69,8 @@ func getPgDBQ() *xsql.DBQ {
 	return db
 }
 
-func getPgDBR() *xsql.DBR {
-	db, err := xsql.NewDBR(pgCfg())
+func getPgDBR() *dbr.DB {
+	db, err := dbr.New(pgCfg())
 
 	if err != nil {
 		panic(err)
@@ -74,8 +79,8 @@ func getPgDBR() *xsql.DBR {
 	return db
 }
 
-func getPgDBM() *xsql.DBM {
-	db, err := xsql.NewDBM(pgCfg())
+func getPgDBM() *dbm.DB {
+	db, err := dbm.New(pgCfg())
 
 	if err != nil {
 		panic(err)

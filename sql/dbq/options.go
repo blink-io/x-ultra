@@ -1,4 +1,4 @@
-package dbr
+package dbq
 
 import (
 	"github.com/gocraft/dbr/v2"
@@ -18,8 +18,9 @@ func applyOptions(ops ...Option) *options {
 	return opts
 }
 
-func WithEventReceiver(er dbr.EventReceiver) Option {
-	return func(o *options) {
-		o.er = er
-	}
-}
+//
+//func WithEventReceiver(er dbr.EventReceiver) Option {
+//	return func(o *options) {
+//		o.er = er
+//	}
+//}

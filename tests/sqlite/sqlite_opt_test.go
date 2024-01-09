@@ -9,7 +9,13 @@ import (
 	"time"
 
 	xsql "github.com/blink-io/x/sql"
+	xdb "github.com/blink-io/x/sql/db"
+	"github.com/blink-io/x/sql/dbm"
+	"github.com/blink-io/x/sql/dbp"
+	"github.com/blink-io/x/sql/dbq"
 	"github.com/blink-io/x/sql/dbr"
+	"github.com/blink-io/x/sql/dbw"
+	"github.com/blink-io/x/sql/dbx"
 )
 
 func getSqliteSqlDB() *sql.DB {
@@ -22,8 +28,8 @@ func getSqliteSqlDB() *sql.DB {
 	return db
 }
 
-func getSqliteDB() *xsql.DB {
-	db, err := xsql.NewDB(sqliteCfg(), dbOpts()...)
+func getSqliteDB() *xdb.DB {
+	db, err := xdb.New(sqliteCfg(), dbOpts()...)
 
 	if err != nil {
 		panic(err)
@@ -32,15 +38,15 @@ func getSqliteDB() *xsql.DB {
 	return db
 }
 
-func getSqliteDBX() *xsql.DBX {
-	db, err := xsql.NewDBX(sqliteCfg(),
-		xsql.DBXExecLogFunc(func(ctx context.Context, t time.Duration, sql string, result sql.Result, err error) {
+func getSqliteDBX() *dbx.DB {
+	db, err := dbx.New(sqliteCfg(),
+		dbx.WithExecLogFunc(func(ctx context.Context, t time.Duration, sql string, result sql.Result, err error) {
 			slog.Default().Info("dbx exec log",
 				slog.String("sql", sql),
 				slog.Duration("time", t),
 			)
 		}),
-		xsql.DBXQueryLogFunc(func(ctx context.Context, t time.Duration, sql string, rows *sql.Rows, err error) {
+		dbx.WithQueryLogFunc(func(ctx context.Context, t time.Duration, sql string, rows *sql.Rows, err error) {
 			slog.Default().Info("dbx query log",
 				slog.String("sql", sql),
 				slog.Duration("time", t),
@@ -55,8 +61,8 @@ func getSqliteDBX() *xsql.DBX {
 	return db
 }
 
-func getSqliteDBQ() *xsql.DBQ {
-	db, err := xsql.NewDBQ(sqliteCfg())
+func getSqliteDBQ() *dbq.DB {
+	db, err := dbq.New(sqliteCfg())
 	if err != nil {
 		panic(err)
 	}
@@ -64,9 +70,9 @@ func getSqliteDBQ() *xsql.DBQ {
 	return db
 }
 
-func getSqliteDBR() *xsql.DBR {
-	db, err := xsql.NewDBR(sqliteCfg(),
-		xsql.DBREventReceiver(dbr.NewTimingEventReceiver()),
+func getSqliteDBR() *dbr.DB {
+	db, err := dbr.New(sqliteCfg(),
+		dbr.WithEventReceiver(dbr.NewTimingEventReceiver()),
 	)
 
 	if err != nil {
@@ -76,8 +82,8 @@ func getSqliteDBR() *xsql.DBR {
 	return db
 }
 
-func getSqliteDBM() *xsql.DBM {
-	db, err := xsql.NewDBM(sqliteCfg())
+func getSqliteDBM() *dbm.DB {
+	db, err := dbm.New(sqliteCfg())
 
 	if err != nil {
 		panic(err)
@@ -86,8 +92,8 @@ func getSqliteDBM() *xsql.DBM {
 	return db
 }
 
-func getSqliteDBP() *xsql.DBP {
-	db, err := xsql.NewDBP(sqliteCfg())
+func getSqliteDBP() *dbp.DB {
+	db, err := dbp.New(sqliteCfg())
 
 	if err != nil {
 		panic(err)
@@ -98,8 +104,8 @@ func getSqliteDBP() *xsql.DBP {
 	return db
 }
 
-func getSqliteDBW() *xsql.DBW {
-	db, err := xsql.NewDBW(sqliteCfg())
+func getSqliteDBW() *dbw.DB {
+	db, err := dbw.New(sqliteCfg())
 
 	if err != nil {
 		panic(err)

@@ -7,11 +7,7 @@ import (
 
 	"github.com/blink-io/x/sql/driver/hooks"
 	"go.opentelemetry.io/otel/attribute"
-
-	"github.com/uptrace/bun"
 )
-
-type QueryHook = bun.QueryHook
 
 type Config struct {
 	Context         context.Context
@@ -44,7 +40,7 @@ type Config struct {
 	accessor   string
 }
 
-func setupConfig(c *Config) *Config {
+func SetupConfig(c *Config) *Config {
 	if c == nil {
 		c = new(Config)
 	}
@@ -72,9 +68,6 @@ func (c *Config) Validate(ctx context.Context) error {
 	return nil
 }
 
-func newDBInfo(c *Config) DBInfo {
-	return DBInfo{
-		Name:    c.Name,
-		Dialect: c.Dialect,
-	}
+func (c *Config) DBInfo() DBInfo {
+	return NewDBInfo(c)
 }

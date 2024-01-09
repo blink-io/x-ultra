@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	xsql "github.com/blink-io/x/sql"
+	"github.com/blink-io/x/sql/dbx"
 	"github.com/stretchr/testify/require"
 )
 
@@ -30,8 +31,8 @@ func sqliteOpts() *xsql.Config {
 	return opt
 }
 
-func getSqliteDBX() *xsql.DBX {
-	db, err := xsql.NewDBX(sqliteOpts())
+func getSqliteDBX() *dbx.DB {
+	db, err := dbx.New(sqliteOpts())
 
 	if err != nil {
 		panic(err)

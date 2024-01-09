@@ -7,23 +7,13 @@ import (
 	"errors"
 )
 
-type Checker interface {
-	IsMySQL() bool
-	IsPostgres() bool
-	IsSQLite() bool
-}
-
-type HealthChecker interface {
-	HealthCheck(context.Context) error
-}
-
 // IsNoRows .
 func IsNoRows(e error) bool {
 	return errors.Is(e, sql.ErrNoRows)
 }
 
-func doPingFunc(ctx context.Context, f func(context.Context) error) error {
-	if err := f(ctx); err != nil && !errors.Is(err, driver.ErrSkip) {
+func DoPingContext(ctx context.Context, db *sql.DB) error {
+	if err := db.PingContext(ctx); err != nil && !errors.Is(err, driver.ErrSkip) {
 		return err
 	}
 	return nil

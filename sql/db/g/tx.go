@@ -3,7 +3,7 @@ package g
 import (
 	"context"
 
-	"github.com/blink-io/x/sql"
+	xdb "github.com/blink-io/x/sql/db"
 	"github.com/uptrace/bun"
 )
 
@@ -30,7 +30,7 @@ func NewTx[M Model, I ID](itx bun.Tx) Tx[M, I] {
 	return &tx[M, I]{itx}
 }
 
-func NewTxWithDB[M Model, I ID](db *sql.DB) (Tx[M, I], error) {
+func NewTxWithDB[M Model, I ID](db *xdb.DB) (Tx[M, I], error) {
 	itx, err := db.Begin()
 	if err != nil {
 		return nil, err

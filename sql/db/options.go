@@ -1,11 +1,13 @@
-package dbr
+package db
 
 import (
-	"github.com/gocraft/dbr/v2"
+	"github.com/uptrace/bun"
 )
 
+type QueryHook = bun.QueryHook
+
 type options struct {
-	er dbr.EventReceiver
+	queryHooks []QueryHook
 }
 
 type Option func(*options)
@@ -18,8 +20,8 @@ func applyOptions(ops ...Option) *options {
 	return opts
 }
 
-func WithEventReceiver(er dbr.EventReceiver) Option {
+func WithQueryHooks(hooks ...QueryHook) Option {
 	return func(o *options) {
-		o.er = er
+		o.queryHooks = append(o.queryHooks, hooks...)
 	}
 }

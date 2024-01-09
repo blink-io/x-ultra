@@ -4,7 +4,7 @@ import (
 	"context"
 	"reflect"
 
-	"github.com/blink-io/x/sql"
+	xdb "github.com/blink-io/x/sql/db"
 	"github.com/uptrace/bun/schema"
 )
 
@@ -25,10 +25,10 @@ type (
 	IDType = string
 
 	DBer interface {
-		DB() *sql.DB
+		DB() *xdb.DB
 	}
 	Replacer interface {
-		Replace(*sql.DB)
+		Replace(*xdb.DB)
 	}
 
 	base[M Model, I ID] interface {
@@ -55,10 +55,10 @@ type (
 	}
 
 	DB[M Model, I ID] interface {
-		sql.IDB
+		xdb.IDB
 		base[M, I]
 		// DB .
-		DB() *sql.DB
+		DB() *xdb.DB
 		// ModelType defines
 		ModelType() *M
 		// TableType defines
@@ -67,7 +67,7 @@ type (
 		Tx() (Tx[M, I], error)
 	}
 
-	idb = sql.DB
+	idb = xdb.DB
 
 	db[M Model, I ID] struct {
 		*idb
@@ -79,7 +79,7 @@ type (
 // Do type check
 var _ DB[Model, IDType] = (*db[Model, IDType])(nil)
 
-func NewDB[M Model, I ID](idb *sql.DB) DB[M, I] {
+func NewDB[M Model, I ID](idb *xdb.DB) DB[M, I] {
 	mm := (*M)(nil)
 	idb.RegisterModel(mm)
 	tt := idb.Table(reflect.TypeOf(mm))
@@ -130,7 +130,7 @@ func (g *db[M, I]) Tx() (Tx[M, I], error) {
 	return NewTxWithDB[M, I](g.idb)
 }
 
-func (g *db[M, I]) DB() *sql.DB {
+func (g *db[M, I]) DB() *xdb.DB {
 	return g.idb
 }
 

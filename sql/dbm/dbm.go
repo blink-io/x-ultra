@@ -1,4 +1,4 @@
-package sql
+package dbm
 
 import (
 	"context"
@@ -8,6 +8,8 @@ import (
 	"strings"
 	"time"
 
+	xsql "github.com/blink-io/x/sql"
+
 	"github.com/go-rel/mysql"
 	"github.com/go-rel/postgres"
 	"github.com/go-rel/rel"
@@ -15,67 +17,64 @@ import (
 )
 
 const (
-	AccessorDBM = "dbm"
-	RawNameDBM  = "go-rel"
+	Accessor = "dbm(go-rel)"
 )
 
 type (
-	idbm = rel.Repository
-	DBM  struct {
-		idbm
+	idb = rel.Repository
+	DB  struct {
+		idb
 		sqlDB    *sql.DB
-		info     DBInfo
+		info     xsql.DBInfo
 		accessor string
 		rawName  string
 	}
 )
 
-var _ HealthChecker = (*DBM)(nil)
+var _ xsql.HealthChecker = (*DB)(nil)
 
-func NewDBM(c *Config) (*DBM, error) {
-	c = setupConfig(c)
-	c.accessor = AccessorDBM
+func New(c *xsql.Config) (*DB, error) {
+	c = xsql.SetupConfig(c)
 
-	sqlDB, err := NewSqlDB(c)
+	sqlDB, err := xsql.NewSqlDB(c)
 	if err != nil {
 		return nil, err
 	}
 
 	var d rel.Adapter
 	switch c.Dialect {
-	case DialectMySQL:
+	case xsql.DialectMySQL:
 		d = mysql.New(sqlDB)
-	case DialectPostgres:
+	case xsql.DialectPostgres:
 		d = postgres.New(sqlDB)
-	case DialectSQLite:
+	case xsql.DialectSQLite:
 		d = sqlite3.New(sqlDB)
 	default:
-		return nil, ErrUnsupportedDialect
+		return nil, xsql.ErrUnsupportedDialect
 	}
 
 	rdb := rel.New(d)
 	if c.Logger != nil {
 		rdb.Instrumentation(dbmLogger(c.Logger))
 	}
-	db := &DBM{
-		idbm:     rdb,
+	db := &DB{
+		idb:      rdb,
 		sqlDB:    sqlDB,
-		accessor: c.accessor,
-		rawName:  RawNameDBM,
+		accessor: Accessor,
 	}
 	return db, nil
 }
 
-func (db *DBM) SqlDB() *sql.DB {
+func (db *DB) SqlDB() *sql.DB {
 	return db.sqlDB
 }
 
-func (db *DBM) Accessor() string {
+func (db *DB) Accessor() string {
 	return db.accessor
 }
 
-func (db *DBM) HealthCheck(ctx context.Context) error {
-	return doPingFunc(ctx, db.sqlDB.PingContext)
+func (db *DB) HealthCheck(ctx context.Context) error {
+	return xsql.DoPingContext(ctx, db.sqlDB)
 }
 
 func dbmLogger(logger func(format string, args ...any)) rel.Instrumenter {

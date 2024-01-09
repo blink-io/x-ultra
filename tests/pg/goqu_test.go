@@ -4,7 +4,8 @@ import (
 	"fmt"
 	"log/slog"
 
-	xsql "github.com/blink-io/x/sql"
+	"github.com/blink-io/x/sql/dbq"
+	xsql "github.com/blink-io/x/sql/dbx"
 	"github.com/doug-martin/goqu/v9"
 )
 
@@ -16,12 +17,12 @@ func (l logger) Printf(format string, args ...any) {
 
 var _ goqu.Logger = (logger)(nil)
 
-func handleDBQ(db *xsql.DBQ) {
+func handleDBQ(db *dbq.DB) {
 	db.Logger(logger(func(format string, args ...any) {
 		slog.Default().Info(fmt.Sprintf(format, args...))
 	}))
 }
 
-func handleDBX(db *xsql.DBX) {
+func handleDBX(db *xsql.DB) {
 
 }

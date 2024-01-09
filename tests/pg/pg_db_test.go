@@ -7,8 +7,8 @@ import (
 	"testing"
 
 	"github.com/blink-io/x/postgres"
-	xsql "github.com/blink-io/x/sql"
-	"github.com/blink-io/x/sql/g"
+	xsql "github.com/blink-io/x/sql/db"
+	"github.com/blink-io/x/sql/db/g"
 	"github.com/blink-io/x/sql/scany/dbscan"
 	"github.com/blink-io/x/sql/scany/pgxscan"
 	"github.com/doug-martin/goqu/v9"
