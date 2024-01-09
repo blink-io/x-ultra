@@ -69,7 +69,9 @@ type (
 
 type rserver interface {
 	ServerCodec
+
 	ServerRouter
+
 	router() *mux.Router
 }
 
