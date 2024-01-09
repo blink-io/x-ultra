@@ -7,9 +7,9 @@ import (
 	"time"
 
 	xsql "github.com/blink-io/x/sql"
-	db2 "github.com/blink-io/x/sql/db"
-	dbp2 "github.com/blink-io/x/sql/dbp"
-	dbx2 "github.com/blink-io/x/sql/dbx"
+	xdb "github.com/blink-io/x/sql/db"
+	"github.com/blink-io/x/sql/dbp"
+	"github.com/blink-io/x/sql/dbx"
 	"github.com/samber/do/v2"
 	"github.com/stretchr/testify/require"
 )
@@ -21,8 +21,8 @@ func TestDo_1(t *testing.T) {
 	i := do.New()
 
 	// inject both services into DI container
-	do.Provide[*db2.DB](i, NewDB)
-	do.Provide[*dbp2.DB](i, NewDBPWithErr)
+	do.Provide[*xdb.DB](i, NewDB)
+	do.Provide[*dbp.DB](i, NewDBPWithErr)
 	do.Provide[*xsql.Config](i, NewOptions)
 
 	uname := "uni-opts"
@@ -38,14 +38,14 @@ func TestDo_1(t *testing.T) {
 	require.NotNil(t, uopt1)
 	require.NotNil(t, uopt2)
 
-	db, err := do.Invoke[*db2.DB](i)
+	db, err := do.Invoke[*xdb.DB](i)
 	require.NoError(t, err)
 
-	dbx, err2 := do.Invoke[*dbx2.DB](i)
+	dbx, err2 := do.Invoke[*dbx.DB](i)
 	require.Nil(t, dbx)
 	require.Error(t, err2)
 
-	dbp, err3 := do.Invoke[*dbp2.DB](i)
+	dbp, err3 := do.Invoke[*dbp.DB](i)
 	require.Nil(t, dbp)
 	require.Equal(t, yesErr, err3)
 
@@ -58,22 +58,19 @@ func TestDo_1(t *testing.T) {
 	i.Shutdown()
 }
 
-func NewDBPWithErr(i do.Injector) (*dbp2.DB, error) {
+func NewDBPWithErr(i do.Injector) (*dbp.DB, error) {
 	return nil, yesErr
 }
 
-func NewDB(i do.Injector) (*db2.DB, error) {
-	return db2.NewDB(do.MustInvoke[*xsql.Config](i))
+func NewDB(i do.Injector) (*xdb.DB, error) {
+	return xdb.New(do.MustInvoke[*xsql.Config](i))
 }
 
 func NewOptions(i do.Injector) (*xsql.Config, error) {
 	var opt = &xsql.Config{
-		Dialect: db2.DialectSQLite,
+		Dialect: xsql.DialectSQLite,
 		Host:    sqlitePath,
-		DOptions: []db2.DialectOption{
-			db2.DialectWithLoc(time.Local),
-		},
-		Loc: time.Local,
+		Loc:     time.Local,
 	}
 	return opt, nil
 }
