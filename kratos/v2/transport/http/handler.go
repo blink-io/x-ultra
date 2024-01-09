@@ -32,3 +32,14 @@ func StdHandler(h http.Handler) khttp.HandlerFunc {
 		return nil
 	}
 }
+
+func RouteHandlerFunc(r Router, f khttp.HandlerFunc) http.Handler {
+	return http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+		ctx := &wrapper{router: r}
+		ctx.Reset(res, req)
+		err := f(ctx)
+		if err != nil {
+			r.server().EncodeError()(res, req, err)
+		}
+	})
+}

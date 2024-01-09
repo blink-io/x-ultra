@@ -184,7 +184,7 @@ func TestRouter_Group(t *testing.T) {
 }
 
 func TestHandle(_ *testing.T) {
-	r := NewRouter("/", NewServer())
+	r := newRouter("/", NewServer())
 	h := func(i Context) error {
 		return nil
 	}

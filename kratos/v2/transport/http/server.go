@@ -67,6 +67,12 @@ type (
 	}
 )
 
+type rserver interface {
+	ServerCodec
+	ServerRouter
+	router() *mux.Router
+}
+
 type Server interface {
 	ServerCodec
 
@@ -84,5 +90,5 @@ type Server interface {
 
 	http.Handler
 
-	Router() *mux.Router
+	router() *mux.Router
 }

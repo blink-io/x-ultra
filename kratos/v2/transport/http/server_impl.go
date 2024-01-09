@@ -133,7 +133,7 @@ func StrictSlash(strictSlash bool) ServerOption {
 // PathPrefix with mux's PathPrefix, router will be replaced by a subrouter that start with prefix.
 func PathPrefix(prefix string) ServerOption {
 	return func(s *server) {
-		s.router = s.router.PathPrefix(prefix).Subrouter()
+		s.mux = s.mux.PathPrefix(prefix).Subrouter()
 	}
 }
 
@@ -161,7 +161,7 @@ type server struct {
 	encErr      EncodeErrorFunc
 	strictSlash bool
 	kind        transport.Kind
-	router      *mux.Router
+	mux         *mux.Router
 }
 
 // NewHTTPServer creates an HTTP server
@@ -190,17 +190,17 @@ func NewServer(opts ...ServerOption) Server {
 		encResp:     DefaultResponseEncoder,
 		encErr:      DefaultErrorEncoder,
 		strictSlash: true,
-		router:      mux.NewRouter(),
+		mux:         mux.NewRouter(),
 		adapter:     ha.NewDefault(),
 	}
 	for _, o := range opts {
 		o(srv)
 	}
 	srv.kind = srv.adapter.Kind()
-	srv.router.StrictSlash(srv.strictSlash)
-	srv.router.NotFoundHandler = http.DefaultServeMux
-	srv.router.MethodNotAllowedHandler = http.DefaultServeMux
-	srv.router.Use(srv.filter())
+	srv.mux.StrictSlash(srv.strictSlash)
+	srv.mux.NotFoundHandler = http.DefaultServeMux
+	srv.mux.MethodNotAllowedHandler = http.DefaultServeMux
+	srv.mux.Use(srv.filter())
 
 	if na, ok := srv.adapter.(adapter.Initializer); ok {
 		na.Init(srv.cxt, adapter.Options{
@@ -208,7 +208,7 @@ func NewServer(opts ...ServerOption) Server {
 			Address:  srv.address,
 			Endpoint: srv.endpoint,
 			TlsConf:  srv.tlsConf,
-			Handler:  FilterChain(srv.filters...)(srv.router),
+			Handler:  FilterChain(srv.filters...)(srv.mux),
 		})
 	}
 
@@ -251,8 +251,8 @@ func (s *server) Middleware() matcher.Matcher {
 	return s.middleware
 }
 
-func (s *server) Router() *mux.Router {
-	return s.router
+func (s *server) router() *mux.Router {
+	return s.mux
 }
 
 // Use uses a service middleware with selector.
@@ -266,7 +266,7 @@ func (s *server) Use(selector string, m ...middleware.Middleware) {
 
 // WalkRoute walks the router and all its sub-routers, calling walkFn for each route in the tree.
 func (s *server) WalkRoute(fn WalkRouteFunc) error {
-	return s.router.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
+	return s.mux.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
 		methods, err := route.GetMethods()
 		if err != nil {
 			return nil // ignore no methods
@@ -294,27 +294,27 @@ func (s *server) WalkHandle(handle func(method, path string, handler http.Handle
 
 // Route registers an HTTP router.
 func (s *server) Route(prefix string, filters ...FilterFunc) Router {
-	return NewRouter(prefix, s, filters...)
+	return newRouter(prefix, s, filters...)
 }
 
 // Handle registers a new route with a matcher for the URL path.
 func (s *server) Handle(path string, h http.Handler) {
-	s.router.Handle(path, h)
+	s.mux.Handle(path, h)
 }
 
 // HandlePrefix registers a new route with a matcher for the URL path prefix.
 func (s *server) HandlePrefix(prefix string, h http.Handler) {
-	s.router.PathPrefix(prefix).Handler(h)
+	s.mux.PathPrefix(prefix).Handler(h)
 }
 
 // HandleFunc registers a new route with a matcher for the URL path.
 func (s *server) HandleFunc(path string, h http.HandlerFunc) {
-	s.router.HandleFunc(path, h)
+	s.mux.HandleFunc(path, h)
 }
 
 // HandleHeader registers a new route with a matcher for the header.
 func (s *server) HandleHeader(key, val string, h http.HandlerFunc) {
-	s.router.Headers(key, val).Handler(h)
+	s.mux.Headers(key, val).Handler(h)
 }
 
 // ServeHTTP should write reply headers and data to the ResponseWriter and then return.

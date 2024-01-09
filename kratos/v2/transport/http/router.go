@@ -20,21 +20,22 @@ type Router interface {
 	TRACE(path string, h HandlerFunc, m ...FilterFunc)
 	OPTIONS(path string, h HandlerFunc, m ...FilterFunc)
 
-	Server() Server
 	Prefix() string
 	Filters() []FilterFunc
+
+	server() rserver
 }
 
 // Router is an HTTP router.
 type router struct {
 	prefix  string
-	srv     Server
+	srv     rserver
 	filters []FilterFunc
 }
 
 var _ Router = (*router)(nil)
 
-func NewRouter(prefix string, srv Server, filters ...FilterFunc) Router {
+func newRouter(prefix string, srv rserver, filters ...FilterFunc) Router {
 	r := &router{
 		prefix:  prefix,
 		srv:     srv,
@@ -43,15 +44,17 @@ func NewRouter(prefix string, srv Server, filters ...FilterFunc) Router {
 	return r
 }
 
+// Filters returns filters of this router
 func (r *router) Filters() []FilterFunc {
 	return r.filters
 }
 
+// Prefix returns prefix of this router
 func (r *router) Prefix() string {
 	return r.prefix
 }
 
-func (r *router) Server() Server {
+func (r *router) server() rserver {
 	return r.srv
 }
 
@@ -60,7 +63,7 @@ func (r *router) Group(prefix string, filters ...FilterFunc) Router {
 	var newFilters []FilterFunc
 	newFilters = append(newFilters, r.filters...)
 	newFilters = append(newFilters, filters...)
-	return NewRouter(path.Join(r.prefix, prefix), r.srv, newFilters...)
+	return newRouter(path.Join(r.prefix, prefix), r.srv, newFilters...)
 }
 
 // Handle registers a new route with a matcher for the URL path and method.
@@ -84,9 +87,9 @@ func (r *router) doHandle(pathPrefix bool, method, relativePath string, h Handle
 	next = FilterChain(r.filters...)(next)
 	rpath := path.Join(r.prefix, relativePath)
 	if pathPrefix {
-		r.srv.Router().PathPrefix(rpath).Handler(next).Methods(method)
+		r.srv.router().PathPrefix(rpath).Handler(next).Methods(method)
 	} else {
-		r.srv.Router().Handle(rpath, next).Methods(method)
+		r.srv.router().Handle(rpath, next).Methods(method)
 	}
 }
 
