@@ -24,7 +24,7 @@ var compatiblePostgresDialects = []string{
 
 func init() {
 	dn := DialectPostgres
-	drivers[dn] = getPostgresDriver
+	drivers[dn] = GetPostgresDriver
 	dsners[dn] = GetPostgresDSN
 }
 
@@ -98,11 +98,13 @@ func handlePostgresParams(params map[string]string) map[string]string {
 }
 
 func IsCompatiblePostgresDialect(dialect string) bool {
-	i, _ := slices.Index(compatiblePostgresDialects, dialect)
-	return i > 0
+	i := slices.FindIndex(compatiblePostgresDialects, func(i string) bool {
+		return i == dialect
+	})
+	return i > -1
 }
 
-func getPostgresDriver(dialect string) driver.Driver {
+func GetPostgresDriver(dialect string) driver.Driver {
 	if IsCompatiblePostgresDialect(dialect) {
 		return stdlib.GetDefaultDriver()
 	}

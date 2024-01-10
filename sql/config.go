@@ -21,22 +21,23 @@ type Config struct {
 	TLSConfig       *tls.Config
 	Params          map[string]string
 	DialTimeout     time.Duration
-	ConnInitSQL     string
 	ConnMaxLifetime time.Duration
 	ConnMaxIdleTime time.Duration
 	MaxOpenConns    int
 	MaxIdleConns    int
+	ConnInitSQL     string
 	ValidationSQL   string
 	DriverHooks     []hooks.Hooks
+	Loc             *time.Location
+	Debug           bool
+	Collation       string
+	ClientName      string
+	Logger          func(format string, args ...any)
+	Accessor        string
 
-	Loc        *time.Location
-	Debug      bool
-	Collation  string
-	ClientName string
-	WithOTel   bool
-	Attrs      []attribute.KeyValue
-	Logger     func(format string, args ...any)
-	Accessor   string
+	// OpenTelemetry
+	WithOTel  bool
+	OTelAttrs []attribute.KeyValue
 
 	dsn string
 }
@@ -71,4 +72,8 @@ func (c *Config) Validate(ctx context.Context) error {
 
 func (c *Config) DBInfo() DBInfo {
 	return NewDBInfo(c)
+}
+
+func (c *Config) DSN() string {
+	return c.dsn
 }

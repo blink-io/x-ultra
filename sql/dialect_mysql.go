@@ -104,8 +104,10 @@ func handleMySQLParams(params map[string]string) map[string]string {
 }
 
 func IsCompatibleMySQLDialect(dialect string) bool {
-	i, _ := slices.Index(compatibleMySQLDialects, dialect)
-	return i > 0
+	i := slices.FindIndex(compatibleMySQLDialects, func(i string) bool {
+		return i == dialect
+	})
+	return i > -1
 }
 
 func GetMySQLDriver(dialect string) driver.Driver {

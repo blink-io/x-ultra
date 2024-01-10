@@ -80,7 +80,7 @@ func NewSqlDB(c *Config) (*sql.DB, error) {
 			OTelDBSystem(c.Dialect),
 			OTelDBHostPort(hostPort),
 			OTelReportDBStats(),
-			OTelAttrs(c.Attrs...),
+			OTelAttrs(c.OTelAttrs...),
 		}
 		if len(c.Accessor) > 0 {
 			otelOps = append(otelOps, OTelDBAccessor(c.Accessor))
@@ -91,7 +91,7 @@ func NewSqlDB(c *Config) (*sql.DB, error) {
 	}
 
 	// Ignore driver.ErrSkip when the Conn does not implement driver.Pinger interface
-	if err := db.Ping(); err != nil && !errors.Is(err, driver.ErrSkip) {
+	if err := DoPingContext(ctx, db); err != nil {
 		return nil, err
 	}
 

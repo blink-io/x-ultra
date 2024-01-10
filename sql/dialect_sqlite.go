@@ -32,8 +32,10 @@ func GetSQLiteDSN(dialect string) (Dsner, error) {
 }
 
 func IsCompatibleSQLiteDialect(dialect string) bool {
-	i, _ := slices.Index(compatibleSQLiteDialects, dialect)
-	return i > 0
+	i := slices.FindIndex(compatibleSQLiteDialects, func(i string) bool {
+		return i == dialect
+	})
+	return i > -1
 }
 
 func GetSQLiteDriver(dialect string) driver.Driver {
