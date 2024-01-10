@@ -78,9 +78,9 @@ const (
 )
 
 var (
-	showVersion         = flag.Bool("version", false, "print the version and exit")
-	showHelp            = flag.Bool("help", false, "print help info and exit")
-	customGoPackageName = flag.String("custom-go-package", "", "Custom Go package name")
+	showVersion     = flag.Bool("version", false, "print the version and exit")
+	showHelp        = flag.Bool("help", false, "print help info and exit")
+	customGoPackage = flag.String("custom-go-package", "", "Custom Go package name")
 )
 
 func dprintf(format string, args ...any) {
@@ -92,7 +92,7 @@ func dprintf(format string, args ...any) {
 func main() {
 	flag.Parse()
 
-	dprintf("===============> flag:custom-go-package:%s\n", *customGoPackageName)
+	dprintf("===============> flag:custom-go-package:%s\n", *customGoPackage)
 
 	if *showVersion {
 		fmt.Fprintln(os.Stdout, connect.Version+"(blink)")
@@ -119,7 +119,7 @@ func generate(plugin *protogen.Plugin, file *protogen.File) {
 	if len(file.Services) == 0 {
 		return
 	}
-	if pkgName := *customGoPackageName; len(pkgName) > 0 {
+	if pkgName := *customGoPackage; len(pkgName) > 0 {
 		file.GoPackageName = protogen.GoPackageName(pkgName)
 	} else {
 		file.GoPackageName += generatedPackageSuffix
