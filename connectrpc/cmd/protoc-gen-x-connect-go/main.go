@@ -80,7 +80,7 @@ const (
 var (
 	showVersion     = flag.Bool("version", false, "print the version and exit")
 	showHelp        = flag.Bool("help", false, "print help info and exit")
-	customGoPackage = flag.String("custom-go-package", "", "Custom Go package name")
+	customGoPackage = flag.String("custom_go_package", "", "custom Go package name")
 )
 
 func dprintf(format string, args ...any) {
