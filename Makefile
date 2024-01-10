@@ -40,4 +40,5 @@ fix-udp:
 .PHONY: install-tools
 # Run fix UDP
 install-tools:
-	go install github.com/blink-io/x/kratos/v2/cmd/protoc-gen-go-http@latest
+	go install github.com/blink-io/x/kratos/v2/cmd/protoc-gen-x-go-http@latest
+	go install github.com/blink-io/x/connectrpc/cmd/protoc-gen-x-connect-go@latest
