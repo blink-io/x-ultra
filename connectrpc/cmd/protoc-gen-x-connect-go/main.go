@@ -78,6 +78,8 @@ const (
 )
 
 var (
+	showVersion         = flag.Bool("version", false, "print the version and exit")
+	showHelp            = flag.Bool("help", false, "print help info and exit")
 	customGoPackageName = flag.String("custom-go-package", "", "Custom Go package name")
 )
 
@@ -90,19 +92,15 @@ func dprintf(format string, args ...any) {
 func main() {
 	flag.Parse()
 
-	dprintf("flag:custom-go-package: %s", *customGoPackageName)
+	dprintf("===============> flag:custom-go-package:%s\n", *customGoPackageName)
 
-	if len(os.Args) == 2 && os.Args[1] == "--version" {
+	if *showVersion {
 		fmt.Fprintln(os.Stdout, connect.Version+"(blink)")
 		os.Exit(0)
 	}
-	if len(os.Args) == 2 && (os.Args[1] == "-h" || os.Args[1] == "--help") {
+	if *showHelp {
 		fmt.Fprintln(os.Stdout, usage)
 		os.Exit(0)
-	}
-	if len(os.Args) != 1 {
-		fmt.Fprintln(os.Stderr, usage)
-		os.Exit(1)
 	}
 	protogen.Options{}.Run(
 		func(plugin *protogen.Plugin) error {
