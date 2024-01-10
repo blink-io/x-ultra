@@ -93,7 +93,6 @@ require (
 )
 
 require (
-	connectrpc.com/connect v1.14.0
 	connectrpc.com/grpchealth v1.3.0
 	connectrpc.com/grpcreflect v1.2.0
 	github.com/DATA-DOG/go-sqlmock v1.5.2
@@ -115,6 +114,7 @@ require (
 	github.com/dchest/siphash v1.2.3
 	github.com/deckarep/golang-set/v2 v2.6.0
 	github.com/doug-martin/goqu/v9 v9.19.0
+	github.com/eapache/queue/v2 v2.0.0-20230407133247-75960ed334e4
 	github.com/emicklei/proto v1.13.0
 	github.com/exaring/otelpgx v0.5.2
 	github.com/expr-lang/expr v1.15.8
@@ -193,6 +193,7 @@ require (
 )
 
 require (
+	connectrpc.com/connect v1.14.0 // indirect
 	github.com/ProtonMail/go-crypto v0.0.0-20230923063757-afb1ddc0824c // indirect
 	github.com/ProtonMail/go-mime v0.0.0-20230322103455-7d82a3887f2f // indirect
 	github.com/alicebob/gopher-json v0.0.0-20230218143504-906a9b012302 // indirect

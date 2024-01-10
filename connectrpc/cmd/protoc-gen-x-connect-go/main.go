@@ -42,6 +42,7 @@ package main
 
 import (
 	"bytes"
+	"flag"
 	"fmt"
 	"os"
 	"path"
@@ -76,9 +77,13 @@ const (
 	protoPackageFieldNum = 2
 )
 
+var (
+	customGoPackageName = flag.String("custom-go-package", "", "Custom Go package name")
+)
+
 func main() {
 	if len(os.Args) == 2 && os.Args[1] == "--version" {
-		fmt.Fprintln(os.Stdout, connect.Version)
+		fmt.Fprintln(os.Stdout, connect.Version+"(blink)")
 		os.Exit(0)
 	}
 	if len(os.Args) == 2 && (os.Args[1] == "-h" || os.Args[1] == "--help") {
@@ -106,7 +111,11 @@ func generate(plugin *protogen.Plugin, file *protogen.File) {
 	if len(file.Services) == 0 {
 		return
 	}
-	file.GoPackageName += generatedPackageSuffix
+	if pkgName := *customGoPackageName; len(pkgName) > 0 {
+		file.GoPackageName = protogen.GoPackageName(pkgName)
+	} else {
+		file.GoPackageName += generatedPackageSuffix
+	}
 
 	generatedFilenamePrefixToSlash := filepath.ToSlash(file.GeneratedFilenamePrefix)
 	file.GeneratedFilenamePrefix = path.Join(
