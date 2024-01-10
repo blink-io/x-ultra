@@ -20,7 +20,7 @@ var (
 func main() {
 	flag.Parse()
 	if *showVersion {
-		fmt.Printf("protoc-gen-go-http %v\n", release)
+		fmt.Printf("protoc-gen-x-go-http %v\n", release+"(blink)")
 		return
 	}
 

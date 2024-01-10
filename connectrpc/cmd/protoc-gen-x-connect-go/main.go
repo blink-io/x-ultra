@@ -172,6 +172,9 @@ func generatePreamble(g *protogen.GeneratedFile, file *protogen.File) {
 	} else {
 		g.P("// Source: ", file.Desc.Path())
 	}
+	if len(*customGoPackage) > 0 {
+		g.P("// Custom Go Package: ", *customGoPackage)
+	}
 	g.P()
 
 	pkgPath := protoreflect.SourcePath{protoPackageFieldNum}
