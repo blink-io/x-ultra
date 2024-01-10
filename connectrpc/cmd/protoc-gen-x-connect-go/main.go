@@ -81,7 +81,17 @@ var (
 	customGoPackageName = flag.String("custom-go-package", "", "Custom Go package name")
 )
 
+func dprintf(format string, args ...any) {
+	if os.Getenv("DEBUG") == "1" {
+		fmt.Fprintf(os.Stderr, format, args...)
+	}
+}
+
 func main() {
+	flag.Parse()
+
+	dprintf("flag:custom-go-package: %s", *customGoPackageName)
+
 	if len(os.Args) == 2 && os.Args[1] == "--version" {
 		fmt.Fprintln(os.Stdout, connect.Version+"(blink)")
 		os.Exit(0)
