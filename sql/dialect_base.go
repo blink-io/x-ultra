@@ -15,10 +15,14 @@ type (
 
 	// DialectOption defines option for dialect
 	DialectOption func(*dialectOptions)
+
+	GetDriverFunc func(dialect string) driver.Driver
+
+	GetDSNFunc func(dialect string) (Dsner, error)
 )
 
 var (
-	drivers = make(map[string]driver.Driver)
+	drivers = make(map[string]GetDriverFunc)
 
-	dsners = make(map[string]Dsner)
+	dsners = make(map[string]GetDSNFunc)
 )

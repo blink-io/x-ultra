@@ -29,6 +29,7 @@ var _ xsql.HealthChecker = (*DB)(nil)
 
 func New(c *xsql.Config, ops ...Option) (*DB, error) {
 	c = xsql.SetupConfig(c)
+	c.Accessor = Accessor
 
 	var d gorp.Dialect
 	switch c.Dialect {

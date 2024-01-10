@@ -36,8 +36,9 @@ type Config struct {
 	WithOTel   bool
 	Attrs      []attribute.KeyValue
 	Logger     func(format string, args ...any)
-	dsn        string
-	accessor   string
+	Accessor   string
+
+	dsn string
 }
 
 func SetupConfig(c *Config) *Config {

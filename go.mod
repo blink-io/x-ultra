@@ -107,7 +107,7 @@ require (
 	github.com/beevik/guid v1.0.0
 	github.com/bits-and-blooms/bloom/v3 v3.6.0
 	github.com/bmatcuk/doublestar/v4 v4.6.1
-	github.com/brianvoe/gofakeit/v6 v6.26.3
+	github.com/brianvoe/gofakeit/v6 v6.26.4
 	github.com/bwmarrin/snowflake v0.3.0
 	github.com/caarlos0/env/v10 v10.0.0
 	github.com/carlmjohnson/requests v0.23.5
@@ -148,6 +148,7 @@ require (
 	github.com/kardianos/osext v0.0.0-20190222173326-2bc1f35cddc0
 	github.com/leonelquinteros/gotext v1.5.2
 	github.com/lesismal/nbio v1.3.21
+	github.com/life4/genesis v1.10.2
 	github.com/matryer/is v1.4.1
 	github.com/mattn/go-runewidth v0.0.15
 	github.com/matttproud/golang_protobuf_extensions/v2 v2.0.0
@@ -184,7 +185,7 @@ require (
 	github.com/wk8/go-ordered-map/v2 v2.1.8
 	github.com/xo/dburl v0.20.2
 	github.com/yuin/goldmark v1.6.0
-	github.com/zitadel/passwap v0.4.0
+	github.com/zitadel/passwap v0.5.0
 	go.opentelemetry.io/otel v1.21.0
 	go.opentelemetry.io/otel/trace v1.21.0
 	golang.org/x/net v0.20.0
@@ -289,7 +290,7 @@ require (
 	lukechampine.com/uint128 v1.3.0 // indirect
 	modernc.org/cc/v3 v3.41.0 // indirect
 	modernc.org/ccgo/v3 v3.16.15 // indirect
-	modernc.org/libc v1.39.1 // indirect
+	modernc.org/libc v1.40.1 // indirect
 	modernc.org/mathutil v1.6.0 // indirect
 	modernc.org/memory v1.7.2 // indirect
 	modernc.org/opt v0.1.3 // indirect

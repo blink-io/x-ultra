@@ -3,6 +3,7 @@ package tests
 import (
 	"errors"
 	"fmt"
+	"reflect"
 	"testing"
 	"time"
 
@@ -23,10 +24,10 @@ func TestDo_1(t *testing.T) {
 	// inject both services into DI container
 	do.Provide[*xdb.DB](i, NewDB)
 	do.Provide[*dbp.DB](i, NewDBPWithErr)
-	do.Provide[*xsql.Config](i, NewOptions)
+	do.Provide[*xsql.Config](i, NewConfig)
 
 	uname := "uni-opts"
-	do.ProvideNamedTransient(i, uname, NewOptions)
+	do.ProvideNamedTransient(i, uname, NewConfig)
 
 	opt1 := do.MustInvoke[*xsql.Config](i)
 	opt2 := do.MustInvoke[*xsql.Config](i)
@@ -58,6 +59,39 @@ func TestDo_1(t *testing.T) {
 	i.Shutdown()
 }
 
+func TestDo_2(t *testing.T) {
+	i := do.New()
+	uname := "abc"
+	do.ProvideNamed[*xsql.Config](i, uname, NewConfig)
+
+	uopt1 := do.MustInvokeNamed[*xsql.Config](i, uname)
+	uopt2 := do.MustInvokeNamed[*xsql.Config](i, uname)
+	require.NotNil(t, uopt1)
+	require.NotNil(t, uopt2)
+	require.Equal(t, uopt1, uopt2)
+
+	dequal := reflect.DeepEqual(uopt1, uopt2)
+	fmt.Println("DeepEqual: ", dequal)
+
+	do.OverrideNamed(i, uname, NewConfig)
+	uopt3 := do.MustInvokeNamed[*xsql.Config](i, uname)
+	require.NotEqual(t, uopt2, uopt3)
+}
+
+func TestDo_3(t *testing.T) {
+	i := do.New()
+	uname := "abc"
+	do.ProvideNamed[*xsql.Config](i, uname, NewConfig)
+
+	uopt1 := do.MustInvokeNamed[*xsql.Config](i, uname)
+
+	uopt2 := new(xsql.Config)
+
+	reflect.Copy(reflect.ValueOf(uopt2), reflect.ValueOf(uopt1))
+
+	fmt.Println("done")
+}
+
 func NewDBPWithErr(i do.Injector) (*dbp.DB, error) {
 	return nil, yesErr
 }
@@ -66,7 +100,7 @@ func NewDB(i do.Injector) (*xdb.DB, error) {
 	return xdb.New(do.MustInvoke[*xsql.Config](i))
 }
 
-func NewOptions(i do.Injector) (*xsql.Config, error) {
+func NewConfig(i do.Injector) (*xsql.Config, error) {
 	var opt = &xsql.Config{
 		Dialect: xsql.DialectSQLite,
 		Host:    sqlitePath,

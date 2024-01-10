@@ -46,8 +46,12 @@ func NewSqlDB(c *Config) (*sql.DB, error) {
 	var dsn string
 	var err error
 	if dfn, ok := dsners[dialect]; ok {
-		dsn, err = dfn(ctx, c)
-		c.dsn = dsn
+		if dsner, derr := dfn(dialect); derr != nil {
+			dsn, err = dsner(ctx, c)
+			c.dsn = dsn
+		} else {
+			err = derr
+		}
 		if err != nil {
 			return nil, err
 		}
@@ -56,8 +60,8 @@ func NewSqlDB(c *Config) (*sql.DB, error) {
 	}
 
 	var drv driver.Driver
-	if dd, ok := drivers[dialect]; ok {
-		drv = dd
+	if cfn, ok := drivers[dialect]; ok {
+		drv = cfn(dialect)
 	} else {
 		return nil, ErrUnsupportedDriver
 	}
@@ -78,8 +82,8 @@ func NewSqlDB(c *Config) (*sql.DB, error) {
 			OTelReportDBStats(),
 			OTelAttrs(c.Attrs...),
 		}
-		if len(c.accessor) > 0 {
-			otelOps = append(otelOps, OTelDBAccessor(c.accessor))
+		if len(c.Accessor) > 0 {
+			otelOps = append(otelOps, OTelDBAccessor(c.Accessor))
 		}
 		db = otelOpenDB(conn, otelOps...)
 	} else {

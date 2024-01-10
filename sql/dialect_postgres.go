@@ -2,8 +2,10 @@ package sql
 
 import (
 	"context"
+	"database/sql/driver"
 
 	pgparams "github.com/blink-io/x/postgres/params"
+	"github.com/life4/genesis/slices"
 
 	pgxzap "github.com/jackc/pgx-zap"
 	"github.com/jackc/pgx/v5"
@@ -13,16 +15,28 @@ import (
 	"go.uber.org/zap"
 )
 
-func init() {
-	dn := DialectPostgres
-	drivers[dn] = stdlib.GetDefaultDriver()
-	dsners[dn] = PostgresDSN
+var compatiblePostgresDialects = []string{
+	DialectPostgres,
+	"postgresql",
+	"pg",
+	"pgx",
 }
 
-func PostgresDSN(ctx context.Context, c *Config) (string, error) {
-	cc := ToPGXConfig(c)
-	dsn := stdlib.RegisterConnConfig(cc)
-	return dsn, nil
+func init() {
+	dn := DialectPostgres
+	drivers[dn] = getPostgresDriver
+	dsners[dn] = GetPostgresDSN
+}
+
+func GetPostgresDSN(dialect string) (Dsner, error) {
+	if !IsCompatiblePostgresDialect(dialect) {
+		return nil, ErrUnsupportedDialect
+	}
+	return func(ctx context.Context, c *Config) (string, error) {
+		cc := ToPGXConfig(c)
+		dsn := stdlib.RegisterConnConfig(cc)
+		return dsn, nil
+	}, nil
 }
 
 func ToPGXConfig(c *Config) *pgx.ConnConfig {
@@ -81,4 +95,16 @@ func handlePostgresParams(params map[string]string) map[string]string {
 		newParams[k] = v
 	}
 	return newParams
+}
+
+func IsCompatiblePostgresDialect(dialect string) bool {
+	i, _ := slices.Index(compatiblePostgresDialects, dialect)
+	return i > 0
+}
+
+func getPostgresDriver(dialect string) driver.Driver {
+	if IsCompatiblePostgresDialect(dialect) {
+		return stdlib.GetDefaultDriver()
+	}
+	return nil
 }

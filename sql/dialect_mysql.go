@@ -2,25 +2,38 @@ package sql
 
 import (
 	"context"
+	"database/sql/driver"
 	"net"
 	"time"
 
 	"github.com/blink-io/x/cast"
 	mysqlparams "github.com/blink-io/x/mysql/params"
+	"github.com/life4/genesis/slices"
 
 	"github.com/go-sql-driver/mysql"
 )
 
-func init() {
-	dn := DialectMySQL
-	drivers[dn] = &mysql.MySQLDriver{}
-	dsners[dn] = MySQLDSN
+var compatibleMySQLDialects = []string{
+	DialectMySQL,
+	"mysql5",
+	"mysql8",
 }
 
-func MySQLDSN(ctx context.Context, c *Config) (string, error) {
-	cc := ToMySQLConfig(c)
-	dsn := cc.FormatDSN()
-	return dsn, nil
+func init() {
+	dn := DialectMySQL
+	drivers[dn] = GetMySQLDriver
+	dsners[dn] = GetMySQLDSN
+}
+
+func GetMySQLDSN(dialect string) (Dsner, error) {
+	if !IsCompatibleMySQLDialect(dialect) {
+		return nil, ErrUnsupportedDialect
+	}
+	return func(ctx context.Context, c *Config) (string, error) {
+		cc := ToMySQLConfig(c)
+		dsn := cc.FormatDSN()
+		return dsn, nil
+	}, nil
 }
 
 func ToMySQLConfig(c *Config) *mysql.Config {
@@ -88,4 +101,16 @@ func handleMySQLParams(params map[string]string) map[string]string {
 		newParams[k] = v
 	}
 	return newParams
+}
+
+func IsCompatibleMySQLDialect(dialect string) bool {
+	i, _ := slices.Index(compatibleMySQLDialects, dialect)
+	return i > 0
+}
+
+func GetMySQLDriver(dialect string) driver.Driver {
+	if IsCompatibleMySQLDialect(dialect) {
+		return &mysql.MySQLDriver{}
+	}
+	return nil
 }

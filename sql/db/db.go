@@ -39,6 +39,7 @@ var _ IDB = (*DB)(nil)
 
 func New(c *Config, ops ...Option) (*DB, error) {
 	c = xsql.SetupConfig(c)
+	c.Accessor = Accessor
 
 	dopts := make([]DialectOption, 0)
 	if c.Loc != nil {

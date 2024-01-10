@@ -38,6 +38,7 @@ var _ xsql.HealthChecker = (*DB)(nil)
 
 func New(c *xsql.Config, ops ...Option) (*DB, error) {
 	c = xsql.SetupConfig(c)
+	c.Accessor = Accessor
 
 	sqlDB, err := xsql.NewSqlDB(c)
 	if err != nil {
