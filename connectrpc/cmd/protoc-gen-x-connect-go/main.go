@@ -92,8 +92,6 @@ func dprintf(format string, args ...any) {
 func main() {
 	flag.Parse()
 
-	dprintf("===============> flag:custom-go-package:%s\n", *customGoPackage)
-
 	if *showVersion {
 		fmt.Fprintln(os.Stdout, connect.Version+"(blink)")
 		os.Exit(0)
@@ -102,8 +100,12 @@ func main() {
 		fmt.Fprintln(os.Stdout, usage)
 		os.Exit(0)
 	}
-	protogen.Options{}.Run(
+	protogen.Options{
+		ParamFunc: flag.CommandLine.Set,
+	}.Run(
 		func(plugin *protogen.Plugin) error {
+			dprintf("===============> flag:custom-go-package:%s\n", *customGoPackage)
+
 			plugin.SupportedFeatures = uint64(pluginpb.CodeGeneratorResponse_FEATURE_PROTO3_OPTIONAL)
 			for _, file := range plugin.Files {
 				if file.Generate {

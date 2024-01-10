@@ -17,10 +17,6 @@ var (
 	transportPath   = flag.String("transport_path", "", "Custom HTTP transport import path")
 )
 
-var debug = (func() bool {
-	return os.Getenv("DEBUG") == "1"
-})()
-
 func main() {
 	flag.Parse()
 	if *showVersion {
@@ -47,7 +43,7 @@ func main() {
 }
 
 func dprintf(format string, args ...any) {
-	if debug {
+	if os.Getenv("DEBUG") == "1" {
 		fmt.Fprintf(os.Stderr, format, args...)
 	}
 }
