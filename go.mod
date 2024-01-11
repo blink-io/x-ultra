@@ -269,7 +269,7 @@ require (
 	github.com/samber/lo v1.39.0 // indirect
 	github.com/segmentio/asm v1.2.0 // indirect
 	github.com/serenize/snaker v0.0.0-20201027110005-a7ad2135616e // indirect
-	github.com/sirupsen/logrus v1.9.0 // indirect
+	github.com/sirupsen/logrus v1.9.3 // indirect
 	github.com/smarty/assertions v1.15.1 // indirect
 	github.com/stretchr/objx v0.5.1 // indirect
 	github.com/tmthrgd/go-hex v0.0.0-20190904060850-447a3041c3bc // indirect

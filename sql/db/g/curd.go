@@ -7,41 +7,55 @@ import (
 )
 
 func Insert[M Model](ctx context.Context, db bun.IDB, m *M, ops ...InsertOption) error {
-	q := db.NewInsert().Returning("NULL")
-	for _, o := range ops {
-		o(q)
-	}
+	q := db.NewInsert()
+	opts := applyInsertOptions(ops...)
+	handleInsertOptions(q, opts)
 	_, err := q.Model(m).Exec(ctx)
 	return err
 }
 
 func BulkInsert[M Model](ctx context.Context, db bun.IDB, ms []*M, ops ...InsertOption) error {
-	q := db.NewInsert().Returning("NULL")
-	for _, o := range ops {
-		o(q)
-	}
+	q := db.NewInsert()
+	o := applyInsertOptions(ops...)
+	handleInsertOptions(q, o)
 	_, err := q.Model(&ms).Exec(ctx)
 	return err
 }
 
+func handleInsertOptions(q *bun.InsertQuery, o *insertOptions) {
+	if r := o.returning; r != nil {
+		q.Returning(r.query, r.args...)
+	} else {
+		q.Returning("NULL")
+	}
+}
+
 func Update[M Model](ctx context.Context, db bun.IDB, m *M, ops ...UpdateOption) error {
 	q := db.NewUpdate()
-	for _, o := range ops {
-		o(q)
-	}
+	o := applyUpdateOptions(ops...)
+	handleUpdateOptions(q, o)
 	_, err := q.Model(m).
 		WherePK().
 		Exec(ctx)
 	return err
 }
 
+func handleUpdateOptions(q *bun.UpdateQuery, o *updateOptions) {
+	if o.omitZero {
+		q.OmitZero()
+	}
+	if r := o.returning; r != nil {
+		q.Returning(r.query, r.args...)
+	} else {
+		q.Returning("NULL")
+	}
+}
+
 func Delete[M Model, I ID](ctx context.Context, db bun.IDB, ID I, field string, ops ...DeleteOption) error {
 	q := db.NewDelete()
-	for _, o := range ops {
-		o(q)
-	}
-	_, err := q.
-		Model((*M)(nil)).
+	o := applyDeleteOptions(ops...)
+	handleDeleteOptions(q, o)
+	_, err := q.Model((*M)(nil)).
 		Where("?=?", bun.Ident(field), ID).
 		Exec(ctx)
 	return err
@@ -49,67 +63,63 @@ func Delete[M Model, I ID](ctx context.Context, db bun.IDB, ID I, field string, 
 
 func BulkDelete[M Model, I ID](ctx context.Context, db bun.IDB, IDs []I, field string, ops ...DeleteOption) error {
 	q := db.NewDelete()
-	for _, o := range ops {
-		o(q)
-	}
-	_, err := q.
-		Model((*M)(nil)).
+	o := applyDeleteOptions(ops...)
+	handleDeleteOptions(q, o)
+	_, err := q.Model((*M)(nil)).
 		Where("? IN (?)", bun.Ident(field), bun.In(IDs)).
 		Exec(ctx)
 	return err
 }
 
+func handleDeleteOptions(q *bun.DeleteQuery, o *deleteOptions) {
+	if o.force {
+		q.ForceDelete()
+	}
+}
+
 func Get[M Model, I ID](ctx context.Context, db bun.IDB, ID I, field string, ops ...SelectOption) (*M, error) {
 	var m = new(M)
 	q := db.NewSelect()
-	for _, o := range ops {
-		o(q)
-	}
-	err := q.
-		Model(m).
-		Where("?=?", bun.Ident(field), ID).
-		Limit(1).
-		Scan(ctx, m)
+	o := applySelectOptions(ops...)
+	handleSelectOptions(q, o)
+	err := q.Model(m).
+		Where("?=?", bun.Ident(field), ID).Limit(1).Scan(ctx, m)
 	return m, err
 }
 
 func One[M Model](ctx context.Context, db bun.IDB, ops ...SelectOption) (*M, error) {
 	var m = new(M)
 	q := db.NewSelect()
-	for _, o := range ops {
-		o(q)
-	}
-	err := q.
-		Model(m).
-		Limit(1).
-		Scan(ctx, m)
+	o := applySelectOptions(ops...)
+	handleSelectOptions(q, o)
+	err := q.Model(m).
+		Limit(1).Scan(ctx, m)
 	return m, err
 }
 
 func All[M Model](ctx context.Context, db bun.IDB, ops ...SelectOption) ([]*M, error) {
 	var ms []*M
 	q := db.NewSelect()
-	for _, o := range ops {
-		o(q)
-	}
-	err := q.
-		Model(&ms).
-		Scan(ctx)
+	o := applySelectOptions(ops...)
+	handleSelectOptions(q, o)
+	err := q.Model(&ms).Scan(ctx)
 	return ms, err
 }
 
 func Count[M Model](ctx context.Context, db bun.IDB, ops ...SelectOption) (int, error) {
 	q := db.NewSelect()
-	for _, o := range ops {
-		o(q)
-	}
+	o := applySelectOptions(ops...)
+	handleSelectOptions(q, o)
 	return q.Model((*M)(nil)).Count(ctx)
 }
 
 func Exists[M Model](ctx context.Context, db bun.IDB, ops ...SelectOption) (bool, error) {
 	q := db.NewSelect()
-	for _, o := range ops {
-		o(q)
-	}
+	o := applySelectOptions(ops...)
+	handleSelectOptions(q, o)
 	return q.Model((*M)(nil)).Exists(ctx)
+}
+
+func handleSelectOptions(q *bun.SelectQuery, o *selectOptions) {
+
 }

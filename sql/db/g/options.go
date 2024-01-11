@@ -2,18 +2,43 @@ package g
 
 import (
 	"context"
-
-	"github.com/uptrace/bun"
 )
 
 type (
-	InsertOption func(*bun.InsertQuery)
+	withTxCtxKey struct{}
 
-	UpdateOption func(*bun.UpdateQuery)
+	insertOptions struct {
+		ignore bool
 
-	SelectOption func(*bun.SelectQuery)
+		returning *queryAndArgs
+	}
 
-	DeleteOption func(*bun.DeleteQuery)
+	InsertOption func(*insertOptions)
+
+	updateOptions struct {
+		omitZero bool
+
+		returning *queryAndArgs
+	}
+
+	UpdateOption func(*updateOptions)
+
+	selectOptions struct {
+		cols []string
+	}
+
+	SelectOption func(*selectOptions)
+
+	deleteOptions struct {
+		force bool
+	}
+
+	DeleteOption func(*deleteOptions)
+
+	queryAndArgs struct {
+		query string
+		args  []any
+	}
 
 	Where struct {
 		q string
@@ -22,8 +47,6 @@ type (
 )
 
 var EmptyWhere = Where{}
-
-type withTxCtxKey struct{}
 
 func WithTx(ctx context.Context) context.Context {
 	return context.WithValue(ctx, withTxCtxKey{}, true)
@@ -34,46 +57,84 @@ func HasTx(ctx context.Context) bool {
 	return ok && has
 }
 
-func InsertIgnore(v bool) InsertOption {
-	return func(q *bun.InsertQuery) {
-		q.Ignore()
+func applyInsertOptions(ops ...InsertOption) *insertOptions {
+	opts := new(insertOptions)
+	for _, o := range ops {
+		o(opts)
+	}
+	return opts
+}
+
+func InsertIgnore() InsertOption {
+	return func(o *insertOptions) {
+		o.ignore = true
 	}
 }
 
 func InsertReturning(query string, args ...any) InsertOption {
-	return func(q *bun.InsertQuery) {
-		q.Returning(query, args...)
-	}
-}
-
-func UpdateOmitZero(v bool) UpdateOption {
-	return func(q *bun.UpdateQuery) {
-		if v {
-			q.OmitZero()
+	return func(o *insertOptions) {
+		o.returning = &queryAndArgs{
+			query: query,
+			args:  args,
 		}
 	}
 }
 
-func ForceDelete() DeleteOption {
-	return func(q *bun.DeleteQuery) {
-		q.ForceDelete()
+func applyUpdateOptions(ops ...UpdateOption) *updateOptions {
+	opts := new(updateOptions)
+	for _, o := range ops {
+		o(opts)
+	}
+	return opts
+}
+
+func UpdateOmitZero() UpdateOption {
+	return func(o *updateOptions) {
+		o.omitZero = true
 	}
 }
 
-func SelectWhere(es ...Where) SelectOption {
-	return func(q *bun.SelectQuery) {
-		for _, e := range es {
-			q.Where(e.q, e.a...)
+func UpdateReturning(query string, args ...any) UpdateOption {
+	return func(o *updateOptions) {
+		o.returning = &queryAndArgs{
+			query: query,
+			args:  args,
 		}
+	}
+}
+
+func applyDeleteOptions(ops ...DeleteOption) *deleteOptions {
+	opts := new(deleteOptions)
+	for _, o := range ops {
+		o(opts)
+	}
+	return opts
+}
+
+func DeleteForce() DeleteOption {
+	return func(o *deleteOptions) {
+		o.force = true
+	}
+}
+
+func applySelectOptions(ops ...SelectOption) *selectOptions {
+	opts := new(selectOptions)
+	for _, o := range ops {
+		o(opts)
+	}
+	return opts
+}
+
+func SelectWhere(ws ...Where) SelectOption {
+	return func(o *selectOptions) {
+		//for _, e := range es {
+		//	q.Where(e.q, e.a...)
+		//}
 	}
 }
 
 func SelectColumns(cols ...string) SelectOption {
-	return func(q *bun.SelectQuery) {
-		q.Column(cols...)
+	return func(o *selectOptions) {
+		o.cols = append(o.cols, cols...)
 	}
-}
-
-func NewWhere(q string, a ...any) Where {
-	return Where{q: q, a: a}
 }

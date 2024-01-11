@@ -259,7 +259,7 @@ func TestSqlite_DB_Insert_1(t *testing.T) {
 
 	rdb := g.NewDB[Application, string](db)
 
-	err1 := rdb.Insert(ctx, r1)
+	err1 := rdb.Insert(ctx, r1, g.InsertReturning("id"))
 	require.NoError(t, err1)
 }
 

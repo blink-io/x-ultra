@@ -37,6 +37,8 @@ type (
 
 		xsql.WithSqlDB
 
+		xsql.WithDBInfo
+
 		xsql.HealthChecker
 
 		IDBExt

@@ -33,6 +33,10 @@ type (
 		SqlDB() *sql.DB
 	}
 
+	WithDBInfo interface {
+		DBInfo() DBInfo
+	}
+
 	HealthChecker interface {
 		HealthCheck(context.Context) error
 	}
