@@ -1,13 +1,12 @@
-//go:build !nosqlite
-
 package sql
 
 import (
 	"context"
 	"database/sql/driver"
 
-	"github.com/glebarez/go-sqlite"
+	//"github.com/glebarez/go-sqlite"
 	"github.com/life4/genesis/slices"
+	"modernc.org/sqlite"
 )
 
 var compatibleSQLiteDialects = []string{
@@ -38,9 +37,9 @@ func IsCompatibleSQLiteDialect(dialect string) bool {
 	return i > -1
 }
 
-func GetSQLiteDriver(dialect string) driver.Driver {
+func GetSQLiteDriver(dialect string) (driver.Driver, error) {
 	if IsCompatibleSQLiteDialect(dialect) {
-		return &sqlite.Driver{}
+		return &sqlite.Driver{}, nil
 	}
-	return nil
+	return nil, ErrUnsupportedDriver
 }

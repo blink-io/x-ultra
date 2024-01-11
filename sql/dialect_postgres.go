@@ -104,9 +104,9 @@ func IsCompatiblePostgresDialect(dialect string) bool {
 	return i > -1
 }
 
-func GetPostgresDriver(dialect string) driver.Driver {
+func GetPostgresDriver(dialect string) (driver.Driver, error) {
 	if IsCompatiblePostgresDialect(dialect) {
-		return stdlib.GetDefaultDriver()
+		return stdlib.GetDefaultDriver(), nil
 	}
-	return nil
+	return nil, ErrUnsupportedDriver
 }

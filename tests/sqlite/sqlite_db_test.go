@@ -8,6 +8,7 @@ import (
 
 	"github.com/blink-io/x/id"
 	xsql "github.com/blink-io/x/sql"
+	xdb "github.com/blink-io/x/sql/db"
 	"github.com/blink-io/x/sql/db/g"
 	"github.com/blink-io/x/sql/scany/dbscan"
 	"github.com/blink-io/x/sqlite"
@@ -252,11 +253,21 @@ func TestSqlite_DB_Delete_1(t *testing.T) {
 	require.NoError(t, err)
 }
 
+func TestSqlite_DB_Insert_1(t *testing.T) {
+	db := getSqliteDB()
+	r1 := newRandomRecordForApp(xdb.Accessor)
+
+	rdb := g.NewDB[Application, string](db)
+
+	err1 := rdb.Insert(ctx, r1)
+	require.NoError(t, err1)
+}
+
 func TestSqlite_DB_BulkInsert_1(t *testing.T) {
 	db := getSqliteDB()
-	r1 := newRandomRecordForApp("bun")
-	r2 := newRandomRecordForApp("bun")
-	r3 := newRandomRecordForApp("bun")
+	r1 := newRandomRecordForApp(xdb.Accessor)
+	r2 := newRandomRecordForApp(xdb.Accessor)
+	r3 := newRandomRecordForApp(xdb.Accessor)
 
 	tdb, err := g.NewDB[Application, string](db).Tx()
 	require.NoError(t, err)
@@ -265,6 +276,30 @@ func TestSqlite_DB_BulkInsert_1(t *testing.T) {
 	require.NoError(t, err1)
 
 	require.NoError(t, tdb.Commit())
+}
+
+func TestSqlite_DB_Update_1(t *testing.T) {
+	db := getSqliteDB()
+
+	rdb := g.NewDB[Application, string](db)
+
+	ds := rdb.NewUpdate().
+		Table("applications").
+		SetColumn("status", "?", "no-ok").
+		Where("status = ?", "ok")
+	_, err1 := ds.Exec(ctx)
+	require.NoError(t, err1)
+}
+
+func TestSqlite_DB_Delete_All(t *testing.T) {
+	db := getSqliteDB()
+
+	rdb := g.NewDB[Application, string](db)
+
+	ds := rdb.NewDelete()
+
+	_, err1 := ds.Exec(ctx)
+	require.NoError(t, err1)
 }
 
 func TestSqlite_DB_InsertMap_1(t *testing.T) {
@@ -300,6 +335,25 @@ func TestSqlite_DB_SelectModel_2(t *testing.T) {
 	_, err := db.NewRaw("select * from applications where ? = ?",
 		bun.Ident("status"), "status1").Exec(ctx, &rs)
 	require.NoError(t, err)
+}
+
+func TestSqlite_DB_Select_Funcs(t *testing.T) {
+	db := getSqliteDB()
+
+	type Result struct {
+		Payload string `db:"payload"`
+	}
+
+	sqlF := "select %s as payload"
+	funcs := getSqliteFuncMap()
+	for k, v := range funcs {
+		ss := fmt.Sprintf(sqlF, v)
+		row := db.QueryRowContext(ctx, ss)
+		var rstr string
+		err := row.Scan(&rstr)
+		require.NoError(t, err)
+		fmt.Println(k, "=>", rstr)
+	}
 }
 
 func TestSqlite_DBScan_1(t *testing.T) {

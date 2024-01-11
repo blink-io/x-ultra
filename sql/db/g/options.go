@@ -40,6 +40,12 @@ func InsertIgnore(v bool) InsertOption {
 	}
 }
 
+func InsertReturning(query string, args ...any) InsertOption {
+	return func(q *bun.InsertQuery) {
+		q.Returning(query, args...)
+	}
+}
+
 func UpdateOmitZero(v bool) UpdateOption {
 	return func(q *bun.UpdateQuery) {
 		if v {

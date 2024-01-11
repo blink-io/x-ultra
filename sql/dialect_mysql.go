@@ -110,9 +110,9 @@ func IsCompatibleMySQLDialect(dialect string) bool {
 	return i > -1
 }
 
-func GetMySQLDriver(dialect string) driver.Driver {
+func GetMySQLDriver(dialect string) (driver.Driver, error) {
 	if IsCompatibleMySQLDialect(dialect) {
-		return &mysql.MySQLDriver{}
+		return &mysql.MySQLDriver{}, nil
 	}
-	return nil
+	return nil, ErrUnsupportedDriver
 }

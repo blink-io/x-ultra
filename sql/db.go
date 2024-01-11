@@ -50,7 +50,7 @@ func NewSqlDB(c *Config) (*sql.DB, error) {
 	var dsn string
 	var err error
 	if dfn, ok := dsners[dialect]; ok {
-		if dsner, derr := dfn(dialect); derr != nil {
+		if dsner, derr := dfn(dialect); derr == nil {
 			dsn, err = dsner(ctx, c)
 			c.dsn = dsn
 		} else {
@@ -65,7 +65,10 @@ func NewSqlDB(c *Config) (*sql.DB, error) {
 
 	var drv driver.Driver
 	if cfn, ok := drivers[dialect]; ok {
-		drv = cfn(dialect)
+		var derr error
+		if drv, derr = cfn(dialect); derr != nil {
+			return nil, err
+		}
 	} else {
 		return nil, ErrUnsupportedDriver
 	}

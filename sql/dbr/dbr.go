@@ -78,6 +78,10 @@ func New(c *Config, ops ...Option) (*DB, error) {
 	return db, nil
 }
 
+func (db *DB) SqlDB() *sql.DB {
+	return db.sqlDB
+}
+
 func (db *DB) Accessor() string {
 	return db.accessor
 }

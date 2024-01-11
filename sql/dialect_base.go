@@ -16,7 +16,7 @@ type (
 	// DialectOption defines option for dialect
 	DialectOption func(*dialectOptions)
 
-	GetDriverFunc func(dialect string) driver.Driver
+	GetDriverFunc func(dialect string) (driver.Driver, error)
 
 	GetDSNFunc func(dialect string) (Dsner, error)
 )

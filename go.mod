@@ -149,6 +149,7 @@ require (
 	github.com/leonelquinteros/gotext v1.5.2
 	github.com/lesismal/nbio v1.3.21
 	github.com/life4/genesis v1.10.2
+	github.com/mailgun/raymond/v2 v2.0.48
 	github.com/matryer/is v1.4.1
 	github.com/mattn/go-runewidth v0.0.15
 	github.com/matttproud/golang_protobuf_extensions/v2 v2.0.0
@@ -268,6 +269,7 @@ require (
 	github.com/samber/lo v1.39.0 // indirect
 	github.com/segmentio/asm v1.2.0 // indirect
 	github.com/serenize/snaker v0.0.0-20201027110005-a7ad2135616e // indirect
+	github.com/sirupsen/logrus v1.9.0 // indirect
 	github.com/smarty/assertions v1.15.1 // indirect
 	github.com/stretchr/objx v0.5.1 // indirect
 	github.com/tmthrgd/go-hex v0.0.0-20190904060850-447a3041c3bc // indirect

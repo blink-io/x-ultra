@@ -7,7 +7,7 @@ import (
 )
 
 func Insert[M Model](ctx context.Context, db bun.IDB, m *M, ops ...InsertOption) error {
-	q := db.NewInsert()
+	q := db.NewInsert().Returning("NULL")
 	for _, o := range ops {
 		o(q)
 	}
@@ -16,7 +16,7 @@ func Insert[M Model](ctx context.Context, db bun.IDB, m *M, ops ...InsertOption)
 }
 
 func BulkInsert[M Model](ctx context.Context, db bun.IDB, ms []*M, ops ...InsertOption) error {
-	q := db.NewInsert()
+	q := db.NewInsert().Returning("NULL")
 	for _, o := range ops {
 		o(q)
 	}

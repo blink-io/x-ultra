@@ -22,9 +22,7 @@ func New(ops ...Option) *Dialect {
 // Let the developers make the decision.
 func (d *Dialect) AppendTime(b []byte, tm time.Time) []byte {
 	b = append(b, '\'')
-	if loc := d.opt.loc; loc == nil {
-		tm = tm.Local()
-	} else {
+	if loc := d.opt.loc; loc != nil {
 		tm = tm.In(loc)
 	}
 	b = tm.AppendFormat(b, time.RFC3339Nano)

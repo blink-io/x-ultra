@@ -16,7 +16,7 @@ import (
 
 var ctx = context.Background()
 
-var sqlitePath = filepath.Join(".", "bun_demo.db")
+var sqlitePath = filepath.Join(".", "sqlite_demo.db")
 
 func dbOpts() []xdb.Option {
 	opts := []xdb.Option{
@@ -25,7 +25,14 @@ func dbOpts() []xdb.Option {
 	return opts
 }
 
+func get() {
+
+}
+
 func sqliteCfg() *xsql.Config {
+	rpath, _ := filepath.Abs(sqlitePath)
+	fmt.Println("Real path for sqlite: ", rpath)
+
 	var cfg = &xsql.Config{
 		Dialect:     xsql.DialectSQLite,
 		Host:        sqlitePath,
