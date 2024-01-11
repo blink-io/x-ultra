@@ -4,8 +4,10 @@ import (
 	"context"
 	"database/sql"
 	"io"
+	"reflect"
 
 	xsql "github.com/blink-io/x/sql"
+	"github.com/uptrace/bun/schema"
 
 	"github.com/uptrace/bun"
 )
@@ -15,15 +17,28 @@ const (
 )
 
 type (
+	Config = xsql.Config
+
 	idb = bun.DB
+
+	TxDB = bun.IDB
+
+	Tx = bun.Tx
 
 	IDB interface {
 		bun.IDB
 		io.Closer
-		ToSQL() string
-	}
 
-	Config = xsql.Config
+		ToSQL() string
+
+		xsql.WithSqlDB
+
+		xsql.HealthChecker
+
+		RegisterModel(m ...any)
+
+		Table(typ reflect.Type) *schema.Table
+	}
 
 	DB struct {
 		*idb
@@ -57,6 +72,7 @@ func New(c *Config, ops ...Option) (*DB, error) {
 		rdb.AddQueryHook(h)
 	}
 
+	rdb.Begin()
 	db := &DB{
 		idb:      rdb,
 		sqlDB:    sqlDB,
@@ -73,6 +89,10 @@ func (db *DB) RegisterModel(m ...any) {
 
 func (db *DB) ToSQL() string {
 	return db.idb.String()
+}
+
+func (db *DB) SqlDB() *sql.DB {
+	return db.sqlDB
 }
 
 func (db *DB) Close() error {

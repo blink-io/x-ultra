@@ -4,14 +4,14 @@ import (
 	"context"
 
 	xdb "github.com/blink-io/x/sql/db"
-	"github.com/uptrace/bun"
 )
 
 type (
-	itx = bun.Tx
+	itx = xdb.Tx
 
 	Tx[M Model, I ID] interface {
-		bun.IDB
+		xdb.TxDB
+
 		base[M, I]
 		// Commit the transaction
 		Commit() error
@@ -26,12 +26,12 @@ type (
 
 var _ Tx[Model, IDType] = (*tx[Model, IDType])(nil)
 
-func NewTx[M Model, I ID](itx bun.Tx) Tx[M, I] {
+func NewTx[M Model, I ID](itx xdb.Tx) Tx[M, I] {
 	return &tx[M, I]{itx}
 }
 
-func NewTxWithDB[M Model, I ID](db *xdb.DB) (Tx[M, I], error) {
-	itx, err := db.Begin()
+func NewTxWithDB[M Model, I ID](db xdb.IDB) (Tx[M, I], error) {
+	itx, err := db.BeginTx(context.Background(), nil)
 	if err != nil {
 		return nil, err
 	}

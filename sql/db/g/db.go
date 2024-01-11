@@ -56,21 +56,26 @@ type (
 
 	DB[M Model, I ID] interface {
 		xdb.IDB
+
 		base[M, I]
+
 		// DB .
-		DB() *xdb.DB
+		DB() xdb.IDB
+
 		// ModelType defines
 		ModelType() *M
+
 		// TableType defines
 		TableType() *schema.Table
+
 		// Tx defines
 		Tx() (Tx[M, I], error)
 	}
 
-	idb = xdb.DB
+	idb = xdb.IDB
 
 	db[M Model, I ID] struct {
-		*idb
+		idb
 		mm *M
 		tt *schema.Table
 	}
@@ -79,7 +84,7 @@ type (
 // Do type check
 var _ DB[Model, IDType] = (*db[Model, IDType])(nil)
 
-func NewDB[M Model, I ID](idb *xdb.DB) DB[M, I] {
+func NewDB[M Model, I ID](idb xdb.IDB) DB[M, I] {
 	mm := (*M)(nil)
 	idb.RegisterModel(mm)
 	tt := idb.Table(reflect.TypeOf(mm))
@@ -130,7 +135,7 @@ func (g *db[M, I]) Tx() (Tx[M, I], error) {
 	return NewTxWithDB[M, I](g.idb)
 }
 
-func (g *db[M, I]) DB() *xdb.DB {
+func (g *db[M, I]) DB() xdb.IDB {
 	return g.idb
 }
 

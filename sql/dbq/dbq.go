@@ -26,6 +26,10 @@ type (
 
 	Config = xsql.Config
 
+	// IDB defines
+	IDB interface {
+	}
+
 	DB struct {
 		*idb
 		sqlDB    *sql.DB

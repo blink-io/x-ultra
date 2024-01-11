@@ -29,6 +29,10 @@ var (
 )
 
 type (
+	WithSqlDB interface {
+		SqlDB() *sql.DB
+	}
+
 	HealthChecker interface {
 		HealthCheck(context.Context) error
 	}

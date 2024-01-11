@@ -15,7 +15,7 @@ require (
 	github.com/disgoorg/snowflake/v2 v2.0.1
 	github.com/frankban/quicktest v1.14.6 //test
 	github.com/fxamacker/cbor/v2 v2.5.0
-	github.com/getsentry/sentry-go v0.25.0
+	github.com/getsentry/sentry-go v0.26.0
 	github.com/go-chi/chi/v5 v5.0.11
 	github.com/go-kratos/kratos/v2 v2.7.2
 	github.com/go-playground/validator/v10 v10.16.0
@@ -68,10 +68,10 @@ require (
 	github.com/twmb/murmur3 v1.1.8
 	github.com/ulikunitz/xz v0.5.11
 	github.com/unrolled/render v1.6.1
-	github.com/uptrace/bun v1.1.16
-	github.com/uptrace/bun/dialect/mysqldialect v1.1.16
-	github.com/uptrace/bun/dialect/pgdialect v1.1.16
-	github.com/uptrace/bun/dialect/sqlitedialect v1.1.16
+	github.com/uptrace/bun v1.1.17
+	github.com/uptrace/bun/dialect/mysqldialect v1.1.17
+	github.com/uptrace/bun/dialect/pgdialect v1.1.17
+	github.com/uptrace/bun/dialect/sqlitedialect v1.1.17
 	github.com/uptrace/opentelemetry-go-extra/otelsql v0.2.3
 	github.com/vmihailenco/go-tinylfu v0.2.2
 	github.com/vmihailenco/msgpack/v5 v5.4.1
@@ -280,7 +280,7 @@ require (
 	go.opentelemetry.io/otel/sdk v1.21.0 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
 	go.uber.org/mock v0.4.0 // indirect
-	golang.org/x/exp v0.0.0-20240103183307-be819d1f06fc // indirect
+	golang.org/x/exp v0.0.0-20240110193028-0dcbfd608b1e // indirect
 	golang.org/x/mod v0.14.0 // indirect
 	golang.org/x/sync v0.6.0 // indirect
 	golang.org/x/term v0.16.0 // indirect
