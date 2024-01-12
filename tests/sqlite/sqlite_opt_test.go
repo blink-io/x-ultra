@@ -40,6 +40,7 @@ func getSqliteDB() *xdb.DB {
 
 func getSqliteDBX() *dbx.DB {
 	db, err := dbx.New(sqliteCfg(),
+		dbx.WithDbTag("db"),
 		dbx.WithExecLogFunc(func(ctx context.Context, t time.Duration, sql string, result sql.Result, err error) {
 			slog.Default().Info("dbx exec log",
 				slog.String("sql", sql),

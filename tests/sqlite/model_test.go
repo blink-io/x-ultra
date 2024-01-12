@@ -11,6 +11,39 @@ import (
 	"github.com/uptrace/bun"
 )
 
+// Model8 for dbx
+type Model8 struct {
+	ID      int    `db:"pk"`
+	Name    string `db:"name"`
+	Title   string `db:"title"`
+	Fax     string `db:"fax"`
+	Web     string `db:"web"`
+	Age     int    `db:"age"`
+	Right   bool   `db:"right"`
+	Counter int64  `db:"counter"`
+}
+
+func NewModel8() *Model8 {
+	m := new(Model8)
+	m.Name = "Orm Benchmark"
+	m.Title = "Just a Benchmark for fun"
+	m.Fax = "99909990"
+	m.Web = "http://blog.milkpod29.me"
+	m.Age = 100
+	m.Right = true
+	m.Counter = 1000
+
+	return m
+}
+
+func (Model8) Table() string {
+	return "models"
+}
+
+func (Model8) TableName() string {
+	return "models"
+}
+
 // Application represents iOS/Android/Windows/OSX/Linux application
 type Application struct {
 	bun.BaseModel `bun:"applications,alias:applications" db:"-" json:"-" toml:"-" yaml:"-" msgpack:"-"`

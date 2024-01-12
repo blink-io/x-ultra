@@ -2,15 +2,19 @@ package g
 
 import (
 	"context"
+
+	"github.com/uptrace/bun/schema"
 )
 
 type (
+	queryWithArgs = schema.QueryWithArgs
+
 	withTxCtxKey struct{}
 
 	insertOptions struct {
 		ignore bool
 
-		returning *queryAndArgs
+		returning *schema.QueryWithArgs
 	}
 
 	InsertOption func(*insertOptions)
@@ -18,35 +22,27 @@ type (
 	updateOptions struct {
 		omitZero bool
 
-		returning *queryAndArgs
+		returning *queryWithArgs
 	}
 
 	UpdateOption func(*updateOptions)
 
 	selectOptions struct {
-		cols []string
+		cols    []string
+		where   []*queryWithArgs
+		whereOr []*queryWithArgs
 	}
 
 	SelectOption func(*selectOptions)
 
 	deleteOptions struct {
 		force bool
+
+		returning *queryWithArgs
 	}
 
 	DeleteOption func(*deleteOptions)
-
-	queryAndArgs struct {
-		query string
-		args  []any
-	}
-
-	Where struct {
-		q string
-		a []any
-	}
 )
-
-var EmptyWhere = Where{}
 
 func WithTx(ctx context.Context) context.Context {
 	return context.WithValue(ctx, withTxCtxKey{}, true)
@@ -73,9 +69,9 @@ func InsertIgnore() InsertOption {
 
 func InsertReturning(query string, args ...any) InsertOption {
 	return func(o *insertOptions) {
-		o.returning = &queryAndArgs{
-			query: query,
-			args:  args,
+		o.returning = &queryWithArgs{
+			Query: query,
+			Args:  args,
 		}
 	}
 }
@@ -96,9 +92,9 @@ func UpdateOmitZero() UpdateOption {
 
 func UpdateReturning(query string, args ...any) UpdateOption {
 	return func(o *updateOptions) {
-		o.returning = &queryAndArgs{
-			query: query,
-			args:  args,
+		o.returning = &queryWithArgs{
+			Query: query,
+			Args:  args,
 		}
 	}
 }
@@ -117,6 +113,15 @@ func DeleteForce() DeleteOption {
 	}
 }
 
+func DeleteReturning(query string, args ...any) DeleteOption {
+	return func(o *deleteOptions) {
+		o.returning = &queryWithArgs{
+			Query: query,
+			Args:  args,
+		}
+	}
+}
+
 func applySelectOptions(ops ...SelectOption) *selectOptions {
 	opts := new(selectOptions)
 	for _, o := range ops {
@@ -125,11 +130,27 @@ func applySelectOptions(ops ...SelectOption) *selectOptions {
 	return opts
 }
 
-func SelectWhere(ws ...Where) SelectOption {
+func SelectWhere(query string, args ...any) SelectOption {
 	return func(o *selectOptions) {
-		//for _, e := range es {
-		//	q.Where(e.q, e.a...)
-		//}
+		o.where = append(
+			o.where,
+			&queryWithArgs{
+				Query: query,
+				Args:  args,
+			},
+		)
+	}
+}
+
+func SelectWhereOr(query string, args ...any) SelectOption {
+	return func(o *selectOptions) {
+		o.whereOr = append(
+			o.whereOr,
+			&queryWithArgs{
+				Query: query,
+				Args:  args,
+			},
+		)
 	}
 }
 

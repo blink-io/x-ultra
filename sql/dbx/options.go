@@ -9,6 +9,8 @@ import (
 )
 
 type options struct {
+	dbTag string
+
 	// QueryLogFunc is called each time when performing a SQL query that returns data.
 	queryLogFunc dbx.QueryLogFunc
 
@@ -26,6 +28,12 @@ func applyOptions(ops ...Option) *options {
 		o(opts)
 	}
 	return opts
+}
+
+func WithDbTag(dbTag string) Option {
+	return func(o *options) {
+		o.dbTag = dbTag
+	}
 }
 
 func WithQueryLogFunc(f dbx.QueryLogFunc) Option {

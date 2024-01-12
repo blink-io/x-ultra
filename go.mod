@@ -8,7 +8,7 @@ require (
 	github.com/Masterminds/squirrel v1.5.4
 	github.com/ProtonMail/gopenpgp/v2 v2.7.4
 	github.com/alexedwards/argon2id v1.0.0
-	github.com/andybalholm/brotli v1.0.6
+	github.com/andybalholm/brotli v1.1.0
 	github.com/cenkalti/backoff/v4 v4.2.1
 	github.com/cespare/xxhash/v2 v2.2.0
 	github.com/creasty/defaults v1.7.0
@@ -50,7 +50,7 @@ require (
 	github.com/nicksnyder/go-i18n/v2 v2.3.0
 	github.com/npillmayer/nestext v0.1.3
 	github.com/oklog/ulid/v2 v2.1.0
-	github.com/onsi/ginkgo/v2 v2.13.2
+	github.com/onsi/ginkgo/v2 v2.14.0
 	github.com/onsi/gomega v1.30.0
 	github.com/outcaste-io/ristretto v0.2.3
 	github.com/pelletier/go-toml/v2 v2.1.1
@@ -166,7 +166,7 @@ require (
 	github.com/qustavo/dotsql v1.2.0
 	github.com/remychantenay/slog-otel v1.2.3
 	github.com/reugn/go-streams v0.9.0
-	github.com/rickar/cal/v2 v2.1.13
+	github.com/rickar/cal/v2 v2.1.14
 	github.com/russross/blackfriday v1.6.0
 	github.com/samber/do/v2 v2.0.0-beta.2
 	github.com/samber/slog-common v0.15.0
@@ -287,7 +287,7 @@ require (
 	golang.org/x/sync v0.6.0 // indirect
 	golang.org/x/term v0.16.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
-	golang.org/x/tools v0.16.1 // indirect
+	golang.org/x/tools v0.17.0 // indirect
 	google.golang.org/genproto v0.0.0-20240108191215-35c7eff3a6b1 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240108191215-35c7eff3a6b1 // indirect
 	lukechampine.com/uint128 v1.3.0 // indirect

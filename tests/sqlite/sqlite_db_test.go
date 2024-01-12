@@ -12,7 +12,6 @@ import (
 	"github.com/blink-io/x/sql/db/g"
 	"github.com/blink-io/x/sql/scany/dbscan"
 	"github.com/blink-io/x/sqlite"
-
 	"github.com/brianvoe/gofakeit/v6"
 	"github.com/doug-martin/goqu/v9"
 	"github.com/go-rel/rel"
@@ -35,6 +34,20 @@ func TestSqlite_DBX_Select_Funcs(t *testing.T) {
 		require.NoError(t, q.Row(&s))
 		slog.Info("result: ", k, s)
 	}
+}
+
+func TestSqlite_DBX_CreateTable_Model8(t *testing.T) {
+
+}
+
+func TestSqlite_DBX_Select_All(t *testing.T) {
+	db := getSqliteDBX()
+
+	var as []*Application
+	err := db.Select().From("applications").All(&as)
+	require.NoError(t, err)
+
+	fmt.Println("Result count: ", len(as))
 }
 
 func TestSqlite_DBX_Insert_1(t *testing.T) {
@@ -128,6 +141,21 @@ func TestSqlite_DBQ_Select_2(t *testing.T) {
 	require.NoError(t, err)
 	fmt.Println("Result ==================>")
 	litter.Dump(rt)
+}
+
+func TestSqlite_DBQ_Select_All(t *testing.T) {
+	//Debug = true
+	db := getSqliteDBQ()
+
+	ds := db.From("applications")
+
+	var rts []*Application
+
+	err1 := ds.Select(ToAnySlice[string](appColumns)...).
+		Where(goqu.L("type = ?", "type-001")).ScanStructs(&rts)
+
+	require.NoError(t, err1)
+	fmt.Println("Result ==================>", len(rts))
 }
 
 func TestSqlite_DBQ_Select_3(t *testing.T) {

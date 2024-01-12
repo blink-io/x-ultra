@@ -36,6 +36,10 @@ func New(c *xsql.Config, ops ...Option) (*DB, error) {
 	}
 
 	opts := applyOptions(ops...)
+	// Setup dbTag
+	if dbTag := opts.dbTag; len(dbTag) > 0 {
+		dbx.DbTag = dbTag
+	}
 
 	rdb := dbx.NewFromDB(sqlDB, c.Dialect)
 	rdb.LogFunc = c.Logger
