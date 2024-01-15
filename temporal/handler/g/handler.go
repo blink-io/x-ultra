@@ -8,6 +8,7 @@ import (
 
 type ServiceRegistrar interface {
 	client.Client
+	Raw() client.Client
 }
 
 type RegistrarFunc[S any] func(ServiceRegistrar, S)
