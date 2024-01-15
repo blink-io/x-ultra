@@ -25,10 +25,6 @@ func dbOpts() []xdb.Option {
 	return opts
 }
 
-func get() {
-
-}
-
 func sqliteCfg() *xsql.Config {
 	rpath, _ := filepath.Abs(sqlitePath)
 	fmt.Println("Real path for sqlite: ", rpath)

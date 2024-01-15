@@ -14,6 +14,7 @@ import (
 	"github.com/blink-io/x/sql/dbp"
 	"github.com/blink-io/x/sql/dbq"
 	"github.com/blink-io/x/sql/dbr"
+	"github.com/blink-io/x/sql/dbs"
 	"github.com/blink-io/x/sql/dbw"
 	"github.com/blink-io/x/sql/dbx"
 )
@@ -107,6 +108,16 @@ func getSqliteDBP() *dbp.DB {
 
 func getSqliteDBW() *dbw.DB {
 	db, err := dbw.New(sqliteCfg())
+
+	if err != nil {
+		panic(err)
+	}
+
+	return db
+}
+
+func getSqliteDBS() *dbs.DB {
+	db, err := dbs.New(sqliteCfg())
 
 	if err != nil {
 		panic(err)
