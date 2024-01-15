@@ -9,5 +9,5 @@ type WithHandler interface {
 }
 
 type Handler interface {
-	HandleGRPC(context.Context, ServiceRegistrar)
+	HandleGRPC(context.Context, ServiceRegistrar) error
 }

@@ -12,7 +12,7 @@ type WithHandler interface {
 }
 
 type Handler interface {
-	HandleHTTP(context.Context, ServerRouter)
+	HandleHTTP(context.Context, ServerRouter) error
 }
 
 func StdHandlerFunc(h http.HandlerFunc) khttp.HandlerFunc {

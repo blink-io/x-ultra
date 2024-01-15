@@ -6,9 +6,9 @@ import (
 	kgrpc "github.com/blink-io/x/kratos/v2/transport/grpc"
 )
 
-type RegistrarFunc[S any] func(kgrpc.ServiceRegistrar, S)
+type RegistrarFunc[S any] func(kgrpc.ServiceRegistrar, S) error
 
-type CtxRegistrarFunc[S any] func(context.Context, kgrpc.ServiceRegistrar, S)
+type CtxRegistrarFunc[S any] func(context.Context, kgrpc.ServiceRegistrar, S) error
 
 type Handler = kgrpc.Handler
 
@@ -20,8 +20,8 @@ type handler[S any] struct {
 var _ Handler = (*handler[any])(nil)
 
 func NewHandler[S any](s S, f RegistrarFunc[S]) Handler {
-	cf := func(ctx context.Context, r kgrpc.ServiceRegistrar, s S) {
-		f(r, s)
+	cf := func(ctx context.Context, r kgrpc.ServiceRegistrar, s S) error {
+		return f(r, s)
 	}
 	h := &handler[S]{
 		s: s,
@@ -38,6 +38,6 @@ func NewCtxHandler[S any](s S, f CtxRegistrarFunc[S]) Handler {
 	return h
 }
 
-func (h handler[S]) HandleGRPC(ctx context.Context, r kgrpc.ServiceRegistrar) {
-	h.f(ctx, r, h.s)
+func (h handler[S]) HandleGRPC(ctx context.Context, r kgrpc.ServiceRegistrar) error {
+	return h.f(ctx, r, h.s)
 }
