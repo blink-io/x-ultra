@@ -28,11 +28,7 @@ func NewHandler[S any](s S, f RegistrarFunc[S]) Handler {
 		f(r, s)
 		return nil
 	}
-	h := &handler[S]{
-		s: s,
-		f: cf,
-	}
-	return h
+	return NewCtxErrHandler(s, cf)
 }
 
 func NewCtxHandler[S any](s S, f CtxRegistrarFunc[S]) Handler {
@@ -40,11 +36,7 @@ func NewCtxHandler[S any](s S, f CtxRegistrarFunc[S]) Handler {
 		f(ctx, r, s)
 		return nil
 	}
-	h := &handler[S]{
-		s: s,
-		f: cf,
-	}
-	return h
+	return NewCtxErrHandler(s, cf)
 }
 
 // NewErrHandler creates a handler with returning error.
@@ -52,11 +44,7 @@ func NewErrHandler[S any](s S, f RegistrarFuncWithErr[S]) Handler {
 	cf := func(ctx context.Context, r khttp.ServerRouter, s S) error {
 		return f(r, s)
 	}
-	h := &handler[S]{
-		s: s,
-		f: cf,
-	}
-	return h
+	return NewCtxErrHandler(s, cf)
 }
 
 // NewCtxErrHandler creates a handler with a context parameter and returning error.
