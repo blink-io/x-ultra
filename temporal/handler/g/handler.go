@@ -6,20 +6,20 @@ import (
 	"go.temporal.io/sdk/client"
 )
 
-type Service interface {
+type ServiceRegistrar interface {
 	client.Client
 }
 
-type RegistrarFunc[S any] func(Service, S)
+type RegistrarFunc[S any] func(ServiceRegistrar, S)
 
-type CtxRegistrarFunc[S any] func(context.Context, Service, S)
+type CtxRegistrarFunc[S any] func(context.Context, ServiceRegistrar, S)
 
-type RegistrarErrFunc[S any] func(Service, S) error
+type RegistrarErrFunc[S any] func(ServiceRegistrar, S) error
 
-type CtxRegistrarErrFunc[S any] func(context.Context, Service, S) error
+type CtxRegistrarErrFunc[S any] func(context.Context, ServiceRegistrar, S) error
 
 type Handler interface {
-	HandleTemporal(context.Context, Service) error
+	HandleTemporal(context.Context, ServiceRegistrar) error
 }
 
 type handler[S any] struct {
@@ -29,12 +29,12 @@ type handler[S any] struct {
 
 var _ Handler = (*handler[any])(nil)
 
-func (h handler[S]) HandleTemporal(ctx context.Context, r Service) error {
+func (h handler[S]) HandleTemporal(ctx context.Context, r ServiceRegistrar) error {
 	return h.f(ctx, r, h.s)
 }
 
 func NewHandler[S any](s S, f RegistrarFunc[S]) Handler {
-	cf := func(ctx context.Context, r Service, s S) error {
+	cf := func(ctx context.Context, r ServiceRegistrar, s S) error {
 		f(r, s)
 		return nil
 	}
@@ -42,7 +42,7 @@ func NewHandler[S any](s S, f RegistrarFunc[S]) Handler {
 }
 
 func NewCtxHandler[S any](s S, f CtxRegistrarFunc[S]) Handler {
-	cf := func(ctx context.Context, r Service, s S) error {
+	cf := func(ctx context.Context, r ServiceRegistrar, s S) error {
 		f(ctx, r, s)
 		return nil
 	}
@@ -50,7 +50,7 @@ func NewCtxHandler[S any](s S, f CtxRegistrarFunc[S]) Handler {
 }
 
 func NewErrHandler[S any](s S, f RegistrarFunc[S]) Handler {
-	cf := func(ctx context.Context, r Service, s S) error {
+	cf := func(ctx context.Context, r ServiceRegistrar, s S) error {
 		f(r, s)
 		return nil
 	}
