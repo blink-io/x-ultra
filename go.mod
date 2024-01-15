@@ -120,6 +120,7 @@ require (
 	github.com/expr-lang/expr v1.15.8
 	github.com/gabriel-vasile/mimetype v1.4.3
 	github.com/glebarez/go-sqlite v1.22.0
+	github.com/go-co-op/gocron/v2 v2.1.2
 	github.com/go-crypt/crypt v0.2.14
 	github.com/go-faster/city v1.0.1
 	github.com/go-faster/xor v1.0.0
@@ -264,6 +265,7 @@ require (
 	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
 	github.com/rivo/uniseg v0.4.4 // indirect
 	github.com/robfig/cron v1.2.0 // indirect
+	github.com/robfig/cron/v3 v3.0.1 // indirect
 	github.com/rogpeppe/go-internal v1.12.0 // indirect
 	github.com/samber/go-type-to-string v1.2.0 // indirect
 	github.com/samber/lo v1.39.0 // indirect
