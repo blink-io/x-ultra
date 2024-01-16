@@ -33,43 +33,7 @@ func TestLoggerInfoExpected(t *testing.T) {
 		logger.Infoln("foo")
 		logger.Infoln("foo", "bar")
 		logger.Infoln("s1", "s2", 1, 2, 3, "s3", 4, "s5", 6)
-		logger.Print("hello")
-		logger.Print("s1", "s2", 1, 2, 3, "s3", 4, "s5", 6)
-		logger.Printf("%s world", "hello")
-		logger.Println()
-		logger.Println("foo")
-		logger.Println("foo", "bar")
-		logger.Println("s1", "s2", 1, 2, 3, "s3", 4, "s5", 6)
-	})
-}
 
-func TestLoggerDebugExpected(t *testing.T) {
-	checkMessages(t, slog.LevelDebug, []Option{WithDebug()}, slog.LevelDebug, []string{
-		"hello",
-		"s1s21 2 3s34s56",
-		"hello world",
-		"",
-		"foo",
-		"foo bar",
-		"s1 s2 1 2 3 s3 4 s5 6",
-	}, func(logger *Logger) {
-		logger.Print("hello")
-		logger.Print("s1", "s2", 1, 2, 3, "s3", 4, "s5", 6)
-		logger.Printf("%s world", "hello")
-		logger.Println()
-		logger.Println("foo")
-		logger.Println("foo", "bar")
-		logger.Println("s1", "s2", 1, 2, 3, "s3", 4, "s5", 6)
-	})
-}
-
-func TestLoggerDebugSuppressed(t *testing.T) {
-	checkMessages(t, slog.LevelInfo, []Option{WithDebug()}, slog.LevelDebug, nil, func(logger *Logger) {
-		logger.Print("hello")
-		logger.Printf("%s world", "hello")
-		logger.Println()
-		logger.Println("foo")
-		logger.Println("foo", "bar")
 	})
 }
 

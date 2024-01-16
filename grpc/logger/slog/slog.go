@@ -45,22 +45,6 @@ func (f optionFunc) apply(log *Logger) {
 	f(log)
 }
 
-// WithDebug configures a Logger to print at zap's DebugLevel instead of
-// InfoLevel.
-// It only affects the Printf, Println and Print methods, which are only used in the gRPC v1 grpclog.Logger API.
-//
-// Deprecated: use grpclog.SetLoggerV2() for v2 API.
-func WithDebug() Option {
-	return optionFunc(func(logger *Logger) {
-		logger.print = &printer{
-			enabler: logger.delegate,
-			level:   slog.LevelDebug,
-			print:   printWrapper(logger.delegate.Debug),
-			printf:  printfWrapper(logger.delegate.Debug),
-		}
-	})
-}
-
 // withWarn redirects the fatal level to the warn level, which makes testing
 // easier. This is intentionally unexported.
 func withWarn() Option {
@@ -99,7 +83,7 @@ func NewLogger(l *slog.Logger, options ...Option) *Logger {
 	return logger
 }
 
-// printer implements Print, Printf, and Println operations for a Zap level.
+// printer implements Print, Printf, and Println operations for a slog level.
 //
 // We use it to customize Debug vs Info, and Warn vs Fatal for Print and Fatal
 // respectively.
@@ -126,7 +110,7 @@ func (v *printer) Println(args ...any) {
 
 var _ grpclog.LoggerV2 = (*Logger)(nil)
 
-// Logger adapts zap's Logger to be compatible with grpclog.LoggerV2 and the deprecated grpclog.Logger.
+// Logger adapts slog's Logger to be compatible with grpclog.LoggerV2 only.
 type Logger struct {
 	delegate *xslog.Logger
 	enabler  LevelEnabler
@@ -135,27 +119,6 @@ type Logger struct {
 	ctx      context.Context
 	// printToDebug bool
 	// fatalToWarn  bool
-}
-
-// Print implements grpclog.Logger.
-//
-// Deprecated: use [Logger.Info].
-func (l *Logger) Print(args ...any) {
-	l.print.Print(args...)
-}
-
-// Printf implements grpclog.Logger.
-//
-// Deprecated: use [Logger.Infof].
-func (l *Logger) Printf(format string, args ...any) {
-	l.print.Printf(format, args...)
-}
-
-// Println implements grpclog.Logger.
-//
-// Deprecated: use [Logger.Info].
-func (l *Logger) Println(args ...any) {
-	l.print.Println(args...)
 }
 
 // Info implements grpclog.LoggerV2.
@@ -238,14 +201,15 @@ func sprintln(args []any) string {
 	return s[:len(s)-1]
 }
 
-func printWrapper(fn func(string, ...any)) func(...any) {
+func printWrapper(f func(string, ...any)) func(...any) {
 	return func(args ...any) {
-		fn(sprintln(args))
+		f(sprintln(args))
 	}
 }
-func printfWrapper(fn func(string, ...any)) func(string, ...any) {
+
+func printfWrapper(f func(string, ...any)) func(string, ...any) {
 	return func(format string, args ...any) {
 		msg := fmt.Sprintf(format, args...)
-		fn(msg)
+		f(msg)
 	}
 }
