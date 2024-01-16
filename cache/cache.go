@@ -4,6 +4,8 @@ import (
 	"time"
 )
 
+const ErrNameSuffix = "-with-error"
+
 // Cache defines cache abstract
 type Cache[V any] interface {
 	Name() string
@@ -21,7 +23,19 @@ type TTLSetter[V any] interface {
 	SetWithTTL(string, V, time.Duration)
 }
 
-func IsTTLCache(v any) bool {
-	_, ok := v.(TTLSetter[any])
-	return ok
+// ErrCache defines cache abstract with error
+type ErrCache[V any] interface {
+	Name() string
+	Set(string, V) error
+	Get(string) (V, bool, error)
+	Del(string) error
+}
+
+type ErrTTLSetter[V any] interface {
+	SetWithTTL(string, V, time.Duration) error
+}
+
+type ErrTTLCache[V any] interface {
+	ErrCache[V]
+	ErrTTLSetter[V]
 }

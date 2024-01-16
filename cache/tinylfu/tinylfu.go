@@ -1,7 +1,6 @@
 package tinylfu
 
 import (
-	"context"
 	"time"
 
 	"github.com/blink-io/x/cache"
@@ -17,7 +16,7 @@ type Cache[V any] struct {
 	ttl time.Duration
 }
 
-func New[V any](ctx context.Context, ttl time.Duration) (*Cache[V], error) {
+func New[V any](ttl time.Duration) (*Cache[V], error) {
 	c := tinylfu.New(100_000_000, 100_000_000)
 	return &Cache[V]{c, ttl}, nil
 }

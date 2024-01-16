@@ -7,18 +7,25 @@ import (
 	"github.com/google/uuid"
 )
 
+type (
+	Task          = gocron.Task
+	Job           = gocron.Job
+	JobOption     = gocron.JobOption
+	JobDefinition = gocron.JobDefinition
+)
+
 type ServiceRegistrar interface {
 	// NewJob creates a new job in the Scheduler. The job is scheduled per the provided
 	// definition when the Scheduler is started. If the Scheduler is already running
 	// the job will be scheduled when the Scheduler is started.
-	NewJob(gocron.JobDefinition, gocron.Task, ...gocron.JobOption) (gocron.Job, error)
+	NewJob(JobDefinition, Task, ...JobOption) (Job, error)
 	// RemoveByTags removes all jobs that have at least one of the provided tags.
 	RemoveByTags(...string)
 	// RemoveJob removes the job with the provided id.
 	RemoveJob(uuid.UUID) error
 	// Update replaces the existing Job's JobDefinition with the provided
 	// JobDefinition. The Job's Job.ID() remains the same.
-	Update(uuid.UUID, gocron.JobDefinition, gocron.Task, ...gocron.JobOption) (gocron.Job, error)
+	Update(uuid.UUID, JobDefinition, Task, ...JobOption) (Job, error)
 }
 
 type RegistrarFunc[S any] func(ServiceRegistrar, S)

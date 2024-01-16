@@ -1,7 +1,6 @@
 package ristretto
 
 import (
-	"context"
 	"time"
 
 	"github.com/blink-io/x/cache"
@@ -22,7 +21,7 @@ type Cache[V any] struct {
 	ttl time.Duration
 }
 
-func New[V any](ctx context.Context, ttl time.Duration) (*Cache[V], error) {
+func New[V any](ttl time.Duration) (*Cache[V], error) {
 	c, err := ristretto.NewCache(&ristretto.Config{
 		NumCounters: 1e7,     // number of keys to track frequency of (10M).
 		MaxCost:     1 << 30, // maximum cost of cache (1GB).

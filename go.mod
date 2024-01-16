@@ -106,7 +106,7 @@ require (
 	github.com/beevik/guid v1.0.0
 	github.com/bits-and-blooms/bloom/v3 v3.6.0
 	github.com/bmatcuk/doublestar/v4 v4.6.1
-	github.com/brianvoe/gofakeit/v6 v6.26.4
+	github.com/brianvoe/gofakeit/v6 v6.27.0
 	github.com/bwmarrin/snowflake v0.3.0
 	github.com/caarlos0/env/v10 v10.0.0
 	github.com/carlmjohnson/requests v0.23.5
@@ -170,7 +170,7 @@ require (
 	github.com/reugn/go-streams v0.10.0
 	github.com/rickar/cal/v2 v2.1.14
 	github.com/russross/blackfriday v1.6.0
-	github.com/samber/do/v2 v2.0.0-beta.2
+	github.com/samber/do/v2 v2.0.0-beta.3
 	github.com/samber/slog-common v0.15.0
 	github.com/samber/slog-multi v1.0.2
 	github.com/samber/slog-nats v0.1.1
@@ -295,7 +295,7 @@ require (
 	lukechampine.com/uint128 v1.3.0 // indirect
 	modernc.org/cc/v3 v3.41.0 // indirect
 	modernc.org/ccgo/v3 v3.16.15 // indirect
-	modernc.org/libc v1.40.2 // indirect
+	modernc.org/libc v1.40.3 // indirect
 	modernc.org/mathutil v1.6.0 // indirect
 	modernc.org/memory v1.7.2 // indirect
 	modernc.org/opt v0.1.3 // indirect

@@ -1,7 +1,6 @@
 package ccache
 
 import (
-	"context"
 	"time"
 
 	"github.com/blink-io/x/cache"
@@ -22,7 +21,7 @@ type Cache[V any] struct {
 	ttl time.Duration
 }
 
-func New[V any](ctx context.Context, ttl time.Duration) (*Cache[V], error) {
+func New[V any](ttl time.Duration) (*Cache[V], error) {
 	cfg := ccache.Configure[V]()
 	c := ccache.New(cfg)
 	return &Cache[V]{c, ttl}, nil

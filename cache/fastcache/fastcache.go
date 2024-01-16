@@ -1,7 +1,6 @@
 package fastcache
 
 import (
-	"context"
 	"time"
 
 	"github.com/VictoriaMetrics/fastcache"
@@ -24,7 +23,7 @@ type Cache[V any] struct {
 	enc cache.Codec
 }
 
-func New[V any](ctx context.Context, ttl time.Duration) (*Cache[V], error) {
+func New[V any](ttl time.Duration) (*Cache[V], error) {
 	c := fastcache.New(MaxCost)
 	return &Cache[V]{cc: c, ttl: ttl}, nil
 }
