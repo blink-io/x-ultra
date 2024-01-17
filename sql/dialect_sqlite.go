@@ -20,6 +20,9 @@ func init() {
 	dsners[dn] = GetSQLiteDSN
 }
 
+type SQLiteOptions struct {
+}
+
 func GetSQLiteDSN(dialect string) (Dsner, error) {
 	if !IsCompatibleSQLiteDialect(dialect) {
 		return nil, ErrUnsupportedDialect
@@ -42,4 +45,9 @@ func GetSQLiteDriver(dialect string) (driver.Driver, error) {
 		return &sqlite.Driver{}, nil
 	}
 	return nil, ErrUnsupportedDriver
+}
+
+func AdditionsToSQLiteOptions(adds map[string]string) *SQLiteOptions {
+	opts := new(SQLiteOptions)
+	return opts
 }

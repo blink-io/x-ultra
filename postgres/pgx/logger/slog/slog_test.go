@@ -10,7 +10,7 @@ import (
 
 func TestSlog_1(t *testing.T) {
 	ctx := context.Background()
-	ll := New(slog.Default())
+	ll := NewLogger(slog.Default())
 
 	logWithData := func(data map[string]any) {
 		ll.Log(ctx, tracelog.LogLevelInfo, "msg1", data)

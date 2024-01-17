@@ -13,7 +13,7 @@ type log struct {
 	sl *slog.Logger
 }
 
-func New(sl *slog.Logger) tracelog.Logger {
+func NewLogger(sl *slog.Logger) tracelog.Logger {
 	return &log{sl: sl}
 }
 

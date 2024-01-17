@@ -39,7 +39,9 @@ type Config struct {
 	WithOTel  bool
 	OTelAttrs []attribute.KeyValue
 
-	dsn string
+	// Additional options
+	Additions map[string]string
+	dsn       string
 }
 
 func SetupConfig(c *Config) *Config {

@@ -7,10 +7,10 @@ import (
 	"time"
 
 	"github.com/blink-io/x/cast"
-	mysqlparams "github.com/blink-io/x/mysql/params"
-	"github.com/life4/genesis/slices"
 
+	mysqlparams "github.com/blink-io/x/mysql/params"
 	"github.com/go-sql-driver/mysql"
+	"github.com/life4/genesis/slices"
 )
 
 var compatibleMySQLDialects = []string{
@@ -23,6 +23,9 @@ func init() {
 	dn := DialectMySQL
 	drivers[dn] = GetMySQLDriver
 	dsners[dn] = GetMySQLDSN
+}
+
+type MySQLOptions struct {
 }
 
 func GetMySQLDSN(dialect string) (Dsner, error) {
@@ -66,6 +69,7 @@ func ToMySQLConfig(c *Config) *mysql.Config {
 	cc := mysql.NewConfig()
 	// Put the local timezone because the default value is UTC
 	cc.Loc = loc
+	// Force to parse to time.Time
 	cc.ParseTime = true
 	cc.Net = network
 	cc.DBName = name
@@ -115,4 +119,9 @@ func GetMySQLDriver(dialect string) (driver.Driver, error) {
 		return &mysql.MySQLDriver{}, nil
 	}
 	return nil, ErrUnsupportedDriver
+}
+
+func AdditionsToMySQLOptions(adds map[string]string) *MySQLOptions {
+	opts := new(MySQLOptions)
+	return opts
 }
