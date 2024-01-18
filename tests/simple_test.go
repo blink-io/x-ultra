@@ -129,6 +129,8 @@ type ii struct {
 	ib ib
 }
 
+var kk *ii
+
 func TestStruct_1(t *testing.T) {
 	var i ii
 	require.NotNil(t, i)

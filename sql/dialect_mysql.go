@@ -7,10 +7,8 @@ import (
 	"time"
 
 	"github.com/blink-io/x/cast"
-
 	mysqlparams "github.com/blink-io/x/mysql/params"
 	"github.com/go-sql-driver/mysql"
-	"github.com/life4/genesis/slices"
 )
 
 var compatibleMySQLDialects = []string{
@@ -20,9 +18,10 @@ var compatibleMySQLDialects = []string{
 }
 
 func init() {
-	dn := DialectMySQL
-	drivers[dn] = GetMySQLDriver
-	dsners[dn] = GetMySQLDSN
+	d := DialectMySQL
+	//drivers[d] = GetMySQLDriver
+	//dsners[d] = GetMySQLDSN
+	connectors[d] = GetMySQLConnector
 }
 
 type MySQLOptions struct {
@@ -37,6 +36,20 @@ func GetMySQLDSN(dialect string) (Dsner, error) {
 		dsn := cc.FormatDSN()
 		return dsn, nil
 	}, nil
+}
+
+func GetMySQLDriver(dialect string) (driver.Driver, error) {
+	if IsCompatibleMySQLDialect(dialect) {
+		return &mysql.MySQLDriver{}, nil
+	}
+	return nil, ErrUnsupportedDriver
+}
+
+func GetMySQLConnector(ctx context.Context, c *Config) (driver.Connector, error) {
+	cc := ToMySQLConfig(c)
+	dsn := cc.FormatDSN()
+	drv := wrapDriverHooks(getRawPostgresDriver(), c.DriverHooks...)
+	return &dsnConnector{dsn: dsn, driver: drv}, nil
 }
 
 func ToMySQLConfig(c *Config) *mysql.Config {
@@ -95,6 +108,19 @@ func ToMySQLConfig(c *Config) *mysql.Config {
 	return cc
 }
 
+func IsCompatibleMySQLDialect(dialect string) bool {
+	return isCompatibleDialect(dialect, compatibleMySQLDialects)
+}
+
+func AdditionsToMySQLOptions(adds map[string]string) *MySQLOptions {
+	opts := new(MySQLOptions)
+	return opts
+}
+
+func getRawMySQLDriver() *mysql.MySQLDriver {
+	return &mysql.MySQLDriver{}
+}
+
 func mysqlTLSKeyName(name string) string {
 	return DialectMySQL + "_" + name
 }
@@ -105,23 +131,4 @@ func handleMySQLParams(params map[string]string) map[string]string {
 		newParams[k] = v
 	}
 	return newParams
-}
-
-func IsCompatibleMySQLDialect(dialect string) bool {
-	i := slices.FindIndex(compatibleMySQLDialects, func(i string) bool {
-		return i == dialect
-	})
-	return i > -1
-}
-
-func GetMySQLDriver(dialect string) (driver.Driver, error) {
-	if IsCompatibleMySQLDialect(dialect) {
-		return &mysql.MySQLDriver{}, nil
-	}
-	return nil, ErrUnsupportedDriver
-}
-
-func AdditionsToMySQLOptions(adds map[string]string) *MySQLOptions {
-	opts := new(MySQLOptions)
-	return opts
 }

@@ -3,14 +3,12 @@ package sql
 import (
 	"context"
 	"database/sql"
-	"database/sql/driver"
 	"errors"
 	"fmt"
 	"net"
 	"runtime"
 
 	"github.com/blink-io/x/cast"
-	"github.com/blink-io/x/sql/driver/hooks"
 )
 
 const (
@@ -61,48 +59,28 @@ type (
 )
 
 func NewSqlDB(c *Config) (*sql.DB, error) {
-	dialect := c.Dialect
+	dialect := getFormalDialect(c.Dialect)
 	ctx := c.Context
+	if ctx == nil {
+		ctx = context.Background()
+	}
 
-	var dsn string
-	var err error
-	if dfn, ok := dsners[dialect]; ok {
-		if dsner, derr := dfn(dialect); derr == nil {
-			dsn, err = dsner(ctx, c)
-			c.dsn = dsn
-		} else {
-			err = derr
-		}
-		if err != nil {
-			return nil, err
-		}
-	} else {
+	connFn := connectors[dialect]
+	if connFn == nil {
 		return nil, ErrUnsupportedDialect
 	}
 
-	var drv driver.Driver
-	if cfn, ok := drivers[dialect]; ok {
-		var derr error
-		if drv, derr = cfn(dialect); derr != nil {
-			return nil, err
-		}
-	} else {
-		return nil, ErrUnsupportedDriver
+	conn, err := connFn(ctx, c)
+	if err != nil {
+		return nil, err
 	}
 
-	drvHooks := c.DriverHooks
-	if len(drvHooks) > 0 {
-		drv = hooks.Wrap(drv, hooks.Compose(drvHooks...))
-	}
-
-	conn := &dsnConnector{dsn: dsn, driver: drv}
-	hostPort := net.JoinHostPort(c.Host, cast.ToString(c.Port))
 	var db *sql.DB
 	if c.WithOTel {
 		otelOps := []OTelOption{
+			OTelDBHostPort(net.JoinHostPort(c.Host, cast.ToString(c.Port))),
 			OTelDBName(c.Name),
 			OTelDBSystem(c.Dialect),
-			OTelDBHostPort(hostPort),
 			OTelReportDBStats(),
 			OTelAttrs(c.OTelAttrs...),
 		}
@@ -114,6 +92,7 @@ func NewSqlDB(c *Config) (*sql.DB, error) {
 		db = otelWrapper(sql.OpenDB)(conn)
 	}
 
+	// Do ping check
 	if err := DoPingContext(ctx, db); err != nil {
 		return nil, err
 	}

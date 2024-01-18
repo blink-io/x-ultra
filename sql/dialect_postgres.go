@@ -11,9 +11,9 @@ import (
 	pgxzap "github.com/jackc/pgx-zap"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/jackc/pgx/v5/stdlib"
 	"github.com/jackc/pgx/v5/tracelog"
-	"github.com/life4/genesis/slices"
 	"go.uber.org/zap"
 )
 
@@ -25,14 +25,16 @@ var compatiblePostgresDialects = []string{
 }
 
 func init() {
-	dn := DialectPostgres
-	drivers[dn] = GetPostgresDriver
-	dsners[dn] = GetPostgresDSN
+	d := DialectPostgres
+	//drivers[dn] = GetPostgresDriver
+	//dsners[dn] = GetPostgresDSN
+	connectors[d] = GetPostgresConnector
 }
 
 type PostgresOptions struct {
 	trace    string
 	tracelog string
+	usePool  bool
 }
 
 func GetPostgresDSN(dialect string) (Dsner, error) {
@@ -40,13 +42,35 @@ func GetPostgresDSN(dialect string) (Dsner, error) {
 		return nil, ErrUnsupportedDialect
 	}
 	return func(ctx context.Context, c *Config) (string, error) {
-		cc := ToPGXConfig(c)
+		cc, _ := ToPGXConfig(c)
 		dsn := stdlib.RegisterConnConfig(cc)
 		return dsn, nil
 	}, nil
 }
 
-func ToPGXConfig(c *Config) *pgx.ConnConfig {
+func GetPostgresDriver(dialect string) (driver.Driver, error) {
+	if IsCompatiblePostgresDialect(dialect) {
+		return getRawPostgresDriver(), nil
+	}
+	return nil, ErrUnsupportedDriver
+}
+
+func GetPostgresConnector(ctx context.Context, c *Config) (driver.Connector, error) {
+	cc, aopt := ToPGXConfig(c)
+	dsn := stdlib.RegisterConnConfig(cc)
+	if aopt.usePool {
+		pool, err := pgxpool.New(ctx, dsn)
+		if err != nil {
+			return nil, err
+		}
+		return stdlib.GetPoolConnector(pool), nil
+	} else {
+		drv := wrapDriverHooks(getRawPostgresDriver(), c.DriverHooks...)
+		return &dsnConnector{dsn: dsn, driver: drv}, nil
+	}
+}
+
+func ToPGXConfig(c *Config) (*pgx.ConnConfig, *PostgresOptions) {
 	name := c.Name
 	host := c.Host
 	port := c.Port
@@ -121,7 +145,20 @@ func ToPGXConfig(c *Config) *pgx.ConnConfig {
 		}
 		cc.Tracer = &tracelog.TraceLog{Logger: tlogger, LogLevel: traceLogLevel}
 	}
-	return cc
+	return cc, aopts
+}
+
+func AdditionsToPostgresOptions(adds map[string]string) *PostgresOptions {
+	opts := new(PostgresOptions)
+	if adds != nil {
+		opts.trace = adds["trace"]
+		opts.tracelog = adds["tracelog"]
+	}
+	return opts
+}
+
+func getRawPostgresDriver() *stdlib.Driver {
+	return &stdlib.Driver{}
 }
 
 func handlePostgresParams(params map[string]string) map[string]string {
@@ -133,22 +170,5 @@ func handlePostgresParams(params map[string]string) map[string]string {
 }
 
 func IsCompatiblePostgresDialect(dialect string) bool {
-	i := slices.FindIndex(compatiblePostgresDialects, func(i string) bool {
-		return i == dialect
-	})
-	return i > -1
-}
-
-func GetPostgresDriver(dialect string) (driver.Driver, error) {
-	if IsCompatiblePostgresDialect(dialect) {
-		return stdlib.GetDefaultDriver(), nil
-	}
-	return nil, ErrUnsupportedDriver
-}
-
-func AdditionsToPostgresOptions(adds map[string]string) *PostgresOptions {
-	opts := new(PostgresOptions)
-	opts.tracelog = adds["trace"]
-	opts.tracelog = adds["tracelog"]
-	return opts
+	return isCompatibleDialect(dialect, compatiblePostgresDialects)
 }

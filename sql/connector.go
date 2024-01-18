@@ -5,6 +5,8 @@ import (
 	"database/sql/driver"
 )
 
+var _ driver.Connector = (*dsnConnector)(nil)
+
 type dsnConnector struct {
 	dsn    string
 	driver driver.Driver

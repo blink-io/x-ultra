@@ -30,6 +30,7 @@ func sqliteCfg() *xsql.Config {
 	fmt.Println("Real path for sqlite: ", rpath)
 
 	var cfg = &xsql.Config{
+		Context:     context.Background(),
 		Dialect:     xsql.DialectSQLite,
 		Host:        sqlitePath,
 		DriverHooks: newDriverHooks(),
