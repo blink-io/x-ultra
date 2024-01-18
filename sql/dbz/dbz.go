@@ -1,18 +1,26 @@
 package dbz
 
 import (
+	"context"
 	"database/sql"
+	"io"
 
 	xsql "github.com/blink-io/x/sql"
 )
 
 const (
-	Accessor = "dbz(squirrel)"
+	Accessor = "dbz()"
 )
 
 type (
 	IDB interface {
+		io.Closer
+
 		xsql.WithSqlDB
+
+		xsql.WithDBInfo
+
+		xsql.HealthChecker
 	}
 
 	DB struct {
@@ -32,12 +40,29 @@ func New(c *xsql.Config, ops ...Option) (*DB, error) {
 		return nil, err
 	}
 
+	opts := applyOptions(ops...)
+	if opts != nil {
+
+	}
+
 	s := &DB{
 		sqlDB: sqlDB,
 		info:  xsql.NewDBInfo(c),
 	}
 
 	return s, nil
+}
+
+func (db *DB) Close() error {
+	return nil
+}
+
+func (db *DB) DBInfo() xsql.DBInfo {
+	return db.info
+}
+
+func (db *DB) HealthCheck(ctx context.Context) error {
+	return xsql.DoPingContext(ctx, db.sqlDB)
 }
 
 func (db *DB) SqlDB() *sql.DB {

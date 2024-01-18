@@ -43,7 +43,7 @@ require (
 	github.com/lithammer/shortuuid/v4 v4.0.0
 	github.com/lmittmann/tint v1.0.3
 	github.com/matthewhartstonge/argon2 v1.0.0
-	github.com/miekg/dns v1.1.57
+	github.com/miekg/dns v1.1.58
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/natefinch/lumberjack/v3 v3.0.0-alpha
 	github.com/nats-io/nats.go v1.32.0
@@ -186,6 +186,9 @@ require (
 	github.com/thanhpk/randstr v1.0.6
 	github.com/uptrace/opentelemetry-go-extra/otelutil v0.2.3
 	github.com/uptrace/opentelemetry-go-extra/otelzap v0.2.3
+	github.com/vingarcia/ksql v1.11.1
+	github.com/vingarcia/ksql/adapters/kmysql v1.11.1
+	github.com/vingarcia/ksql/adapters/modernc-ksqlite v1.11.1
 	github.com/vmihailenco/tagparser/v2 v2.0.0
 	github.com/wk8/go-ordered-map/v2 v2.1.8
 	github.com/xo/dburl v0.21.1

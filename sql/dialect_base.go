@@ -12,11 +12,11 @@ import (
 type (
 	Dsner = func(context.Context, *Config) (string, error)
 
-	GetDriverFunc func(dialect string) (driver.Driver, error)
-
-	GetDSNFunc func(dialect string) (Dsner, error)
-
 	ConnectorFunc func(ctx context.Context, c *Config) (driver.Connector, error)
+
+	//GetDriverFunc func(dialect string) (driver.Driver, error)
+
+	//GetDSNFunc func(dialect string) (Dsner, error)
 )
 
 var (
@@ -27,7 +27,7 @@ var (
 	connectors = make(map[string]ConnectorFunc)
 )
 
-func getFormalDialect(dialect string) string {
+func GetFormalDialect(dialect string) string {
 	if IsCompatiblePostgresDialect(dialect) {
 		return DialectPostgres
 	} else if IsCompatibleMySQLDialect(dialect) {

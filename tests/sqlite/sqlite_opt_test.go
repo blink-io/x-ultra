@@ -10,6 +10,7 @@ import (
 
 	xsql "github.com/blink-io/x/sql"
 	xdb "github.com/blink-io/x/sql/db"
+	"github.com/blink-io/x/sql/dbk"
 	"github.com/blink-io/x/sql/dbm"
 	"github.com/blink-io/x/sql/dbp"
 	"github.com/blink-io/x/sql/dbq"
@@ -118,6 +119,16 @@ func getSqliteDBW() *dbw.DB {
 
 func getSqliteDBS() *dbs.DB {
 	db, err := dbs.New(sqliteCfg())
+
+	if err != nil {
+		panic(err)
+	}
+
+	return db
+}
+
+func getSqliteDBK() *dbk.DB {
+	db, err := dbk.New(sqliteCfg())
 
 	if err != nil {
 		panic(err)

@@ -59,7 +59,7 @@ type (
 )
 
 func NewSqlDB(c *Config) (*sql.DB, error) {
-	dialect := getFormalDialect(c.Dialect)
+	dialect := GetFormalDialect(c.Dialect)
 	ctx := c.Context
 	if ctx == nil {
 		ctx = context.Background()
