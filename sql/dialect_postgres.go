@@ -5,6 +5,7 @@ import (
 	"database/sql/driver"
 	"log/slog"
 
+	"github.com/blink-io/x/cast"
 	pgparams "github.com/blink-io/x/postgres/params"
 	pgxslog "github.com/blink-io/x/postgres/pgx/logger/slog"
 	pgxotel "github.com/blink-io/x/postgres/pgx/tracer/otel"
@@ -151,8 +152,9 @@ func ToPGXConfig(c *Config) (*pgx.ConnConfig, *PostgresOptions) {
 func AdditionsToPostgresOptions(adds map[string]string) *PostgresOptions {
 	opts := new(PostgresOptions)
 	if adds != nil {
-		opts.trace = adds["trace"]
-		opts.tracelog = adds["tracelog"]
+		opts.trace = adds[AdditionTrace]
+		opts.tracelog = adds[AdditionTracelog]
+		opts.usePool = cast.ToBool(adds[AdditionUsePool])
 	}
 	return opts
 }
