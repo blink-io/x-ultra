@@ -90,9 +90,9 @@ func NewSqlDB(c *Config) (*sql.DB, error) {
 		return nil, ErrUnsupportedDriver
 	}
 
-	driverHooks := c.DriverHooks
-	if len(driverHooks) > 0 {
-		drv = hooks.Wrap(drv, hooks.Compose(driverHooks...))
+	drvHooks := c.DriverHooks
+	if len(drvHooks) > 0 {
+		drv = hooks.Wrap(drv, hooks.Compose(drvHooks...))
 	}
 
 	conn := &dsnConnector{dsn: dsn, driver: drv}
@@ -111,10 +111,9 @@ func NewSqlDB(c *Config) (*sql.DB, error) {
 		}
 		db = otelOpenDB(conn, otelOps...)
 	} else {
-		db = sqlOpenDB(conn)
+		db = otelWrapper(sql.OpenDB)(conn)
 	}
 
-	// Ignore driver.ErrSkip when the Conn does not implement driver.Pinger interface
 	if err := DoPingContext(ctx, db); err != nil {
 		return nil, err
 	}

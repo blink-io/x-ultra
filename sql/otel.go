@@ -9,7 +9,7 @@ import (
 	xotelsql "github.com/XSAM/otelsql"
 	"github.com/uptrace/opentelemetry-go-extra/otelsql"
 	"go.opentelemetry.io/otel/attribute"
-	semconv "go.opentelemetry.io/otel/semconv/v1.21.0"
+	semconv "go.opentelemetry.io/otel/semconv/v1.24.0"
 )
 
 type otelOptions struct {
@@ -128,6 +128,8 @@ func xotelOpenDB(cc driver.Connector, ops ...OTelOption) *sql.DB {
 	return db
 }
 
-func sqlOpenDB(cc driver.Connector, ops ...OTelOption) *sql.DB {
-	return sql.OpenDB(cc)
+func otelWrapper(f func(driver.Connector) *sql.DB) func(driver.Connector, ...OTelOption) *sql.DB {
+	return func(cc driver.Connector, ops ...OTelOption) *sql.DB {
+		return f(cc)
+	}
 }

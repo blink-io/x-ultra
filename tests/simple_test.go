@@ -115,3 +115,21 @@ func TestKratosServer(t *testing.T) {
 	err = srv.Start(context.Background())
 	require.NotNil(t, err)
 }
+
+type ia interface {
+	Hello()
+}
+
+type ib interface {
+	Hi() string
+}
+
+type ii struct {
+	ia ia
+	ib ib
+}
+
+func TestStruct_1(t *testing.T) {
+	var i ii
+	require.NotNil(t, i)
+}

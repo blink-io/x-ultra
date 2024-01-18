@@ -50,8 +50,8 @@ require (
 	github.com/nicksnyder/go-i18n/v2 v2.3.0
 	github.com/npillmayer/nestext v0.1.3
 	github.com/oklog/ulid/v2 v2.1.0
-	github.com/onsi/ginkgo/v2 v2.14.0
-	github.com/onsi/gomega v1.30.0
+	github.com/onsi/ginkgo/v2 v2.15.0
+	github.com/onsi/gomega v1.31.0
 	github.com/outcaste-io/ristretto v0.2.3
 	github.com/pelletier/go-toml/v2 v2.1.1
 	github.com/pierrec/lz4/v4 v4.1.21
@@ -119,7 +119,7 @@ require (
 	github.com/exaring/otelpgx v0.5.2
 	github.com/expr-lang/expr v1.15.8
 	github.com/gabriel-vasile/mimetype v1.4.3
-	github.com/go-co-op/gocron/v2 v2.1.2
+	github.com/go-co-op/gocron/v2 v2.2.0
 	github.com/go-crypt/crypt v0.2.14
 	github.com/go-faster/city v1.0.1
 	github.com/go-faster/xor v1.0.0
@@ -185,12 +185,14 @@ require (
 	github.com/thanhpk/randstr v1.0.6
 	github.com/uptrace/opentelemetry-go-extra/otelutil v0.2.3
 	github.com/uptrace/opentelemetry-go-extra/otelzap v0.2.3
+	github.com/vmihailenco/tagparser/v2 v2.0.0
 	github.com/wk8/go-ordered-map/v2 v2.1.8
-	github.com/xo/dburl v0.20.2
+	github.com/xo/dburl v0.21.1
 	github.com/yuin/goldmark v1.6.0
 	github.com/zitadel/passwap v0.5.0
-	go.opentelemetry.io/otel v1.21.0
-	go.opentelemetry.io/otel/trace v1.21.0
+	go.opentelemetry.io/otel v1.22.0
+	go.opentelemetry.io/otel/metric v1.22.0
+	go.opentelemetry.io/otel/trace v1.22.0
 	golang.org/x/net v0.20.0
 	golang.org/x/sys v0.16.0
 )
@@ -274,13 +276,11 @@ require (
 	github.com/smarty/assertions v1.15.1 // indirect
 	github.com/stretchr/objx v0.5.1 // indirect
 	github.com/tmthrgd/go-hex v0.0.0-20190904060850-447a3041c3bc // indirect
-	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	github.com/x448/float16 v0.8.4 // indirect
 	github.com/yuin/gopher-lua v1.1.1 // indirect
 	go.etcd.io/etcd/api/v3 v3.5.11 // indirect
 	go.etcd.io/etcd/client/pkg/v3 v3.5.11 // indirect
-	go.opentelemetry.io/otel/metric v1.21.0 // indirect
-	go.opentelemetry.io/otel/sdk v1.21.0 // indirect
+	go.opentelemetry.io/otel/sdk v1.22.0 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
 	go.uber.org/mock v0.4.0 // indirect
 	golang.org/x/exp v0.0.0-20240112132812-db7319d0e0e3 // indirect
