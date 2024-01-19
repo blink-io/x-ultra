@@ -59,6 +59,6 @@ func toSQLiteDSN(c *Config) string {
 	return dsn
 }
 
-func getRawSQLiteDriver() *sqlite.Driver {
+func getRawSQLiteDriver() driver.Driver {
 	return &sqlite.Driver{}
 }

@@ -1,4 +1,4 @@
-package stdsql
+package kstd
 
 import (
 	"context"

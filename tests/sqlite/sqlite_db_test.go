@@ -18,19 +18,16 @@ func TestSqlite_DB_CreateTable_1(t *testing.T) {
 	require.NoError(t, err)
 }
 
-func TestSqlite_DB_CreateTable_Funcs(t *testing.T) {
+func TestSqlite_DB_DropTable_1(t *testing.T) {
 	db := getSqliteDB()
+	m := (*Application)(nil)
+	_, err := db.NewDropTable().IfExists().Model(m).Exec(ctx)
+	require.NoError(t, err)
+}
 
-	sqlF := "select %s as payload"
-	funcs := getSqliteFuncMap()
-
-	for _, fstr := range funcs {
-		ss := fmt.Sprintf(sqlF, fstr)
-		row := db.QueryRow(ss)
-		var v string
-		require.NoError(t, row.Scan(&v))
-		fmt.Println("SQLite func payload:  ", v)
-	}
+func TestRebuildTable_1(t *testing.T) {
+	TestSqlite_DB_DropTable_1(t)
+	TestSqlite_DB_CreateTable_1(t)
 }
 
 func TestSqlite_DB_Delete_1(t *testing.T) {

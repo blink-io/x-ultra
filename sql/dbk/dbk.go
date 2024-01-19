@@ -4,7 +4,7 @@ import (
 	"database/sql"
 
 	xsql "github.com/blink-io/x/sql"
-	"github.com/blink-io/x/sql/dbk/adapters/stdsql"
+	"github.com/blink-io/x/sql/dbk/adapters/kstd"
 	"github.com/vingarcia/ksql"
 	"github.com/vingarcia/ksql/sqldialect"
 )
@@ -57,7 +57,7 @@ func New(c *xsql.Config, ops ...Option) (*DB, error) {
 
 	}
 
-	rdb, err := ksql.NewWithAdapter(stdsql.NewSQLAdapter(sqlDB), dp)
+	rdb, err := ksql.NewWithAdapter(kstd.NewSQLAdapter(sqlDB), dp)
 
 	s := &DB{
 		idb:   rdb,

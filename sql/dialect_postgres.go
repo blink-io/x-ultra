@@ -58,16 +58,16 @@ func GetPostgresDriver(dialect string) (driver.Driver, error) {
 
 func GetPostgresConnector(ctx context.Context, c *Config) (driver.Connector, error) {
 	cc, aopt := ToPGXConfig(c)
-	dsn := stdlib.RegisterConnConfig(cc)
+	c.dsn = stdlib.RegisterConnConfig(cc)
 	if aopt.usePool {
-		pool, err := pgxpool.New(ctx, dsn)
+		pool, err := pgxpool.New(ctx, c.dsn)
 		if err != nil {
 			return nil, err
 		}
 		return stdlib.GetPoolConnector(pool), nil
 	} else {
 		drv := wrapDriverHooks(getRawPostgresDriver(), c.DriverHooks...)
-		return &dsnConnector{dsn: dsn, driver: drv}, nil
+		return &dsnConnector{dsn: c.dsn, driver: drv}, nil
 	}
 }
 
@@ -159,8 +159,8 @@ func AdditionsToPostgresOptions(adds map[string]string) *PostgresOptions {
 	return opts
 }
 
-func getRawPostgresDriver() *stdlib.Driver {
-	return &stdlib.Driver{}
+func getRawPostgresDriver() driver.Driver {
+	return stdlib.GetDefaultDriver()
 }
 
 func handlePostgresParams(params map[string]string) map[string]string {

@@ -1,4 +1,4 @@
-package mixin
+package model
 
 import (
 	"context"
@@ -12,10 +12,10 @@ import (
 )
 
 var (
-	// m is a lock for SetGenerator
-	m = new(sync.Mutex)
+	// guidMux is a lock for SetGenerator
+	guidMux = new(sync.Mutex)
 
-	// gg is global generator for all tables' ID field
+	// gg is global generator for all tables' GUID field
 	gg = func() string {
 		return uuid.New().String()
 	}
@@ -49,13 +49,14 @@ type columns struct {
 
 type Generator func() string
 
-// Model is the common part for all models in the project
-var _ bun.BeforeAppendModelHook = (*Model)(nil)
+// MixinModel is the common part for all models in the project
+var _ bun.BeforeAppendModelHook = (*MixinModel)(nil)
 
-type Model struct {
+type MixinModel struct {
 	// ID generator for a single model
-	ig        Generator `bun:"-" db:"-" json:"-" toml:"-" yaml:"-" msgpack:"-"`
-	ID        string    `bun:"id,pk,type:varchar(60)" db:"id" json:"id,omitempty" toml:"id,omitempty" yaml:"id,omitempty" msgpack:"id,omitempty"`
+	gg        Generator `bun:"-" db:"-" json:"-" toml:"-" yaml:"-" msgpack:"-"`
+	ID        int64     `bun:"id,pk,autoincrement" db:"id" json:"id,omitempty" toml:"id,omitempty" yaml:"id,omitempty" msgpack:"id,omitempty"`
+	GUID      string    `bun:"guid,type:varchar(60)" db:"guid" json:"guid,omitempty" toml:"guid,omitempty" yaml:"guid,omitempty" msgpack:"guid,omitempty"`
 	CreatedAt time.Time `bun:"created_at,notnull,skipupdate" db:"created_at" json:"created_at,omitempty" toml:"created_at,omitempty" yaml:"created_at,omitempty" msgpack:"created_at,omitempty"`
 	UpdatedAt time.Time `bun:"updated_at,notnull" db:"updated_at" json:"updated_at,omitempty" toml:"updated_at,omitempty" yaml:"updated_at,omitempty" msgpack:"updated_at,omitempty"`
 	// Optional fields for tables
@@ -66,29 +67,29 @@ type Model struct {
 	IsDeleted sql.NullBool   `bun:"is_deleted,nullzero,skipupdate" db:"is_deleted" json:"is_deleted,omitempty" toml:"is_deleted,omitempty" yaml:"is_deleted,omitempty" msgpack:"is_deleted,omitempty"`
 }
 
-func (m *Model) BeforeAppendModel(ctx context.Context, query bun.Query) error {
+func (m *MixinModel) BeforeAppendModel(ctx context.Context, query bun.Query) error {
 	handleTSZ(m, query)
-	handleAutoID(m, query)
+	handleGUID(m, query)
 	return nil
 }
 
-// SetGenerator overrides the global generator for every model
-func (m *Model) SetGenerator(g Generator) {
-	m.ig = g
+// GUIDGen overrides the global generator for every model
+func (m *MixinModel) GUIDGen(g Generator) {
+	m.gg = g
 }
 
-// SetGenerator sets global ID generator for all models
-func SetGenerator(g Generator) {
+// GUIDGen sets global ID generator for all models
+func GUIDGen(g Generator) {
 	if g != nil {
-		m.Lock()
+		guidMux.Lock()
 		gg = g
-		m.Unlock()
+		guidMux.Unlock()
 	} else {
 		log.Println("parameter g is nil, ignore")
 	}
 }
 
-func handleTSZ(m *Model, query bun.Query) {
+func handleTSZ(m *MixinModel, query bun.Query) {
 	if m != nil {
 		switch query.Operation() {
 		case "INSERT":
@@ -103,12 +104,12 @@ func handleTSZ(m *Model, query bun.Query) {
 	}
 }
 
-func handleAutoID(m *Model, query bun.Query) {
-	if o := query.Operation(); o == "INSERT" && m != nil && len(m.ID) == 0 {
+func handleGUID(m *MixinModel, query bun.Query) {
+	if o := query.Operation(); o == "INSERT" && m != nil && len(m.GUID) == 0 {
 		var xg = gg
-		if m.ig != nil {
-			xg = m.ig
+		if m.gg != nil {
+			xg = m.gg
 		}
-		m.ID = xg()
+		m.GUID = xg()
 	}
 }

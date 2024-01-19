@@ -1,11 +1,11 @@
-package mixin
+package model
 
 import (
 	"database/sql"
 	"time"
 )
 
-type Extension struct {
+type ExtraModel struct {
 	CreatedAt time.Time `bun:"created_at,notnull,skipupdate" db:"created_at" json:"created_at,omitempty" toml:"created_at,omitempty" yaml:"created_at,omitempty" msgpack:"created_at,omitempty"`
 	UpdatedAt time.Time `bun:"updated_at,notnull" db:"updated_at" json:"updated_at,omitempty" toml:"updated_at,omitempty" yaml:"updated_at,omitempty" msgpack:"updated_at,omitempty"`
 	// Optional fields for tables

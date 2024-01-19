@@ -117,7 +117,7 @@ func AdditionsToMySQLOptions(adds map[string]string) *MySQLOptions {
 	return opts
 }
 
-func getRawMySQLDriver() *mysql.MySQLDriver {
+func getRawMySQLDriver() driver.Driver {
 	return &mysql.MySQLDriver{}
 }
 
