@@ -51,7 +51,7 @@ require (
 	github.com/npillmayer/nestext v0.1.3
 	github.com/oklog/ulid/v2 v2.1.0
 	github.com/onsi/ginkgo/v2 v2.15.0
-	github.com/onsi/gomega v1.31.0
+	github.com/onsi/gomega v1.31.1
 	github.com/outcaste-io/ristretto v0.2.3
 	github.com/pelletier/go-toml/v2 v2.1.1
 	github.com/pierrec/lz4/v4 v4.1.21
@@ -106,7 +106,7 @@ require (
 	github.com/beevik/guid v1.0.0
 	github.com/bits-and-blooms/bloom/v3 v3.6.0
 	github.com/bmatcuk/doublestar/v4 v4.6.1
-	github.com/brianvoe/gofakeit/v6 v6.27.0
+	github.com/brianvoe/gofakeit/v6 v6.28.0
 	github.com/bwmarrin/snowflake v0.3.0
 	github.com/caarlos0/env/v10 v10.0.0
 	github.com/carlmjohnson/requests v0.23.5
@@ -116,7 +116,7 @@ require (
 	github.com/doug-martin/goqu/v9 v9.19.0
 	github.com/eapache/queue/v2 v2.0.0-20230407133247-75960ed334e4
 	github.com/emicklei/proto v1.13.0
-	github.com/exaring/otelpgx v0.5.2
+	github.com/exaring/otelpgx v0.5.3
 	github.com/expr-lang/expr v1.15.8
 	github.com/gabriel-vasile/mimetype v1.4.3
 	github.com/go-co-op/gocron/v2 v2.2.0
@@ -297,7 +297,7 @@ require (
 	go.opentelemetry.io/otel/sdk v1.22.0 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
 	go.uber.org/mock v0.4.0 // indirect
-	golang.org/x/exp v0.0.0-20240112132812-db7319d0e0e3 // indirect
+	golang.org/x/exp v0.0.0-20240119083558-1b970713d09a // indirect
 	golang.org/x/mod v0.14.0 // indirect
 	golang.org/x/sync v0.6.0 // indirect
 	golang.org/x/term v0.16.0 // indirect
@@ -309,7 +309,7 @@ require (
 	lukechampine.com/uint128 v1.3.0 // indirect
 	modernc.org/cc/v3 v3.41.0 // indirect
 	modernc.org/ccgo/v3 v3.16.15 // indirect
-	modernc.org/libc v1.40.5 // indirect
+	modernc.org/libc v1.40.6 // indirect
 	modernc.org/mathutil v1.6.0 // indirect
 	modernc.org/memory v1.7.2 // indirect
 	modernc.org/opt v0.1.3 // indirect
