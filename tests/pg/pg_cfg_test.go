@@ -27,6 +27,9 @@ func pgCfg() *xsql.Config {
 		ClientName:    "blink-dev",
 		Password:      getPgPwd(),
 		DriverHooks:   newDriverHooks(),
+		Additions:     map[string]string{
+			//xsql.AdditionUsePool: "true",
+		},
 	}
 	return cfg
 }

@@ -119,7 +119,7 @@ require (
 	github.com/exaring/otelpgx v0.5.3
 	github.com/expr-lang/expr v1.15.8
 	github.com/gabriel-vasile/mimetype v1.4.3
-	github.com/go-co-op/gocron/v2 v2.2.0
+	github.com/go-co-op/gocron/v2 v2.2.1
 	github.com/go-crypt/crypt v0.2.14
 	github.com/go-faster/city v1.0.1
 	github.com/go-faster/xor v1.0.0
@@ -178,7 +178,7 @@ require (
 	github.com/samber/slog-sentry/v2 v2.4.0
 	github.com/samber/slog-syslog v1.0.0
 	github.com/samber/slog-webhook v1.0.0
-	github.com/samber/slog-zap/v2 v2.2.0
+	github.com/samber/slog-zap/v2 v2.3.0
 	github.com/segmentio/encoding v0.4.0
 	github.com/shopspring/decimal v1.3.1
 	github.com/smartystreets/goconvey v1.8.1

@@ -22,6 +22,10 @@ func init() {
 type SQLiteOptions struct {
 }
 
+func ValidateSQLiteConfig(c *Config) error {
+	return nil
+}
+
 func GetSQLiteDSN(dialect string) (Dsner, error) {
 	if !IsCompatibleSQLiteDialect(dialect) {
 		return nil, ErrUnsupportedDialect
@@ -33,7 +37,7 @@ func GetSQLiteDSN(dialect string) (Dsner, error) {
 }
 
 func IsCompatibleSQLiteDialect(dialect string) bool {
-	return isCompatibleDialect(dialect, compatibleSQLiteDialects)
+	return isCompatibleDialectIn(dialect, compatibleSQLiteDialects)
 }
 
 func GetSQLiteDriver(dialect string) (driver.Driver, error) {

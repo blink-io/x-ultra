@@ -11,18 +11,24 @@ import (
 	"github.com/uptrace/bun"
 )
 
+var m1 = (*Application)(nil)
+var m2 = (*User)(nil)
+var ms = []any{m1, m2}
+
 func TestSqlite_DB_CreateTable_1(t *testing.T) {
 	db := getSqliteDB()
-	m := (*Application)(nil)
-	_, err := db.NewCreateTable().IfNotExists().Model(m).Exec(ctx)
-	require.NoError(t, err)
+	for _, m := range ms {
+		_, err := db.NewCreateTable().IfNotExists().Model(m).Exec(ctx)
+		require.NoError(t, err)
+	}
 }
 
 func TestSqlite_DB_DropTable_1(t *testing.T) {
 	db := getSqliteDB()
-	m := (*Application)(nil)
-	_, err := db.NewDropTable().IfExists().Model(m).Exec(ctx)
-	require.NoError(t, err)
+	for _, m := range ms {
+		_, err := db.NewDropTable().IfExists().Model(m).Exec(ctx)
+		require.NoError(t, err)
+	}
 }
 
 func TestRebuildTable_1(t *testing.T) {

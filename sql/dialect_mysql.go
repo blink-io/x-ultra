@@ -27,6 +27,10 @@ func init() {
 type MySQLOptions struct {
 }
 
+func ValidateMySQLConfig(c *Config) error {
+	return nil
+}
+
 func GetMySQLDSN(dialect string) (Dsner, error) {
 	if !IsCompatibleMySQLDialect(dialect) {
 		return nil, ErrUnsupportedDialect
@@ -109,7 +113,7 @@ func ToMySQLConfig(c *Config) *mysql.Config {
 }
 
 func IsCompatibleMySQLDialect(dialect string) bool {
-	return isCompatibleDialect(dialect, compatibleMySQLDialects)
+	return isCompatibleDialectIn(dialect, compatibleMySQLDialects)
 }
 
 func AdditionsToMySQLOptions(adds map[string]string) *MySQLOptions {

@@ -21,7 +21,9 @@ func TestPg_DBX_Insert_1(t *testing.T) {
 }
 
 func TestPg_PGX_Pool_1(t *testing.T) {
-	cc, _ := xsql.ToPGXConfig(pgCfg())
+	cc, _, err := xsql.ToPGXConfig(pgCfg())
+	require.NoError(t, err)
+
 	cfg, err := pgxpool.ParseConfig("")
 	require.NoError(t, err)
 

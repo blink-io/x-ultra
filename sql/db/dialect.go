@@ -16,7 +16,7 @@ func GetDialect(c *xsql.Config, ops ...DialectOption) (schema.Dialect, *sql.DB, 
 	c = xsql.SetupConfig(c)
 
 	ctx := c.Context
-	dialect := c.Dialect
+	dialect := xsql.GetFormalDialect(c.Dialect)
 
 	var sd schema.Dialect
 	if dfn, ok := dialectors[dialect]; ok {

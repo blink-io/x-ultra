@@ -186,8 +186,8 @@ github.com/getsentry/sentry-go v0.26.0/go.mod h1:lc76E2QywIyW8WuBnwl8Lc4bkmQH4+w
 github.com/ghodss/yaml v1.0.0/go.mod h1:4dBDuWmgqj2HViK6kFavaiC9ZROes6MMH2rRYeMEF04=
 github.com/go-chi/chi/v5 v5.0.11 h1:BnpYbFZ3T3S1WMpD79r7R5ThWX40TaFB7L31Y8xqSwA=
 github.com/go-chi/chi/v5 v5.0.11/go.mod h1:DslCQbL2OYiznFReuXYUmQ2hGd1aDpCnlMNITLSKoi8=
-github.com/go-co-op/gocron/v2 v2.2.0 h1:yJBOoKTYJQ7DSGBSM6vL01jJA2rEQi3wYvWg8DTJf40=
-github.com/go-co-op/gocron/v2 v2.2.0/go.mod h1:0MfNAXEchzeSH1vtkZrTAcSMWqyL435kL6CA4b0bjrg=
+github.com/go-co-op/gocron/v2 v2.2.1 h1:SP0Tmzp7JA6t9ErGj2/7k6edPBPwUEH4jWhV4O6gp1k=
+github.com/go-co-op/gocron/v2 v2.2.1/go.mod h1:0MfNAXEchzeSH1vtkZrTAcSMWqyL435kL6CA4b0bjrg=
 github.com/go-crypt/crypt v0.2.14 h1:+zfd2HTjmFn+6A1JvdmV+U8kV/zLHrFHeCJgc04RVFo=
 github.com/go-crypt/crypt v0.2.14/go.mod h1:qyXcj8Z1687xNAxc7xRpYuRysPNdlpimKq4WsHphDuU=
 github.com/go-crypt/x v0.2.8 h1:S2pV5b8ww+jdXmaSqMmvv4Aq0Gjy/4Eyzd6Sdxo5abQ=
@@ -581,8 +581,8 @@ github.com/samber/slog-syslog v1.0.0 h1:4tf8sNv9+qTQ6Fj8+N6U1ZEtUbqbAIzd+q26/Neg
 github.com/samber/slog-syslog v1.0.0/go.mod h1:jjupk+yHPVSuXuGhKleoClYc/HEaC+Ro5X4YYeBrt6g=
 github.com/samber/slog-webhook v1.0.0 h1:RdubICZoivM3VQMCuzeRFhrSKV7pxrLKZnzAl9vlhcw=
 github.com/samber/slog-webhook v1.0.0/go.mod h1:yjG7ZVKtWMbwnUXHaqdbLHtJLFhj5/2jae4bI76uF+M=
-github.com/samber/slog-zap/v2 v2.2.0 h1:O9FevxkLKqv+7jxluk8krVlcdI9G+W8HlPv8WDvHbLQ=
-github.com/samber/slog-zap/v2 v2.2.0/go.mod h1:QOtMMGqrKKQHkljDp9W6jUgEkImPOWgqHPvlRdyexLo=
+github.com/samber/slog-zap/v2 v2.3.0 h1:llAvuHMc1N9GL76Yf1FKqWYhWRcwVFVv0XCx8gLo6Uk=
+github.com/samber/slog-zap/v2 v2.3.0/go.mod h1:QOtMMGqrKKQHkljDp9W6jUgEkImPOWgqHPvlRdyexLo=
 github.com/sanity-io/litter v1.5.5 h1:iE+sBxPBzoK6uaEP5Lt3fHNgpKcHXc/A2HGETy0uJQo=
 github.com/sanity-io/litter v1.5.5/go.mod h1:9gzJgR2i4ZpjZHsKvUXIRQVk7P+yM3e+jAF7bU2UI5U=
 github.com/segmentio/asm v1.2.0 h1:9BQrFxC+YOHJlTlHGkTrFWf59nbL3XnCoFLTwDCI7ys=

@@ -43,6 +43,26 @@ func (Model8) TableName() string {
 	return "models"
 }
 
+// User represents iOS/Android/Windows/OSX/Linux application
+type User struct {
+	bun.BaseModel `bun:"users,alias:users" db:"-" json:"-" toml:"-" yaml:"-" msgpack:"-"`
+	model.IDModel
+	Username    string         `bun:"username,type:varchar(60),notnull" db:"username" json:"username,omitempty" toml:"username,omitempty" yaml:"username,omitempty" msgpack:"username,omitempty"`
+	Location    string         `bun:"location,type:varchar(60),notnull" db:"location" json:"location,omitempty" toml:"location,omitempty" yaml:"location,omitempty" msgpack:"location,omitempty"`
+	Profile     string         `bun:"profile,type:varchar(200),notnull" db:"profile" json:"profile,omitempty" toml:"profile,omitempty" yaml:"profile,omitempty" msgpack:"profile,omitempty"`
+	Level       int8           `bun:"level,notnull" db:"code" json:"level,omitempty" toml:"level,omitempty" yaml:"level,omitempty" msgpack:"level,omitempty"`
+	Description sql.NullString `bun:"description,type:text" db:"description" json:"description,omitempty" toml:"description,omitempty" yaml:"description,omitempty" msgpack:"description,omitempty"`
+	model.ExtraModel
+}
+
+func (User) TableName() string {
+	return "users"
+}
+
+func (User) Table() string {
+	return "users"
+}
+
 // Application represents iOS/Android/Windows/OSX/Linux application
 type Application struct {
 	bun.BaseModel `bun:"applications,alias:applications" db:"-" json:"-" toml:"-" yaml:"-" msgpack:"-"`

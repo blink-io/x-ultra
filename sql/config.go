@@ -3,10 +3,15 @@ package sql
 import (
 	"context"
 	"crypto/tls"
+	"errors"
 	"time"
 
 	"github.com/blink-io/x/sql/driver/hooks"
 	"go.opentelemetry.io/otel/attribute"
+)
+
+var (
+	ErrNilConfig = errors.New("config is nil")
 )
 
 type Config struct {
@@ -66,10 +71,29 @@ func (c *Config) SetDefaults() {
 	if c.Loc == nil {
 		c.Loc = time.Local
 	}
+	if len(c.Dialect) > 0 {
+		c.Dialect = GetFormalDialect(c.Dialect)
+	}
 }
 
 func (c *Config) Validate(ctx context.Context) error {
-	return nil
+	if c == nil {
+		return ErrNilConfig
+	}
+	d, ok := IsCompatibleDialect(c.Dialect)
+	if !ok {
+		return ErrUnsupportedDialect
+	}
+	switch d {
+	case DialectPostgres:
+		return ValidatePostgresConfig(c)
+	case DialectMySQL:
+		return ValidateMySQLConfig(c)
+	case DialectSQLite:
+		return ValidateSQLiteConfig(c)
+	default:
+		return ErrUnsupportedDialect
+	}
 }
 
 func (c *Config) DBInfo() DBInfo {

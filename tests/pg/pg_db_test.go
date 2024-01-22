@@ -9,11 +9,12 @@ import (
 
 func TestPg_DB_Insert_1(t *testing.T) {
 	db := getPgDB()
-	r := newRandomRecordForApp("bun")
+	r1 := newRandomRecordForApp("bun")
+	r2 := newRandomRecordForApp("bun")
 	txdb, err := g.NewDB[Application, string](db).Tx()
 	require.NoError(t, err)
 
-	err1 := txdb.BulkInsert(ctx, []*Application{r})
+	err1 := txdb.BulkInsert(ctx, []*Application{r1, r2})
 	if err1 != nil {
 		require.NoError(t, txdb.Rollback())
 	} else {

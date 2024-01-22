@@ -28,17 +28,25 @@ var (
 )
 
 func GetFormalDialect(dialect string) string {
-	if IsCompatiblePostgresDialect(dialect) {
-		return DialectPostgres
-	} else if IsCompatibleMySQLDialect(dialect) {
-		return DialectMySQL
-	} else if IsCompatibleSQLiteDialect(dialect) {
-		return DialectSQLite
+	if d, ok := IsCompatibleDialect(dialect); ok {
+		return d
 	}
 	return ""
 }
 
-func isCompatibleDialect(dialect string, compatibleDialects []string) bool {
+// IsCompatibleDialect checks
+func IsCompatibleDialect(dialect string) (string, bool) {
+	if IsCompatiblePostgresDialect(dialect) {
+		return DialectPostgres, true
+	} else if IsCompatibleMySQLDialect(dialect) {
+		return DialectMySQL, true
+	} else if IsCompatibleSQLiteDialect(dialect) {
+		return DialectSQLite, true
+	}
+	return "", false
+}
+
+func isCompatibleDialectIn(dialect string, compatibleDialects []string) bool {
 	dialect = strings.ToLower(dialect)
 	i := slices.FindIndex(compatibleDialects, func(i string) bool {
 		return i == dialect

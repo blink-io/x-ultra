@@ -18,6 +18,12 @@ import (
 	"go.uber.org/zap"
 )
 
+const (
+	PostgresTraceOTel = "otel"
+
+	PostgresTracelogZap = "zap"
+)
+
 var compatiblePostgresDialects = []string{
 	DialectPostgres,
 	"postgresql",
@@ -38,12 +44,19 @@ type PostgresOptions struct {
 	usePool  bool
 }
 
+func ValidatePostgresConfig(c *Config) error {
+	return nil
+}
+
 func GetPostgresDSN(dialect string) (Dsner, error) {
 	if !IsCompatiblePostgresDialect(dialect) {
 		return nil, ErrUnsupportedDialect
 	}
 	return func(ctx context.Context, c *Config) (string, error) {
-		cc, _ := ToPGXConfig(c)
+		cc, _, err := ToPGXConfig(c)
+		if err != nil {
+			return "", err
+		}
 		dsn := stdlib.RegisterConnConfig(cc)
 		return dsn, nil
 	}, nil
@@ -57,21 +70,31 @@ func GetPostgresDriver(dialect string) (driver.Driver, error) {
 }
 
 func GetPostgresConnector(ctx context.Context, c *Config) (driver.Connector, error) {
-	cc, aopt := ToPGXConfig(c)
-	c.dsn = stdlib.RegisterConnConfig(cc)
+	cc, aopt, err := ToPGXConfig(c)
+	if err != nil {
+		return nil, err
+	}
 	if aopt.usePool {
-		pool, err := pgxpool.New(ctx, c.dsn)
-		if err != nil {
-			return nil, err
+		ppc, errv := pgxpool.ParseConfig("")
+		if errv != nil {
+			return nil, errv
 		}
+		ppc.ConnString()
+		ppc.ConnConfig = cc
+		pool, errp := pgxpool.NewWithConfig(ctx, ppc)
+		if errp != nil {
+			return nil, errp
+		}
+		c.dsn = ppc.ConnString()
 		return stdlib.GetPoolConnector(pool), nil
 	} else {
+		c.dsn = stdlib.RegisterConnConfig(cc)
 		drv := wrapDriverHooks(getRawPostgresDriver(), c.DriverHooks...)
 		return &dsnConnector{dsn: c.dsn, driver: drv}, nil
 	}
 }
 
-func ToPGXConfig(c *Config) (*pgx.ConnConfig, *PostgresOptions) {
+func ToPGXConfig(c *Config) (*pgx.ConnConfig, *PostgresOptions, error) {
 	name := c.Name
 	host := c.Host
 	port := c.Port
@@ -92,8 +115,7 @@ func ToPGXConfig(c *Config) (*pgx.ConnConfig, *PostgresOptions) {
 
 	pgcc, err := pgconn.ParseConfig("")
 	if err != nil {
-		// This can be happened
-		panic(err)
+		return nil, nil, err
 	}
 
 	pgcc.Database = name
@@ -109,8 +131,7 @@ func ToPGXConfig(c *Config) (*pgx.ConnConfig, *PostgresOptions) {
 
 	cc, err := pgx.ParseConfig("")
 	if err != nil {
-		// This can't be happened
-		panic(err)
+		return nil, nil, err
 	}
 
 	aopts := AdditionsToPostgresOptions(c.Additions)
@@ -121,7 +142,7 @@ func ToPGXConfig(c *Config) (*pgx.ConnConfig, *PostgresOptions) {
 		traceLogLevel = tracelog.LogLevelDebug
 	}
 
-	if aopts.trace == "otel" {
+	if aopts.trace == PostgresTraceOTel {
 		cc.Tracer = pgxotel.NewTracer()
 	} else {
 		var tlogger tracelog.Logger
@@ -138,7 +159,7 @@ func ToPGXConfig(c *Config) (*pgx.ConnConfig, *PostgresOptions) {
 				l("msg: %s, data: %#v", args...)
 			})
 		} else {
-			if aopts.tracelog == "zap" {
+			if aopts.tracelog == PostgresTracelogZap {
 				tlogger = pgxzap.NewLogger(zap.L())
 			} else {
 				tlogger = pgxslog.NewLogger(slog.Default())
@@ -146,7 +167,22 @@ func ToPGXConfig(c *Config) (*pgx.ConnConfig, *PostgresOptions) {
 		}
 		cc.Tracer = &tracelog.TraceLog{Logger: tlogger, LogLevel: traceLogLevel}
 	}
-	return cc, aopts
+	return cc, aopts, nil
+}
+
+func ToPGXPoolConfig(c *Config) (*pgxpool.Config, *PostgresOptions, error) {
+	ppc, err := pgxpool.ParseConfig("")
+	if err != nil {
+		return nil, nil, err
+	}
+
+	pgcc, aopt, err := ToPGXConfig(c)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	ppc.ConnConfig = pgcc
+	return ppc, aopt, nil
 }
 
 func AdditionsToPostgresOptions(adds map[string]string) *PostgresOptions {
@@ -172,5 +208,5 @@ func handlePostgresParams(params map[string]string) map[string]string {
 }
 
 func IsCompatiblePostgresDialect(dialect string) bool {
-	return isCompatibleDialect(dialect, compatiblePostgresDialects)
+	return isCompatibleDialectIn(dialect, compatiblePostgresDialects)
 }
