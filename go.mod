@@ -148,6 +148,7 @@ require (
 	github.com/k0kubun/pp/v3 v3.2.0
 	github.com/kardianos/osext v0.0.0-20190222173326-2bc1f35cddc0
 	github.com/leonelquinteros/gotext v1.5.2
+	github.com/leporo/sqlf v1.4.0
 	github.com/lesismal/nbio v1.3.21
 	github.com/life4/genesis v1.10.2
 	github.com/mailgun/raymond/v2 v2.0.48
@@ -158,6 +159,7 @@ require (
 	github.com/microcosm-cc/bluemonday v1.0.26
 	github.com/mileusna/useragent v1.3.4
 	github.com/montanaflynn/stats v0.7.1
+	github.com/nleof/goyesql v1.0.2
 	github.com/nsqio/go-nsq v1.1.0
 	github.com/orcaman/concurrent-map/v2 v2.0.1
 	github.com/ory/dockertest v3.3.5+incompatible
@@ -290,6 +292,7 @@ require (
 	github.com/smarty/assertions v1.15.1 // indirect
 	github.com/stretchr/objx v0.5.1 // indirect
 	github.com/tmthrgd/go-hex v0.0.0-20190904060850-447a3041c3bc // indirect
+	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/x448/float16 v0.8.4 // indirect
 	github.com/yuin/gopher-lua v1.1.1 // indirect
 	go.etcd.io/etcd/api/v3 v3.5.11 // indirect
