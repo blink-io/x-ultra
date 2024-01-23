@@ -16,8 +16,10 @@ const (
 	DialectMySQL = "mysql"
 	// DialectPostgres defines PostgreSQL dialect
 	DialectPostgres = "postgres"
-	// DialectSQLite defines SQLite dialect
+	// DialectSQLite defines SQLite dialect. We only support SQLite3 above.
 	DialectSQLite = "sqlite"
+	// DialectSQLite3 defines SQLite dialect
+	DialectSQLite3 = "sqlite3"
 )
 
 var (

@@ -3,6 +3,7 @@ package dbq
 import (
 	"context"
 	"database/sql"
+	"log/slog"
 
 	xsql "github.com/blink-io/x/sql"
 	"github.com/doug-martin/goqu/v9"
@@ -16,9 +17,15 @@ const (
 )
 
 func init() {
+	// Overrides default dialects
 	goqu.RegisterDialect(xsql.DialectPostgres, postgres.DialectOptions())
 	goqu.RegisterDialect(xsql.DialectMySQL, mysql.DialectOptions())
-	goqu.RegisterDialect(xsql.DialectSQLite, sqlite3.DialectOptions())
+	//
+	sqliteDialectOpts := sqlite3.DialectOptions()
+	// See: https://www.sqlite.org/lang_returning.html
+	// The RETURNING syntax has been supported by SQLite since version 3.35.0 (2021-03-12).
+	sqliteDialectOpts.SupportsReturn = true
+	goqu.RegisterDialect(xsql.DialectSQLite, sqliteDialectOpts)
 }
 
 type (
@@ -51,6 +58,7 @@ func New(c *xsql.Config, ops ...Option) (*DB, error) {
 
 	if c.Loc != nil {
 		goqu.SetTimeLocation(c.Loc)
+		slog.Info("Setup global time location for goqu", slog.String("location", c.Loc.String()))
 	}
 
 	opts := applyOptions(ops...)

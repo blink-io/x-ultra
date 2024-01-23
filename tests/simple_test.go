@@ -135,3 +135,16 @@ func TestStruct_1(t *testing.T) {
 	var i ii
 	require.NotNil(t, i)
 }
+
+func TestLoc(t *testing.T) {
+	locs := []string{
+		"Asia/Shanghai",
+		"Asia/Chongqing",
+		"Asia/Hong_Kong",
+	}
+	for _, l := range locs {
+		loc, err := time.LoadLocation(l)
+		require.NoError(t, err)
+		fmt.Println("Local Loc: ", loc.String())
+	}
+}

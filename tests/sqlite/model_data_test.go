@@ -23,3 +23,7 @@ func newRandomRecordForApp(from string) *Application {
 	r.DeletedAt = xsql.ValidTime(tnow)
 	return r
 }
+
+func appModel() *Application {
+	return new(Application)
+}

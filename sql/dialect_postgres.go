@@ -79,7 +79,6 @@ func GetPostgresConnector(ctx context.Context, c *Config) (driver.Connector, err
 		if errv != nil {
 			return nil, errv
 		}
-		ppc.ConnString()
 		ppc.ConnConfig = cc
 		pool, errp := pgxpool.NewWithConfig(ctx, ppc)
 		if errp != nil {

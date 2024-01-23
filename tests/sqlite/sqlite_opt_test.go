@@ -18,7 +18,15 @@ import (
 	"github.com/blink-io/x/sql/dbs"
 	"github.com/blink-io/x/sql/dbw"
 	"github.com/blink-io/x/sql/dbx"
+	"github.com/doug-martin/goqu/v9"
+	"github.com/doug-martin/goqu/v9/dialect/sqlite3"
 )
+
+func init() {
+	sqliteDialectOpts := sqlite3.DialectOptions()
+	sqliteDialectOpts.SupportsReturn = true
+	goqu.RegisterDialect(xsql.DialectSQLite, sqliteDialectOpts)
+}
 
 func getSqliteSqlDB() *sql.DB {
 	db, err := xsql.NewSqlDB(sqliteCfg())

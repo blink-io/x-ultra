@@ -1,5 +1,6 @@
 package pgx
 
+// Constants defined in pgxpool for runtime parameters.
 const (
 	PoolMinConns = "pool_min_conns"
 
@@ -14,6 +15,7 @@ const (
 	PoolHealthCheckPeriod = "pool_health_check_period"
 )
 
+// Constants defined in pgx for runtime parameters.
 const (
 	Timezone = "timezone"
 

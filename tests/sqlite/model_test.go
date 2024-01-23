@@ -89,7 +89,7 @@ func (Application) Columns() []string {
 
 var appColumns = []string{
 	"id",
-	"iid",
+	"guid",
 	"status",
 	"name",
 	"code",
