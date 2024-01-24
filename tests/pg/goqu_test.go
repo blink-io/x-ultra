@@ -19,7 +19,7 @@ var _ goqu.Logger = (logger)(nil)
 
 func handleDBQ(db *dbq.DB) {
 	db.Logger(logger(func(format string, args ...any) {
-		slog.Default().Info(fmt.Sprintf(format, args...))
+		slog.Info(fmt.Sprintf(format, args...))
 	}))
 }
 
