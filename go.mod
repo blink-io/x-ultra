@@ -27,7 +27,7 @@ require (
 	github.com/gofrs/uuid/v5 v5.0.0
 	github.com/gogo/protobuf v1.3.2
 	github.com/google/flatbuffers v23.5.26+incompatible
-	github.com/google/uuid v1.5.0
+	github.com/google/uuid v1.6.0
 	github.com/gopacket/gopacket v1.2.0
 	github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.0.1
 	github.com/hashicorp/golang-lru/v2 v2.0.7
@@ -86,7 +86,7 @@ require (
 	golang.org/x/crypto v0.18.0
 	golang.org/x/text v0.14.0
 	google.golang.org/genproto/googleapis/api v0.0.0-20240123012728-ef4313101c80
-	google.golang.org/grpc v1.60.1
+	google.golang.org/grpc v1.61.0
 	google.golang.org/protobuf v1.32.0
 	gopkg.in/yaml.v3 v3.0.1
 	modernc.org/sqlite v1.28.0
@@ -126,7 +126,7 @@ require (
 	github.com/go-gorp/gorp/v3 v3.1.0
 	github.com/go-kit/log v0.2.1
 	github.com/go-kratos/aegis v0.2.0
-	github.com/go-rel/mysql v0.11.0
+	github.com/go-rel/mysql v0.12.0
 	github.com/go-rel/postgres v0.11.0
 	github.com/go-rel/rel v0.41.0
 	github.com/go-rel/sqlite3 v0.11.0
