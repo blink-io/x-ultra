@@ -36,11 +36,11 @@ func (ss Settings) ToURL() (string, error) {
 	return "", nil
 }
 
-func (ss Settings) ParseDSN(dsn string) error {
+func (ss Settings) ParseDSN(dsnstr string) error {
 	if ss == nil {
 		return errors.New("settings is nil")
 	}
-	_, err := doParseDSN(dsn, ss)
+	_, err := doParseDSN(dsnstr, ss)
 	return err
 }
 
@@ -130,11 +130,11 @@ func doParseURL(urlstr string, settings Settings) (Settings, error) {
 	return settings, nil
 }
 
-func ParseDSN(dsn string) (Settings, error) {
-	return doParseDSN(dsn, defaultSettings())
+func ParseDSN(dsnstr string) (Settings, error) {
+	return doParseDSN(dsnstr, defaultSettings())
 }
 
-func doParseDSN(dsn string, settings Settings) (Settings, error) {
+func doParseDSN(dsnstr string, settings Settings) (Settings, error) {
 	if settings == nil {
 		settings = NewSettings()
 	}
@@ -143,54 +143,54 @@ func doParseDSN(dsn string, settings Settings) (Settings, error) {
 		"dbname": "database",
 	}
 
-	for len(dsn) > 0 {
+	for len(dsnstr) > 0 {
 		var key, val string
-		eqIdx := strings.IndexRune(dsn, '=')
+		eqIdx := strings.IndexRune(dsnstr, '=')
 		if eqIdx < 0 {
-			return nil, errors.New("invalid dsn")
+			return nil, errors.New("invalid DSN")
 		}
 
-		key = strings.Trim(dsn[:eqIdx], " \t\n\r\v\f")
-		dsn = strings.TrimLeft(dsn[eqIdx+1:], " \t\n\r\v\f")
-		if len(dsn) == 0 {
-		} else if dsn[0] != '\'' {
+		key = strings.Trim(dsnstr[:eqIdx], " \t\n\r\v\f")
+		dsnstr = strings.TrimLeft(dsnstr[eqIdx+1:], " \t\n\r\v\f")
+		if len(dsnstr) == 0 {
+		} else if dsnstr[0] != '\'' {
 			end := 0
-			for ; end < len(dsn); end++ {
-				if asciiSpace[dsn[end]] == 1 {
+			for ; end < len(dsnstr); end++ {
+				if asciiSpace[dsnstr[end]] == 1 {
 					break
 				}
-				if dsn[end] == '\\' {
+				if dsnstr[end] == '\\' {
 					end++
-					if end == len(dsn) {
+					if end == len(dsnstr) {
 						return nil, errors.New("invalid backslash")
 					}
 				}
 			}
-			val = strings.Replace(strings.Replace(dsn[:end], "\\\\", "\\", -1), "\\'", "'", -1)
-			if end == len(dsn) {
-				dsn = ""
+			val = strings.Replace(strings.Replace(dsnstr[:end], "\\\\", "\\", -1), "\\'", "'", -1)
+			if end == len(dsnstr) {
+				dsnstr = ""
 			} else {
-				dsn = dsn[end+1:]
+				dsnstr = dsnstr[end+1:]
 			}
 		} else { // quoted string
-			dsn = dsn[1:]
+			dsnstr = dsnstr[1:]
 			end := 0
-			for ; end < len(dsn); end++ {
-				if dsn[end] == '\'' {
+			for ; end < len(dsnstr); end++ {
+				if dsnstr[end] == '\'' {
 					break
 				}
-				if dsn[end] == '\\' {
+				if dsnstr[end] == '\\' {
 					end++
 				}
 			}
-			if end == len(dsn) {
+			if end == len(dsnstr) {
 				return nil, errors.New("unterminated quoted string in connection info string")
 			}
-			val = strings.Replace(strings.Replace(dsn[:end], "\\\\", "\\", -1), "\\'", "'", -1)
-			if end == len(dsn) {
-				dsn = ""
+			val = strings.Replace(strings.Replace(dsnstr[:end], "\\\\", "\\", -1), "\\'", "'", -1)
+			if end == len(dsnstr) {
+				dsnstr = ""
 			} else {
-				dsn = dsn[end+1:]
+				dsnstr = dsnstr[end+1:]
 			}
 		}
 
@@ -199,7 +199,7 @@ func doParseDSN(dsn string, settings Settings) (Settings, error) {
 		}
 
 		if key == "" {
-			return nil, errors.New("invalid dsn")
+			return nil, errors.New("invalid DSN")
 		}
 
 		settings[key] = val

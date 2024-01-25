@@ -117,7 +117,7 @@ require (
 	github.com/eapache/queue/v2 v2.0.0-20230407133247-75960ed334e4
 	github.com/emicklei/proto v1.13.0
 	github.com/exaring/otelpgx v0.5.3
-	github.com/expr-lang/expr v1.15.8
+	github.com/expr-lang/expr v1.16.0
 	github.com/gabriel-vasile/mimetype v1.4.3
 	github.com/go-co-op/gocron/v2 v2.2.1
 	github.com/go-crypt/crypt v0.2.14
