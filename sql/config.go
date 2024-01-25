@@ -16,8 +16,8 @@ var (
 
 type Config struct {
 	Context         context.Context
+	Transport       string
 	Dialect         string
-	Network         string
 	Host            string
 	Port            int
 	Name            string
@@ -65,8 +65,8 @@ func (c *Config) SetDefaults() {
 	if c.Context == nil {
 		c.Context = context.Background()
 	}
-	if len(c.Network) == 0 {
-		c.Network = "tcp"
+	if len(c.Transport) == 0 {
+		c.Transport = "tcp"
 	}
 	if c.Loc == nil {
 		c.Loc = time.Local

@@ -57,7 +57,7 @@ func GetMySQLConnector(ctx context.Context, c *Config) (driver.Connector, error)
 }
 
 func ToMySQLConfig(c *Config) *mysql.Config {
-	network := c.Network
+	network := c.Transport
 	name := c.Name
 	host := c.Host
 	port := c.Port

@@ -15,15 +15,15 @@ func ParseURL(url string) (*Config, error) {
 
 	pwd, _ := u.User.Password()
 	c := &Config{
-		Context:  context.Background(),
-		Network:  u.Transport,
-		Dialect:  u.Driver,
-		Host:     u.Host,
-		Port:     cast.ToInt(u.Port()),
-		User:     u.User.Username(),
-		Password: pwd,
-		Name:     u.Path,
-		dsn:      u.DSN,
+		Context:   context.Background(),
+		Transport: u.Transport,
+		Dialect:   u.Driver,
+		Host:      u.Host,
+		Port:      cast.ToInt(u.Port()),
+		User:      u.User.Username(),
+		Password:  pwd,
+		Name:      u.Path,
+		dsn:       u.DSN,
 	}
 	return c, nil
 }
