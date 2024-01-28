@@ -115,7 +115,7 @@ require (
 	github.com/deckarep/golang-set/v2 v2.6.0
 	github.com/doug-martin/goqu/v9 v9.19.0
 	github.com/eapache/queue/v2 v2.0.0-20230407133247-75960ed334e4
-	github.com/emicklei/proto v1.13.0
+	github.com/emicklei/proto v1.13.2
 	github.com/exaring/otelpgx v0.5.3
 	github.com/expr-lang/expr v1.16.0
 	github.com/gabriel-vasile/mimetype v1.4.3
@@ -280,7 +280,7 @@ require (
 	github.com/quic-go/qpack v0.4.0 // indirect
 	github.com/refraction-networking/utls v1.6.1 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
-	github.com/rivo/uniseg v0.4.4 // indirect
+	github.com/rivo/uniseg v0.4.6 // indirect
 	github.com/robfig/cron v1.2.0 // indirect
 	github.com/robfig/cron/v3 v3.0.1 // indirect
 	github.com/rogpeppe/go-internal v1.12.0 // indirect
