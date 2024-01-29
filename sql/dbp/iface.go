@@ -8,7 +8,7 @@ import (
 	"github.com/go-gorp/gorp/v3"
 )
 
-type IDbMap interface {
+type DBF interface {
 	TraceOn(prefix string, logger gorp.Logger)
 	TraceOff()
 	WithContext(ctx context.Context) gorp.SqlExecutor
@@ -46,4 +46,4 @@ type IDbMap interface {
 	Query(q string, args ...interface{}) (*sql.Rows, error)
 }
 
-var _ IDbMap = (*idb)(nil)
+var _ DBF = (*idb)(nil)

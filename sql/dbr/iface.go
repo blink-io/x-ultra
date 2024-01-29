@@ -8,7 +8,7 @@ import (
 	"github.com/gocraft/dbr/v2"
 )
 
-type ISession interface {
+type DBF interface {
 	DeleteFrom(table string) *dbr.DeleteStmt
 	DeleteBySql(query string, value ...interface{}) *dbr.DeleteStmt
 	InsertInto(table string) *dbr.InsertStmt
@@ -22,4 +22,4 @@ type ISession interface {
 	UpdateBySql(query string, value ...interface{}) *dbr.UpdateStmt
 }
 
-var _ ISession = (*idb)(nil)
+var _ DBF = (*idb)(nil)

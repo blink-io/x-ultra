@@ -7,7 +7,7 @@ import (
 	"github.com/pocketbase/dbx"
 )
 
-type IDB interface {
+type DBF interface {
 	Clone() *dbx.DB
 	WithContext(ctx context.Context) *dbx.DB
 	Context() context.Context
@@ -23,4 +23,4 @@ type IDB interface {
 	QuoteColumnName(s string) string
 }
 
-var _ IDB = (*idb)(nil)
+var _ DBF = (*idb)(nil)

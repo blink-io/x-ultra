@@ -7,7 +7,7 @@ import (
 	"github.com/doug-martin/goqu/v9"
 )
 
-type IDatabase interface {
+type DBF interface {
 	Dialect() string
 	Begin() (*goqu.TxDatabase, error)
 	BeginTx(ctx context.Context, opts *sql.TxOptions) (*goqu.TxDatabase, error)
@@ -38,4 +38,4 @@ type IDatabase interface {
 	ScanValContext(ctx context.Context, i interface{}, query string, args ...interface{}) (bool, error)
 }
 
-var _ IDatabase = (*idb)(nil)
+var _ DBF = (*idb)(nil)

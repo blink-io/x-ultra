@@ -8,7 +8,7 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-type IDB interface {
+type DBF interface {
 	DriverName() string
 	ShowSql() *gosql.DB
 	Begin() (*gosql.DB, error)
@@ -30,4 +30,4 @@ type IDB interface {
 	Relation(name string, fn gosql.BuilderChainFunc) *gosql.DB
 }
 
-var _ IDB = (*idb)(nil)
+var _ DBF = (*idb)(nil)

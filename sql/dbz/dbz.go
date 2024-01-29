@@ -6,15 +6,20 @@ import (
 	"io"
 
 	xsql "github.com/blink-io/x/sql"
+	"github.com/stephenafamo/bob"
 )
 
 const (
-	Accessor = "dbz()"
+	Accessor = "dbz(bob)"
 )
 
 type (
+	idb = bob.DB
+
 	IDB interface {
 		io.Closer
+
+		DBF
 
 		xsql.WithSqlDB
 
@@ -24,6 +29,7 @@ type (
 	}
 
 	DB struct {
+		idb
 		sqlDB *sql.DB
 		info  xsql.DBInfo
 	}
@@ -46,6 +52,7 @@ func New(c *xsql.Config, ops ...Option) (*DB, error) {
 	}
 
 	s := &DB{
+		idb:   bob.NewDB(sqlDB),
 		sqlDB: sqlDB,
 		info:  xsql.NewDBInfo(c),
 	}
