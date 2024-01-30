@@ -10,7 +10,6 @@ import (
 
 	"github.com/blink-io/x/locale"
 
-	"github.com/go-task/slim-sprig/v3"
 	"github.com/jellydator/ttlcache/v3"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"golang.org/x/text/language"
@@ -35,7 +34,6 @@ type (
 		*ib
 		cache   *ttlcache.Cache[string, T]
 		noCache bool
-		funcMap template.FuncMap
 	}
 )
 
@@ -48,8 +46,8 @@ var (
 	// bb is default bb
 	bb = New(DefaultOptions)
 
-	fm         = sprig.TxtFuncMap()
-	log Logger = func(format string, args ...any) {
+	funcMap template.FuncMap
+	log     Logger = func(format string, args ...any) {
 		msg := fmt.Sprintf(format, args...)
 		slog.Info(msg)
 	}
@@ -75,7 +73,6 @@ func New(o *Options) *Bundle {
 	b := &Bundle{
 		ib:      ib,
 		noCache: o.Cache,
-		funcMap: fm,
 	}
 	if !b.noCache {
 		b.cache = ttlcache.New[string, T](

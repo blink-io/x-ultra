@@ -2,6 +2,8 @@ package i18n
 
 import (
 	"text/template"
+
+	sprig "github.com/go-task/slim-sprig/v3"
 )
 
 // Tr defines Localizer wrapper function for translation
@@ -10,7 +12,6 @@ func Tr(loc *Localizer) T {
 		if loc != nil {
 			cfg := &LocalizeConfig{
 				MessageID: messageID,
-				Funcs:     fm,
 			}
 			for _, o := range ops {
 				o(cfg)
@@ -45,6 +46,12 @@ func (d MD) O() LOption {
 func Funcs(funcMap template.FuncMap) LOption {
 	return func(c *LocalizeConfig) {
 		c.Funcs = funcMap
+	}
+}
+
+func SprigFuncs() LOption {
+	return func(c *LocalizeConfig) {
+		c.Funcs = sprig.FuncMap()
 	}
 }
 
