@@ -17,15 +17,11 @@ type (
 	idb = bob.Executor
 
 	IDB interface {
+		DBF
+
 		io.Closer
 
-		bob.Executor
-
-		xsql.WithSqlDB
-
-		xsql.WithDBInfo
-
-		xsql.HealthChecker
+		xsql.IDBExt
 	}
 
 	DB struct {

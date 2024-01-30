@@ -3,6 +3,7 @@ package dbx
 import (
 	"context"
 	"database/sql"
+	"io"
 
 	xsql "github.com/blink-io/x/sql"
 	"github.com/pocketbase/dbx"
@@ -15,6 +16,14 @@ const (
 type (
 	idb = dbx.DB
 
+	IDB interface {
+		DBF
+
+		io.Closer
+
+		xsql.IDBExt
+	}
+
 	DB struct {
 		*idb
 		sqlDB    *sql.DB
@@ -24,7 +33,7 @@ type (
 	}
 )
 
-var _ xsql.HealthChecker = (*DB)(nil)
+var _ IDB = (*DB)(nil)
 
 func New(c *xsql.Config, ops ...Option) (*DB, error) {
 	c = xsql.SetupConfig(c)
@@ -56,6 +65,14 @@ func New(c *xsql.Config, ops ...Option) (*DB, error) {
 		info:     c.DBInfo(),
 	}
 	return db, nil
+}
+
+func (db *DB) SqlDB() *sql.DB {
+	return db.sqlDB
+}
+
+func (db *DB) DBInfo() xsql.DBInfo {
+	return db.info
 }
 
 func (db *DB) Accessor() string {

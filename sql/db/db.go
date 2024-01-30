@@ -35,11 +35,7 @@ type (
 
 		io.Closer
 
-		xsql.WithSqlDB
-
-		xsql.WithDBInfo
-
-		xsql.HealthChecker
+		xsql.IDBExt
 
 		IDBExt
 	}

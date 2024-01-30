@@ -3,11 +3,11 @@ package dbr
 import (
 	"context"
 	"database/sql"
+	"io"
 	"time"
 
 	xsql "github.com/blink-io/x/sql"
 	"github.com/blink-io/x/sql/dbr/dialect"
-
 	"github.com/gocraft/dbr/v2"
 )
 
@@ -22,6 +22,14 @@ type (
 
 	Config = xsql.Config
 
+	IDB interface {
+		DBF
+
+		io.Closer
+
+		xsql.IDBExt
+	}
+
 	DB struct {
 		*idb
 		sqlDB    *sql.DB
@@ -31,7 +39,7 @@ type (
 	}
 )
 
-var _ xsql.HealthChecker = (*DB)(nil)
+var _ IDB = (*DB)(nil)
 
 func New(c *Config, ops ...Option) (*DB, error) {
 	c = xsql.SetupConfig(c)
@@ -76,6 +84,10 @@ func New(c *Config, ops ...Option) (*DB, error) {
 		info:     c.DBInfo(),
 	}
 	return db, nil
+}
+
+func (db *DB) DBInfo() xsql.DBInfo {
+	return db.info
 }
 
 func (db *DB) SqlDB() *sql.DB {

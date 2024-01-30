@@ -1,6 +1,7 @@
 package dbs
 
 import (
+	"context"
 	"database/sql"
 
 	xsql "github.com/blink-io/x/sql"
@@ -12,7 +13,7 @@ const (
 
 type (
 	IDB interface {
-		xsql.WithSqlDB
+		xsql.IDBExt
 	}
 
 	DB struct {
@@ -38,6 +39,14 @@ func New(c *xsql.Config, ops ...Option) (*DB, error) {
 	}
 
 	return s, nil
+}
+
+func (db *DB) DBInfo() xsql.DBInfo {
+	return db.info
+}
+
+func (db *DB) HealthCheck(ctx context.Context) error {
+	return xsql.DoPingContext(ctx, db.sqlDB)
 }
 
 func (db *DB) SqlDB() *sql.DB {

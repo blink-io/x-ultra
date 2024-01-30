@@ -16,7 +16,6 @@ import (
 	"github.com/blink-io/x/sql/dbq"
 	"github.com/blink-io/x/sql/dbr"
 	"github.com/blink-io/x/sql/dbs"
-	"github.com/blink-io/x/sql/dbw"
 	"github.com/blink-io/x/sql/dbx"
 	"github.com/doug-martin/goqu/v9"
 	"github.com/doug-martin/goqu/v9/dialect/sqlite3"
@@ -111,16 +110,6 @@ func getSqliteDBP() *dbp.DB {
 	}
 
 	db.TraceOn("[gorp]", log.New(os.Stdout, "dbp:", log.Lmicroseconds))
-
-	return db
-}
-
-func getSqliteDBW() *dbw.DB {
-	db, err := dbw.New(sqliteCfg())
-
-	if err != nil {
-		panic(err)
-	}
 
 	return db
 }

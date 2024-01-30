@@ -3,6 +3,7 @@ package dbq
 import (
 	"context"
 	"database/sql"
+	"io"
 	"log/slog"
 
 	xsql "github.com/blink-io/x/sql"
@@ -35,6 +36,11 @@ type (
 
 	// IDB defines
 	IDB interface {
+		DBF
+
+		io.Closer
+
+		xsql.IDBExt
 	}
 
 	DB struct {
@@ -45,7 +51,7 @@ type (
 	}
 )
 
-var _ xsql.HealthChecker = (*DB)(nil)
+var _ IDB = (*DB)(nil)
 
 func New(c *xsql.Config, ops ...Option) (*DB, error) {
 	c = xsql.SetupConfig(c)
@@ -76,6 +82,18 @@ func New(c *xsql.Config, ops ...Option) (*DB, error) {
 		info:     c.DBInfo(),
 	}
 	return db, nil
+}
+
+func (db *DB) Close() error {
+	return db.sqlDB.Close()
+}
+
+func (db *DB) SqlDB() *sql.DB {
+	return db.sqlDB
+}
+
+func (db *DB) DBInfo() xsql.DBInfo {
+	return db.info
 }
 
 func (db *DB) Accessor() string {

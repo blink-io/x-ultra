@@ -1,7 +1,9 @@
 package dbk
 
 import (
+	"context"
 	"database/sql"
+	"io"
 
 	xsql "github.com/blink-io/x/sql"
 	"github.com/blink-io/x/sql/dbk/adapters/kstd"
@@ -17,7 +19,11 @@ type (
 	idb = ksql.DB
 
 	IDB interface {
-		xsql.WithSqlDB
+		DBF
+
+		io.Closer
+
+		xsql.IDBExt
 	}
 
 	DB struct {
@@ -39,7 +45,6 @@ func New(c *xsql.Config, ops ...Option) (*DB, error) {
 		return nil, err
 	}
 
-	type dbc func(db *sql.DB) (ksql.DB, error)
 	var dp sqldialect.Provider
 	switch dialect {
 	case xsql.DialectPostgres:
@@ -70,4 +75,12 @@ func New(c *xsql.Config, ops ...Option) (*DB, error) {
 
 func (db *DB) SqlDB() *sql.DB {
 	return db.sqlDB
+}
+
+func (db *DB) DBInfo() xsql.DBInfo {
+	return db.info
+}
+
+func (db *DB) HealthCheck(ctx context.Context) error {
+	return xsql.DoPingContext(ctx, db.sqlDB)
 }

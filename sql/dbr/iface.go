@@ -21,5 +21,3 @@ type DBF interface {
 	Update(table string) *dbr.UpdateStmt
 	UpdateBySql(query string, value ...interface{}) *dbr.UpdateStmt
 }
-
-var _ DBF = (*idb)(nil)

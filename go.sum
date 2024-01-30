@@ -338,8 +338,6 @@ github.com/huandu/go-sqlbuilder v1.25.0/go.mod h1:nUVmMitjOmn/zacMLXT0d3Yd3RHoO2
 github.com/huandu/xstrings v1.3.2/go.mod h1:y5/lhBue+AyNmUVz9RLU9xbLR0o4KIIExikq4ovT0aE=
 github.com/huandu/xstrings v1.4.0 h1:D17IlohoQq4UcpqD7fDk80P7l+lwAmlFaBHgOipl2FU=
 github.com/huandu/xstrings v1.4.0/go.mod h1:y5/lhBue+AyNmUVz9RLU9xbLR0o4KIIExikq4ovT0aE=
-github.com/ilibs/gosql/v2 v2.1.4 h1:CFn21d67OKX4ofZcnKne90meopoLnmp9LI/HFpFPKL8=
-github.com/ilibs/gosql/v2 v2.1.4/go.mod h1:eHKamW5v/ZGwE6mDpUE6OVgmu+6GfKdbXzHPLANYxhQ=
 github.com/imroc/req/v3 v3.42.3 h1:ryPG2AiwouutAopwPxKpWKyxgvO8fB3hts4JXlh3PaE=
 github.com/imroc/req/v3 v3.42.3/go.mod h1:Axz9Y/a2b++w5/Jht3IhQsdBzrG1ftJd1OJhu21bB2Q=
 github.com/jackc/chunkreader/v2 v2.0.1 h1:i+RDz65UE+mmpjTfyz0MoVTnzeYxroil2G82ki7MGG8=

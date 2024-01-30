@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"io"
 	"log/slog"
 	"strings"
 	"time"
@@ -22,7 +23,16 @@ const (
 
 type (
 	idb = rel.Repository
-	DB  struct {
+
+	IDB interface {
+		DBF
+
+		io.Closer
+
+		xsql.IDBExt
+	}
+
+	DB struct {
 		idb
 		sqlDB    *sql.DB
 		info     xsql.DBInfo
@@ -31,7 +41,7 @@ type (
 	}
 )
 
-var _ xsql.HealthChecker = (*DB)(nil)
+var _ IDB = (*DB)(nil)
 
 func New(c *xsql.Config) (*DB, error) {
 	c = xsql.SetupConfig(c)
@@ -64,6 +74,14 @@ func New(c *xsql.Config) (*DB, error) {
 		accessor: Accessor,
 	}
 	return db, nil
+}
+
+func (db *DB) Close() error {
+	return db.sqlDB.Close()
+}
+
+func (db *DB) DBInfo() xsql.DBInfo {
+	return db.info
 }
 
 func (db *DB) SqlDB() *sql.DB {
