@@ -14,12 +14,12 @@ const (
 )
 
 type (
-	idb = bob.DB
+	idb = bob.Executor
 
 	IDB interface {
 		io.Closer
 
-		DBF
+		bob.Executor
 
 		xsql.WithSqlDB
 
@@ -51,8 +51,12 @@ func New(c *xsql.Config, ops ...Option) (*DB, error) {
 
 	}
 
+	var rdb bob.Executor = bob.NewDB(sqlDB)
+	if c.Debug {
+		rdb = bob.Debug(rdb)
+	}
 	s := &DB{
-		idb:   bob.NewDB(sqlDB),
+		idb:   rdb,
 		sqlDB: sqlDB,
 		info:  xsql.NewDBInfo(c),
 	}

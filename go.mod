@@ -142,7 +142,7 @@ require (
 	github.com/imroc/req/v3 v3.42.3
 	github.com/jackc/chunkreader/v2 v2.0.1
 	github.com/jackc/puddle/v2 v2.2.1
-	github.com/jhump/protoreflect v1.15.5
+	github.com/jhump/protoreflect v1.15.6
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/jonboulle/clockwork v0.4.0
 	github.com/k0kubun/pp/v3 v3.2.0
@@ -280,7 +280,7 @@ require (
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/qdm12/reprint v0.0.0-20200326205758-722754a53494 // indirect
 	github.com/quic-go/qpack v0.4.0 // indirect
-	github.com/refraction-networking/utls v1.6.1 // indirect
+	github.com/refraction-networking/utls v1.6.2 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
 	github.com/rivo/uniseg v0.4.6 // indirect
 	github.com/robfig/cron v1.2.0 // indirect
