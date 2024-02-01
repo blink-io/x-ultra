@@ -11,7 +11,7 @@ type SQLiteError = sqlite3.Error
 
 func sqliteStateErr(e *SQLiteError) *StateError {
 	err := &StateError{
-		origin:  e.Code,
+		cause:   e.Code,
 		code:    cast.ToString(e.Code),
 		message: e.Error(),
 	}

@@ -7,7 +7,7 @@ import (
 
 func mysqlStateErr(e *mysql.MySQLError) *StateError {
 	err := &StateError{
-		origin:  e,
+		cause:   e,
 		code:    cast.ToString(e.Number),
 		message: e.Message,
 	}

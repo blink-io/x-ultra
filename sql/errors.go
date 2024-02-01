@@ -13,7 +13,7 @@ const (
 )
 
 type StateError struct {
-	origin error
+	cause error
 
 	message string
 	// Code in Postgres/SQLite, Number in MySQl
@@ -28,13 +28,15 @@ func (e *StateError) Code() string {
 	return e.code
 }
 
-func (e *StateError) Origin() error {
-	return e.origin
+func (e *StateError) Cause() error {
+	return e.cause
 }
 
 func (e *StateError) Is(err error) bool {
-	return errors.Is(e.origin, err)
+	return errors.Is(e.cause, err)
 }
+
+var E = WrapError
 
 func WrapError(e error) *StateError {
 	var newErr *StateError
@@ -46,7 +48,7 @@ func WrapError(e error) *StateError {
 		newErr = sqliteStateErr(sqliteErr)
 	} else {
 		newErr = &StateError{
-			origin:  e,
+			cause:   e,
 			code:    ErrCodeUndefined,
 			message: e.Error(),
 		}

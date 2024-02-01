@@ -6,7 +6,7 @@ import (
 
 func pgxStateErr(e *pgconn.PgError) *StateError {
 	err := &StateError{
-		origin:  e,
+		cause:   e,
 		code:    e.Code,
 		message: e.Message,
 	}
