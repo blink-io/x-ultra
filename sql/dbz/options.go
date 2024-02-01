@@ -1,11 +1,7 @@
 package dbz
 
-import (
-	"github.com/gocraft/dbr/v2"
-)
-
 type options struct {
-	er dbr.EventReceiver
+	wrappers []ExecWrapper
 }
 
 type Option func(*options)
@@ -16,4 +12,10 @@ func applyOptions(ops ...Option) *options {
 		o(opts)
 	}
 	return opts
+}
+
+func ExecWrappers(ws ...ExecWrapper) Option {
+	return func(o *options) {
+		o.wrappers = append(o.wrappers, ws...)
+	}
 }

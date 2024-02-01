@@ -3,8 +3,6 @@ package sql
 import (
 	"context"
 	"database/sql/driver"
-
-	"modernc.org/sqlite"
 )
 
 var compatibleSQLiteDialects = []string{
@@ -16,7 +14,7 @@ func init() {
 	d := DialectSQLite
 	//drivers[dn] = GetSQLiteDriver
 	//dsners[dn] = GetSQLiteDSN
-	connectors[d] = GetQLiteConnector
+	connectors[d] = GetSQLiteConnector
 }
 
 type SQLiteOptions struct {
@@ -42,12 +40,12 @@ func IsCompatibleSQLiteDialect(dialect string) bool {
 
 func GetSQLiteDriver(dialect string) (driver.Driver, error) {
 	if IsCompatibleSQLiteDialect(dialect) {
-		return &sqlite.Driver{}, nil
+		return getRawSQLiteDriver(), nil
 	}
 	return nil, ErrUnsupportedDriver
 }
 
-func GetQLiteConnector(ctx context.Context, c *Config) (driver.Connector, error) {
+func GetSQLiteConnector(ctx context.Context, c *Config) (driver.Connector, error) {
 	dsn := toSQLiteDSN(c)
 	drv := wrapDriverHooks(getRawSQLiteDriver(), c.DriverHooks...)
 	return &dsnConnector{dsn: dsn, driver: drv}, nil
@@ -61,8 +59,4 @@ func AdditionsToSQLiteOptions(adds map[string]string) *SQLiteOptions {
 func toSQLiteDSN(c *Config) string {
 	dsn := c.Host
 	return dsn
-}
-
-func getRawSQLiteDriver() driver.Driver {
-	return &sqlite.Driver{}
 }

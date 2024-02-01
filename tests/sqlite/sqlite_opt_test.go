@@ -3,6 +3,7 @@ package sqlite
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"log"
 	"log/slog"
 	"os"
@@ -17,8 +18,10 @@ import (
 	"github.com/blink-io/x/sql/dbr"
 	"github.com/blink-io/x/sql/dbs"
 	"github.com/blink-io/x/sql/dbx"
+	"github.com/blink-io/x/sql/dbz"
 	"github.com/doug-martin/goqu/v9"
 	"github.com/doug-martin/goqu/v9/dialect/sqlite3"
+	"github.com/stephenafamo/bob"
 )
 
 func init() {
@@ -127,6 +130,29 @@ func getSqliteDBS() *dbs.DB {
 func getSqliteDBK() *dbk.DB {
 	db, err := dbk.New(sqliteCfg())
 
+	if err != nil {
+		panic(err)
+	}
+
+	return db
+}
+
+var errDef = errors.New("default error")
+
+func getSqliteDBZ() *dbz.DB {
+	ops := []dbz.Option{
+		dbz.ExecWrappers(
+			bob.Debug,
+			func(exec bob.Executor) bob.Executor {
+				return dbz.ExecOnError(exec, func(e error) error {
+					if e != nil {
+						return errDef
+					}
+					return e
+				})
+			}),
+	}
+	db, err := dbz.New(sqliteCfg(), ops...)
 	if err != nil {
 		panic(err)
 	}

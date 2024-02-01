@@ -3,15 +3,18 @@ package sql
 import (
 	"errors"
 
-	"github.com/blink-io/x/cast"
 	//"github.com/glebarez/go-sqlite"
 	"github.com/go-sql-driver/mysql"
 	"github.com/jackc/pgx/v5/pgconn"
-	"modernc.org/sqlite"
+)
+
+const (
+	ErrCodeUndefined = "undefined"
 )
 
 type StateError struct {
-	origin  error
+	origin error
+
 	message string
 	// Code in Postgres/SQLite, Number in MySQl
 	code string
@@ -25,21 +28,28 @@ func (e *StateError) Code() string {
 	return e.code
 }
 
+func (e *StateError) Origin() error {
+	return e.origin
+}
+
+func (e *StateError) Is(err error) bool {
+	return errors.Is(e.origin, err)
+}
+
 func WrapError(e error) *StateError {
-	newErr := &StateError{
-		origin: e,
-	}
+	var newErr *StateError
 	if pgErr := new(pgconn.PgError); errors.As(e, &pgErr) {
-		newErr.code = pgErr.Code
-		newErr.message = pgErr.Message
+		newErr = pgxStateErr(pgErr)
 	} else if mysqlErr := new(mysql.MySQLError); errors.As(e, &mysqlErr) {
-		newErr.code = cast.ToString(mysqlErr.Number)
-		newErr.message = mysqlErr.Message
-	} else if sqliteErr := new(sqlite.Error); errors.As(e, &sqliteErr) {
-		newErr.code = cast.ToString(sqliteErr.Code())
-		newErr.message = sqliteErr.Error()
+		newErr = mysqlStateErr(mysqlErr)
+	} else if sqliteErr := new(SQLiteError); errors.As(e, &sqliteErr) {
+		newErr = sqliteStateErr(sqliteErr)
 	} else {
-		newErr.message = e.Error()
+		newErr = &StateError{
+			origin:  e,
+			code:    ErrCodeUndefined,
+			message: e.Error(),
+		}
 	}
 	return newErr
 }

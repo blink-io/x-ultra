@@ -1,4 +1,4 @@
-package dbz
+package dbt
 
 import (
 	"context"
@@ -6,7 +6,6 @@ import (
 	"io"
 
 	xsql "github.com/blink-io/x/sql"
-	"github.com/stephenafamo/bob"
 )
 
 const (
@@ -14,7 +13,7 @@ const (
 )
 
 type (
-	idb = bob.Executor
+	idb = *sql.DB
 
 	IDB interface {
 		DBF
@@ -43,18 +42,12 @@ func New(c *xsql.Config, ops ...Option) (*DB, error) {
 	}
 
 	opts := applyOptions(ops...)
-
-	var ew []ExecWrapper
 	if opts != nil {
-		ew = opts.wrappers
+
 	}
 
-	var rdb bob.Executor = bob.NewDB(sqlDB)
-	for _, w := range ew {
-		rdb = w(rdb)
-	}
 	s := &DB{
-		idb:   rdb,
+		//idb:   rdb,
 		sqlDB: sqlDB,
 		info:  xsql.NewDBInfo(c),
 	}

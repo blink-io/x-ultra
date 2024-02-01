@@ -1,4 +1,4 @@
-package dbp
+package dbt
 
 type options struct {
 }
@@ -12,10 +12,3 @@ func applyOptions(ops ...Option) *options {
 	}
 	return opts
 }
-
-//
-//func WithEventReceiver(er dbr.EventReceiver) Option {
-//	return func(o *options) {
-//		o.er = er
-//	}
-//}

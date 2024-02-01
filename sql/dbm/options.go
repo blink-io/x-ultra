@@ -1,11 +1,6 @@
 package dbm
 
-import (
-	"github.com/gocraft/dbr/v2"
-)
-
 type options struct {
-	er dbr.EventReceiver
 }
 
 type Option func(*options)

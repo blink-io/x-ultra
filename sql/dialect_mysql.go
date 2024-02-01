@@ -44,7 +44,7 @@ func GetMySQLDSN(dialect string) (Dsner, error) {
 
 func GetMySQLDriver(dialect string) (driver.Driver, error) {
 	if IsCompatibleMySQLDialect(dialect) {
-		return &mysql.MySQLDriver{}, nil
+		return getRawMySQLDriver(), nil
 	}
 	return nil, ErrUnsupportedDriver
 }
