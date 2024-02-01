@@ -80,7 +80,7 @@ func Do[Request Req, Response Req](
 			// https://developer.mozilla.org/docs/Web/HTTP/Methods/DELETE
 			http.MethodDelete,
 			http.MethodPatch:
-			if !opts.skipBody {
+			if !opts.skipReqBody {
 				if err := kctx.Bind(&in); err != nil {
 					return err
 				}
@@ -105,8 +105,12 @@ func Do[Request Req, Response Req](
 			kctx.Header().Set(k, v)
 		}
 
-		reply := out.(*Response)
-		return kctx.Result(opts.statusCode, reply)
+		if opts.skipResBody {
+			return kctx.Result(opts.statusCode, nil)
+		} else {
+			reply := out.(*Response)
+			return kctx.Result(opts.statusCode, reply)
+		}
 	}
 }
 

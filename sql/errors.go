@@ -1,6 +1,7 @@
 package sql
 
 import (
+	"database/sql"
 	"errors"
 
 	//"github.com/glebarez/go-sqlite"
@@ -10,6 +11,13 @@ import (
 
 const (
 	ErrCodeUndefined = "undefined"
+)
+
+var (
+	ErrConstraintPrimaryKey = &StateError{}
+	ErrConstraintUnique     = &StateError{}
+	ErrConstraintCheck      = &StateError{}
+	ErrConstraintNotNull    = &StateError{}
 )
 
 type StateError struct {
@@ -54,4 +62,8 @@ func WrapError(e error) *StateError {
 		}
 	}
 	return newErr
+}
+
+func IsErrNoRows(e error) bool {
+	return errors.Is(e, sql.ErrNoRows)
 }

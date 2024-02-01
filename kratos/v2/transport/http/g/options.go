@@ -10,13 +10,14 @@ type keyValue struct {
 }
 
 type options struct {
-	method     string
-	statusCode int
-	ahs        []*keyValue
-	shs        map[string]string
-	skipBody   bool
-	skipVars   bool
-	skipQuery  bool
+	method      string
+	statusCode  int
+	ahs         []*keyValue
+	shs         map[string]string
+	skipQuery   bool
+	skipVars    bool
+	skipReqBody bool
+	skipResBody bool
 }
 
 type DoOption func(*options)
@@ -56,12 +57,6 @@ func SetHeader(key string, value string) DoOption {
 	}
 }
 
-func SkipBody() DoOption {
-	return func(o *options) {
-		o.skipBody = true
-	}
-}
-
 func SkipVars() DoOption {
 	return func(o *options) {
 		o.skipVars = true
@@ -71,5 +66,17 @@ func SkipVars() DoOption {
 func SkipQuery() DoOption {
 	return func(o *options) {
 		o.skipQuery = true
+	}
+}
+
+func SkipReqBody() DoOption {
+	return func(o *options) {
+		o.skipReqBody = true
+	}
+}
+
+func SkipResBody() DoOption {
+	return func(o *options) {
+		o.skipResBody = true
 	}
 }

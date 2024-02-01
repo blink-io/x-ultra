@@ -1,6 +1,8 @@
 package sql
 
 import (
+	"errors"
+	"fmt"
 	"testing"
 
 	"github.com/blink-io/x/cast"
@@ -36,4 +38,12 @@ func TestSQLiteErr(t *testing.T) {
 	newErr := WrapError(err)
 
 	require.NotNil(t, newErr)
+}
+
+func TestErrEqual(t *testing.T) {
+	var err = &StateError{code: "good"}
+	var err1 = &StateError{code: "good"}
+
+	b := errors.Is(err, err1)
+	fmt.Println("Result: ", b)
 }

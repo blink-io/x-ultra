@@ -26,6 +26,12 @@ func TestSqlite_DBZ_Select_Funcs(t *testing.T) {
 	}
 }
 
+func TestSqlite_DBZ_Select_NoRows(t *testing.T) {
+	db := getSqliteDBZ()
+	require.NotNil(t, db)
+
+}
+
 func TestSqlite_DBZ_Select_All(t *testing.T) {
 	db := getSqliteDBX()
 
