@@ -77,6 +77,9 @@ func Do[Request Req, Response Req](
 		if err := kctx.BindQuery(&in); err != nil {
 			return err
 		}
+		if err := kctx.BindVars(&in); err != nil {
+			return err
+		}
 		khttp.SetOperation(kctx, operation)
 		mwHandle := kctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return handle(kctx, req.(*Request))
