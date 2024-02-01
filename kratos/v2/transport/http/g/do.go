@@ -58,8 +58,21 @@ func Do[Request Req, Response Req](
 	ops ...DoOption,
 ) khttp.HandlerFunc {
 	return func(kctx khttp.Context) error {
-
+		opts := applyOptions(ops...)
 		var in Request
+
+		if !opts.skipQuery {
+			if err := kctx.BindQuery(&in); err != nil {
+				return err
+			}
+
+		}
+		if !opts.skipVars {
+			if err := kctx.BindVars(&in); err != nil {
+				return err
+			}
+		}
+
 		switch method {
 		case http.MethodPost,
 			http.MethodPut,
@@ -67,19 +80,15 @@ func Do[Request Req, Response Req](
 			// https://developer.mozilla.org/docs/Web/HTTP/Methods/DELETE
 			http.MethodDelete,
 			http.MethodPatch:
-			if err := kctx.Bind(&in); err != nil {
-				return err
+			if !opts.skipBody {
+				if err := kctx.Bind(&in); err != nil {
+					return err
+				}
 			}
 			break
 		default:
 		}
 
-		if err := kctx.BindQuery(&in); err != nil {
-			return err
-		}
-		if err := kctx.BindVars(&in); err != nil {
-			return err
-		}
 		khttp.SetOperation(kctx, operation)
 		mwHandle := kctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return handle(kctx, req.(*Request))
@@ -89,7 +98,6 @@ func Do[Request Req, Response Req](
 			return err
 		}
 
-		opts := applyOptions(ops...)
 		for _, i := range opts.ahs {
 			kctx.Header().Add(i.key, i.value)
 		}
