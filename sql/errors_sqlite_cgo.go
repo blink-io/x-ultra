@@ -4,6 +4,7 @@ package sql
 
 import (
 	"github.com/blink-io/x/cast"
+
 	"github.com/mattn/go-sqlite3"
 )
 

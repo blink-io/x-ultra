@@ -12,16 +12,23 @@ import (
 const (
 	ErrCodeUndefined = "undefined"
 
+	ErrCodeConstraintPrimaryKey = "primary_key_constraint"
+
 	ErrCodeConstraintUnique = "unique_constraint"
+
+	ErrCodeConstraintCheck = "check_constraint"
 
 	ErrCodeConstraintNotNull = "unique_constraint"
 )
 
 var (
-	ErrConstraintPrimaryKey = &StateError{}
-	ErrConstraintUnique     = &StateError{}
-	ErrConstraintCheck      = &StateError{}
-	ErrConstraintNotNull    = &StateError{}
+	ErrConstraintPrimaryKey = &StateError{code: ErrCodeConstraintPrimaryKey}
+
+	ErrConstraintUnique = &StateError{code: ErrCodeConstraintUnique}
+
+	ErrConstraintCheck = &StateError{code: ErrCodeConstraintCheck}
+
+	ErrConstraintNotNull = &StateError{code: ErrCodeConstraintNotNull}
 )
 
 type StateError struct {
@@ -68,6 +75,6 @@ func WrapError(e error) *StateError {
 	return newErr
 }
 
-func IsNoRowsErr(e error) bool {
+func IsErrNoRows(e error) bool {
 	return errors.Is(e, sql.ErrNoRows)
 }
