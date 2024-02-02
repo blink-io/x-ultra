@@ -80,7 +80,7 @@ require (
 	go.etcd.io/bbolt v1.3.8
 	go.etcd.io/etcd/client/v3 v3.5.12
 	go.temporal.io/api v1.27.0
-	go.temporal.io/sdk v1.25.1
+	go.temporal.io/sdk v1.25.2-0.20240201213122-86764f86bf30
 	go.uber.org/multierr v1.11.0
 	go.uber.org/zap v1.26.0
 	golang.org/x/crypto v0.18.0
@@ -193,7 +193,7 @@ require (
 	github.com/vmihailenco/tagparser/v2 v2.0.0
 	github.com/wk8/go-ordered-map/v2 v2.1.8
 	github.com/xo/dburl v0.21.1
-	github.com/yuin/goldmark v1.6.0
+	github.com/yuin/goldmark v1.7.0
 	github.com/zitadel/passwap v0.5.0
 	go.opentelemetry.io/otel v1.22.0
 	go.opentelemetry.io/otel/metric v1.22.0
@@ -237,8 +237,6 @@ require (
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/go-rel/sql v0.16.0 // indirect
 	github.com/go-task/slim-sprig v0.0.0-20230315185526-52ccab3ef572 // indirect
-	github.com/gogo/googleapis v1.4.1 // indirect
-	github.com/gogo/status v1.1.1 // indirect
 	github.com/golang-sql/civil v0.0.0-20220223132316-b832511892a9 // indirect
 	github.com/golang/mock v1.6.0 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
