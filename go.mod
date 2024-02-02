@@ -79,7 +79,7 @@ require (
 	gitlab.com/greyxor/slogor v1.2.2
 	go.etcd.io/bbolt v1.3.8
 	go.etcd.io/etcd/client/v3 v3.5.12
-	go.temporal.io/api v1.26.0
+	go.temporal.io/api v1.27.0
 	go.temporal.io/sdk v1.25.1
 	go.uber.org/multierr v1.11.0
 	go.uber.org/zap v1.26.0
@@ -249,7 +249,7 @@ require (
 	github.com/gorilla/css v1.0.1 // indirect
 	github.com/gotestyourself/gotestyourself v2.2.0+incompatible // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0 // indirect
-	github.com/grpc-ecosystem/grpc-gateway v1.16.0 // indirect
+	github.com/grpc-ecosystem/grpc-gateway/v2 v2.19.1 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/huandu/xstrings v1.4.0 // indirect

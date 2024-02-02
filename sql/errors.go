@@ -11,6 +11,10 @@ import (
 
 const (
 	ErrCodeUndefined = "undefined"
+
+	ErrCodeConstraintUnique = "unique_constraint"
+
+	ErrCodeConstraintNotNull = "unique_constraint"
 )
 
 var (
@@ -64,6 +68,6 @@ func WrapError(e error) *StateError {
 	return newErr
 }
 
-func IsErrNoRows(e error) bool {
+func IsNoRowsErr(e error) bool {
 	return errors.Is(e, sql.ErrNoRows)
 }

@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	KindHTTP  Kind = transport.KindHTTP
+	KindHTTP       = transport.KindHTTP
 	KindHTTP3 Kind = "http3"
 )
 

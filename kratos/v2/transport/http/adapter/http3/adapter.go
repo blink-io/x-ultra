@@ -108,7 +108,7 @@ func (s *adapter) Kind() transport.Kind {
 	return transport.KindHTTP3
 }
 
-// Start start the HTTP server.
+// Start starts the HTTP server.
 func (s *adapter) Start(ctx context.Context) error {
 	if err := s.listenAndEndpoint(); err != nil {
 		return err
@@ -123,7 +123,7 @@ func (s *adapter) Start(ctx context.Context) error {
 	return nil
 }
 
-// Stop stop the HTTP server.
+// Stop stops the HTTP server.
 func (s *adapter) Stop(ctx context.Context) error {
 	log.Info("[HTTP3] server stopping")
 	return s.srv.Close()

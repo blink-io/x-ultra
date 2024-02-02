@@ -13,3 +13,7 @@ func mysqlStateErr(e *mysql.MySQLError) *StateError {
 	}
 	return err
 }
+
+func IsMySQLUniqueContraintsErr(e error) bool {
+	return false
+}

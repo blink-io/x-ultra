@@ -14,3 +14,7 @@ func pgxStateErr(e *pgconn.PgError) *StateError {
 	}
 	return err
 }
+
+func IsPostgresUniqueContraintsErr(e error) bool {
+	return false
+}

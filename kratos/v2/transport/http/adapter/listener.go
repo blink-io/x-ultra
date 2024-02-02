@@ -6,6 +6,7 @@ import (
 )
 
 type Listener interface {
-	Addr() net.Addr
 	io.Closer
+
+	Addr() net.Addr
 }
