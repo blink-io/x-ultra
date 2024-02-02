@@ -80,7 +80,7 @@ require (
 	go.etcd.io/bbolt v1.3.8
 	go.etcd.io/etcd/client/v3 v3.5.12
 	go.temporal.io/api v1.27.0
-	go.temporal.io/sdk v1.25.2-0.20240201213122-86764f86bf30
+	go.temporal.io/sdk v1.26.0-rc.1
 	go.uber.org/multierr v1.11.0
 	go.uber.org/zap v1.26.0
 	golang.org/x/crypto v0.18.0
@@ -119,7 +119,7 @@ require (
 	github.com/exaring/otelpgx v0.5.3
 	github.com/expr-lang/expr v1.16.0
 	github.com/gabriel-vasile/mimetype v1.4.3
-	github.com/go-co-op/gocron/v2 v2.2.2
+	github.com/go-co-op/gocron/v2 v2.2.3
 	github.com/go-crypt/crypt v0.2.14
 	github.com/go-faster/city v1.0.1
 	github.com/go-faster/xor v1.0.0
@@ -152,7 +152,7 @@ require (
 	github.com/mailgun/raymond/v2 v2.0.48
 	github.com/matryer/is v1.4.1
 	github.com/mattn/go-runewidth v0.0.15
-	github.com/mattn/go-sqlite3 v1.14.21
+	github.com/mattn/go-sqlite3 v1.14.22
 	github.com/matttproud/golang_protobuf_extensions/v2 v2.0.0
 	github.com/mholt/acmez v1.2.0
 	github.com/microcosm-cc/bluemonday v1.0.26
@@ -268,6 +268,7 @@ require (
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/nats-io/nkeys v0.4.7 // indirect
 	github.com/nats-io/nuid v1.0.1 // indirect
+	github.com/ncruces/go-strftime v0.1.9 // indirect
 	github.com/nxadm/tail v1.4.11 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.0.2 // indirect
@@ -311,7 +312,7 @@ require (
 	lukechampine.com/uint128 v1.3.0 // indirect
 	modernc.org/cc/v3 v3.41.0 // indirect
 	modernc.org/ccgo/v3 v3.16.15 // indirect
-	modernc.org/libc v1.40.10 // indirect
+	modernc.org/libc v1.40.13 // indirect
 	modernc.org/mathutil v1.6.0 // indirect
 	modernc.org/memory v1.7.2 // indirect
 	modernc.org/opt v0.1.3 // indirect
