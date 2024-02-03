@@ -195,6 +195,8 @@ func AdditionsToPostgresOptions(adds map[string]string) *PostgresOptions {
 }
 
 func getRawPostgresDriver() driver.Driver {
+	// Notes: Unable to invoke &stdlib.Driver{} directly.
+	// Because the "configs" field inside the driver is not initialized.
 	return stdlib.GetDefaultDriver()
 }
 

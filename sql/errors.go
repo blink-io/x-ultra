@@ -12,9 +12,11 @@ import (
 const (
 	ErrStateOther = "other"
 
+	ErrStateUnsupported = "unsupported"
+
 	ErrStateNoRows = "now_rows"
 
-	ErrStateTooManyRows = "now_rows"
+	ErrStateTooManyRows = "too_many_rows"
 
 	ErrStateConstraintUnique = "unique_constraint"
 
@@ -23,8 +25,6 @@ const (
 	ErrStateConstraintNotNull = "not_null_constraint"
 
 	ErrStateConstraintForeignKey = "foreign_key_constraint"
-
-	ErrStateUnsupported = "unsupported"
 )
 
 var (
@@ -106,6 +106,8 @@ func WrapError(e error) *StateError {
 		newErr = mysqlStateError(mysqlErr)
 	} else if sqliteErr := new(SQLiteError); errors.As(e, sqliteErr) {
 		newErr = sqliteStateError(sqliteErr)
+	} else if ch, ok := commonErrHandlers[e]; ok {
+		newErr = ch(e)
 	} else {
 		newErr = ErrUnsupported
 	}
@@ -133,6 +135,10 @@ func IsErrConstraintUnique(e error) bool {
 
 func IsErrConstraintNotNull(e error) bool {
 	return IsErrEqualsState(e, ErrStateConstraintNotNull)
+}
+
+func IsErrConstraintForeignKey(e error) bool {
+	return IsErrEqualsState(e, ErrStateConstraintForeignKey)
 }
 
 func IsErrEqualsState(e error, state string) bool {

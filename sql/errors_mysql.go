@@ -9,34 +9,51 @@ var mysqlErrorHandlers = map[uint16]func(*mysql.MySQLError) *StateError{
 	// Error number: 1169; Symbol: ER_DUP_UNIQUE; SQLSTATE: 23000
 	// Message: Can't write, because of unique constraint, to table '%s'
 	1169: func(e *mysql.MySQLError) *StateError {
-		return ErrConstraintUnique
+		code := cast.ToString(e.Number)
+		return ErrConstraintUnique.Renew(code, e.Message, e)
 	},
+
 	// Error number: 1172; Symbol: ER_TOO_MANY_ROWS; SQLSTATE: 42000
 	// Message: Result consisted of more than one row
 	1172: func(e *mysql.MySQLError) *StateError {
-		return ErrTooManyRows
+		code := cast.ToString(e.Number)
+		return ErrTooManyRows.Renew(code, e.Message, e)
 	},
+
 	// Error number: 1329; Symbol: ER_SP_FETCH_NO_DATA; SQLSTATE: 02000
 	// Message: No data - zero rows fetched, selected, or processed
 	1329: func(e *mysql.MySQLError) *StateError {
-		return ErrNoRows
+		code := cast.ToString(e.Number)
+		return ErrNoRows.Renew(code, e.Message, e)
 	},
+
 	// Error number: 1216; Symbol: ER_NO_REFERENCED_ROW; SQLSTATE: 23000
 	// Message: Cannot add or update a child row: a foreign key constraint fails
 	1216: mysqlFKConstraintErrHandler,
+
 	// Error number: 1217; Symbol: ER_ROW_IS_REFERENCED; SQLSTATE: 23000
 	// Message: Cannot delete or update a parent row: a foreign key constraint fails
 	1217: mysqlFKConstraintErrHandler,
+
+	// Error number: 1263; Symbol: ER_WARN_NULL_TO_NOTNULL; SQLSTATE: 22004
+	1263: func(e *mysql.MySQLError) *StateError {
+		code := cast.ToString(e.Number)
+		return ErrConstraintNotNull.Renew(code, e.Message, e)
+	},
+
 	// Error number: 1451; Symbol: ER_ROW_IS_REFERENCED_2; SQLSTATE: 23000
 	// Message: Cannot delete or update a parent row: a foreign key constraint fails (%s)
 	1451: mysqlFKConstraintErrHandler,
+
 	// Error number: 1452; Symbol: ER_NO_REFERENCED_ROW_2; SQLSTATE: 23000
 	// Message: Cannot add or update a child row: a foreign key constraint fails (%s)
 	1452: mysqlFKConstraintErrHandler,
+
 	// Error number: 3819; Symbol: ER_CHECK_CONSTRAINT_VIOLATED; SQLSTATE: HY000
 	// Message: Check constraint '%s' is violated.
 	// ER_CHECK_CONSTRAINT_VIOLATED was added in 8.0.16.
 	3819: mysqlCheckConstraintErrHandler,
+
 	// Error number: 3820; Symbol: ER_CHECK_CONSTRAINT_REFERS_UNKNOWN_COLUMN; SQLSTATE: HY000
 	// Message: Check constraint '%s' refers to non-existing column '%s'.
 	// ER_CHECK_CONSTRAINT_REFERS_UNKNOWN_COLUMN was added in 8.0.16.
@@ -47,12 +64,14 @@ func RegisterMySQLErrorHandler(number uint16, fn func(*mysql.MySQLError) *StateE
 	mysqlErrorHandlers[number] = fn
 }
 
-func mysqlFKConstraintErrHandler(*mysql.MySQLError) *StateError {
-	return ErrConstraintForeignKey
+func mysqlFKConstraintErrHandler(e *mysql.MySQLError) *StateError {
+	code := cast.ToString(e.Number)
+	return ErrConstraintForeignKey.Renew(code, e.Message, e)
 }
 
-func mysqlCheckConstraintErrHandler(*mysql.MySQLError) *StateError {
-	return ErrConstraintForeignKey
+func mysqlCheckConstraintErrHandler(e *mysql.MySQLError) *StateError {
+	code := cast.ToString(e.Number)
+	return ErrConstraintForeignKey.Renew(code, e.Message, e)
 }
 
 // mysqlStateError transforms *mysql.MySQLError to *StateError.
