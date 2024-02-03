@@ -2,9 +2,9 @@ package sqlite
 
 import (
 	"fmt"
-	"log/slog"
 	"testing"
 
+	"github.com/blink-io/x/sql/scany/dbscan"
 	"github.com/stretchr/testify/require"
 )
 
@@ -15,32 +15,32 @@ func TestSqlite_DBX_Select_Funcs(t *testing.T) {
 	funcs := getSqliteFuncMap()
 	for k, v := range funcs {
 		ss := fmt.Sprintf(sqlF, v)
-		q := db.NewQuery(ss)
-		var s string
-		require.NoError(t, q.Row(&s))
-		slog.Info("result: ", k, s)
+		rows, err := db.QueryContext(ctx, ss)
+		require.NoError(t, err)
+
+		var str string
+		err1 := dbscan.ScanOne(&str, rows)
+		require.NoError(t, err1)
+
+		fmt.Println(k, "----->", str)
 	}
 }
 
-func TestSqlite_DBX_CreateTable_Model8(t *testing.T) {
+func TestSqlite_DBX_Select_NoRows(t *testing.T) {
+	db := getSqliteDBX()
+	require.NotNil(t, db)
 
 }
 
-func TestSqlite_DBX_Select_All(t *testing.T) {
+func TestSqlite_DBX_WrapError_NoRows(t *testing.T) {
 	db := getSqliteDBX()
+	sql := "select * from users where id = 18876"
 
-	var as []*Application
-	err := db.Select().From("applications").All(&as)
+	rows, err := db.QueryContext(ctx, sql)
 	require.NoError(t, err)
+	require.NotNil(t, rows)
 
-	fmt.Println("Result count: ", len(as))
-}
-
-func TestSqlite_DBX_Insert_1(t *testing.T) {
-	db := getSqliteDBX()
-
-	r1 := newRandomRecordForApp("dbx")
-
-	err := db.Model(r1).Insert()
-	require.NoError(t, err)
+	var user User
+	errv := dbscan.ScanOne(&user, rows)
+	require.NoError(t, errv)
 }

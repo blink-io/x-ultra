@@ -6,15 +6,15 @@ import (
 	"io"
 
 	xsql "github.com/blink-io/x/sql"
-	"github.com/pocketbase/dbx"
+	"github.com/stephenafamo/bob"
 )
 
 const (
-	Accessor = "dbx(dbx)"
+	Accessor = "dbz(bob)"
 )
 
 type (
-	idb = dbx.DB
+	idb = bob.Executor
 
 	IDB interface {
 		DBF
@@ -25,11 +25,9 @@ type (
 	}
 
 	DB struct {
-		*idb
-		sqlDB    *sql.DB
-		accessor string
-		rawName  string
-		info     xsql.DBInfo
+		idb
+		sqlDB *sql.DB
+		info  xsql.DBInfo
 	}
 )
 
@@ -45,40 +43,37 @@ func New(c *xsql.Config, ops ...Option) (*DB, error) {
 	}
 
 	opts := applyOptions(ops...)
-	// Setup dbTag
-	if dbTag := opts.dbTag; len(dbTag) > 0 {
-		dbx.DbTag = dbTag
+
+	var ew []ExecWrapper
+	if opts != nil {
+		ew = opts.wrappers
 	}
 
-	rdb := dbx.NewFromDB(sqlDB, c.Dialect)
-	rdb.LogFunc = c.Logger
-	if opts.queryLogFunc != nil {
-		rdb.QueryLogFunc = opts.queryLogFunc
+	var rdb bob.Executor = bob.NewDB(sqlDB)
+	for _, w := range ew {
+		rdb = w(rdb)
 	}
-	if opts.queryLogFunc != nil {
-		rdb.ExecLogFunc = opts.execLogFunc
+	s := &DB{
+		idb:   rdb,
+		sqlDB: sqlDB,
+		info:  xsql.NewDBInfo(c),
 	}
-	db := &DB{
-		idb:      rdb,
-		sqlDB:    sqlDB,
-		accessor: Accessor,
-		info:     c.DBInfo(),
-	}
-	return db, nil
+
+	return s, nil
 }
 
-func (db *DB) SqlDB() *sql.DB {
-	return db.sqlDB
+func (db *DB) Close() error {
+	return nil
 }
 
 func (db *DB) DBInfo() xsql.DBInfo {
 	return db.info
 }
 
-func (db *DB) Accessor() string {
-	return db.accessor
-}
-
 func (db *DB) HealthCheck(ctx context.Context) error {
 	return xsql.DoPingContext(ctx, db.sqlDB)
+}
+
+func (db *DB) SqlDB() *sql.DB {
+	return db.sqlDB
 }

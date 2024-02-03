@@ -1,4 +1,4 @@
-package dbz
+package dbx
 
 import (
 	"testing"

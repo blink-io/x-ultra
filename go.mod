@@ -165,7 +165,6 @@ require (
 	github.com/panjf2000/ants/v2 v2.9.0
 	github.com/pashagolub/pgxmock/v3 v3.3.0
 	github.com/philhofer/fwd v1.1.2
-	github.com/pocketbase/dbx v1.10.1
 	github.com/proullon/ramsql v0.1.3
 	github.com/qustavo/dotsql v1.2.0
 	github.com/remychantenay/slog-otel v1.2.3
@@ -312,7 +311,7 @@ require (
 	lukechampine.com/uint128 v1.3.0 // indirect
 	modernc.org/cc/v3 v3.41.0 // indirect
 	modernc.org/ccgo/v3 v3.16.15 // indirect
-	modernc.org/libc v1.40.14 // indirect
+	modernc.org/libc v1.40.16 // indirect
 	modernc.org/mathutil v1.6.0 // indirect
 	modernc.org/memory v1.7.2 // indirect
 	modernc.org/opt v0.1.3 // indirect

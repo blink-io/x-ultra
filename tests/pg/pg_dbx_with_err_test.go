@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestPg_DBZ_ConstraintCheck_Insert_1(t *testing.T) {
+func TestPg_DBX_ConstraintCheck_Insert_1(t *testing.T) {
 	db := getPgDBZ()
 	sql := "insert into mymy(status, code) values ($1, $2)"
 	args := []any{
@@ -21,7 +21,7 @@ func TestPg_DBZ_ConstraintCheck_Insert_1(t *testing.T) {
 	require.ErrorIs(t, nerr, xsql.ErrConstraintCheck)
 }
 
-func TestPg_DBZ_ConstraintUnique_Insert_2(t *testing.T) {
+func TestPg_DBX_ConstraintUnique_Insert_2(t *testing.T) {
 	db := getPgDBZ()
 	sql := "insert into mymy(status, code) values ($1, $2)"
 	args := []any{

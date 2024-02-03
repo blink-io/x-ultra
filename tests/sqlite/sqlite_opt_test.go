@@ -1,12 +1,9 @@
 package sqlite
 
 import (
-	"context"
 	"database/sql"
 	"log"
-	"log/slog"
 	"os"
-	"time"
 
 	xsql "github.com/blink-io/x/sql"
 	xdb "github.com/blink-io/x/sql/db"
@@ -17,7 +14,6 @@ import (
 	"github.com/blink-io/x/sql/dbr"
 	"github.com/blink-io/x/sql/dbs"
 	"github.com/blink-io/x/sql/dbx"
-	"github.com/blink-io/x/sql/dbz"
 	"github.com/doug-martin/goqu/v9"
 	"github.com/doug-martin/goqu/v9/dialect/sqlite3"
 	"github.com/stephenafamo/bob"
@@ -41,30 +37,6 @@ func getSqliteSqlDB() *sql.DB {
 
 func getSqliteDB() *xdb.DB {
 	db, err := xdb.New(sqliteCfg(), dbOpts()...)
-
-	if err != nil {
-		panic(err)
-	}
-
-	return db
-}
-
-func getSqliteDBX() *dbx.DB {
-	db, err := dbx.New(sqliteCfg(),
-		dbx.WithDbTag("db"),
-		dbx.WithExecLogFunc(func(ctx context.Context, t time.Duration, sql string, result sql.Result, err error) {
-			slog.Default().Info("dbx exec log",
-				slog.String("sql", sql),
-				slog.Duration("time", t),
-			)
-		}),
-		dbx.WithQueryLogFunc(func(ctx context.Context, t time.Duration, sql string, rows *sql.Rows, err error) {
-			slog.Default().Info("dbx query log",
-				slog.String("sql", sql),
-				slog.Duration("time", t),
-			)
-		}),
-	)
 
 	if err != nil {
 		panic(err)
@@ -136,17 +108,17 @@ func getSqliteDBK() *dbk.DB {
 	return db
 }
 
-func getSqliteDBZ() *dbz.DB {
-	ops := []dbz.Option{
-		dbz.ExecWrappers(
+func getSqliteDBX() *dbx.DB {
+	ops := []dbx.Option{
+		dbx.ExecWrappers(
 			bob.Debug,
 			func(exec bob.Executor) bob.Executor {
-				return dbz.ExecOnError(exec, func(e error) error {
+				return dbx.ExecOnError(exec, func(e error) error {
 					return xsql.WrapError(e)
 				})
 			}),
 	}
-	db, err := dbz.New(sqliteCfg(), ops...)
+	db, err := dbx.New(sqliteCfg(), ops...)
 	if err != nil {
 		panic(err)
 	}

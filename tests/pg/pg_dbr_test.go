@@ -9,7 +9,7 @@ import (
 )
 
 func TestPg_DBR_Select_Funcs(t *testing.T) {
-	db := getPgDBR()
+	db := getPgDBX()
 
 	sess := db.NewSession(nil)
 
@@ -26,7 +26,7 @@ func TestPg_DBR_Select_Funcs(t *testing.T) {
 }
 
 func TestPg_DBR_Select_Version(t *testing.T) {
-	db := getPgDBR()
+	db := getPgDBX()
 
 	ver := postgres.QueryVersion(ctx, db.QueryRowContext)
 	fmt.Println("Version: ", ver)
