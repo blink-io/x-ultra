@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/blink-io/x/id"
+	xsql "github.com/blink-io/x/sql"
 	"github.com/brianvoe/gofakeit/v6"
 	"github.com/sanity-io/litter"
 	"github.com/stretchr/testify/require"
@@ -45,6 +46,7 @@ func TestSqlite_DBR_Insert_Raw_1(t *testing.T) {
 
 	_, err := db.InsertInto(model.Table()).
 		//Columns(model.Columns()...).
+		//Pair("id", 11).
 		Pair("guid", id.UUID()).
 		Pair("status", "hen-good").
 		Pair("code", id.ShortUUID()).
@@ -55,6 +57,52 @@ func TestSqlite_DBR_Insert_Raw_1(t *testing.T) {
 		Pair("updated_at", n).
 		Exec()
 	require.NoError(t, err)
+}
+
+func TestSqlite_DBR_Insert_Raw_WithErr_Unique_1(t *testing.T) {
+	db := getSqliteDBR()
+	model := appModel()
+	n := time.Now()
+
+	_, err := db.InsertInto(model.Table()).
+		//Columns(model.Columns()...).
+		Pair("id", 11).
+		Pair("guid", id.UUID()).
+		Pair("status", "hen-good").
+		Pair("code", id.ShortUUID()).
+		Pair("type", "type-005-"+db.Accessor()).
+		Pair("name", gofakeit.Name()).
+		Pair("description", gofakeit.ProductName()).
+		Pair("created_at", n).
+		Pair("updated_at", n).
+		Exec()
+	require.Error(t, err)
+	nerr := xsql.WrapError(err)
+
+	require.ErrorIs(t, nerr, xsql.ErrConstraintUnique)
+}
+
+func TestSqlite_DBR_Insert_Raw_WithErr_NotNull_1(t *testing.T) {
+	db := getSqliteDBR()
+	model := appModel()
+	n := time.Now()
+
+	_, err := db.InsertInto(model.Table()).
+		//Columns(model.Columns()...).
+		//Pair("id", 11).
+		Pair("guid", id.UUID()).
+		Pair("status", "hen-good").
+		//Pair("code", id.ShortUUID()).
+		Pair("type", "type-005-"+db.Accessor()).
+		Pair("name", gofakeit.Name()).
+		Pair("description", gofakeit.ProductName()).
+		Pair("created_at", n).
+		Pair("updated_at", n).
+		Exec()
+	require.Error(t, err)
+	nerr := xsql.WrapError(err)
+
+	require.ErrorIs(t, nerr, xsql.ErrConstraintNotNull)
 }
 
 func TestSqlite_DBR_Update_Raw_1(t *testing.T) {
@@ -76,13 +124,14 @@ func TestSqlite_DBR_Update_Raw_2(t *testing.T) {
 	mm := appModel()
 	n := time.Now()
 
-	var ra = new(Application)
+	var ras []*Application
 
 	err := db.Update(mm.TableName()).
+		Set("code", "ar5TyGNG6496GtfJ7mTFBz").
 		Set("status", "fuckll").
 		Set("description", "Xilitron is ON").
 		Set("updated_at", n).
-		Where("id > ?", 8).Returning(mm.Columns()...).Load(ra)
+		Where("id > ?", 1).Returning(mm.Columns()...).Load(&ras)
 	require.NoError(t, err)
 }
 
@@ -92,7 +141,7 @@ func TestSqlite_DBR_Select_1(t *testing.T) {
 	rt := new(Application)
 
 	err := db.Select("*").From(rt.Table()).
-		Where("type like ?", "%type-003%").
+		Where("type like ?", "%type-0011%").
 		Where("? = ?", 1, 1).
 		Limit(1).LoadOne(rt)
 	require.NoError(t, err)

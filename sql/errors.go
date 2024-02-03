@@ -10,37 +10,59 @@ import (
 )
 
 const (
-	ErrCodeUndefined = "undefined"
+	ErrStateOther = "other"
 
-	ErrCodeConstraintPrimaryKey = "primary_key_constraint"
+	ErrStateNoRows = "now_rows"
 
-	ErrCodeConstraintUnique = "unique_constraint"
+	ErrStateTooManyRows = "now_rows"
 
-	ErrCodeConstraintCheck = "check_constraint"
+	ErrStateConstraintUnique = "unique_constraint"
 
-	ErrCodeConstraintNotNull = "unique_constraint"
+	ErrStateConstraintCheck = "check_constraint"
+
+	ErrStateConstraintNotNull = "not_null_constraint"
+
+	ErrStateConstraintForeignKey = "foreign_key_constraint"
+
+	ErrStateUnsupported = "unsupported"
 )
 
 var (
-	ErrConstraintPrimaryKey = &StateError{code: ErrCodeConstraintPrimaryKey}
+	ErrOther = &StateError{state: ErrStateOther}
 
-	ErrConstraintUnique = &StateError{code: ErrCodeConstraintUnique}
+	ErrUnsupported = &StateError{state: ErrStateUnsupported}
 
-	ErrConstraintCheck = &StateError{code: ErrCodeConstraintCheck}
+	ErrNoRows = &StateError{state: ErrStateNoRows}
 
-	ErrConstraintNotNull = &StateError{code: ErrCodeConstraintNotNull}
+	ErrTooManyRows = &StateError{state: ErrStateTooManyRows}
+
+	ErrConstraintUnique = &StateError{state: ErrStateConstraintUnique}
+
+	ErrConstraintCheck = &StateError{state: ErrStateConstraintCheck}
+
+	ErrConstraintNotNull = &StateError{state: ErrStateConstraintNotNull}
+
+	ErrConstraintForeignKey = &StateError{state: ErrStateConstraintForeignKey}
 )
 
 type StateError struct {
 	cause error
 
-	message string
-	// Code in Postgres/SQLite, Number in MySQl
+	// state defines unique id for error
+	state string
+
+	// code in PostgreSQL/SQLite, number in MySQL
 	code string
+
+	message string
 }
 
 func (e *StateError) Error() string {
-	return e.message + " (SQLSTATE " + e.code + ")"
+	return e.message + " (SQLSTATE " + e.state + ")"
+}
+
+func (e *StateError) State() string {
+	return e.state
 }
 
 func (e *StateError) Code() string {
@@ -51,30 +73,72 @@ func (e *StateError) Cause() error {
 	return e.cause
 }
 
-func (e *StateError) Is(err error) bool {
-	return errors.Is(e.cause, err)
+// Is when target is *StateError and their states are the same.
+func (e *StateError) Is(target error) bool {
+	return IsErrEqualsState(target, e.state)
 }
 
-var E = WrapError
+func (e *StateError) Clone() *StateError {
+	return NewStateError(e.state, e.code, e.message, e.cause)
+}
 
+func (e *StateError) Renew(code string, message string, cause error) *StateError {
+	return NewStateError(e.state, code, message, cause)
+}
+
+func NewStateError(state string, code string, message string, cause error) *StateError {
+	return &StateError{
+		state:   state,
+		code:    code,
+		message: message,
+		cause:   cause,
+	}
+}
+
+// WrapError wraps *pgconn.PgError/*mysql.MySQLError/sqlite3.Error to *StateError.
 func WrapError(e error) *StateError {
 	var newErr *StateError
 	if pgErr := new(pgconn.PgError); errors.As(e, &pgErr) {
-		newErr = pgxStateErr(pgErr)
+		newErr = pgxStateError(pgErr)
 	} else if mysqlErr := new(mysql.MySQLError); errors.As(e, &mysqlErr) {
-		newErr = mysqlStateErr(mysqlErr)
-	} else if sqliteErr := new(SQLiteError); errors.As(e, &sqliteErr) {
-		newErr = sqliteStateErr(sqliteErr)
+		newErr = mysqlStateError(mysqlErr)
+	} else if sqliteErr := new(SQLiteError); errors.As(e, sqliteErr) {
+		newErr = sqliteStateError(sqliteErr)
 	} else {
-		newErr = &StateError{
-			cause:   e,
-			code:    ErrCodeUndefined,
-			message: e.Error(),
-		}
+		newErr = ErrUnsupported
 	}
 	return newErr
 }
 
 func IsErrNoRows(e error) bool {
-	return errors.Is(e, sql.ErrNoRows)
+	if errors.Is(e, sql.ErrNoRows) {
+		return true
+	}
+	return IsErrEqualsState(e, ErrStateNoRows)
+}
+
+func IsErrTooManyRows(e error) bool {
+	return IsErrEqualsState(e, ErrStateTooManyRows)
+}
+
+func IsErrConstraintCheck(e error) bool {
+	return IsErrEqualsState(e, ErrStateConstraintCheck)
+}
+
+func IsErrConstraintUnique(e error) bool {
+	return IsErrEqualsState(e, ErrStateConstraintUnique)
+}
+
+func IsErrConstraintNotNull(e error) bool {
+	return IsErrEqualsState(e, ErrStateConstraintNotNull)
+}
+
+func IsErrEqualsState(e error, state string) bool {
+	if se := new(StateError); errors.As(e, &se) {
+		return se.state == state
+	}
+	if we := WrapError(e); !errors.Is(we, ErrUnsupported) {
+		return we.state == state
+	}
+	return false
 }

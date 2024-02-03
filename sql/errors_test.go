@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/blink-io/x/cast"
+	berrors "github.com/blink-io/x/errors"
 
 	"modernc.org/sqlite"
 	//"github.com/glebarez/go-sqlite"
@@ -41,9 +42,33 @@ func TestSQLiteErr(t *testing.T) {
 }
 
 func TestErrEqual(t *testing.T) {
-	var err = &StateError{code: "good"}
-	var err1 = &StateError{code: "good"}
+	var cause1 = errors.New("cause1")
+	var cause2 = berrors.New("cause2 from blink-x")
+	var cause3 = errors.New("cause2 from blink-x")
+	var err1 = NewStateError("good", "very good1", "", cause1)
+	var err2 = NewStateError("good", "very good2", "", cause2)
+	var err3 = err1.Renew("babamama", "Very BabaMama", cause3)
 
-	b := errors.Is(err, err1)
-	fmt.Println("Result: ", b)
+	b1 := errors.Is(err1, err2)
+	b2 := errors.Is(err3, err2)
+	require.True(t, b1)
+	require.True(t, b2)
+}
+
+func TestStateError_Clone(t *testing.T) {
+	var cause1 = errors.New("cause1")
+	var err1 = NewStateError(ErrStateConstraintUnique, "very good1", "", cause1)
+	var err2 = err1.Clone()
+	var err3 = WrapError(&pgconn.PgError{Code: "23505"})
+	var err4 = WrapError(&mysql.MySQLError{Number: uint16(1169)})
+
+	b1 := errors.Is(err1, err2)
+	b2 := errors.Is(err2, err3)
+	b3 := errors.Is(err3, err4)
+	b4 := errors.Is(err1, err4)
+
+	fmt.Println("Result: ", b1)
+	fmt.Println("Result: ", b2)
+	fmt.Println("Result: ", b3)
+	fmt.Println("Result: ", b4)
 }

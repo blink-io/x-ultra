@@ -80,7 +80,7 @@ require (
 	go.etcd.io/bbolt v1.3.8
 	go.etcd.io/etcd/client/v3 v3.5.12
 	go.temporal.io/api v1.27.0
-	go.temporal.io/sdk v1.26.0-rc.1
+	go.temporal.io/sdk v1.26.0-rc.2
 	go.uber.org/multierr v1.11.0
 	go.uber.org/zap v1.26.0
 	golang.org/x/crypto v0.18.0
@@ -312,7 +312,7 @@ require (
 	lukechampine.com/uint128 v1.3.0 // indirect
 	modernc.org/cc/v3 v3.41.0 // indirect
 	modernc.org/ccgo/v3 v3.16.15 // indirect
-	modernc.org/libc v1.40.13 // indirect
+	modernc.org/libc v1.40.14 // indirect
 	modernc.org/mathutil v1.6.0 // indirect
 	modernc.org/memory v1.7.2 // indirect
 	modernc.org/opt v0.1.3 // indirect

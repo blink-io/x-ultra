@@ -50,3 +50,16 @@ func TestSqlite_DBZ_Insert_1(t *testing.T) {
 	err := db.Model(r1).Insert()
 	require.NoError(t, err)
 }
+
+func TestSqlite_DBZ_WrapError_NoRows(t *testing.T) {
+	db := getSqliteDBZ()
+	sql := "select * from users where id = 18876"
+
+	rows, err := db.QueryContext(ctx, sql)
+	require.NoError(t, err)
+	require.NotNil(t, rows)
+
+	var user User
+	errv := dbscan.ScanOne(&user, rows)
+	require.NoError(t, errv)
+}

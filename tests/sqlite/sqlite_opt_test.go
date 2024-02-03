@@ -3,7 +3,6 @@ package sqlite
 import (
 	"context"
 	"database/sql"
-	"errors"
 	"log"
 	"log/slog"
 	"os"
@@ -137,18 +136,13 @@ func getSqliteDBK() *dbk.DB {
 	return db
 }
 
-var errDef = errors.New("default error")
-
 func getSqliteDBZ() *dbz.DB {
 	ops := []dbz.Option{
 		dbz.ExecWrappers(
 			bob.Debug,
 			func(exec bob.Executor) bob.Executor {
 				return dbz.ExecOnError(exec, func(e error) error {
-					if e != nil {
-						return errDef
-					}
-					return e
+					return xsql.WrapError(e)
 				})
 			}),
 	}
