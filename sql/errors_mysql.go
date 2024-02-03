@@ -43,6 +43,10 @@ var mysqlErrorHandlers = map[uint16]func(*mysql.MySQLError) *StateError{
 	3820: mysqlCheckConstraintErrHandler,
 }
 
+func RegisterMySQLErrorHandler(number uint16, fn func(*mysql.MySQLError) *StateError) {
+	mysqlErrorHandlers[number] = fn
+}
+
 func mysqlFKConstraintErrHandler(*mysql.MySQLError) *StateError {
 	return ErrConstraintForeignKey
 }

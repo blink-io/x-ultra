@@ -98,7 +98,9 @@ func NewStateError(state string, code string, message string, cause error) *Stat
 // WrapError wraps *pgconn.PgError/*mysql.MySQLError/sqlite3.Error to *StateError.
 func WrapError(e error) *StateError {
 	var newErr *StateError
-	if pgErr := new(pgconn.PgError); errors.As(e, &pgErr) {
+	if sErr := new(StateError); errors.As(e, &sErr) {
+		newErr = sErr
+	} else if pgErr := new(pgconn.PgError); errors.As(e, &pgErr) {
 		newErr = pgxStateError(pgErr)
 	} else if mysqlErr := new(mysql.MySQLError); errors.As(e, &mysqlErr) {
 		newErr = mysqlStateError(mysqlErr)

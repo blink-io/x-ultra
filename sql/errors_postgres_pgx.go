@@ -44,6 +44,10 @@ var pgxErrorHandlers = map[string]func(*pgconn.PgError) *StateError{
 	},
 }
 
+func RegisterPgxErrorHandler(code string, fn func(*pgconn.PgError) *StateError) {
+	pgxErrorHandlers[code] = fn
+}
+
 // pgxStateError transforms *pgconn.PgError to *StateError.
 // Doc: https://www.postgresql.org/docs/11/protocol-error-fields.html.
 func pgxStateError(e *pgconn.PgError) *StateError {

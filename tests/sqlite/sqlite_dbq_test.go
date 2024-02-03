@@ -274,7 +274,7 @@ func TestSqlite_DBQ_Insert_SQLGen(t *testing.T) {
 	r1 := newRandomRecordForApp("dbq")
 	ds := db.From(r1.TableName())
 
-	insertSQL, args, _ := ds.Insert().Rows(r1).ToSQL()
+	insertSQL, args, _ := ds.Insert().Rows(r1).Prepared(true).ToSQL()
 	fmt.Println(insertSQL, args)
 }
 

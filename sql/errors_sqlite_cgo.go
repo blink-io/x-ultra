@@ -36,6 +36,10 @@ var sqliteErrorHandlers = map[int]func(*sqlite3.Error) *StateError{
 	2067: sqliteUniqueConstraintHandler,
 }
 
+func RegisterSQLiteErrorHandler(number int, fn func(*sqlite3.Error) *StateError) {
+	sqliteErrorHandlers[number] = fn
+}
+
 func sqliteUniqueConstraintHandler(e *sqlite3.Error) *StateError {
 	code := cast.ToString(int(e.ExtendedCode))
 	return ErrConstraintUnique.
