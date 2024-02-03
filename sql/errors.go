@@ -9,47 +9,64 @@ import (
 	"github.com/jackc/pgx/v5/pgconn"
 )
 
+type ErrState string
+
 const (
-	ErrStateOther = "other"
+	ErrStateUnsupported ErrState = "unsupported"
 
-	ErrStateUnsupported = "unsupported"
+	ErrStateOther ErrState = "other"
 
-	ErrStateNoRows = "now_rows"
+	ErrStateNoRows ErrState = "now_rows"
 
-	ErrStateTooManyRows = "too_many_rows"
+	ErrStateTooManyRows ErrState = "too_many_rows"
 
-	ErrStateConstraintUnique = "unique_constraint"
+	ErrStateConstraintUnique ErrState = "unique_constraint"
 
-	ErrStateConstraintCheck = "check_constraint"
+	ErrStateConstraintCheck ErrState = "check_constraint"
 
-	ErrStateConstraintNotNull = "not_null_constraint"
+	ErrStateConstraintNotNull ErrState = "not_null_constraint"
 
-	ErrStateConstraintForeignKey = "foreign_key_constraint"
+	ErrStateConstraintForeignKey ErrState = "foreign_key_constraint"
 )
 
+func (s ErrState) String() string {
+	return string(s)
+}
+
+// ToError creates *StateError with only state value is assigned.
+func (s ErrState) ToError() *StateError {
+	return &StateError{state: s}
+}
+
+func (s ErrState) NewError(code string, message string, cause error) *StateError {
+	return NewStateError(s, code, message, cause)
+}
+
+var _ error = (*StateError)(nil)
+
 var (
-	ErrOther = &StateError{state: ErrStateOther}
+	ErrOther = ErrStateOther.ToError()
 
-	ErrUnsupported = &StateError{state: ErrStateUnsupported}
+	ErrUnsupported = ErrStateUnsupported.ToError()
 
-	ErrNoRows = &StateError{state: ErrStateNoRows}
+	ErrNoRows = ErrStateUnsupported.ToError()
 
-	ErrTooManyRows = &StateError{state: ErrStateTooManyRows}
+	ErrTooManyRows = ErrStateTooManyRows.ToError()
 
-	ErrConstraintUnique = &StateError{state: ErrStateConstraintUnique}
+	ErrConstraintUnique = ErrStateConstraintUnique.ToError()
 
-	ErrConstraintCheck = &StateError{state: ErrStateConstraintCheck}
+	ErrConstraintCheck = ErrStateConstraintCheck.ToError()
 
-	ErrConstraintNotNull = &StateError{state: ErrStateConstraintNotNull}
+	ErrConstraintNotNull = ErrStateConstraintNotNull.ToError()
 
-	ErrConstraintForeignKey = &StateError{state: ErrStateConstraintForeignKey}
+	ErrConstraintForeignKey = ErrStateConstraintForeignKey.ToError()
 )
 
 type StateError struct {
 	cause error
 
 	// state defines unique id for error
-	state string
+	state ErrState
 
 	// code in PostgreSQL/SQLite, number in MySQL
 	code string
@@ -58,10 +75,10 @@ type StateError struct {
 }
 
 func (e *StateError) Error() string {
-	return e.message + " (SQLSTATE " + e.state + ")"
+	return e.message + " (SQLSTATE " + string(e.state) + ")"
 }
 
-func (e *StateError) State() string {
+func (e *StateError) State() ErrState {
 	return e.state
 }
 
@@ -86,7 +103,7 @@ func (e *StateError) Renew(code string, message string, cause error) *StateError
 	return NewStateError(e.state, code, message, cause)
 }
 
-func NewStateError(state string, code string, message string, cause error) *StateError {
+func NewStateError(state ErrState, code string, message string, cause error) *StateError {
 	return &StateError{
 		state:   state,
 		code:    code,
@@ -141,7 +158,7 @@ func IsErrConstraintForeignKey(e error) bool {
 	return IsErrEqualsState(e, ErrStateConstraintForeignKey)
 }
 
-func IsErrEqualsState(e error, state string) bool {
+func IsErrEqualsState(e error, state ErrState) bool {
 	if se := new(StateError); errors.As(e, &se) {
 		return se.state == state
 	}

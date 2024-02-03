@@ -72,3 +72,13 @@ func TestStateError_Clone(t *testing.T) {
 	fmt.Println("Result: ", b3)
 	fmt.Println("Result: ", b4)
 }
+
+func TestErrState(t *testing.T) {
+	ess := []ErrState{
+		ErrStateConstraintCheck,
+		ErrStateConstraintUnique,
+	}
+	for _, e := range ess {
+		fmt.Println(e, " <----> ", e.ToError().Error())
+	}
+}
