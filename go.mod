@@ -32,7 +32,7 @@ require (
 	github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.0.1
 	github.com/hashicorp/golang-lru/v2 v2.0.7
 	github.com/jackc/pgx-zap v0.0.0-20221202020421-94b1cb2f889f
-	github.com/jackc/pgx/v5 v5.5.2
+	github.com/jackc/pgx/v5 v5.5.3
 	github.com/jaevor/go-nanoid v1.3.0
 	github.com/jarcoal/httpmock v1.3.1
 	github.com/jellydator/ttlcache/v3 v3.1.1
@@ -119,7 +119,7 @@ require (
 	github.com/exaring/otelpgx v0.5.3
 	github.com/expr-lang/expr v1.16.0
 	github.com/gabriel-vasile/mimetype v1.4.3
-	github.com/go-co-op/gocron/v2 v2.2.3
+	github.com/go-co-op/gocron/v2 v2.2.4
 	github.com/go-crypt/crypt v0.2.14
 	github.com/go-faster/city v1.0.1
 	github.com/go-faster/xor v1.0.0
@@ -311,7 +311,7 @@ require (
 	lukechampine.com/uint128 v1.3.0 // indirect
 	modernc.org/cc/v3 v3.41.0 // indirect
 	modernc.org/ccgo/v3 v3.16.15 // indirect
-	modernc.org/libc v1.40.16 // indirect
+	modernc.org/libc v1.40.18 // indirect
 	modernc.org/mathutil v1.6.0 // indirect
 	modernc.org/memory v1.7.2 // indirect
 	modernc.org/opt v0.1.3 // indirect
