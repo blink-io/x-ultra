@@ -11,6 +11,7 @@ echo "GOPROXY => ${GOPROXY}"
 GREEN="\e[32m"
 
 tools=(
+  'github.com/rubenv/sql-migrate/...@latest'
   'github.com/blink-io/x/kratos/v2/cmd/protoc-gen-x-go-http@latest'
   'github.com/GaijinEntertainment/go-exhaustruct/cmd/exhaustruct@latest'
   'connectrpc.com/connect/cmd/protoc-gen-connect-go@latest'
@@ -33,7 +34,6 @@ tools=(
   'github.com/alta/protopatch/cmd/protoc-gen-go-patch@latest'
   'github.com/automation-co/husky@latest'
   'mvdan.cc/garble@latest'
-#  'golang.org/x/vuln/cmd/govulncheck@latest'
   # EXP
   'github.com/ServiceWeaver/weaver/cmd/weaver@latest'
   'github.com/rvflash/goup@latest'

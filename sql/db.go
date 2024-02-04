@@ -80,7 +80,7 @@ func NewSqlDB(c *Config) (*sql.DB, error) {
 	var db *sql.DB
 	if c.WithOTel {
 		otelOps := []OTelOption{
-			OTelDBHostPort(net.JoinHostPort(c.Host, cast.ToString(c.Port))),
+			OTelDBHostPort(hostportToAddr(c.Host, c.Port)),
 			OTelDBName(c.Name),
 			OTelDBSystem(c.Dialect),
 			OTelReportDBStats(),
@@ -145,4 +145,8 @@ func NewDBInfo(c *Config) DBInfo {
 		Name:    c.Name,
 		Dialect: c.Dialect,
 	}
+}
+
+func hostportToAddr(host string, port int) string {
+	return net.JoinHostPort(host, cast.ToString(port))
 }

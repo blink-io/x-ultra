@@ -113,6 +113,7 @@ require (
 	github.com/chzyer/readline v1.5.1
 	github.com/dchest/siphash v1.2.3
 	github.com/deckarep/golang-set/v2 v2.6.0
+	github.com/didip/tollbooth/v7 v7.0.1
 	github.com/doug-martin/goqu/v9 v9.19.0
 	github.com/eapache/queue/v2 v2.0.0-20230407133247-75960ed334e4
 	github.com/emicklei/proto v1.13.2
@@ -148,6 +149,7 @@ require (
 	github.com/leonelquinteros/gotext v1.5.2
 	github.com/leporo/sqlf v1.4.0
 	github.com/lesismal/nbio v1.3.21
+	github.com/lib/pq v1.10.9
 	github.com/life4/genesis v1.10.2
 	github.com/mailgun/raymond/v2 v2.0.48
 	github.com/matryer/is v1.4.1
@@ -186,6 +188,7 @@ require (
 	github.com/stephenafamo/bob v0.25.0
 	github.com/stephenafamo/scan v0.5.0
 	github.com/thanhpk/randstr v1.0.6
+	github.com/uptrace/bun/driver/pgdriver v1.1.17
 	github.com/uptrace/opentelemetry-go-extra/otelutil v0.2.3
 	github.com/uptrace/opentelemetry-go-extra/otelzap v0.2.3
 	github.com/vingarcia/ksql v1.12.0
@@ -231,6 +234,7 @@ require (
 	github.com/go-logfmt/logfmt v0.6.0 // indirect
 	github.com/go-logr/logr v1.4.1 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
+	github.com/go-pkgz/expirable-cache v1.0.0 // indirect
 	github.com/go-playground/form/v4 v4.2.1 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
@@ -309,6 +313,7 @@ require (
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240125205218-1f4bbc51befe // indirect
 	gotest.tools v2.2.0+incompatible // indirect
 	lukechampine.com/uint128 v1.3.0 // indirect
+	mellium.im/sasl v0.3.1 // indirect
 	modernc.org/cc/v3 v3.41.0 // indirect
 	modernc.org/ccgo/v3 v3.16.15 // indirect
 	modernc.org/libc v1.40.18 // indirect
