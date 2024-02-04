@@ -58,7 +58,7 @@ require (
 	github.com/quic-go/quic-go v0.41.0
 	github.com/redis/go-redis/extra/rediscmd/v9 v9.0.5
 	github.com/redis/go-redis/v9 v9.4.0
-	github.com/redis/rueidis v1.0.27
+	github.com/redis/rueidis v1.0.28
 	github.com/rs/xid v1.5.0
 	github.com/sanity-io/litter v1.5.5
 	github.com/segmentio/ksuid v1.0.4
