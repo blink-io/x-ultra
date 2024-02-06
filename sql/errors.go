@@ -75,7 +75,7 @@ type StateError struct {
 }
 
 func (e *StateError) Error() string {
-	return e.message + " (SQLSTATE " + string(e.state) + ")"
+	return e.message + " (STATE " + string(e.state) + ")"
 }
 
 func (e *StateError) State() ErrState {
