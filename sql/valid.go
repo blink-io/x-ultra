@@ -5,6 +5,10 @@ import (
 	"time"
 )
 
+func ValidNull[T any](v T) sql.Null[T] {
+	return sql.Null[T]{V: v, Valid: true}
+}
+
 // ValidBool is short for valid NullBool
 func ValidBool(v bool) sql.NullBool {
 	return sql.NullBool{Bool: v, Valid: true}

@@ -11,6 +11,7 @@ echo "GOPROXY => ${GOPROXY}"
 GREEN="\e[32m"
 
 tools=(
+  'github.com/apple/pkl-go/cmd/pkl-gen-go@latest'
   'github.com/rubenv/sql-migrate/...@latest'
   'github.com/blink-io/x/kratos/v2/cmd/protoc-gen-x-go-http@latest'
   'github.com/GaijinEntertainment/go-exhaustruct/cmd/exhaustruct@latest'

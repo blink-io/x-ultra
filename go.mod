@@ -1,6 +1,6 @@
 module github.com/blink-io/x
 
-go 1.21.5
+go 1.22.0
 
 replace github.com/gobwas/glob => github.com/blink-io/glob v0.0.0-20231227024915-2e8bc4bf1fee
 
@@ -76,7 +76,7 @@ require (
 	github.com/vmihailenco/go-tinylfu v0.2.2
 	github.com/vmihailenco/msgpack/v5 v5.4.1
 	github.com/zeebo/xxh3 v1.0.2
-	gitlab.com/greyxor/slogor v1.2.2
+	gitlab.com/greyxor/slogor v1.2.3
 	go.etcd.io/bbolt v1.3.8
 	go.etcd.io/etcd/client/v3 v3.5.12
 	go.temporal.io/api v1.27.0
@@ -123,7 +123,7 @@ require (
 	github.com/expr-lang/expr v1.16.0
 	github.com/gabriel-vasile/mimetype v1.4.3
 	github.com/go-co-op/gocron/v2 v2.2.4
-	github.com/go-crypt/crypt v0.2.14
+	github.com/go-crypt/crypt v0.2.16
 	github.com/go-faster/city v1.0.1
 	github.com/go-faster/xor v1.0.0
 	github.com/go-gorp/gorp/v3 v3.1.0
@@ -232,7 +232,7 @@ require (
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/facebookgo/clock v0.0.0-20150410010913-600d898af40a // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
-	github.com/go-crypt/x v0.2.8 // indirect
+	github.com/go-crypt/x v0.2.10 // indirect
 	github.com/go-logfmt/logfmt v0.6.0 // indirect
 	github.com/go-logr/logr v1.4.1 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
@@ -285,7 +285,7 @@ require (
 	github.com/quic-go/qpack v0.4.0 // indirect
 	github.com/refraction-networking/utls v1.6.2 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
-	github.com/rivo/uniseg v0.4.6 // indirect
+	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/robfig/cron v1.2.0 // indirect
 	github.com/robfig/cron/v3 v3.0.1 // indirect
 	github.com/rogpeppe/go-internal v1.12.0 // indirect
