@@ -1,5 +1,9 @@
 package dbx
 
+import (
+	"github.com/life4/genesis/slices"
+)
+
 type options struct {
 	wrappers []ExecWrapper
 }
@@ -16,6 +20,6 @@ func applyOptions(ops ...Option) *options {
 
 func ExecWrappers(ws ...ExecWrapper) Option {
 	return func(o *options) {
-		o.wrappers = append(o.wrappers, ws...)
+		o.wrappers = slices.Concat(o.wrappers, ws)
 	}
 }
