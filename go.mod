@@ -35,7 +35,7 @@ require (
 	github.com/jackc/pgx/v5 v5.5.3
 	github.com/jaevor/go-nanoid v1.3.0
 	github.com/jarcoal/httpmock v1.3.1
-	github.com/jellydator/ttlcache/v3 v3.1.1
+	github.com/jellydator/ttlcache/v3 v3.2.0
 	github.com/joho/godotenv v1.5.1
 	github.com/karlseguin/ccache/v3 v3.0.5
 	github.com/karrick/godirwalk v1.17.0
