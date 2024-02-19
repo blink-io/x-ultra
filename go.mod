@@ -14,11 +14,11 @@ require (
 	github.com/creasty/defaults v1.7.0
 	github.com/disgoorg/snowflake/v2 v2.0.1
 	github.com/frankban/quicktest v1.14.6 //test
-	github.com/fxamacker/cbor/v2 v2.5.0
+	github.com/fxamacker/cbor/v2 v2.6.0
 	github.com/getsentry/sentry-go v0.27.0
-	github.com/go-chi/chi/v5 v5.0.11
+	github.com/go-chi/chi/v5 v5.0.12
 	github.com/go-kratos/kratos/v2 v2.7.2
-	github.com/go-playground/validator/v10 v10.17.0
+	github.com/go-playground/validator/v10 v10.18.0
 	github.com/go-resty/resty/v2 v2.11.0
 	github.com/go-sql-driver/mysql v1.7.1
 	github.com/go-task/slim-sprig/v3 v3.0.0
@@ -46,7 +46,7 @@ require (
 	github.com/miekg/dns v1.1.58
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/natefinch/lumberjack/v3 v3.0.0-alpha
-	github.com/nats-io/nats.go v1.32.0
+	github.com/nats-io/nats.go v1.33.1
 	github.com/nicksnyder/go-i18n/v2 v2.4.0
 	github.com/npillmayer/nestext v0.1.3
 	github.com/oklog/ulid/v2 v2.1.0
@@ -57,7 +57,7 @@ require (
 	github.com/pierrec/lz4/v4 v4.1.21
 	github.com/quic-go/quic-go v0.41.0
 	github.com/redis/go-redis/extra/rediscmd/v9 v9.0.5
-	github.com/redis/go-redis/v9 v9.4.0
+	github.com/redis/go-redis/v9 v9.5.0
 	github.com/redis/rueidis v1.0.28
 	github.com/rs/xid v1.5.0
 	github.com/sanity-io/litter v1.5.5
@@ -85,11 +85,11 @@ require (
 	go.uber.org/zap v1.26.0
 	golang.org/x/crypto v0.19.0
 	golang.org/x/text v0.14.0
-	google.golang.org/genproto/googleapis/api v0.0.0-20240205150955-31a09d347014
-	google.golang.org/grpc v1.61.0
+	google.golang.org/genproto/googleapis/api v0.0.0-20240213162025-012b6fc9bca9
+	google.golang.org/grpc v1.61.1
 	google.golang.org/protobuf v1.32.0
 	gopkg.in/yaml.v3 v3.0.1
-	modernc.org/sqlite v1.28.0
+	modernc.org/sqlite v1.29.1
 )
 
 require (
@@ -97,13 +97,13 @@ require (
 	connectrpc.com/grpcreflect v1.2.0
 	github.com/DATA-DOG/go-sqlmock v1.5.2
 	github.com/VictoriaMetrics/fastcache v1.12.2
-	github.com/XSAM/otelsql v0.27.0
+	github.com/XSAM/otelsql v0.28.0
 	github.com/ahmetb/go-linq/v3 v3.2.0
 	github.com/alicebob/miniredis/v2 v2.31.1
 	github.com/allegro/bigcache/v3 v3.1.0
 	github.com/ammario/tlru v0.3.0
 	github.com/apache/thrift v0.19.0
-	github.com/apple/pkl-go v0.5.1
+	github.com/apple/pkl-go v0.5.3
 	github.com/avast/retry-go/v4 v4.5.1
 	github.com/beevik/guid v1.0.0
 	github.com/bits-and-blooms/bloom/v3 v3.6.0
@@ -119,11 +119,11 @@ require (
 	github.com/doug-martin/goqu/v9 v9.19.0
 	github.com/eapache/queue/v2 v2.0.0-20230407133247-75960ed334e4
 	github.com/emicklei/proto v1.13.2
-	github.com/exaring/otelpgx v0.5.3
-	github.com/expr-lang/expr v1.16.0
+	github.com/exaring/otelpgx v0.5.4
+	github.com/expr-lang/expr v1.16.1
 	github.com/gabriel-vasile/mimetype v1.4.3
 	github.com/go-co-op/gocron/v2 v2.2.4
-	github.com/go-crypt/crypt v0.2.16
+	github.com/go-crypt/crypt v0.2.18
 	github.com/go-faster/city v1.0.1
 	github.com/go-faster/xor v1.0.0
 	github.com/go-gorp/gorp/v3 v3.1.0
@@ -150,7 +150,7 @@ require (
 	github.com/kardianos/osext v0.0.0-20190222173326-2bc1f35cddc0
 	github.com/leonelquinteros/gotext v1.5.2
 	github.com/leporo/sqlf v1.4.0
-	github.com/lesismal/nbio v1.3.21
+	github.com/lesismal/nbio v1.5.0
 	github.com/lib/pq v1.10.9
 	github.com/life4/genesis v1.10.2
 	github.com/mailgun/raymond/v2 v2.0.48
@@ -175,7 +175,7 @@ require (
 	github.com/reugn/go-streams v0.10.0
 	github.com/rickar/cal/v2 v2.1.15
 	github.com/russross/blackfriday v1.6.0
-	github.com/samber/do/v2 v2.0.0-beta.3
+	github.com/samber/do/v2 v2.0.0-beta.5
 	github.com/samber/slog-common v0.15.0
 	github.com/samber/slog-multi v1.0.2
 	github.com/samber/slog-nats v0.1.1
@@ -207,7 +207,7 @@ require (
 )
 
 require (
-	connectrpc.com/connect v1.14.0 // indirect
+	connectrpc.com/connect v1.15.0 // indirect
 	github.com/Azure/go-ansiterm v0.0.0-20230124172434-306776ec8161 // indirect
 	github.com/Microsoft/go-winio v0.6.1 // indirect
 	github.com/Nvveen/Gotty v0.0.0-20120604004816-cd527374f1e5 // indirect
@@ -232,7 +232,7 @@ require (
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/facebookgo/clock v0.0.0-20150410010913-600d898af40a // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
-	github.com/go-crypt/x v0.2.10 // indirect
+	github.com/go-crypt/x v0.2.12 // indirect
 	github.com/go-logfmt/logfmt v0.6.0 // indirect
 	github.com/go-logr/logr v1.4.1 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
@@ -261,7 +261,6 @@ require (
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jmoiron/sqlx v1.3.5 // indirect
 	github.com/jtolds/gls v4.20.0+incompatible // indirect
-	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.6 // indirect
 	github.com/kr/pretty v0.3.1 // indirect
 	github.com/kr/text v0.2.0 // indirect
@@ -276,7 +275,7 @@ require (
 	github.com/ncruces/go-strftime v0.1.9 // indirect
 	github.com/nxadm/tail v1.4.11 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
-	github.com/opencontainers/image-spec v1.0.2 // indirect
+	github.com/opencontainers/image-spec v1.1.0 // indirect
 	github.com/opencontainers/runc v1.1.12 // indirect
 	github.com/pborman/uuid v1.2.1 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
@@ -305,23 +304,20 @@ require (
 	go.opentelemetry.io/otel/sdk v1.23.1 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
 	go.uber.org/mock v0.4.0 // indirect
-	golang.org/x/exp v0.0.0-20240205201215-2c58cdc269a3 // indirect
+	golang.org/x/exp v0.0.0-20240213143201-ec583247a57a // indirect
 	golang.org/x/mod v0.15.0 // indirect
 	golang.org/x/sync v0.6.0 // indirect
 	golang.org/x/term v0.17.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
-	golang.org/x/tools v0.17.0 // indirect
-	google.golang.org/genproto v0.0.0-20240205150955-31a09d347014 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20240205150955-31a09d347014 // indirect
+	golang.org/x/tools v0.18.0 // indirect
+	google.golang.org/genproto v0.0.0-20240213162025-012b6fc9bca9 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20240213162025-012b6fc9bca9 // indirect
 	gotest.tools v2.2.0+incompatible // indirect
-	lukechampine.com/uint128 v1.3.0 // indirect
 	mellium.im/sasl v0.3.1 // indirect
-	modernc.org/cc/v3 v3.41.0 // indirect
-	modernc.org/ccgo/v3 v3.16.15 // indirect
+	modernc.org/gc/v3 v3.0.0-20240107210532-573471604cb6 // indirect
 	modernc.org/libc v1.41.0 // indirect
 	modernc.org/mathutil v1.6.0 // indirect
 	modernc.org/memory v1.7.2 // indirect
-	modernc.org/opt v0.1.3 // indirect
 	modernc.org/strutil v1.2.0 // indirect
 	modernc.org/token v1.1.0 // indirect
 )
