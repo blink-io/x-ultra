@@ -7,6 +7,7 @@ import (
 
 	xsql "github.com/blink-io/x/sql"
 	"github.com/blink-io/x/sql/dbk/adapters/kstd"
+
 	"github.com/vingarcia/ksql"
 	"github.com/vingarcia/ksql/sqldialect"
 )

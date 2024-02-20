@@ -1,4 +1,4 @@
-package dbt
+package dbz
 
 import (
 	"context"
@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	Accessor = "dbz(bob)"
+	Accessor = "dbz(todo)"
 )
 
 type (

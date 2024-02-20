@@ -128,13 +128,8 @@ require (
 	github.com/go-crypt/crypt v0.2.18
 	github.com/go-faster/city v1.0.1
 	github.com/go-faster/xor v1.0.0
-	github.com/go-gorp/gorp/v3 v3.1.0
 	github.com/go-kit/log v0.2.1
 	github.com/go-kratos/aegis v0.2.0
-	github.com/go-rel/mysql v0.12.0
-	github.com/go-rel/postgres v0.11.0
-	github.com/go-rel/rel v0.41.0
-	github.com/go-rel/sqlite3 v0.11.0
 	github.com/go-slog/otelslog v0.1.0
 	github.com/gobwas/glob v0.2.3
 	github.com/gocraft/dbr/v2 v2.7.6
@@ -242,7 +237,6 @@ require (
 	github.com/go-playground/form/v4 v4.2.1 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
-	github.com/go-rel/sql v0.16.0 // indirect
 	github.com/go-task/slim-sprig v0.0.0-20230315185526-52ccab3ef572 // indirect
 	github.com/golang-sql/civil v0.0.0-20220223132316-b832511892a9 // indirect
 	github.com/golang/mock v1.6.0 // indirect
@@ -275,7 +269,6 @@ require (
 	github.com/nats-io/nkeys v0.4.7 // indirect
 	github.com/nats-io/nuid v1.0.1 // indirect
 	github.com/ncruces/go-strftime v0.1.9 // indirect
-	github.com/nxadm/tail v1.4.11 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.1.0 // indirect
 	github.com/opencontainers/runc v1.1.12 // indirect
@@ -293,7 +286,6 @@ require (
 	github.com/samber/go-type-to-string v1.2.0 // indirect
 	github.com/samber/lo v1.39.0 // indirect
 	github.com/segmentio/asm v1.2.0 // indirect
-	github.com/serenize/snaker v0.0.0-20201027110005-a7ad2135616e // indirect
 	github.com/sirupsen/logrus v1.9.3 // indirect
 	github.com/smarty/assertions v1.15.1 // indirect
 	github.com/stretchr/objx v0.5.1 // indirect

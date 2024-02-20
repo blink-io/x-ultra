@@ -1,4 +1,4 @@
-package dbt
+package dbz
 
 import (
 	"testing"

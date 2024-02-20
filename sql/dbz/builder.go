@@ -1,4 +1,4 @@
-package dbm
+package dbz
 
 import (
 	xsql "github.com/blink-io/x/sql"

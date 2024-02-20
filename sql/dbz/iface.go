@@ -1,4 +1,4 @@
-package dbt
+package dbz
 
 //type DBF interface {
 //	BeginTx(ctx context.Context, opts *sql.TxOptions) (bob.Tx, error)

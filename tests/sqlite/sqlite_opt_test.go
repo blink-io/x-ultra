@@ -2,14 +2,10 @@ package sqlite
 
 import (
 	"database/sql"
-	"log"
-	"os"
 
 	xsql "github.com/blink-io/x/sql"
 	xdb "github.com/blink-io/x/sql/db"
 	"github.com/blink-io/x/sql/dbk"
-	"github.com/blink-io/x/sql/dbm"
-	"github.com/blink-io/x/sql/dbp"
 	"github.com/blink-io/x/sql/dbq"
 	"github.com/blink-io/x/sql/dbr"
 	"github.com/blink-io/x/sql/dbs"
@@ -62,28 +58,6 @@ func getSqliteDBR() *dbr.DB {
 	if err != nil {
 		panic(err)
 	}
-
-	return db
-}
-
-func getSqliteDBM() *dbm.DB {
-	db, err := dbm.New(sqliteCfg())
-
-	if err != nil {
-		panic(err)
-	}
-
-	return db
-}
-
-func getSqliteDBP() *dbp.DB {
-	db, err := dbp.New(sqliteCfg())
-
-	if err != nil {
-		panic(err)
-	}
-
-	db.TraceOn("[gorp]", log.New(os.Stdout, "dbp:", log.Lmicroseconds))
 
 	return db
 }
