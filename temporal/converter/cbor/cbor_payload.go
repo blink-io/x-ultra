@@ -11,7 +11,7 @@ import (
 const (
 	Name = "cbor"
 
-	MetadataEncodingCbor = "cbor/plain"
+	MetadataEncoding = "binary/cbor"
 )
 
 var _ converter.PayloadConverter = (*payloadConverter)(nil)
@@ -40,7 +40,7 @@ func (c *payloadConverter) ToString(payload *commonpb.Payload) string {
 }
 
 func (c *payloadConverter) Encoding() string {
-	return MetadataEncodingCbor
+	return MetadataEncoding
 }
 
 func newPayload(data []byte, c converter.PayloadConverter) *commonpb.Payload {
@@ -53,5 +53,5 @@ func newPayload(data []byte, c converter.PayloadConverter) *commonpb.Payload {
 }
 
 func (c *payloadConverter) Name() string {
-	return "cbor"
+	return Name
 }

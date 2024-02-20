@@ -102,6 +102,7 @@ require (
 	github.com/alicebob/miniredis/v2 v2.31.1
 	github.com/allegro/bigcache/v3 v3.1.0
 	github.com/ammario/tlru v0.3.0
+	github.com/apache/incubator-fury/go/fury v0.0.0-20240220070135-6194c81c8308
 	github.com/apache/thrift v0.19.0
 	github.com/apple/pkl-go v0.5.3
 	github.com/avast/retry-go/v4 v4.5.1
@@ -117,6 +118,7 @@ require (
 	github.com/deckarep/golang-set/v2 v2.6.0
 	github.com/didip/tollbooth/v7 v7.0.1
 	github.com/doug-martin/goqu/v9 v9.19.0
+	github.com/eapache/go-resiliency v1.6.0
 	github.com/eapache/queue/v2 v2.0.0-20230407133247-75960ed334e4
 	github.com/emicklei/proto v1.13.2
 	github.com/exaring/otelpgx v0.5.4

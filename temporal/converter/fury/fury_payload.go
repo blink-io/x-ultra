@@ -1,17 +1,17 @@
-package msgpack
+package fury
 
 import (
 	"fmt"
 
-	"github.com/vmihailenco/msgpack/v5"
+	"github.com/apache/incubator-fury/go/fury"
 	commonpb "go.temporal.io/api/common/v1"
 	"go.temporal.io/sdk/converter"
 )
 
 const (
-	Name = "msgpack"
+	Name = "fury"
 
-	MetadataEncoding = "binary/msgpack"
+	MetadataEncoding = "binary/fury"
 )
 
 var _ converter.PayloadConverter = (*payloadConverter)(nil)
@@ -20,7 +20,7 @@ type payloadConverter struct {
 }
 
 func (c *payloadConverter) ToPayload(value interface{}) (*commonpb.Payload, error) {
-	data, err := msgpack.Marshal(value)
+	data, err := fury.Marshal(value)
 	if err != nil {
 		return nil, fmt.Errorf("%w: %v", converter.ErrUnableToEncode, err)
 	}
@@ -28,7 +28,7 @@ func (c *payloadConverter) ToPayload(value interface{}) (*commonpb.Payload, erro
 }
 
 func (c *payloadConverter) FromPayload(payload *commonpb.Payload, valuePtr interface{}) error {
-	err := msgpack.Unmarshal(payload.GetData(), valuePtr)
+	err := fury.Unmarshal(payload.GetData(), valuePtr)
 	if err != nil {
 		return fmt.Errorf("%w: %v", converter.ErrUnableToDecode, err)
 	}
