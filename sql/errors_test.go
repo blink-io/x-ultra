@@ -45,8 +45,8 @@ func TestErrEqual(t *testing.T) {
 	var cause1 = errors.New("cause1")
 	var cause2 = berrors.New("cause2 from blink-x")
 	var cause3 = errors.New("cause2 from blink-x")
-	var err1 = NewStateError("good", "very good1", "", cause1)
-	var err2 = NewStateError("good", "very good2", "", cause2)
+	var err1 = NewError("good", "very good1", "", cause1)
+	var err2 = NewError("good", "very good2", "", cause2)
 	var err3 = err1.Renew("babamama", "Very BabaMama", cause3)
 
 	b1 := errors.Is(err1, err2)
@@ -57,7 +57,7 @@ func TestErrEqual(t *testing.T) {
 
 func TestStateError_Clone(t *testing.T) {
 	var cause1 = errors.New("cause1")
-	var err1 = NewStateError(ErrStateConstraintUnique, "very good1", "", cause1)
+	var err1 = NewError(ErrNameConstraintUnique, "very good1", "", cause1)
 	var err2 = err1.Clone()
 	var err3 = WrapError(&pgconn.PgError{Code: "23505"})
 	var err4 = WrapError(&mysql.MySQLError{Number: uint16(1169)})
@@ -74,11 +74,18 @@ func TestStateError_Clone(t *testing.T) {
 }
 
 func TestErrState(t *testing.T) {
-	ess := []ErrState{
-		ErrStateConstraintCheck,
-		ErrStateConstraintUnique,
+	ess := []ErrName{
+		ErrNameConstraintCheck,
+		ErrNameConstraintUnique,
 	}
 	for _, e := range ess {
 		fmt.Println(e, " <----> ", e.ToError().Error())
 	}
+}
+
+func TestIsTargetErr(t *testing.T) {
+	rErr := &pgconn.PgError{Code: "23505"}
+	tErr, ok := isTargetErr[*pgconn.PgError](rErr)
+	require.True(t, ok)
+	require.NotNil(t, tErr)
 }

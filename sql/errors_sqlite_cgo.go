@@ -9,19 +9,19 @@ import (
 
 type SQLiteError = sqlite3.Error
 
-var sqliteErrorHandlers = map[int]func(*sqlite3.Error) *StateError{
+var sqliteErrorHandlers = map[int]func(*sqlite3.Error) *Error{
 	// SQLITE_CONSTRAINT_CHECK (275)
-	275: func(e *sqlite3.Error) *StateError {
+	275: func(e *sqlite3.Error) *Error {
 		code := cast.ToString(int(e.ExtendedCode))
 		return ErrConstraintCheck.Renew(code, e.Error(), e)
 	},
 	// SQLITE_CONSTRAINT_FOREIGNKEY (787)
-	787: func(e *sqlite3.Error) *StateError {
+	787: func(e *sqlite3.Error) *Error {
 		code := cast.ToString(int(e.ExtendedCode))
 		return ErrConstraintForeignKey.Renew(code, e.Error(), e)
 	},
 	// SQLITE_CONSTRAINT_NOTNULL (1299)
-	1299: func(e *sqlite3.Error) *StateError {
+	1299: func(e *sqlite3.Error) *Error {
 		code := cast.ToString(int(e.ExtendedCode))
 		return ErrConstraintNotNull.Renew(code, e.Error(), e)
 	},
@@ -33,18 +33,18 @@ var sqliteErrorHandlers = map[int]func(*sqlite3.Error) *StateError{
 	2067: sqliteUniqueConstraintHandler,
 }
 
-func RegisterSQLiteErrorHandler(number int, fn func(*sqlite3.Error) *StateError) {
+func RegisterSQLiteErrorHandler(number int, fn func(*sqlite3.Error) *Error) {
 	sqliteErrorHandlers[number] = fn
 }
 
-func sqliteUniqueConstraintHandler(e *sqlite3.Error) *StateError {
+func sqliteUniqueConstraintHandler(e *sqlite3.Error) *Error {
 	code := cast.ToString(int(e.ExtendedCode))
 	return ErrConstraintUnique.Renew(code, e.Error(), e)
 }
 
-// sqliteStateError transforms *sqlite3.Error to *StateError.
+// handleSqliteError transforms *sqlite3.Error to *Error.
 // Doc: https://www.sqlite.org/rescode.html
-func sqliteStateError(e *sqlite3.Error) *StateError {
+func handleSqliteError(e *sqlite3.Error) *Error {
 	code := int(e.ExtendedCode)
 	if h, ok := sqliteErrorHandlers[code]; ok {
 		return h(e)

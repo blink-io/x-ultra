@@ -5,6 +5,7 @@ import (
 
 	xsql "github.com/blink-io/x/sql"
 	xdb "github.com/blink-io/x/sql/db"
+	"github.com/blink-io/x/sql/dbm"
 	"github.com/blink-io/x/sql/dbq"
 	"github.com/blink-io/x/sql/dbr"
 	"github.com/blink-io/x/sql/dbx"
@@ -43,6 +44,16 @@ func getPgDBQ() *dbq.DB {
 
 func getPgDBX() *dbr.DB {
 	db, err := dbr.New(pgCfg())
+
+	if err != nil {
+		panic(err)
+	}
+
+	return db
+}
+
+func getPgDBM() *dbm.DB {
+	db, err := dbm.New(pgCfg())
 
 	if err != nil {
 		panic(err)

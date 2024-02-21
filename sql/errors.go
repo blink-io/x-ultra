@@ -4,69 +4,68 @@ import (
 	"database/sql"
 	"errors"
 
-	//"github.com/glebarez/go-sqlite"
 	"github.com/go-sql-driver/mysql"
 	"github.com/jackc/pgx/v5/pgconn"
 )
 
-type ErrState string
+type ErrName string
 
 const (
-	ErrStateUnsupported ErrState = "unsupported"
+	ErrNameUnsupported ErrName = "unsupported"
 
-	ErrStateOther ErrState = "other"
+	ErrNameOther ErrName = "other"
 
-	ErrStateNoRows ErrState = "now_rows"
+	ErrNameNoRows ErrName = "now_rows"
 
-	ErrStateTooManyRows ErrState = "too_many_rows"
+	ErrNameTooManyRows ErrName = "too_many_rows"
 
-	ErrStateConstraintUnique ErrState = "unique_constraint"
+	ErrNameConstraintUnique ErrName = "unique_constraint"
 
-	ErrStateConstraintCheck ErrState = "check_constraint"
+	ErrNameConstraintCheck ErrName = "check_constraint"
 
-	ErrStateConstraintNotNull ErrState = "not_null_constraint"
+	ErrNameConstraintNotNull ErrName = "not_null_constraint"
 
-	ErrStateConstraintForeignKey ErrState = "foreign_key_constraint"
+	ErrNameConstraintForeignKey ErrName = "foreign_key_constraint"
 )
 
-func (s ErrState) String() string {
+func (s ErrName) String() string {
 	return string(s)
 }
 
-// ToError creates *StateError with only state value is assigned.
-func (s ErrState) ToError() *StateError {
-	return &StateError{state: s}
+// ToError creates *Error with only name value is assigned.
+func (s ErrName) ToError() *Error {
+	return &Error{name: s}
 }
 
-func (s ErrState) NewError(code string, message string, cause error) *StateError {
-	return NewStateError(s, code, message, cause)
+func (s ErrName) NewError(code string, message string, cause error) *Error {
+	return NewError(s, code, message, cause)
 }
 
-var _ error = (*StateError)(nil)
+var _ error = (*Error)(nil)
 
 var (
-	ErrOther = ErrStateOther.ToError()
+	ErrOther = ErrNameOther.ToError()
 
-	ErrUnsupported = ErrStateUnsupported.ToError()
+	ErrUnsupported = ErrNameUnsupported.ToError()
 
-	ErrNoRows = ErrStateUnsupported.ToError()
+	ErrNoRows = ErrNameUnsupported.ToError()
 
-	ErrTooManyRows = ErrStateTooManyRows.ToError()
+	ErrTooManyRows = ErrNameTooManyRows.ToError()
 
-	ErrConstraintUnique = ErrStateConstraintUnique.ToError()
+	ErrConstraintUnique = ErrNameConstraintUnique.ToError()
 
-	ErrConstraintCheck = ErrStateConstraintCheck.ToError()
+	ErrConstraintCheck = ErrNameConstraintCheck.ToError()
 
-	ErrConstraintNotNull = ErrStateConstraintNotNull.ToError()
+	ErrConstraintNotNull = ErrNameConstraintNotNull.ToError()
 
-	ErrConstraintForeignKey = ErrStateConstraintForeignKey.ToError()
+	ErrConstraintForeignKey = ErrNameConstraintForeignKey.ToError()
 )
 
-type StateError struct {
+type Error struct {
 	cause error
 
-	// state defines unique id for error
-	state ErrState
+	// name defines unique id for error
+	name ErrName
 
 	// code in PostgreSQL/SQLite, number in MySQL
 	code string
@@ -74,96 +73,102 @@ type StateError struct {
 	message string
 }
 
-func (e *StateError) Error() string {
-	return e.message + " (STATE " + string(e.state) + ")"
+func (e *Error) Error() string {
+	return e.message + " (ERR_NAME " + string(e.name) + ")"
 }
 
-func (e *StateError) State() ErrState {
-	return e.state
+func (e *Error) Name() ErrName {
+	return e.name
 }
 
-func (e *StateError) Code() string {
+func (e *Error) Code() string {
 	return e.code
 }
 
-func (e *StateError) Cause() error {
+func (e *Error) Cause() error {
 	return e.cause
 }
 
-// Is when target is *StateError and their states are the same.
-func (e *StateError) Is(target error) bool {
-	return IsErrEqualsState(target, e.state)
+// Is when target is *Error and their names are the same.
+func (e *Error) Is(target error) bool {
+	return IsErrEquals(target, e.name)
 }
 
-func (e *StateError) Clone() *StateError {
-	return NewStateError(e.state, e.code, e.message, e.cause)
+func (e *Error) Clone() *Error {
+	return NewError(e.name, e.code, e.message, e.cause)
 }
 
-func (e *StateError) Renew(code string, message string, cause error) *StateError {
-	return NewStateError(e.state, code, message, cause)
+func (e *Error) Renew(code string, message string, cause error) *Error {
+	return NewError(e.name, code, message, cause)
 }
 
-func NewStateError(state ErrState, code string, message string, cause error) *StateError {
-	return &StateError{
-		state:   state,
+func NewError(name ErrName, code string, message string, cause error) *Error {
+	return &Error{
+		name:    name,
 		code:    code,
 		message: message,
 		cause:   cause,
 	}
 }
 
-// WrapError wraps *pgconn.PgError/*mysql.MySQLError/sqlite3.Error to *StateError.
-func WrapError(e error) *StateError {
-	var newErr *StateError
-	if sErr := new(StateError); errors.As(e, &sErr) {
-		newErr = sErr
-	} else if pgErr := new(pgconn.PgError); errors.As(e, &pgErr) {
-		newErr = pgxStateError(pgErr)
-	} else if mysqlErr := new(mysql.MySQLError); errors.As(e, &mysqlErr) {
-		newErr = mysqlStateError(mysqlErr)
-	} else if sqliteErr := new(SQLiteError); errors.As(e, sqliteErr) {
-		newErr = sqliteStateError(sqliteErr)
-	} else if ch, ok := commonErrHandlers[e]; ok {
-		newErr = ch(e)
+// WrapError wraps *pgconn.PgError/*mysql.MySQLError/sqlite3.Error to *Error.
+func WrapError(e error) *Error {
+	var newErr *Error
+	if tErr, ok := isTargetErr[*Error](e); ok {
+		newErr = tErr
+	} else if tErr, ok := isTargetErr[*pgconn.PgError](e); ok {
+		newErr = handlePgxError(tErr)
+	} else if tErr, ok := isTargetErr[*mysql.MySQLError](e); ok {
+		newErr = handleMysqlError(tErr)
+	} else if tErr, ok := isTargetErr[*SQLiteError](e); ok {
+		newErr = handleSqliteError(tErr)
+	} else if ef, ok := handleCommonError(e); ok {
+		newErr = ef(e)
 	} else {
 		newErr = ErrUnsupported
 	}
 	return newErr
 }
 
+func isTargetErr[T error](e error) (T, bool) {
+	tErr := new(T)
+	ok := errors.As(e, tErr)
+	return *tErr, ok
+}
+
 func IsErrNoRows(e error) bool {
 	if errors.Is(e, sql.ErrNoRows) {
 		return true
 	}
-	return IsErrEqualsState(e, ErrStateNoRows)
+	return IsErrEquals(e, ErrNameNoRows)
 }
 
 func IsErrTooManyRows(e error) bool {
-	return IsErrEqualsState(e, ErrStateTooManyRows)
+	return IsErrEquals(e, ErrNameTooManyRows)
 }
 
 func IsErrConstraintCheck(e error) bool {
-	return IsErrEqualsState(e, ErrStateConstraintCheck)
+	return IsErrEquals(e, ErrNameConstraintCheck)
 }
 
 func IsErrConstraintUnique(e error) bool {
-	return IsErrEqualsState(e, ErrStateConstraintUnique)
+	return IsErrEquals(e, ErrNameConstraintUnique)
 }
 
 func IsErrConstraintNotNull(e error) bool {
-	return IsErrEqualsState(e, ErrStateConstraintNotNull)
+	return IsErrEquals(e, ErrNameConstraintNotNull)
 }
 
 func IsErrConstraintForeignKey(e error) bool {
-	return IsErrEqualsState(e, ErrStateConstraintForeignKey)
+	return IsErrEquals(e, ErrNameConstraintForeignKey)
 }
 
-func IsErrEqualsState(e error, state ErrState) bool {
-	if se := new(StateError); errors.As(e, &se) {
-		return se.state == state
+func IsErrEquals(e error, name ErrName) bool {
+	if se, ok := isTargetErr[*Error](e); ok {
+		return se.name == name
 	}
 	if we := WrapError(e); !errors.Is(we, ErrUnsupported) {
-		return we.state == state
+		return we.name == name
 	}
 	return false
 }

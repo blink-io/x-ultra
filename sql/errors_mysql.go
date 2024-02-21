@@ -5,24 +5,24 @@ import (
 	"github.com/go-sql-driver/mysql"
 )
 
-var mysqlErrorHandlers = map[uint16]func(*mysql.MySQLError) *StateError{
+var mysqlErrorHandlers = map[uint16]func(*mysql.MySQLError) *Error{
 	// Error number: 1169; Symbol: ER_DUP_UNIQUE; SQLSTATE: 23000
 	// Message: Can't write, because of unique constraint, to table '%s'
-	1169: func(e *mysql.MySQLError) *StateError {
+	1169: func(e *mysql.MySQLError) *Error {
 		code := cast.ToString(e.Number)
 		return ErrConstraintUnique.Renew(code, e.Message, e)
 	},
 
 	// Error number: 1172; Symbol: ER_TOO_MANY_ROWS; SQLSTATE: 42000
 	// Message: Result consisted of more than one row
-	1172: func(e *mysql.MySQLError) *StateError {
+	1172: func(e *mysql.MySQLError) *Error {
 		code := cast.ToString(e.Number)
 		return ErrTooManyRows.Renew(code, e.Message, e)
 	},
 
 	// Error number: 1329; Symbol: ER_SP_FETCH_NO_DATA; SQLSTATE: 02000
 	// Message: No data - zero rows fetched, selected, or processed
-	1329: func(e *mysql.MySQLError) *StateError {
+	1329: func(e *mysql.MySQLError) *Error {
 		code := cast.ToString(e.Number)
 		return ErrNoRows.Renew(code, e.Message, e)
 	},
@@ -36,7 +36,7 @@ var mysqlErrorHandlers = map[uint16]func(*mysql.MySQLError) *StateError{
 	1217: mysqlFKConstraintErrHandler,
 
 	// Error number: 1263; Symbol: ER_WARN_NULL_TO_NOTNULL; SQLSTATE: 22004
-	1263: func(e *mysql.MySQLError) *StateError {
+	1263: func(e *mysql.MySQLError) *Error {
 		code := cast.ToString(e.Number)
 		return ErrConstraintNotNull.Renew(code, e.Message, e)
 	},
@@ -60,21 +60,21 @@ var mysqlErrorHandlers = map[uint16]func(*mysql.MySQLError) *StateError{
 	3820: mysqlCheckConstraintErrHandler,
 }
 
-func RegisterMySQLErrorHandler(number uint16, fn func(*mysql.MySQLError) *StateError) {
+func RegisterMySQLErrorHandler(number uint16, fn func(*mysql.MySQLError) *Error) {
 	mysqlErrorHandlers[number] = fn
 }
 
-func mysqlFKConstraintErrHandler(e *mysql.MySQLError) *StateError {
+func mysqlFKConstraintErrHandler(e *mysql.MySQLError) *Error {
 	code := cast.ToString(e.Number)
 	return ErrConstraintForeignKey.Renew(code, e.Message, e)
 }
 
-func mysqlCheckConstraintErrHandler(e *mysql.MySQLError) *StateError {
+func mysqlCheckConstraintErrHandler(e *mysql.MySQLError) *Error {
 	code := cast.ToString(e.Number)
 	return ErrConstraintForeignKey.Renew(code, e.Message, e)
 }
 
-// mysqlStateError transforms *mysql.MySQLError to *StateError.
+// handleMysqlError transforms *mysql.MySQLError to *Error.
 // Doc: https://dev.mysql.com/doc/mysql-errors/8.0/en/server-error-reference.html
 // About SQLState value: This value is a five-character string (for example, '42S02').
 // SQLSTATE values are taken from ANSI SQL and ODBC and are more standardized than the numeric error codes.
@@ -95,7 +95,7 @@ func mysqlCheckConstraintErrHandler(e *mysql.MySQLError) *StateError {
 // In these cases, 'HY000' (general error) is used.
 // For client-side errors, the SQLSTATE value is always 'HY000' (general error),
 // so it is not meaningful for distinguishing one client error from another.
-func mysqlStateError(e *mysql.MySQLError) *StateError {
+func handleMysqlError(e *mysql.MySQLError) *Error {
 	if h, ok := mysqlErrorHandlers[e.Number]; ok {
 		return h(e)
 	} else {

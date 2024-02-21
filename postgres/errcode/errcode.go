@@ -144,10 +144,10 @@ const (
 	CheckViolation               = "23514"
 	ExclusionViolation           = "23P01"
 
-	// Class 24 — Invalid Cursor State
+	// Class 24 — Invalid Cursor Name
 	InvalidCursorState = "24000"
 
-	// Class 25 — Invalid Transaction State
+	// Class 25 — Invalid Transaction Name
 	InvalidTransactionState                         = "25000"
 	ActiveSQLTransaction                            = "25001"
 	BranchTransactionAlreadyActive                  = "25002"
@@ -282,7 +282,7 @@ const (
 	TooManyColumns       = "54011"
 	TooManyArguments     = "54023"
 
-	// Class 55 — Object Not In Prerequisite State
+	// Class 55 — Object Not In Prerequisite Name
 	ObjectNotInPrerequisiteState = "55000"
 	ObjectInUse                  = "55006"
 	CantChangeRuntimeParam       = "55P02"
@@ -497,7 +497,7 @@ func IsIntegrityConstraintViolation(code string) bool {
 	return false
 }
 
-// IsInvalidCursorState asserts the error code class is Class 24 — Invalid Cursor State
+// IsInvalidCursorState asserts the error code class is Class 24 — Invalid Cursor Name
 func IsInvalidCursorState(code string) bool {
 	switch code {
 	case InvalidCursorState:
@@ -506,7 +506,7 @@ func IsInvalidCursorState(code string) bool {
 	return false
 }
 
-// IsInvalidTransactionState asserts the error code class is Class 25 — Invalid Transaction State
+// IsInvalidTransactionState asserts the error code class is Class 25 — Invalid Transaction Name
 func IsInvalidTransactionState(code string) bool {
 	switch code {
 	case InvalidTransactionState, ActiveSQLTransaction, BranchTransactionAlreadyActive, HeldCursorRequiresSameIsolationLevel, InappropriateAccessModeForBranchTransaction, InappropriateIsolationLevelForBranchTransaction, NoActiveSQLTransactionForBranchTransaction, ReadOnlySQLTransaction, SchemaAndDataStatementMixingNotSupported, NoActiveSQLTransaction, InFailedSQLTransaction, IdleInTransactionSessionTimeout:
@@ -668,7 +668,7 @@ func IsProgramLimitExceeded(code string) bool {
 	return false
 }
 
-// IsObjectNotInPrerequisiteState asserts the error code class is Class 55 — Object Not In Prerequisite State
+// IsObjectNotInPrerequisiteState asserts the error code class is Class 55 — Object Not In Prerequisite Name
 func IsObjectNotInPrerequisiteState(code string) bool {
 	switch code {
 	case ObjectNotInPrerequisiteState, ObjectInUse, CantChangeRuntimeParam, LockNotAvailable, UnsafeNewEnumValueUsage:

@@ -115,9 +115,9 @@ var errorCodeNames = map[ErrorCode]string{
 	"23505": "unique_violation",
 	"23514": "check_violation",
 	"23P01": "exclusion_violation",
-	// Class 24 - Invalid Cursor State
+	// Class 24 - Invalid Cursor Name
 	"24000": "invalid_cursor_state",
-	// Class 25 - Invalid Transaction State
+	// Class 25 - Invalid Transaction Name
 	"25000": "invalid_transaction_state",
 	"25001": "active_sql_transaction",
 	"25002": "branch_transaction_already_active",
@@ -231,7 +231,7 @@ var errorCodeNames = map[ErrorCode]string{
 	"54001": "statement_too_complex",
 	"54011": "too_many_columns",
 	"54023": "too_many_arguments",
-	// Class 55 - Object Not In Prerequisite State
+	// Class 55 - Object Not In Prerequisite Name
 	"55000": "object_not_in_prerequisite_state",
 	"55006": "object_in_use",
 	"55P02": "cant_change_runtime_param",

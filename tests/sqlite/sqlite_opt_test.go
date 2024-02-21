@@ -6,6 +6,7 @@ import (
 	xsql "github.com/blink-io/x/sql"
 	xdb "github.com/blink-io/x/sql/db"
 	"github.com/blink-io/x/sql/dbk"
+	"github.com/blink-io/x/sql/dbm"
 	"github.com/blink-io/x/sql/dbq"
 	"github.com/blink-io/x/sql/dbr"
 	"github.com/blink-io/x/sql/dbs"
@@ -54,6 +55,16 @@ func getSqliteDBR() *dbr.DB {
 	db, err := dbr.New(sqliteCfg(),
 		dbr.WithEventReceiver(dbr.NewTimingEventReceiver()),
 	)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return db
+}
+
+func getSqliteDBM() *dbm.DB {
+	db, err := dbm.New(sqliteCfg())
 
 	if err != nil {
 		panic(err)

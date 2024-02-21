@@ -10,9 +10,9 @@ import (
 
 func TestRegister_1(t *testing.T) {
 	err1 := dbr.ErrNotFound
-	RegisterCommonErrHandler(err1, func(e error) *StateError {
+	RegisterCommonErrHandler(err1, func(e error) *Error {
 		if errors.Is(e, dbr.ErrNotFound) {
-			return NewStateError("dbrErr", "dbrErr", "", e)
+			return NewError("dbrErr", "dbrErr", "", e)
 		}
 		return ErrUnsupported
 	})
@@ -21,6 +21,6 @@ func TestRegister_1(t *testing.T) {
 
 	var sErr = WrapError(err2)
 
-	var targetErr = NewStateError("dbrErr", "dbrErr", "", nil)
+	var targetErr = NewError("dbrErr", "dbrErr", "", nil)
 	require.ErrorIs(t, sErr, targetErr)
 }
