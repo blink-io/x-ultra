@@ -151,7 +151,7 @@ require (
 	github.com/kardianos/osext v0.0.0-20190222173326-2bc1f35cddc0
 	github.com/leonelquinteros/gotext v1.5.2
 	github.com/leporo/sqlf v1.4.0
-	github.com/lesismal/nbio v1.5.1
+	github.com/lesismal/nbio v1.5.2
 	github.com/lib/pq v1.10.9
 	github.com/life4/genesis v1.10.2
 	github.com/mailgun/raymond/v2 v2.0.48
@@ -200,9 +200,9 @@ require (
 	github.com/xo/dburl v0.21.1
 	github.com/yuin/goldmark v1.7.0
 	github.com/zitadel/passwap v0.5.0
-	go.opentelemetry.io/otel v1.23.1
-	go.opentelemetry.io/otel/metric v1.23.1
-	go.opentelemetry.io/otel/trace v1.23.1
+	go.opentelemetry.io/otel v1.24.0
+	go.opentelemetry.io/otel/metric v1.24.0
+	go.opentelemetry.io/otel/trace v1.24.0
 	golang.org/x/net v0.21.0
 	golang.org/x/sys v0.17.0
 )
@@ -301,7 +301,7 @@ require (
 	github.com/yuin/gopher-lua v1.1.1 // indirect
 	go.etcd.io/etcd/api/v3 v3.5.12 // indirect
 	go.etcd.io/etcd/client/pkg/v3 v3.5.12 // indirect
-	go.opentelemetry.io/otel/sdk v1.23.1 // indirect
+	go.opentelemetry.io/otel/sdk v1.24.0 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
 	go.uber.org/mock v0.4.0 // indirect
 	golang.org/x/exp v0.0.0-20240222234643-814bf88cf225 // indirect
