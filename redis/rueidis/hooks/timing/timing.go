@@ -81,7 +81,7 @@ func (h *hook) DoStream(c rueidis.Client, ctx context.Context, cmd rueidis.Compl
 	cstr := cmdstr(cmd.Commands())
 	res := c.DoStream(ctx, cmd)
 	cost := time.Since(before)
-	h.logf("Timing cost [%s] for [Do]: [%s]", cost.String(), cstr)
+	h.logf("Timing cost [%s] for [DoStream]: [%s]", cost.String(), cstr)
 	return res
 }
 
@@ -92,7 +92,7 @@ func (h *hook) DoMultiStream(c rueidis.Client, ctx context.Context, multi ...rue
 	}
 	rr := c.DoMultiStream(ctx, multi...)
 	cost := time.Since(before)
-	h.logf("Timing cost for [DoMulti]: [%s]", cost.String())
+	h.logf("Timing cost for [DoMultiStream]: [%s]", cost.String())
 	return rr
 }
 
