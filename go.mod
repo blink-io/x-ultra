@@ -58,7 +58,7 @@ require (
 	github.com/quic-go/quic-go v0.41.0
 	github.com/redis/go-redis/extra/rediscmd/v9 v9.0.5
 	github.com/redis/go-redis/v9 v9.5.1
-	github.com/redis/rueidis v1.0.28
+	github.com/redis/rueidis v1.0.31
 	github.com/rs/xid v1.5.0
 	github.com/sanity-io/litter v1.5.5
 	github.com/segmentio/ksuid v1.0.4
@@ -77,7 +77,7 @@ require (
 	github.com/vmihailenco/msgpack/v5 v5.4.1
 	github.com/zeebo/xxh3 v1.0.2
 	gitlab.com/greyxor/slogor v1.2.3
-	go.etcd.io/bbolt v1.3.8
+	go.etcd.io/bbolt v1.3.9
 	go.etcd.io/etcd/client/v3 v3.5.12
 	go.temporal.io/api v1.27.0
 	go.temporal.io/sdk v1.26.0-rc.2
@@ -89,7 +89,7 @@ require (
 	google.golang.org/grpc v1.62.0
 	google.golang.org/protobuf v1.32.0
 	gopkg.in/yaml.v3 v3.0.1
-	modernc.org/sqlite v1.29.1
+	modernc.org/sqlite v1.29.2
 )
 
 require (
@@ -151,7 +151,7 @@ require (
 	github.com/kardianos/osext v0.0.0-20190222173326-2bc1f35cddc0
 	github.com/leonelquinteros/gotext v1.5.2
 	github.com/leporo/sqlf v1.4.0
-	github.com/lesismal/nbio v1.5.2
+	github.com/lesismal/nbio v1.5.3
 	github.com/lib/pq v1.10.9
 	github.com/life4/genesis v1.10.2
 	github.com/mailgun/raymond/v2 v2.0.48
@@ -172,6 +172,7 @@ require (
 	github.com/philhofer/fwd v1.1.2
 	github.com/proullon/ramsql v0.1.3
 	github.com/qustavo/dotsql v1.2.0
+	github.com/redis/rueidis/rueidishook v1.0.31
 	github.com/remychantenay/slog-otel v1.2.3
 	github.com/reugn/go-streams v0.10.0
 	github.com/rickar/cal/v2 v2.1.15
@@ -248,7 +249,7 @@ require (
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
-	github.com/google/pprof v0.0.0-20240207164012-fb44976bdcd5 // indirect
+	github.com/google/pprof v0.0.0-20240225044709-fd706174c886 // indirect
 	github.com/gopherjs/gopherjs v1.17.2 // indirect
 	github.com/gorilla/css v1.0.1 // indirect
 	github.com/gotestyourself/gotestyourself v2.2.0+incompatible // indirect

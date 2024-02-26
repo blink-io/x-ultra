@@ -57,6 +57,32 @@ func (h *hook) Receive(c rueidis.Client, ctx context.Context, sub rueidis.Comple
 	return nil
 }
 
+func (h *hook) DoStream(c rueidis.Client, ctx context.Context, cmd rueidis.Completed) rueidis.RedisResultStream {
+	ra := c.DoStream(ctx, cmd)
+	for ra.HasNext() {
+		if err := ra.Error(); err != nil {
+			h.handleStreamError(ra)
+		}
+	}
+	return ra
+}
+
+func (h *hook) DoMultiStream(c rueidis.Client, ctx context.Context, multi ...rueidis.Completed) rueidis.MultiRedisResultStream {
+	ra := c.DoMultiStream(ctx, multi...)
+	for ra.HasNext() {
+		if err := ra.Error(); err != nil {
+			h.handleStreamError(ra)
+		}
+	}
+	return ra
+}
+
+func (h *hook) handleStreamError(r rueidis.MultiRedisResultStream) {
+	if err := r.Error(); err != nil {
+		h.hub.CaptureException(err)
+	}
+}
+
 func (h *hook) handleSingleError(r rueidis.RedisResult) {
 	if err := r.Error(); err != nil {
 		h.hub.CaptureException(err)

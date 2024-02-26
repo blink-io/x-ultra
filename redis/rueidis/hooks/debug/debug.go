@@ -60,6 +60,19 @@ func (h *hook) Receive(c rueidis.Client, ctx context.Context, sub rueidis.Comple
 	return err
 }
 
+func (h *hook) DoStream(c rueidis.Client, ctx context.Context, cmd rueidis.Completed) rueidis.RedisResultStream {
+	h.logf("Redis CMD: [%s]", cmdstr(cmd.Commands()))
+	return c.DoStream(ctx, cmd)
+}
+
+func (h *hook) DoMultiStream(c rueidis.Client, ctx context.Context, multi ...rueidis.Completed) rueidis.MultiRedisResultStream {
+	for _, m := range multi {
+		h.logf("Redis CMD: [%s]", cmdstr(m.Commands()))
+	}
+	rr := c.DoMultiStream(ctx, multi...)
+	return rr
+}
+
 func cmdstr(cmds []string) string {
 	return strings.Join(cmds, " ")
 }
