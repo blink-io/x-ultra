@@ -79,13 +79,13 @@ require (
 	gitlab.com/greyxor/slogor v1.2.3
 	go.etcd.io/bbolt v1.3.9
 	go.etcd.io/etcd/client/v3 v3.5.12
-	go.temporal.io/api v1.27.0
-	go.temporal.io/sdk v1.26.0-rc.2
+	go.temporal.io/api v1.28.0
+	go.temporal.io/sdk v1.26.0-rc.3
 	go.uber.org/multierr v1.11.0
 	go.uber.org/zap v1.27.0
-	golang.org/x/crypto v0.19.0
+	golang.org/x/crypto v0.20.0
 	golang.org/x/text v0.14.0
-	google.golang.org/genproto/googleapis/api v0.0.0-20240221002015-b0ce06bbee7c
+	google.golang.org/genproto/googleapis/api v0.0.0-20240227224415-6ceb2ff114de
 	google.golang.org/grpc v1.62.0
 	google.golang.org/protobuf v1.32.0
 	gopkg.in/yaml.v3 v3.0.1
@@ -97,12 +97,12 @@ require (
 	connectrpc.com/grpcreflect v1.2.0
 	github.com/DATA-DOG/go-sqlmock v1.5.2
 	github.com/VictoriaMetrics/fastcache v1.12.2
-	github.com/XSAM/otelsql v0.28.0
+	github.com/XSAM/otelsql v0.29.0
 	github.com/ahmetb/go-linq/v3 v3.2.0
 	github.com/alicebob/miniredis/v2 v2.31.1
 	github.com/allegro/bigcache/v3 v3.1.0
 	github.com/ammario/tlru v0.3.0
-	github.com/apache/incubator-fury/go/fury v0.0.0-20240221062422-8e14efad1a54
+	github.com/apache/incubator-fury/go/fury v0.0.0-20240228035311-a9166cf5a620
 	github.com/apache/thrift v0.19.0
 	github.com/apple/pkl-go v0.5.3
 	github.com/avast/retry-go/v4 v4.5.1
@@ -173,7 +173,7 @@ require (
 	github.com/proullon/ramsql v0.1.3
 	github.com/qustavo/dotsql v1.2.0
 	github.com/redis/rueidis/rueidishook v1.0.31
-	github.com/remychantenay/slog-otel v1.2.3
+	github.com/remychantenay/slog-otel v1.2.4
 	github.com/reugn/go-streams v0.10.0
 	github.com/rickar/cal/v2 v2.1.15
 	github.com/russross/blackfriday v1.6.0
@@ -249,7 +249,7 @@ require (
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
-	github.com/google/pprof v0.0.0-20240225044709-fd706174c886 // indirect
+	github.com/google/pprof v0.0.0-20240227163752-401108e1b7e7 // indirect
 	github.com/gopherjs/gopherjs v1.17.2 // indirect
 	github.com/gorilla/css v1.0.1 // indirect
 	github.com/gotestyourself/gotestyourself v2.2.0+incompatible // indirect
@@ -311,8 +311,8 @@ require (
 	golang.org/x/term v0.17.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
 	golang.org/x/tools v0.18.0 // indirect
-	google.golang.org/genproto v0.0.0-20240221002015-b0ce06bbee7c // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20240221002015-b0ce06bbee7c // indirect
+	google.golang.org/genproto v0.0.0-20240227224415-6ceb2ff114de // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20240227224415-6ceb2ff114de // indirect
 	gotest.tools v2.2.0+incompatible // indirect
 	mellium.im/sasl v0.3.1 // indirect
 	modernc.org/gc/v3 v3.0.0-20240107210532-573471604cb6 // indirect
