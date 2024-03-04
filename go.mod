@@ -76,7 +76,7 @@ require (
 	github.com/vmihailenco/go-tinylfu v0.2.2
 	github.com/vmihailenco/msgpack/v5 v5.4.1
 	github.com/zeebo/xxh3 v1.0.2
-	gitlab.com/greyxor/slogor v1.2.4
+	gitlab.com/greyxor/slogor v1.2.5
 	go.etcd.io/bbolt v1.3.9
 	go.etcd.io/etcd/client/v3 v3.5.12
 	go.temporal.io/api v1.29.0
@@ -102,7 +102,7 @@ require (
 	github.com/alicebob/miniredis/v2 v2.31.1
 	github.com/allegro/bigcache/v3 v3.1.0
 	github.com/ammario/tlru v0.3.0
-	github.com/apache/incubator-fury/go/fury v0.0.0-20240303070208-ed6fa4398fa4
+	github.com/apache/incubator-fury/go/fury v0.0.0-20240304023425-0bd1053b2ecb
 	github.com/apache/thrift v0.19.0
 	github.com/apple/pkl-go v0.5.3
 	github.com/avast/retry-go/v4 v4.5.1
@@ -132,7 +132,7 @@ require (
 	github.com/go-kratos/aegis v0.2.0
 	github.com/go-rel/mysql v0.12.0
 	github.com/go-rel/postgres v0.11.0
-	github.com/go-rel/rel v0.41.0
+	github.com/go-rel/rel v0.42.0
 	github.com/go-rel/sqlite3 v0.11.0
 	github.com/go-slog/otelslog v0.1.0
 	github.com/gobwas/glob v0.2.3
@@ -314,7 +314,7 @@ require (
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240228224816-df926f6c8641 // indirect
 	gotest.tools v2.2.0+incompatible // indirect
 	mellium.im/sasl v0.3.1 // indirect
-	modernc.org/gc/v3 v3.0.0-20240107210532-573471604cb6 // indirect
+	modernc.org/gc/v3 v3.0.0-20240304020402-f0dba7c97c2b // indirect
 	modernc.org/libc v1.41.0 // indirect
 	modernc.org/mathutil v1.6.0 // indirect
 	modernc.org/memory v1.7.2 // indirect
