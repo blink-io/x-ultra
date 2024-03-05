@@ -63,7 +63,7 @@ func TestSnowflake_1(t *testing.T) {
 	gid := snowflake.GetEnv("guild_id")
 	require.NotNil(t, gid)
 
-	// returns a snowflake ID from an environment variable and a bool indicating if the key was found
+	// returns a snowflake ID from an environment variable, and a bool indicating if the key was found
 	ggid, found := snowflake.LookupEnv("guild_id")
 	require.NotNil(t, ggid)
 	require.NotNil(t, found)
