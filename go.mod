@@ -26,7 +26,7 @@ require (
 	github.com/goccy/go-reflect v1.2.0
 	github.com/gofrs/uuid/v5 v5.0.0
 	github.com/gogo/protobuf v1.3.2
-	github.com/google/flatbuffers v23.5.26+incompatible
+	github.com/google/flatbuffers v24.3.6+incompatible
 	github.com/google/uuid v1.6.0
 	github.com/gopacket/gopacket v1.2.0
 	github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.0.1
@@ -89,7 +89,7 @@ require (
 	google.golang.org/grpc v1.62.1
 	google.golang.org/protobuf v1.33.0
 	gopkg.in/yaml.v3 v3.0.1
-	modernc.org/sqlite v1.29.2
+	modernc.org/sqlite v1.29.3
 )
 
 require (
@@ -102,7 +102,7 @@ require (
 	github.com/alicebob/miniredis/v2 v2.31.1
 	github.com/allegro/bigcache/v3 v3.1.0
 	github.com/ammario/tlru v0.3.0
-	github.com/apache/incubator-fury/go/fury v0.0.0-20240305060041-ebc1515be80f
+	github.com/apache/incubator-fury/go/fury v0.0.0-20240306122257-01f1b66383a1
 	github.com/apache/thrift v0.19.0
 	github.com/apple/pkl-go v0.5.3
 	github.com/avast/retry-go/v4 v4.5.1
@@ -124,7 +124,7 @@ require (
 	github.com/exaring/otelpgx v0.5.4
 	github.com/expr-lang/expr v1.16.1
 	github.com/gabriel-vasile/mimetype v1.4.3
-	github.com/go-co-op/gocron/v2 v2.2.4
+	github.com/go-co-op/gocron/v2 v2.2.5
 	github.com/go-crypt/crypt v0.2.18
 	github.com/go-faster/city v1.0.1
 	github.com/go-faster/xor v1.0.0
@@ -142,7 +142,7 @@ require (
 	github.com/gorilla/websocket v1.5.1
 	github.com/h2non/filetype v1.1.3
 	github.com/huandu/go-sqlbuilder v1.25.0
-	github.com/imroc/req/v3 v3.42.3
+	github.com/imroc/req/v3 v3.43.0
 	github.com/jackc/chunkreader/v2 v2.0.1
 	github.com/jackc/puddle/v2 v2.2.1
 	github.com/jhump/protoreflect v1.15.6
