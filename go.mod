@@ -19,7 +19,7 @@ require (
 	github.com/go-chi/chi/v5 v5.0.12
 	github.com/go-kratos/kratos/v2 v2.7.2
 	github.com/go-playground/validator/v10 v10.19.0
-	github.com/go-resty/resty/v2 v2.11.0
+	github.com/go-resty/resty/v2 v2.12.0
 	github.com/go-sql-driver/mysql v1.8.0
 	github.com/go-task/slim-sprig/v3 v3.0.0
 	github.com/goccy/go-json v0.10.2
@@ -50,12 +50,12 @@ require (
 	github.com/nicksnyder/go-i18n/v2 v2.4.0
 	github.com/npillmayer/nestext v0.1.3
 	github.com/oklog/ulid/v2 v2.1.0
-	github.com/onsi/ginkgo/v2 v2.16.0
-	github.com/onsi/gomega v1.31.1
+	github.com/onsi/ginkgo/v2 v2.17.0
+	github.com/onsi/gomega v1.32.0
 	github.com/outcaste-io/ristretto v0.2.3
 	github.com/pelletier/go-toml/v2 v2.1.1
 	github.com/pierrec/lz4/v4 v4.1.21
-	github.com/quic-go/quic-go v0.41.0
+	github.com/quic-go/quic-go v0.42.0
 	github.com/redis/go-redis/extra/rediscmd/v9 v9.0.5
 	github.com/redis/go-redis/v9 v9.5.1
 	github.com/redis/rueidis v1.0.32
@@ -72,7 +72,7 @@ require (
 	github.com/uptrace/bun/dialect/mysqldialect v1.1.17
 	github.com/uptrace/bun/dialect/pgdialect v1.1.17
 	github.com/uptrace/bun/dialect/sqlitedialect v1.1.17
-	github.com/uptrace/opentelemetry-go-extra/otelsql v0.2.3
+	github.com/uptrace/opentelemetry-go-extra/otelsql v0.2.4
 	github.com/vmihailenco/go-tinylfu v0.2.2
 	github.com/vmihailenco/msgpack/v5 v5.4.1
 	github.com/zeebo/xxh3 v1.0.2
@@ -85,7 +85,7 @@ require (
 	go.uber.org/zap v1.27.0
 	golang.org/x/crypto v0.21.0
 	golang.org/x/text v0.14.0
-	google.golang.org/genproto/googleapis/api v0.0.0-20240314234333-6e1732d8331c
+	google.golang.org/genproto/googleapis/api v0.0.0-20240318140521-94a12d6c2237
 	google.golang.org/grpc v1.62.1
 	google.golang.org/protobuf v1.33.0
 	gopkg.in/yaml.v3 v3.0.1
@@ -102,7 +102,7 @@ require (
 	github.com/alicebob/miniredis/v2 v2.32.1
 	github.com/allegro/bigcache/v3 v3.1.0
 	github.com/ammario/tlru v0.4.0
-	github.com/apache/incubator-fury/go/fury v0.0.0-20240317104734-0437556ef4f3
+	github.com/apache/incubator-fury/go/fury v0.0.0-20240318072015-ea622446ed8f
 	github.com/apache/thrift v0.19.0
 	github.com/apple/pkl-go v0.6.0
 	github.com/avast/retry-go/v4 v4.5.1
@@ -193,8 +193,8 @@ require (
 	github.com/stephenafamo/scan v0.5.0
 	github.com/thanhpk/randstr v1.0.6
 	github.com/uptrace/bun/driver/pgdriver v1.1.17
-	github.com/uptrace/opentelemetry-go-extra/otelutil v0.2.3
-	github.com/uptrace/opentelemetry-go-extra/otelzap v0.2.3
+	github.com/uptrace/opentelemetry-go-extra/otelutil v0.2.4
+	github.com/uptrace/opentelemetry-go-extra/otelzap v0.2.4
 	github.com/vingarcia/ksql v1.12.0
 	github.com/vmihailenco/tagparser/v2 v2.0.0
 	github.com/wk8/go-ordered-map/v2 v2.1.8
@@ -250,7 +250,7 @@ require (
 	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
-	github.com/google/pprof v0.0.0-20240227163752-401108e1b7e7 // indirect
+	github.com/google/pprof v0.0.0-20240319011627-a57c5dfe54fd // indirect
 	github.com/gopherjs/gopherjs v1.17.2 // indirect
 	github.com/gorilla/css v1.0.1 // indirect
 	github.com/gotestyourself/gotestyourself v2.2.0+incompatible // indirect
@@ -306,17 +306,17 @@ require (
 	go.opentelemetry.io/otel/sdk v1.24.0 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
 	go.uber.org/mock v0.4.0 // indirect
-	golang.org/x/exp v0.0.0-20240314144324-c7f7c6466f7f // indirect
+	golang.org/x/exp v0.0.0-20240318143956-a85f2c67cd81 // indirect
 	golang.org/x/mod v0.16.0 // indirect
 	golang.org/x/sync v0.6.0 // indirect
 	golang.org/x/term v0.18.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
 	golang.org/x/tools v0.19.0 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20240314234333-6e1732d8331c // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20240318140521-94a12d6c2237 // indirect
 	gotest.tools v2.2.0+incompatible // indirect
 	mellium.im/sasl v0.3.1 // indirect
 	modernc.org/gc/v3 v3.0.0-20240304020402-f0dba7c97c2b // indirect
-	modernc.org/libc v1.45.0 // indirect
+	modernc.org/libc v1.45.2 // indirect
 	modernc.org/mathutil v1.6.0 // indirect
 	modernc.org/memory v1.7.2 // indirect
 	modernc.org/strutil v1.2.0 // indirect
