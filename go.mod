@@ -17,7 +17,7 @@ require (
 	github.com/fxamacker/cbor/v2 v2.6.0
 	github.com/getsentry/sentry-go v0.27.0
 	github.com/go-chi/chi/v5 v5.0.12
-	github.com/go-kratos/kratos/v2 v2.7.2
+	github.com/go-kratos/kratos/v2 v2.7.3
 	github.com/go-playground/validator/v10 v10.19.0
 	github.com/go-resty/resty/v2 v2.12.0
 	github.com/go-sql-driver/mysql v1.8.0
@@ -46,14 +46,14 @@ require (
 	github.com/miekg/dns v1.1.58
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/natefinch/lumberjack/v3 v3.0.0-alpha
-	github.com/nats-io/nats.go v1.33.1
+	github.com/nats-io/nats.go v1.34.0
 	github.com/nicksnyder/go-i18n/v2 v2.4.0
 	github.com/npillmayer/nestext v0.1.3
 	github.com/oklog/ulid/v2 v2.1.0
 	github.com/onsi/ginkgo/v2 v2.17.0
 	github.com/onsi/gomega v1.32.0
 	github.com/outcaste-io/ristretto v0.2.3
-	github.com/pelletier/go-toml/v2 v2.1.1
+	github.com/pelletier/go-toml/v2 v2.2.0
 	github.com/pierrec/lz4/v4 v4.1.21
 	github.com/quic-go/quic-go v0.42.0
 	github.com/redis/go-redis/extra/rediscmd/v9 v9.0.5
@@ -79,7 +79,7 @@ require (
 	gitlab.com/greyxor/slogor v1.2.6
 	go.etcd.io/bbolt v1.3.9
 	go.etcd.io/etcd/client/v3 v3.5.12
-	go.temporal.io/api v1.30.0
+	go.temporal.io/api v1.30.1
 	go.temporal.io/sdk v1.26.0
 	go.uber.org/multierr v1.11.0
 	go.uber.org/zap v1.27.0
@@ -102,8 +102,8 @@ require (
 	github.com/alicebob/miniredis/v2 v2.32.1
 	github.com/allegro/bigcache/v3 v3.1.0
 	github.com/ammario/tlru v0.4.0
-	github.com/apache/incubator-fury/go/fury v0.0.0-20240318072015-ea622446ed8f
-	github.com/apache/thrift v0.19.0
+	github.com/apache/incubator-fury/go/fury v0.0.0-20240320045648-c29488575c44
+	github.com/apache/thrift v0.20.0
 	github.com/apple/pkl-go v0.6.0
 	github.com/avast/retry-go/v4 v4.5.1
 	github.com/beevik/guid v1.0.0
@@ -122,7 +122,7 @@ require (
 	github.com/eapache/queue/v2 v2.0.0-20230407133247-75960ed334e4
 	github.com/emicklei/proto v1.13.2
 	github.com/exaring/otelpgx v0.5.4
-	github.com/expr-lang/expr v1.16.1
+	github.com/expr-lang/expr v1.16.2
 	github.com/gabriel-vasile/mimetype v1.4.3
 	github.com/go-co-op/gocron/v2 v2.2.6
 	github.com/go-crypt/crypt v0.2.19
@@ -173,7 +173,7 @@ require (
 	github.com/proullon/ramsql v0.1.3
 	github.com/qustavo/dotsql v1.2.0
 	github.com/redis/rueidis/rueidishook v1.0.32
-	github.com/remychantenay/slog-otel v1.2.4
+	github.com/remychantenay/slog-otel v1.3.0
 	github.com/reugn/go-streams v0.10.0
 	github.com/rickar/cal/v2 v2.1.15
 	github.com/russross/blackfriday v1.6.0
@@ -209,7 +209,7 @@ require (
 )
 
 require (
-	connectrpc.com/connect v1.15.0 // indirect
+	connectrpc.com/connect v1.16.0 // indirect
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/Azure/go-ansiterm v0.0.0-20230124172434-306776ec8161 // indirect
 	github.com/Microsoft/go-winio v0.6.1 // indirect
@@ -250,7 +250,7 @@ require (
 	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
-	github.com/google/pprof v0.0.0-20240319011627-a57c5dfe54fd // indirect
+	github.com/google/pprof v0.0.0-20240320155624-b11c3daa6f07 // indirect
 	github.com/gopherjs/gopherjs v1.17.2 // indirect
 	github.com/gorilla/css v1.0.1 // indirect
 	github.com/gotestyourself/gotestyourself v2.2.0+incompatible // indirect
@@ -316,7 +316,7 @@ require (
 	gotest.tools v2.2.0+incompatible // indirect
 	mellium.im/sasl v0.3.1 // indirect
 	modernc.org/gc/v3 v3.0.0-20240304020402-f0dba7c97c2b // indirect
-	modernc.org/libc v1.45.2 // indirect
+	modernc.org/libc v1.47.0 // indirect
 	modernc.org/mathutil v1.6.0 // indirect
 	modernc.org/memory v1.7.2 // indirect
 	modernc.org/strutil v1.2.0 // indirect
