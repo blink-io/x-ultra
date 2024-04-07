@@ -2,12 +2,36 @@ package tests
 
 import (
 	"context"
+	"encoding/hex"
+	"fmt"
 	"testing"
 	"time"
 
 	"github.com/alicebob/miniredis/v2"
+	"github.com/gogo/protobuf/proto"
 	"github.com/redis/go-redis/v9"
+	"github.com/stretchr/testify/require"
+	"google.golang.org/protobuf/types/known/durationpb"
 )
+
+func TestRedis_Protobuf_1(t *testing.T) {
+	ctx := context.Background()
+
+	c := redis.NewUniversalClient(&redis.UniversalOptions{
+		Addrs: []string{":6379"},
+	})
+
+	pb := durationpb.New(time.Second * 100)
+	pbData, err := proto.Marshal(pb)
+	require.NoError(t, err)
+
+	hstr := hex.EncodeToString(pbData)
+	fmt.Println("Hex: ", hstr)
+	fmt.Println("xxx: ", fmt.Sprint(pbData))
+
+	errv := c.Set(ctx, "dur_pb", pb, 0).Err()
+	require.NoError(t, errv)
+}
 
 func TestRedisServer_Mini(t *testing.T) {
 	s := miniredis.RunT(t)
@@ -39,4 +63,5 @@ func TestRedisServer_Mini(t *testing.T) {
 	if s.Exists("foo") {
 
 	}
+
 }

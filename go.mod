@@ -79,7 +79,7 @@ require (
 	gitlab.com/greyxor/slogor v1.2.7
 	go.etcd.io/bbolt v1.3.9
 	go.etcd.io/etcd/client/v3 v3.5.13
-	go.temporal.io/api v1.30.1
+	go.temporal.io/api v1.31.0
 	go.temporal.io/sdk v1.26.0
 	go.uber.org/multierr v1.11.0
 	go.uber.org/zap v1.27.0
@@ -102,7 +102,7 @@ require (
 	github.com/alicebob/miniredis/v2 v2.32.1
 	github.com/allegro/bigcache/v3 v3.1.0
 	github.com/ammario/tlru v0.4.0
-	github.com/apache/incubator-fury/go/fury v0.0.0-20240406124306-1d302ef1112d
+	github.com/apache/incubator-fury/go/fury v0.0.0-20240407043309-f892802f6d7b
 	github.com/apache/thrift v0.20.0
 	github.com/apple/pkl-go v0.6.0
 	github.com/avast/retry-go/v4 v4.5.1

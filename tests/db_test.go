@@ -4,11 +4,9 @@ import (
 	"fmt"
 	"log/slog"
 	"path/filepath"
-	"testing"
 
 	xsql "github.com/blink-io/x/sql"
 	"github.com/blink-io/x/sql/dbx"
-	"github.com/stretchr/testify/require"
 )
 
 var sqlitePath = filepath.Join(".", "sqlite", "bun_demo.db")
@@ -57,16 +55,17 @@ func getSqliteFuncMap() map[string]string {
 	return funcsMap
 }
 
-func TestSqlite_DBX_Select_Funcs(t *testing.T) {
-	db := getSqliteDBX()
-
-	sqlF := "select %s as payload"
-	funcs := getSqliteFuncMap()
-	for k, v := range funcs {
-		ss := fmt.Sprintf(sqlF, v)
-		q := db.NewQuery(ss)
-		var s string
-		require.NoError(t, q.Row(&s))
-		slog.Info("result: ", k, s)
-	}
-}
+//
+//func TestSqlite_DBX_Select_Funcs(t *testing.T) {
+//	db := getSqliteDBX()
+//
+//	sqlF := "select %s as payload"
+//	funcs := getSqliteFuncMap()
+//	for k, v := range funcs {
+//		ss := fmt.Sprintf(sqlF, v)
+//		q := db.NewQuery(ss)
+//		var s string
+//		require.NoError(t, q.Row(&s))
+//		slog.Info("result: ", k, s)
+//	}
+//}

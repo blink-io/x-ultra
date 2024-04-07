@@ -36,7 +36,7 @@ func TestErrors_1(t *testing.T) {
 	slog.Debug("Useful debug message.")
 
 	fmt.Println("")
-	slog.SetDefault(slog.New(slogor.NewHandler(os.Stderr, &slogor.Options{
+	slog.SetDefault(slog.New(slogor.NewHandler(os.Stderr, slogor.Options{
 		TimeFormat: time.Kitchen,
 		Level:      slog.LevelDebug,
 		ShowSource: false,
@@ -45,7 +45,7 @@ func TestErrors_1(t *testing.T) {
 	slog.Info("Example with kitchen time.")
 	slog.Debug("Example with kitchen time.")
 	fmt.Println("")
-	slog.SetDefault(slog.New(slogor.NewHandler(os.Stderr, &slogor.Options{
+	slog.SetDefault(slog.New(slogor.NewHandler(os.Stderr, slogor.Options{
 		TimeFormat: time.RFC3339Nano,
 		Level:      slog.LevelDebug,
 		ShowSource: true,
@@ -53,7 +53,7 @@ func TestErrors_1(t *testing.T) {
 	slog.Info("Example with RFC 3339 time and source path")
 
 	fmt.Println("")
-	slog.SetDefault(slog.New(slogor.NewHandler(os.Stderr, &slogor.Options{
+	slog.SetDefault(slog.New(slogor.NewHandler(os.Stderr, slogor.Options{
 		TimeFormat: time.Stamp,
 		Level:      slog.LevelDebug,
 		ShowSource: false,
