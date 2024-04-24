@@ -58,7 +58,7 @@ require (
 	github.com/quic-go/quic-go v0.42.0
 	github.com/redis/go-redis/extra/rediscmd/v9 v9.0.5
 	github.com/redis/go-redis/v9 v9.5.1
-	github.com/redis/rueidis v1.0.34
+	github.com/redis/rueidis v1.0.35
 	github.com/rs/xid v1.5.0
 	github.com/sanity-io/litter v1.5.5
 	github.com/segmentio/ksuid v1.0.4
@@ -76,7 +76,7 @@ require (
 	github.com/vmihailenco/go-tinylfu v0.2.2
 	github.com/vmihailenco/msgpack/v5 v5.4.1
 	github.com/zeebo/xxh3 v1.0.2
-	gitlab.com/greyxor/slogor v1.2.7
+	gitlab.com/greyxor/slogor v1.2.8
 	go.etcd.io/bbolt v1.3.9
 	go.etcd.io/etcd/client/v3 v3.5.13
 	go.temporal.io/api v1.32.0
@@ -102,7 +102,7 @@ require (
 	github.com/alicebob/miniredis/v2 v2.32.1
 	github.com/allegro/bigcache/v3 v3.1.0
 	github.com/ammario/tlru v0.4.0
-	github.com/apache/incubator-fury/go/fury v0.0.0-20240421001917-9cf495b9ffc7
+	github.com/apache/incubator-fury/go/fury v0.0.0-20240424114434-d3a787687b18
 	github.com/apache/thrift v0.20.0
 	github.com/apple/pkl-go v0.6.0
 	github.com/avast/retry-go/v4 v4.6.0
@@ -124,7 +124,7 @@ require (
 	github.com/exaring/otelpgx v0.5.4
 	github.com/expr-lang/expr v1.16.5
 	github.com/gabriel-vasile/mimetype v1.4.3
-	github.com/go-co-op/gocron/v2 v2.2.9
+	github.com/go-co-op/gocron/v2 v2.2.10
 	github.com/go-crypt/crypt v0.2.21
 	github.com/go-faster/city v1.0.1
 	github.com/go-faster/xor v1.0.0
@@ -141,7 +141,7 @@ require (
 	github.com/gorilla/mux v1.8.1
 	github.com/gorilla/websocket v1.5.1
 	github.com/h2non/filetype v1.1.3
-	github.com/huandu/go-sqlbuilder v1.27.0
+	github.com/huandu/go-sqlbuilder v1.27.1
 	github.com/imroc/req/v3 v3.43.3
 	github.com/jackc/chunkreader/v2 v2.0.1
 	github.com/jackc/puddle/v2 v2.2.1
@@ -151,9 +151,9 @@ require (
 	github.com/kardianos/osext v0.0.0-20190222173326-2bc1f35cddc0
 	github.com/leonelquinteros/gotext v1.6.0
 	github.com/leporo/sqlf v1.4.0
-	github.com/lesismal/nbio v1.5.6
+	github.com/lesismal/nbio v1.5.8
 	github.com/lib/pq v1.10.9
-	github.com/life4/genesis v1.10.2
+	github.com/life4/genesis v1.10.3
 	github.com/mailgun/raymond/v2 v2.0.48
 	github.com/matryer/is v1.4.1
 	github.com/mattn/go-runewidth v0.0.15
@@ -172,7 +172,7 @@ require (
 	github.com/philhofer/fwd v1.1.2
 	github.com/proullon/ramsql v0.1.3
 	github.com/qustavo/dotsql v1.2.0
-	github.com/redis/rueidis/rueidishook v1.0.34
+	github.com/redis/rueidis/rueidishook v1.0.35
 	github.com/remychantenay/slog-otel v1.3.0
 	github.com/reugn/go-streams v0.10.0
 	github.com/rickar/cal/v2 v2.1.15
@@ -221,7 +221,7 @@ require (
 	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/bahlo/generic-list-go v0.2.0 // indirect
 	github.com/bits-and-blooms/bitset v1.13.0 // indirect
-	github.com/bufbuild/protocompile v0.11.0 // indirect
+	github.com/bufbuild/protocompile v0.12.0 // indirect
 	github.com/buger/jsonparser v1.1.1 // indirect
 	github.com/cenkalti/backoff v2.2.1+incompatible // indirect
 	github.com/cloudflare/circl v1.3.7 // indirect
@@ -250,7 +250,7 @@ require (
 	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
-	github.com/google/pprof v0.0.0-20240416155748-26353dc0451f // indirect
+	github.com/google/pprof v0.0.0-20240422182052-72c8669ad3e7 // indirect
 	github.com/gopherjs/gopherjs v1.17.2 // indirect
 	github.com/gorilla/css v1.0.1 // indirect
 	github.com/gotestyourself/gotestyourself v2.2.0+incompatible // indirect
