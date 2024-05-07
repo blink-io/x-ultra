@@ -88,7 +88,7 @@ func (s *adapter) Init(ctx context.Context, opts Options) {
 	s.srv = &http3.Server{
 		Addr:       s.address,
 		TLSConfig:  s.tlsConf,
-		QuicConfig: s.qconf,
+		QUICConfig: s.qconf,
 		Handler:    opts.Handler,
 	}
 }

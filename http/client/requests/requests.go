@@ -22,7 +22,7 @@ func HTTP3Conf(tlsConf *tls.Config, qconf *quic.Config) *Builder {
 	cc := requests.New().
 		Transport(&http3.RoundTripper{
 			TLSClientConfig: tlsConf,
-			QuicConfig:      qconf,
+			QUICConfig:      qconf,
 		})
 	return cc
 }
