@@ -19,12 +19,12 @@ require (
 	github.com/go-chi/chi/v5 v5.0.12
 	github.com/go-kratos/kratos/v2 v2.7.3
 	github.com/go-playground/validator/v10 v10.20.0
-	github.com/go-resty/resty/v2 v2.12.0
+	github.com/go-resty/resty/v2 v2.13.1
 	github.com/go-sql-driver/mysql v1.8.1
 	github.com/go-task/slim-sprig/v3 v3.0.0
 	github.com/goccy/go-json v0.10.2
 	github.com/goccy/go-reflect v1.2.0
-	github.com/gofrs/uuid/v5 v5.1.0
+	github.com/gofrs/uuid/v5 v5.2.0
 	github.com/gogo/protobuf v1.3.2
 	github.com/google/flatbuffers v24.3.25+incompatible
 	github.com/google/uuid v1.6.0
@@ -50,7 +50,7 @@ require (
 	github.com/nicksnyder/go-i18n/v2 v2.4.0
 	github.com/npillmayer/nestext v0.1.3
 	github.com/oklog/ulid/v2 v2.1.0
-	github.com/onsi/ginkgo/v2 v2.17.2
+	github.com/onsi/ginkgo/v2 v2.17.3
 	github.com/onsi/gomega v1.33.1
 	github.com/outcaste-io/ristretto v0.2.3
 	github.com/pelletier/go-toml/v2 v2.2.2
@@ -58,7 +58,7 @@ require (
 	github.com/quic-go/quic-go v0.43.1
 	github.com/redis/go-redis/extra/rediscmd/v9 v9.0.5
 	github.com/redis/go-redis/v9 v9.5.1
-	github.com/redis/rueidis v1.0.36
+	github.com/redis/rueidis v1.0.37
 	github.com/rs/xid v1.5.0
 	github.com/sanity-io/litter v1.5.5
 	github.com/segmentio/ksuid v1.0.4
@@ -79,14 +79,14 @@ require (
 	gitlab.com/greyxor/slogor v1.2.8
 	go.etcd.io/bbolt v1.3.10
 	go.etcd.io/etcd/client/v3 v3.5.13
-	go.temporal.io/api v1.32.0
+	go.temporal.io/api v1.33.0
 	go.temporal.io/sdk v1.26.1
 	go.uber.org/multierr v1.11.0
 	go.uber.org/zap v1.27.0
 	golang.org/x/crypto v0.23.0
 	golang.org/x/text v0.15.0
-	google.golang.org/genproto/googleapis/api v0.0.0-20240506185236-b8a5c65736ae
-	google.golang.org/grpc v1.63.2
+	google.golang.org/genproto/googleapis/api v0.0.0-20240513163218-0867130af1f8
+	google.golang.org/grpc v1.64.0
 	google.golang.org/protobuf v1.34.1
 	gopkg.in/yaml.v3 v3.0.1
 	modernc.org/sqlite v1.29.9
@@ -102,7 +102,7 @@ require (
 	github.com/alicebob/miniredis/v2 v2.32.1
 	github.com/allegro/bigcache/v3 v3.1.0
 	github.com/ammario/tlru v0.4.0
-	github.com/apache/incubator-fury/go/fury v0.0.0-20240506162936-72fdfd5946b1
+	github.com/apache/incubator-fury/go/fury v0.0.0-20240514113234-b904639db689
 	github.com/apache/thrift v0.20.0
 	github.com/apple/pkl-go v0.6.0
 	github.com/avast/retry-go/v4 v4.6.0
@@ -122,10 +122,10 @@ require (
 	github.com/eapache/queue/v2 v2.0.0-20230407133247-75960ed334e4
 	github.com/emicklei/proto v1.13.2
 	github.com/exaring/otelpgx v0.5.4
-	github.com/expr-lang/expr v1.16.5
+	github.com/expr-lang/expr v1.16.7
 	github.com/gabriel-vasile/mimetype v1.4.3
 	github.com/go-co-op/gocron/v2 v2.5.0
-	github.com/go-crypt/crypt v0.2.21
+	github.com/go-crypt/crypt v0.2.22
 	github.com/go-faster/city v1.0.1
 	github.com/go-faster/xor v1.0.0
 	github.com/go-kit/log v0.2.1
@@ -142,7 +142,7 @@ require (
 	github.com/gorilla/websocket v1.5.1
 	github.com/h2non/filetype v1.1.3
 	github.com/huandu/go-sqlbuilder v1.27.1
-	github.com/imroc/req/v3 v3.43.3
+	github.com/imroc/req/v3 v3.43.4
 	github.com/jackc/chunkreader/v2 v2.0.1
 	github.com/jackc/puddle/v2 v2.2.1
 	github.com/jhump/protoreflect v1.16.0
@@ -172,12 +172,12 @@ require (
 	github.com/philhofer/fwd v1.1.2
 	github.com/proullon/ramsql v0.1.3
 	github.com/qustavo/dotsql v1.2.0
-	github.com/redis/rueidis/rueidishook v1.0.36
+	github.com/redis/rueidis/rueidishook v1.0.37
 	github.com/remychantenay/slog-otel v1.3.0
 	github.com/reugn/go-streams v0.10.0
 	github.com/rickar/cal/v2 v2.1.15
 	github.com/russross/blackfriday v1.6.0
-	github.com/samber/do/v2 v2.0.0-beta.5
+	github.com/samber/do/v2 v2.0.0-beta.7
 	github.com/samber/slog-common v0.16.0
 	github.com/samber/slog-multi v1.0.2
 	github.com/samber/slog-nats v0.2.0
@@ -198,7 +198,7 @@ require (
 	github.com/vingarcia/ksql v1.12.0
 	github.com/vmihailenco/tagparser/v2 v2.0.0
 	github.com/wk8/go-ordered-map/v2 v2.1.8
-	github.com/xo/dburl v0.23.0
+	github.com/xo/dburl v0.23.1
 	github.com/yuin/goldmark v1.7.1
 	github.com/zitadel/passwap v0.5.0
 	go.opentelemetry.io/otel v1.26.0
@@ -209,7 +209,7 @@ require (
 )
 
 require (
-	connectrpc.com/connect v1.16.1 // indirect
+	connectrpc.com/connect v1.16.2 // indirect
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/Azure/go-ansiterm v0.0.0-20230124172434-306776ec8161 // indirect
 	github.com/Microsoft/go-winio v0.6.2 // indirect
@@ -235,7 +235,7 @@ require (
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/facebookgo/clock v0.0.0-20150410010913-600d898af40a // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
-	github.com/go-crypt/x v0.2.14 // indirect
+	github.com/go-crypt/x v0.2.15 // indirect
 	github.com/go-logfmt/logfmt v0.6.0 // indirect
 	github.com/go-logr/logr v1.4.1 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
@@ -249,7 +249,7 @@ require (
 	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
-	github.com/google/pprof v0.0.0-20240430035430-e4905b036c4e // indirect
+	github.com/google/pprof v0.0.0-20240509144519-723abb6459b7 // indirect
 	github.com/gopherjs/gopherjs v1.17.2 // indirect
 	github.com/gorilla/css v1.0.1 // indirect
 	github.com/gotestyourself/gotestyourself v2.2.0+incompatible // indirect
@@ -289,12 +289,12 @@ require (
 	github.com/robfig/cron v1.2.0 // indirect
 	github.com/robfig/cron/v3 v3.0.1 // indirect
 	github.com/rogpeppe/go-internal v1.12.0 // indirect
-	github.com/samber/go-type-to-string v1.2.0 // indirect
+	github.com/samber/go-type-to-string v1.5.0 // indirect
 	github.com/samber/lo v1.39.0 // indirect
 	github.com/segmentio/asm v1.2.0 // indirect
 	github.com/serenize/snaker v0.0.0-20201027110005-a7ad2135616e // indirect
 	github.com/sirupsen/logrus v1.9.3 // indirect
-	github.com/smarty/assertions v1.15.1 // indirect
+	github.com/smarty/assertions v1.16.0 // indirect
 	github.com/stretchr/objx v0.5.2 // indirect
 	github.com/tmthrgd/go-hex v0.0.0-20190904060850-447a3041c3bc // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
@@ -311,7 +311,7 @@ require (
 	golang.org/x/term v0.20.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
 	golang.org/x/tools v0.21.0 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20240506185236-b8a5c65736ae // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20240513163218-0867130af1f8 // indirect
 	gotest.tools v2.2.0+incompatible // indirect
 	mellium.im/sasl v0.3.1 // indirect
 	modernc.org/gc/v3 v3.0.0-20240304020402-f0dba7c97c2b // indirect
