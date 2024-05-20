@@ -46,7 +46,7 @@ require (
 	github.com/miekg/dns v1.1.59
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/natefinch/lumberjack/v3 v3.0.0-alpha
-	github.com/nats-io/nats.go v1.34.1
+	github.com/nats-io/nats.go v1.35.0
 	github.com/nicksnyder/go-i18n/v2 v2.4.0
 	github.com/npillmayer/nestext v0.1.3
 	github.com/oklog/ulid/v2 v2.1.0
@@ -55,7 +55,7 @@ require (
 	github.com/outcaste-io/ristretto v0.2.3
 	github.com/pelletier/go-toml/v2 v2.2.2
 	github.com/pierrec/lz4/v4 v4.1.21
-	github.com/quic-go/quic-go v0.43.1
+	github.com/quic-go/quic-go v0.44.0
 	github.com/redis/go-redis/extra/rediscmd/v9 v9.0.5
 	github.com/redis/go-redis/v9 v9.5.1
 	github.com/redis/rueidis v1.0.37
@@ -64,7 +64,7 @@ require (
 	github.com/segmentio/ksuid v1.0.4
 	github.com/stretchr/testify v1.9.0
 	github.com/teris-io/shortid v0.0.0-20220617161101-71ec9f2aa569
-	github.com/tink-crypto/tink-go/v2 v2.1.0
+	github.com/tink-crypto/tink-go/v2 v2.2.0
 	github.com/twmb/murmur3 v1.1.8
 	github.com/ulikunitz/xz v0.5.12
 	github.com/unrolled/render v1.6.1
@@ -85,11 +85,11 @@ require (
 	go.uber.org/zap v1.27.0
 	golang.org/x/crypto v0.23.0
 	golang.org/x/text v0.15.0
-	google.golang.org/genproto/googleapis/api v0.0.0-20240513163218-0867130af1f8
+	google.golang.org/genproto/googleapis/api v0.0.0-20240515191416-fc5f0ca64291
 	google.golang.org/grpc v1.64.0
 	google.golang.org/protobuf v1.34.1
 	gopkg.in/yaml.v3 v3.0.1
-	modernc.org/sqlite v1.29.9
+	modernc.org/sqlite v1.29.10
 )
 
 require (
@@ -102,7 +102,7 @@ require (
 	github.com/alicebob/miniredis/v2 v2.32.1
 	github.com/allegro/bigcache/v3 v3.1.0
 	github.com/ammario/tlru v0.4.0
-	github.com/apache/incubator-fury/go/fury v0.0.0-20240514113234-b904639db689
+	github.com/apache/incubator-fury/go/fury v0.0.0-20240516134149-262c578bd29b
 	github.com/apache/thrift v0.20.0
 	github.com/apple/pkl-go v0.6.0
 	github.com/avast/retry-go/v4 v4.6.0
@@ -142,7 +142,7 @@ require (
 	github.com/gorilla/websocket v1.5.1
 	github.com/h2non/filetype v1.1.3
 	github.com/huandu/go-sqlbuilder v1.27.1
-	github.com/imroc/req/v3 v3.43.4
+	github.com/imroc/req/v3 v3.43.5
 	github.com/jackc/chunkreader/v2 v2.0.1
 	github.com/jackc/puddle/v2 v2.2.1
 	github.com/jhump/protoreflect v1.16.0
@@ -254,7 +254,7 @@ require (
 	github.com/gorilla/css v1.0.1 // indirect
 	github.com/gotestyourself/gotestyourself v2.2.0+incompatible // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0 // indirect
-	github.com/grpc-ecosystem/grpc-gateway/v2 v2.19.1 // indirect
+	github.com/grpc-ecosystem/grpc-gateway/v2 v2.20.0 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/huandu/xstrings v1.4.0 // indirect
@@ -289,7 +289,7 @@ require (
 	github.com/robfig/cron v1.2.0 // indirect
 	github.com/robfig/cron/v3 v3.0.1 // indirect
 	github.com/rogpeppe/go-internal v1.12.0 // indirect
-	github.com/samber/go-type-to-string v1.5.0 // indirect
+	github.com/samber/go-type-to-string v1.7.0 // indirect
 	github.com/samber/lo v1.39.0 // indirect
 	github.com/segmentio/asm v1.2.0 // indirect
 	github.com/serenize/snaker v0.0.0-20201027110005-a7ad2135616e // indirect
@@ -311,11 +311,11 @@ require (
 	golang.org/x/term v0.20.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
 	golang.org/x/tools v0.21.0 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20240513163218-0867130af1f8 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20240515191416-fc5f0ca64291 // indirect
 	gotest.tools v2.2.0+incompatible // indirect
 	mellium.im/sasl v0.3.1 // indirect
 	modernc.org/gc/v3 v3.0.0-20240304020402-f0dba7c97c2b // indirect
-	modernc.org/libc v1.50.5 // indirect
+	modernc.org/libc v1.50.7 // indirect
 	modernc.org/mathutil v1.6.0 // indirect
 	modernc.org/memory v1.8.0 // indirect
 	modernc.org/strutil v1.2.0 // indirect
