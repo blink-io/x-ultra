@@ -72,14 +72,14 @@ require (
 	github.com/uptrace/bun/dialect/mysqldialect v1.2.1
 	github.com/uptrace/bun/dialect/pgdialect v1.2.1
 	github.com/uptrace/bun/dialect/sqlitedialect v1.2.1
-	github.com/uptrace/opentelemetry-go-extra/otelsql v0.2.4
+	github.com/uptrace/opentelemetry-go-extra/otelsql v0.3.0
 	github.com/vmihailenco/go-tinylfu v0.2.2
 	github.com/vmihailenco/msgpack/v5 v5.4.1
 	github.com/zeebo/xxh3 v1.0.2
 	gitlab.com/greyxor/slogor v1.2.8
 	go.etcd.io/bbolt v1.3.10
 	go.etcd.io/etcd/client/v3 v3.5.13
-	go.temporal.io/api v1.33.0
+	go.temporal.io/api v1.34.0
 	go.temporal.io/sdk v1.26.1
 	go.uber.org/multierr v1.11.0
 	go.uber.org/zap v1.27.0
@@ -179,7 +179,7 @@ require (
 	github.com/russross/blackfriday v1.6.0
 	github.com/samber/do/v2 v2.0.0-beta.7
 	github.com/samber/slog-common v0.16.0
-	github.com/samber/slog-multi v1.0.2
+	github.com/samber/slog-multi v1.0.3
 	github.com/samber/slog-nats v0.2.0
 	github.com/samber/slog-sentry/v2 v2.5.0
 	github.com/samber/slog-syslog v1.0.0
@@ -193,8 +193,8 @@ require (
 	github.com/stephenafamo/scan v0.5.0
 	github.com/thanhpk/randstr v1.0.6
 	github.com/uptrace/bun/driver/pgdriver v1.2.1
-	github.com/uptrace/opentelemetry-go-extra/otelutil v0.2.4
-	github.com/uptrace/opentelemetry-go-extra/otelzap v0.2.4
+	github.com/uptrace/opentelemetry-go-extra/otelutil v0.3.0
+	github.com/uptrace/opentelemetry-go-extra/otelzap v0.3.0
 	github.com/vingarcia/ksql v1.12.0
 	github.com/vmihailenco/tagparser/v2 v2.0.0
 	github.com/wk8/go-ordered-map/v2 v2.1.8
@@ -302,6 +302,7 @@ require (
 	github.com/yuin/gopher-lua v1.1.1 // indirect
 	go.etcd.io/etcd/api/v3 v3.5.13 // indirect
 	go.etcd.io/etcd/client/pkg/v3 v3.5.13 // indirect
+	go.opentelemetry.io/otel/log v0.3.0 // indirect
 	go.opentelemetry.io/otel/sdk v1.27.0 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
 	go.uber.org/mock v0.4.0 // indirect
