@@ -102,7 +102,7 @@ require (
 	github.com/alicebob/miniredis/v2 v2.32.1
 	github.com/allegro/bigcache/v3 v3.1.0
 	github.com/ammario/tlru v0.4.0
-	github.com/apache/incubator-fury/go/fury v0.0.0-20240528110143-489439d74c99
+	github.com/apache/incubator-fury/go/fury v0.0.0-20240529093637-3e996ffd15f1
 	github.com/apache/thrift v0.20.0
 	github.com/apple/pkl-go v0.6.0
 	github.com/avast/retry-go/v4 v4.6.0
