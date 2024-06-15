@@ -43,10 +43,10 @@ require (
 	github.com/lithammer/shortuuid/v4 v4.0.0
 	github.com/lmittmann/tint v1.0.4
 	github.com/matthewhartstonge/argon2 v1.0.0
-	github.com/miekg/dns v1.1.59
+	github.com/miekg/dns v1.1.61
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/natefinch/lumberjack/v3 v3.0.0-alpha
-	github.com/nats-io/nats.go v1.35.0
+	github.com/nats-io/nats.go v1.36.0
 	github.com/nicksnyder/go-i18n/v2 v2.4.0
 	github.com/npillmayer/nestext v0.1.3
 	github.com/oklog/ulid/v2 v2.1.0
@@ -58,7 +58,7 @@ require (
 	github.com/quic-go/quic-go v0.45.0
 	github.com/redis/go-redis/extra/rediscmd/v9 v9.5.3
 	github.com/redis/go-redis/v9 v9.5.3
-	github.com/redis/rueidis v1.0.38
+	github.com/redis/rueidis v1.0.39
 	github.com/rs/xid v1.5.0
 	github.com/sanity-io/litter v1.5.5
 	github.com/segmentio/ksuid v1.0.4
@@ -80,7 +80,7 @@ require (
 	go.etcd.io/bbolt v1.3.10
 	go.etcd.io/etcd/client/v3 v3.5.14
 	go.temporal.io/api v1.34.0
-	go.temporal.io/sdk v1.26.1
+	go.temporal.io/sdk v1.27.0
 	go.uber.org/multierr v1.11.0
 	go.uber.org/zap v1.27.0
 	golang.org/x/crypto v0.24.0
@@ -120,7 +120,7 @@ require (
 	github.com/eapache/go-resiliency v1.6.0
 	github.com/eapache/queue/v2 v2.0.0-20230407133247-75960ed334e4
 	github.com/emicklei/proto v1.13.2
-	github.com/exaring/otelpgx v0.6.0
+	github.com/exaring/otelpgx v0.6.1
 	github.com/expr-lang/expr v1.16.9
 	github.com/gabriel-vasile/mimetype v1.4.4
 	github.com/go-co-op/gocron/v2 v2.5.0
@@ -138,7 +138,7 @@ require (
 	github.com/gocraft/dbr/v2 v2.7.6
 	github.com/golang-cz/devslog v0.0.8
 	github.com/gorilla/mux v1.8.1
-	github.com/gorilla/websocket v1.5.2
+	github.com/gorilla/websocket v1.5.3
 	github.com/h2non/filetype v1.1.3
 	github.com/huandu/go-sqlbuilder v1.27.3
 	github.com/imroc/req/v3 v3.43.7
@@ -171,7 +171,7 @@ require (
 	github.com/philhofer/fwd v1.1.2
 	github.com/proullon/ramsql v0.1.3
 	github.com/qustavo/dotsql v1.2.0
-	github.com/redis/rueidis/rueidishook v1.0.38
+	github.com/redis/rueidis/rueidishook v1.0.39
 	github.com/remychantenay/slog-otel v1.3.1
 	github.com/reugn/go-streams v0.10.0
 	github.com/rickar/cal/v2 v2.1.15
@@ -198,7 +198,7 @@ require (
 	github.com/vmihailenco/tagparser/v2 v2.0.0
 	github.com/wk8/go-ordered-map/v2 v2.1.8
 	github.com/xo/dburl v0.23.2
-	github.com/yuin/goldmark v1.7.1
+	github.com/yuin/goldmark v1.7.2
 	github.com/zitadel/passwap v0.5.0
 	go.opentelemetry.io/otel v1.27.0
 	go.opentelemetry.io/otel/metric v1.27.0
@@ -276,7 +276,7 @@ require (
 	github.com/ncruces/go-strftime v0.1.9 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.1.0 // indirect
-	github.com/opencontainers/runc v1.1.12 // indirect
+	github.com/opencontainers/runc v1.1.13 // indirect
 	github.com/pborman/uuid v1.2.1 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
@@ -305,7 +305,7 @@ require (
 	go.opentelemetry.io/otel/sdk v1.27.0 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
 	go.uber.org/mock v0.4.0 // indirect
-	golang.org/x/exp v0.0.0-20240604190554-fc45aab8b7f8 // indirect
+	golang.org/x/exp v0.0.0-20240613232115-7f521ea00fb8 // indirect
 	golang.org/x/mod v0.18.0 // indirect
 	golang.org/x/sync v0.7.0 // indirect
 	golang.org/x/term v0.21.0 // indirect
@@ -315,7 +315,7 @@ require (
 	gotest.tools v2.2.0+incompatible // indirect
 	mellium.im/sasl v0.3.1 // indirect
 	modernc.org/gc/v3 v3.0.0-20240304020402-f0dba7c97c2b // indirect
-	modernc.org/libc v1.53.1 // indirect
+	modernc.org/libc v1.53.3 // indirect
 	modernc.org/mathutil v1.6.0 // indirect
 	modernc.org/memory v1.8.0 // indirect
 	modernc.org/strutil v1.2.0 // indirect
