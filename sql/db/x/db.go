@@ -14,11 +14,7 @@ const (
 
 type (
 	// ID defines the generic type for ID in repository
-	ID interface {
-		~int | ~int8 | ~int16 | ~int32 | ~int64 |
-			~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 |
-			~string
-	}
+	ID any
 	// Model defines the generic type for Model in repository
 	Model = any
 

@@ -10,7 +10,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/blink-io/x/util/random"
+	"github.com/blink-io/x/misc/random"
 	"github.com/stretchr/testify/require"
 	"golang.org/x/crypto/pbkdf2"
 )

@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/blink-io/x/misc/random"
 	xsql "github.com/blink-io/x/sql"
-	"github.com/blink-io/x/util/random"
 	"github.com/lmittmann/tint"
 	"gitlab.com/greyxor/slogor"
 )

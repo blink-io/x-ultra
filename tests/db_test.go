@@ -6,7 +6,6 @@ import (
 	"path/filepath"
 
 	xsql "github.com/blink-io/x/sql"
-	"github.com/blink-io/x/sql/dbx"
 )
 
 var sqlitePath = filepath.Join(".", "sqlite", "bun_demo.db")
@@ -27,16 +26,6 @@ func sqliteOpts() *xsql.Config {
 		},
 	}
 	return opt
-}
-
-func getSqliteDBX() *dbx.DB {
-	db, err := dbx.New(sqliteOpts())
-
-	if err != nil {
-		panic(err)
-	}
-
-	return db
 }
 
 func getSqliteFuncMap() map[string]string {

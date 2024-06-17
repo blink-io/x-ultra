@@ -9,8 +9,6 @@ import (
 
 	xsql "github.com/blink-io/x/sql"
 	xdb "github.com/blink-io/x/sql/db"
-	"github.com/blink-io/x/sql/dbq"
-	"github.com/blink-io/x/sql/dbx"
 	"github.com/samber/do/v2"
 	"github.com/stretchr/testify/require"
 )
@@ -23,7 +21,6 @@ func TestDo_1(t *testing.T) {
 
 	// inject both services into DI container
 	do.Provide[*xdb.DB](i, NewDB)
-	do.Provide[*dbq.DB](i, NewDBPWithErr)
 	do.Provide[*xsql.Config](i, NewConfig)
 
 	uname := "uni-opts"
@@ -41,14 +38,6 @@ func TestDo_1(t *testing.T) {
 
 	db, err := do.Invoke[*xdb.DB](i)
 	require.NoError(t, err)
-
-	dbx, err2 := do.Invoke[*dbx.DB](i)
-	require.Nil(t, dbx)
-	require.Error(t, err2)
-
-	dbp, err3 := do.Invoke[*dbq.DB](i)
-	require.Nil(t, dbp)
-	require.Equal(t, yesErr, err3)
 
 	row := db.QueryRow("select sqlite_version()")
 	var str string
@@ -90,10 +79,6 @@ func TestDo_3(t *testing.T) {
 	reflect.Copy(reflect.ValueOf(uopt2), reflect.ValueOf(uopt1))
 
 	fmt.Println("done")
-}
-
-func NewDBPWithErr(i do.Injector) (*dbq.DB, error) {
-	return nil, yesErr
 }
 
 func NewDB(i do.Injector) (*xdb.DB, error) {

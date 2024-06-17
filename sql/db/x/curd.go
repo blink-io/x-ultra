@@ -12,8 +12,8 @@ const (
 	OperationInsert = iota
 	OperationBulkInsert
 	OperationUpdate
-	OperationDelect
-	OperationBulkDelect
+	OperationDelete
+	OperationBulkDelete
 	OperationSelectOne
 	OperationSelectByPK
 	OperationSelectAll
@@ -50,7 +50,7 @@ func Update[M Model](ctx context.Context, db bun.IDB, m *M, ops ...UpdateOption)
 func Delete[M Model, I ID](ctx context.Context, db bun.IDB, ID I, field string, ops ...DeleteOption) error {
 	q := db.NewDelete()
 	o := applyDeleteOptions(ops...)
-	handleDeleteOptions(OperationDelect, q, o)
+	handleDeleteOptions(OperationDelete, q, o)
 	_, err := q.Model((*M)(nil)).
 		Where("? = ?", bun.Ident(field), ID).
 		Exec(ctx)
@@ -60,7 +60,7 @@ func Delete[M Model, I ID](ctx context.Context, db bun.IDB, ID I, field string, 
 func BulkDelete[M Model, I ID](ctx context.Context, db bun.IDB, IDs []I, field string, ops ...DeleteOption) error {
 	q := db.NewDelete()
 	o := applyDeleteOptions(ops...)
-	handleDeleteOptions(OperationBulkDelect, q, o)
+	handleDeleteOptions(OperationBulkDelete, q, o)
 	_, err := q.Model((*M)(nil)).
 		Where("? IN (?)", bun.Ident(field), bun.In(IDs)).
 		Exec(ctx)

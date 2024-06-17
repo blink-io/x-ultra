@@ -24,7 +24,7 @@ import (
 	"strings"
 	"testing"
 
-	utilnet "github.com/blink-io/x/util/net"
+	utilnet "github.com/blink-io/x/misc/net"
 )
 
 func Example() {
