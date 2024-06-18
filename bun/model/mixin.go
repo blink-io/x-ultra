@@ -20,7 +20,7 @@ var (
 		return uuid.New().String()
 	}
 
-	Columns = &columns{
+	ColumnNames = &columnNames{
 		// Required fields
 		ID:        "id",
 		CreatedAt: "created_at",
@@ -34,12 +34,12 @@ var (
 	}
 )
 
-type columns struct {
-	// Require columns
+type columnNames struct {
+	// Require columnNames
 	ID        string
 	CreatedAt string
 	UpdatedAt string
-	// Optional columns
+	// Optional columnNames
 	CreatedBy string
 	UpdatedBy string
 	DeletedAt string
@@ -91,13 +91,13 @@ func GUIDGen(g Generator) {
 
 func handleTSZ(m *MixinModel, query bun.Query) {
 	if m != nil {
-		switch query.Operation() {
-		case "INSERT":
+		switch query.(type) {
+		case *bun.InsertQuery:
 			m.CreatedAt = time.Now()
 			m.UpdatedAt = m.CreatedAt
-		case "UPDATE":
+		case *bun.UpdateQuery:
 			m.UpdatedAt = time.Now()
-		case "DELETE":
+		case *bun.DeleteQuery:
 			m.DeletedAt = sql.NullTime{Time: time.Now(), Valid: true}
 			m.IsDeleted = sql.NullBool{Bool: true, Valid: true}
 		}
