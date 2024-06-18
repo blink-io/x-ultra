@@ -2,19 +2,16 @@ package x
 
 import (
 	"context"
-
-	"github.com/uptrace/bun/schema"
+	rdb "github.com/blink-io/x/sql/db"
 )
 
 type (
-	queryWithArgs = schema.QueryWithArgs
-
 	withTxCtxKey struct{}
 
 	insertOptions struct {
 		ignore bool
 
-		returning *schema.QueryWithArgs
+		returning *rdb.QueryWithArgs
 	}
 
 	InsertOption func(*insertOptions)
@@ -22,15 +19,15 @@ type (
 	updateOptions struct {
 		omitZero bool
 
-		returning *queryWithArgs
+		returning *rdb.QueryWithArgs
 	}
 
 	UpdateOption func(*updateOptions)
 
 	selectOptions struct {
 		cols    []string
-		where   []*queryWithArgs
-		whereOr []*queryWithArgs
+		where   []*rdb.QueryWithArgs
+		whereOr []*rdb.QueryWithArgs
 	}
 
 	SelectOption func(*selectOptions)
@@ -38,7 +35,7 @@ type (
 	deleteOptions struct {
 		force bool
 
-		returning *queryWithArgs
+		returning *rdb.QueryWithArgs
 	}
 
 	DeleteOption func(*deleteOptions)
@@ -69,7 +66,7 @@ func InsertIgnore() InsertOption {
 
 func InsertReturning(query string, args ...any) InsertOption {
 	return func(o *insertOptions) {
-		o.returning = &queryWithArgs{
+		o.returning = &rdb.QueryWithArgs{
 			Query: query,
 			Args:  args,
 		}
@@ -92,7 +89,7 @@ func UpdateOmitZero() UpdateOption {
 
 func UpdateReturning(query string, args ...any) UpdateOption {
 	return func(o *updateOptions) {
-		o.returning = &queryWithArgs{
+		o.returning = &rdb.QueryWithArgs{
 			Query: query,
 			Args:  args,
 		}
@@ -115,7 +112,7 @@ func DeleteForce() DeleteOption {
 
 func DeleteReturning(query string, args ...any) DeleteOption {
 	return func(o *deleteOptions) {
-		o.returning = &queryWithArgs{
+		o.returning = &rdb.QueryWithArgs{
 			Query: query,
 			Args:  args,
 		}
@@ -134,7 +131,7 @@ func SelectWhere(query string, args ...any) SelectOption {
 	return func(o *selectOptions) {
 		o.where = append(
 			o.where,
-			&queryWithArgs{
+			&rdb.QueryWithArgs{
 				Query: query,
 				Args:  args,
 			},
@@ -146,7 +143,7 @@ func SelectWhereOr(query string, args ...any) SelectOption {
 	return func(o *selectOptions) {
 		o.whereOr = append(
 			o.whereOr,
-			&queryWithArgs{
+			&rdb.QueryWithArgs{
 				Query: query,
 				Args:  args,
 			},

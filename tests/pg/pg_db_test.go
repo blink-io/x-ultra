@@ -11,7 +11,7 @@ func TestPg_DB_Insert_1(t *testing.T) {
 	db := getPgDB()
 	r1 := newRandomRecordForApp("bun")
 	r2 := newRandomRecordForApp("bun")
-	txdb, err := x.NewDB[Application, string](db).Tx()
+	txdb, err := x.New[Application, string](db).Tx()
 	require.NoError(t, err)
 
 	err1 := txdb.BulkInsert(ctx, []*Application{r1, r2})

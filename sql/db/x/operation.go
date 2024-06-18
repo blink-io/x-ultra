@@ -3,7 +3,7 @@ package x
 import (
 	"context"
 
-	"github.com/uptrace/bun"
+	rdb "github.com/blink-io/x/sql/db"
 )
 
 type Operation int
@@ -21,7 +21,7 @@ const (
 	OperationExists
 )
 
-func Insert[M Model](ctx context.Context, db bun.IDB, m *M, ops ...InsertOption) error {
+func Insert[M Model](ctx context.Context, db rdb.RawIDB, m *M, ops ...InsertOption) error {
 	q := db.NewInsert()
 	opts := applyInsertOptions(ops...)
 	handleInsertOptions(OperationInsert, q, opts)
@@ -29,7 +29,7 @@ func Insert[M Model](ctx context.Context, db bun.IDB, m *M, ops ...InsertOption)
 	return err
 }
 
-func BulkInsert[M Model](ctx context.Context, db bun.IDB, ms []*M, ops ...InsertOption) error {
+func BulkInsert[M Model](ctx context.Context, db rdb.RawIDB, ms []*M, ops ...InsertOption) error {
 	q := db.NewInsert()
 	o := applyInsertOptions(ops...)
 	handleInsertOptions(OperationBulkInsert, q, o)
@@ -37,7 +37,7 @@ func BulkInsert[M Model](ctx context.Context, db bun.IDB, ms []*M, ops ...Insert
 	return err
 }
 
-func Update[M Model](ctx context.Context, db bun.IDB, m *M, ops ...UpdateOption) error {
+func Update[M Model](ctx context.Context, db rdb.RawIDB, m *M, ops ...UpdateOption) error {
 	q := db.NewUpdate()
 	o := applyUpdateOptions(ops...)
 	handleUpdateOptions(OperationUpdate, q, o)
@@ -47,37 +47,37 @@ func Update[M Model](ctx context.Context, db bun.IDB, m *M, ops ...UpdateOption)
 	return err
 }
 
-func Delete[M Model, I ID](ctx context.Context, db bun.IDB, ID I, field string, ops ...DeleteOption) error {
+func Delete[M Model, I ID](ctx context.Context, db rdb.RawIDB, ID I, field string, ops ...DeleteOption) error {
 	q := db.NewDelete()
 	o := applyDeleteOptions(ops...)
 	handleDeleteOptions(OperationDelete, q, o)
 	_, err := q.Model((*M)(nil)).
-		Where("? = ?", bun.Ident(field), ID).
+		Where("? = ?", rdb.Ident(field), ID).
 		Exec(ctx)
 	return err
 }
 
-func BulkDelete[M Model, I ID](ctx context.Context, db bun.IDB, IDs []I, field string, ops ...DeleteOption) error {
+func BulkDelete[M Model, I ID](ctx context.Context, db rdb.RawIDB, IDs []I, field string, ops ...DeleteOption) error {
 	q := db.NewDelete()
 	o := applyDeleteOptions(ops...)
 	handleDeleteOptions(OperationBulkDelete, q, o)
 	_, err := q.Model((*M)(nil)).
-		Where("? IN (?)", bun.Ident(field), bun.In(IDs)).
+		Where("? IN (?)", rdb.Ident(field), rdb.In(IDs)).
 		Exec(ctx)
 	return err
 }
 
-func Get[M Model, I ID](ctx context.Context, db bun.IDB, ID I, field string, ops ...SelectOption) (*M, error) {
+func Get[M Model, I ID](ctx context.Context, db rdb.RawIDB, ID I, field string, ops ...SelectOption) (*M, error) {
 	var m = new(M)
 	q := db.NewSelect()
 	o := applySelectOptions(ops...)
 	handleSelectOptions(OperationSelectByPK, q, o)
 	err := q.Model(m).
-		Where("? = ?", bun.Ident(field), ID).Limit(1).Scan(ctx, m)
+		Where("? = ?", rdb.Ident(field), ID).Limit(1).Scan(ctx, m)
 	return m, err
 }
 
-func One[M Model](ctx context.Context, db bun.IDB, ops ...SelectOption) (*M, error) {
+func One[M Model](ctx context.Context, db rdb.RawIDB, ops ...SelectOption) (*M, error) {
 	var m = new(M)
 	q := db.NewSelect()
 	o := applySelectOptions(ops...)
@@ -87,7 +87,7 @@ func One[M Model](ctx context.Context, db bun.IDB, ops ...SelectOption) (*M, err
 	return m, err
 }
 
-func All[M Model](ctx context.Context, db bun.IDB, ops ...SelectOption) ([]*M, error) {
+func All[M Model](ctx context.Context, db rdb.RawIDB, ops ...SelectOption) ([]*M, error) {
 	var ms []*M
 	q := db.NewSelect()
 	o := applySelectOptions(ops...)
@@ -96,21 +96,21 @@ func All[M Model](ctx context.Context, db bun.IDB, ops ...SelectOption) ([]*M, e
 	return ms, err
 }
 
-func Count[M Model](ctx context.Context, db bun.IDB, ops ...SelectOption) (int, error) {
+func Count[M Model](ctx context.Context, db rdb.RawIDB, ops ...SelectOption) (int, error) {
 	q := db.NewSelect()
 	o := applySelectOptions(ops...)
 	handleSelectOptions(OperationCount, q, o)
 	return q.Model((*M)(nil)).Count(ctx)
 }
 
-func Exists[M Model](ctx context.Context, db bun.IDB, ops ...SelectOption) (bool, error) {
+func Exists[M Model](ctx context.Context, db rdb.RawIDB, ops ...SelectOption) (bool, error) {
 	q := db.NewSelect()
 	o := applySelectOptions(ops...)
 	handleSelectOptions(OperationExists, q, o)
 	return q.Model((*M)(nil)).Exists(ctx)
 }
 
-func handleInsertOptions(op Operation, q *bun.InsertQuery, o *insertOptions) {
+func handleInsertOptions(op Operation, q *rdb.InsertQuery, o *insertOptions) {
 	if q == nil || o == nil {
 		return
 	}
@@ -121,7 +121,7 @@ func handleInsertOptions(op Operation, q *bun.InsertQuery, o *insertOptions) {
 	}
 }
 
-func handleUpdateOptions(op Operation, q *bun.UpdateQuery, o *updateOptions) {
+func handleUpdateOptions(op Operation, q *rdb.UpdateQuery, o *updateOptions) {
 	if q == nil || o == nil {
 		return
 	}
@@ -135,7 +135,7 @@ func handleUpdateOptions(op Operation, q *bun.UpdateQuery, o *updateOptions) {
 	}
 }
 
-func handleDeleteOptions(op Operation, q *bun.DeleteQuery, o *deleteOptions) {
+func handleDeleteOptions(op Operation, q *rdb.DeleteQuery, o *deleteOptions) {
 	if q == nil || o == nil {
 		return
 	}
@@ -149,7 +149,7 @@ func handleDeleteOptions(op Operation, q *bun.DeleteQuery, o *deleteOptions) {
 	}
 }
 
-func handleSelectOptions(op Operation, q *bun.SelectQuery, o *selectOptions) {
+func handleSelectOptions(op Operation, q *rdb.SelectQuery, o *selectOptions) {
 	if q == nil || o == nil {
 		return
 	}

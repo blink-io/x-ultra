@@ -10,7 +10,7 @@ import (
 )
 
 func GetPostgresPgConnector(ctx context.Context, c *Config) (driver.Connector, error) {
-	//addr := hostportToAddr(c.Host, c.Port)
+	//addr := hostPortToAddr(c.Host, c.Port)
 	url := ""
 	dsn, err := pq.ParseURL(url)
 	cc, err := pq.NewConnector(dsn)

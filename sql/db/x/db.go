@@ -4,8 +4,7 @@ import (
 	"context"
 	"reflect"
 
-	xdb "github.com/blink-io/x/sql/db"
-	"github.com/uptrace/bun/schema"
+	rdb "github.com/blink-io/x/sql/db"
 )
 
 const (
@@ -18,13 +17,15 @@ type (
 	// Model defines the generic type for Model in repository
 	Model = any
 
-	IDType = string
+	IDType = int64
 
 	DBer interface {
-		DB() *xdb.DB
+		DB() *rdb.DB
 	}
+
+	// Replacer replaces raw DB
 	Replacer interface {
-		Replace(*xdb.DB)
+		Replace(*rdb.DB)
 	}
 
 	base[M Model, I ID] interface {
@@ -46,99 +47,99 @@ type (
 		All(context.Context, ...SelectOption) ([]*M, error)
 		// Count rows
 		Count(context.Context, ...SelectOption) (int, error)
-		// Exists has record
+		// Exists check
 		Exists(context.Context, ...SelectOption) (bool, error)
 	}
 
 	DB[M Model, I ID] interface {
-		xdb.IDB
+		rdb.IDB
 
 		base[M, I]
 
 		// DB .
-		DB() xdb.IDB
+		DB() rdb.IDB
 
 		// ModelType defines
 		ModelType() *M
 
 		// TableType defines
-		TableType() *schema.Table
+		TableType() *rdb.TableType
 
 		// Tx defines
 		Tx() (Tx[M, I], error)
 	}
 
-	idb = xdb.IDB
+	idb = rdb.IDB
 
 	db[M Model, I ID] struct {
 		idb
 		mm *M
-		tt *schema.Table
+		tt *rdb.TableType
 	}
 )
 
 // Do type check
 var _ DB[Model, IDType] = (*db[Model, IDType])(nil)
 
-func NewDB[M Model, I ID](idb xdb.IDB) DB[M, I] {
+func New[M Model, I ID](idb rdb.IDB) DB[M, I] {
 	mm := (*M)(nil)
 	idb.RegisterModel(mm)
 	tt := idb.Table(reflect.TypeOf(mm))
 	return &db[M, I]{idb: idb, mm: mm, tt: tt}
 }
 
-func (g *db[M, I]) Insert(ctx context.Context, m *M, ops ...InsertOption) error {
-	return Insert[M](ctx, g.idb, m, ops...)
+func (x *db[M, I]) Insert(ctx context.Context, m *M, ops ...InsertOption) error {
+	return Insert[M](ctx, x.idb, m, ops...)
 }
 
-func (g *db[M, I]) BulkInsert(ctx context.Context, ms []*M, ops ...InsertOption) error {
-	return BulkInsert[M](ctx, g.idb, ms, ops...)
+func (x *db[M, I]) BulkInsert(ctx context.Context, ms []*M, ops ...InsertOption) error {
+	return BulkInsert[M](ctx, x.idb, ms, ops...)
 }
 
-func (g *db[M, I]) Update(ctx context.Context, m *M, ops ...UpdateOption) error {
-	return Update[M](ctx, g.idb, m, ops...)
+func (x *db[M, I]) Update(ctx context.Context, m *M, ops ...UpdateOption) error {
+	return Update[M](ctx, x.idb, m, ops...)
 }
 
-func (g *db[M, I]) Delete(ctx context.Context, ID I, ops ...DeleteOption) error {
-	return Delete[M](ctx, g.idb, ID, IDField, ops...)
+func (x *db[M, I]) Delete(ctx context.Context, ID I, ops ...DeleteOption) error {
+	return Delete[M](ctx, x.idb, ID, IDField, ops...)
 }
 
-func (g *db[M, I]) BulkDelete(ctx context.Context, IDs []I, ops ...DeleteOption) error {
-	return BulkDelete[M, I](ctx, g.idb, IDs, IDField, ops...)
+func (x *db[M, I]) BulkDelete(ctx context.Context, IDs []I, ops ...DeleteOption) error {
+	return BulkDelete[M, I](ctx, x.idb, IDs, IDField, ops...)
 }
 
-func (g *db[M, I]) Get(ctx context.Context, ID I, ops ...SelectOption) (*M, error) {
-	return Get[M, I](ctx, g.idb, ID, IDField, ops...)
+func (x *db[M, I]) Get(ctx context.Context, ID I, ops ...SelectOption) (*M, error) {
+	return Get[M, I](ctx, x.idb, ID, IDField, ops...)
 }
 
-func (g *db[M, I]) One(ctx context.Context, ops ...SelectOption) (*M, error) {
-	return One[M](ctx, g.idb, ops...)
+func (x *db[M, I]) One(ctx context.Context, ops ...SelectOption) (*M, error) {
+	return One[M](ctx, x.idb, ops...)
 }
 
-func (g *db[M, I]) All(ctx context.Context, ops ...SelectOption) ([]*M, error) {
-	return All[M](ctx, g.idb, ops...)
+func (x *db[M, I]) All(ctx context.Context, ops ...SelectOption) ([]*M, error) {
+	return All[M](ctx, x.idb, ops...)
 }
 
-func (g *db[M, I]) Count(ctx context.Context, ops ...SelectOption) (int, error) {
-	return Count[M](ctx, g.idb, ops...)
+func (x *db[M, I]) Count(ctx context.Context, ops ...SelectOption) (int, error) {
+	return Count[M](ctx, x.idb, ops...)
 }
 
-func (g *db[M, I]) Exists(ctx context.Context, ops ...SelectOption) (bool, error) {
-	return Exists[M](ctx, g.idb, ops...)
+func (x *db[M, I]) Exists(ctx context.Context, ops ...SelectOption) (bool, error) {
+	return Exists[M](ctx, x.idb, ops...)
 }
 
-func (g *db[M, I]) Tx() (Tx[M, I], error) {
-	return NewTxWithDB[M, I](g.idb)
+func (x *db[M, I]) Tx() (Tx[M, I], error) {
+	return NewTxWithDB[M, I](x.idb)
 }
 
-func (g *db[M, I]) DB() xdb.IDB {
-	return g.idb
+func (x *db[M, I]) DB() rdb.IDB {
+	return x.idb
 }
 
-func (g *db[M, I]) ModelType() *M {
-	return g.mm
+func (x *db[M, I]) ModelType() *M {
+	return x.mm
 }
 
-func (g *db[M, I]) TableType() *schema.Table {
-	return g.tt
+func (x *db[M, I]) TableType() *rdb.TableType {
+	return x.tt
 }

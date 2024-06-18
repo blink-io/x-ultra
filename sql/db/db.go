@@ -18,30 +18,24 @@ const (
 type (
 	Config = xsql.Config
 
-	idb = bun.DB
-
-	TxDB = bun.IDB
-
-	Tx = bun.Tx
-
-	IDBExt interface {
+	ext interface {
 		RegisterModel(m ...any)
 
 		Table(typ reflect.Type) *schema.Table
 	}
 
 	IDB interface {
-		bun.IDB
+		RawIDB
 
 		io.Closer
 
 		xsql.IDBExt
 
-		IDBExt
+		ext
 	}
 
 	DB struct {
-		*idb
+		*rdb
 		sqlDB    *sql.DB
 		info     xsql.DBInfo
 		accessor string
@@ -72,7 +66,7 @@ func New(c *Config, ops ...Option) (*DB, error) {
 	}
 
 	db := &DB{
-		idb:      rdb,
+		rdb:      rdb,
 		sqlDB:    sqlDB,
 		accessor: Accessor,
 		info:     c.DBInfo(),
@@ -82,7 +76,7 @@ func New(c *Config, ops ...Option) (*DB, error) {
 }
 
 func (db *DB) RegisterModel(m ...any) {
-	db.idb.RegisterModel(m...)
+	db.rdb.RegisterModel(m...)
 }
 
 func (db *DB) SqlDB() *sql.DB {
@@ -90,8 +84,8 @@ func (db *DB) SqlDB() *sql.DB {
 }
 
 func (db *DB) Close() error {
-	if db.idb != nil {
-		return db.idb.Close()
+	if db.rdb != nil {
+		return db.rdb.Close()
 	}
 	return nil
 }

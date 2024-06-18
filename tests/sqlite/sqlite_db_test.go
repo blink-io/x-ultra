@@ -38,7 +38,7 @@ func TestRebuildTable_1(t *testing.T) {
 
 func TestSqlite_DB_Delete_1(t *testing.T) {
 	db := getSqliteDB()
-	gdb := xdbx.NewDB[Application, string](db)
+	gdb := xdbx.New[Application, string](db)
 	//err := gdb.Delete(ctx, "123456")
 	err := gdb.BulkDelete(ctx, []string{"123456", "888888"})
 	require.NoError(t, err)
@@ -48,7 +48,7 @@ func TestSqlite_DB_Insert_1(t *testing.T) {
 	db := getSqliteDB()
 	r1 := newRandomRecordForApp(xdb.Accessor)
 
-	rdb := xdbx.NewDB[Application, string](db)
+	rdb := xdbx.New[Application, string](db)
 
 	err1 := rdb.Insert(ctx, r1, xdbx.InsertReturning("id"))
 	require.NoError(t, err1)
@@ -60,7 +60,7 @@ func TestSqlite_DB_BulkInsert_1(t *testing.T) {
 	r2 := newRandomRecordForApp(xdb.Accessor)
 	r3 := newRandomRecordForApp(xdb.Accessor)
 
-	tdb, err := xdbx.NewDB[Application, string](db).Tx()
+	tdb, err := xdbx.New[Application, string](db).Tx()
 	require.NoError(t, err)
 
 	err1 := tdb.BulkInsert(ctx, []*Application{r1, r2, r3})
@@ -72,7 +72,7 @@ func TestSqlite_DB_BulkInsert_1(t *testing.T) {
 func TestSqlite_DB_Update_1(t *testing.T) {
 	db := getSqliteDB()
 
-	rdb := xdbx.NewDB[Application, string](db)
+	rdb := xdbx.New[Application, string](db)
 
 	ds := rdb.NewUpdate().
 		Table("applications").
@@ -85,7 +85,7 @@ func TestSqlite_DB_Update_1(t *testing.T) {
 func TestSqlite_DB_Delete_All(t *testing.T) {
 	db := getSqliteDB()
 
-	rdb := xdbx.NewDB[Application, string](db)
+	rdb := xdbx.New[Application, string](db)
 
 	ds := rdb.NewDelete()
 
