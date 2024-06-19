@@ -24,6 +24,8 @@ type (
 		RegisterModel(m ...any)
 
 		Table(typ reflect.Type) *schema.Table
+
+		Context() context.Context
 	}
 
 	IDB interface {
@@ -38,6 +40,7 @@ type (
 
 	DB struct {
 		*rdb
+		ctx      context.Context
 		sqlDB    *sql.DB
 		info     xsql.DBInfo
 		accessor string
@@ -67,7 +70,13 @@ func New(c *Config, ops ...Option) (*DB, error) {
 		rdb.AddQueryHook(h)
 	}
 
+	ctx := c.Context
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
 	db := &DB{
+		ctx:      ctx,
 		rdb:      rdb,
 		sqlDB:    sqlDB,
 		accessor: Accessor,
@@ -106,4 +115,8 @@ func (db *DB) DBInfo() xsql.DBInfo {
 
 func (db *DB) HealthCheck(ctx context.Context) error {
 	return xsql.DoPingContext(ctx, db.sqlDB)
+}
+
+func (db *DB) Context() context.Context {
+	return db.ctx
 }
