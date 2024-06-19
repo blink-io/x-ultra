@@ -9,33 +9,50 @@ type (
 	withTxCtxKey struct{}
 
 	insertOptions struct {
-		ignore bool
-
-		returning *rdb.QueryWithArgs
+		ignore         bool
+		columns        []string
+		excludeColumns []string
+		columnExprs    []*rdb.QueryWithArgs
+		returning      *rdb.QueryWithArgs
 	}
 
 	InsertOption func(*insertOptions)
 
 	updateOptions struct {
-		omitZero bool
-
-		returning *rdb.QueryWithArgs
+		omitZero       bool
+		bulk           bool
+		columns        []string
+		excludeColumns []string
+		FQN            string
+		forceIndexes   []string
+		ignoreIndexes  []string
+		modelTableExpr *rdb.QueryWithArgs
+		returning      *rdb.QueryWithArgs
 	}
 
 	UpdateOption func(*updateOptions)
 
 	selectOptions struct {
-		cols    []string
-		where   []*rdb.QueryWithArgs
-		whereOr []*rdb.QueryWithArgs
+		queryFunc      func(*rdb.SelectQuery) *rdb.SelectQuery
+		distinct       bool
+		distinctOn     []*rdb.QueryWithArgs
+		limit          int
+		offset         int
+		columns        []string
+		excludeColumns []string
+		columnExprs    []*rdb.QueryWithArgs
+		orders         []string
+		where          []*rdb.QueryWithArgs
+		whereOr        []*rdb.QueryWithArgs
 	}
 
 	SelectOption func(*selectOptions)
 
 	deleteOptions struct {
-		force bool
-
-		returning *rdb.QueryWithArgs
+		forceDelete bool
+		returning   *rdb.QueryWithArgs
+		where       []*rdb.QueryWithArgs
+		whereOr     []*rdb.QueryWithArgs
 	}
 
 	DeleteOption func(*deleteOptions)
@@ -106,7 +123,7 @@ func applyDeleteOptions(ops ...DeleteOption) *deleteOptions {
 
 func DeleteForce() DeleteOption {
 	return func(o *deleteOptions) {
-		o.force = true
+		o.forceDelete = true
 	}
 }
 
@@ -116,6 +133,26 @@ func DeleteReturning(query string, args ...any) DeleteOption {
 			Query: query,
 			Args:  args,
 		}
+	}
+}
+
+func DeleteWhere(query string, args ...any) DeleteOption {
+	return func(o *deleteOptions) {
+		sq := rdb.SafeQuery(query, args)
+		o.where = append(
+			o.where,
+			&sq,
+		)
+	}
+}
+
+func DeleteWhereOr(query string, args ...any) DeleteOption {
+	return func(o *deleteOptions) {
+		sq := rdb.SafeQuery(query, args)
+		o.whereOr = append(
+			o.whereOr,
+			&sq,
+		)
 	}
 }
 
@@ -129,30 +166,38 @@ func applySelectOptions(ops ...SelectOption) *selectOptions {
 
 func SelectWhere(query string, args ...any) SelectOption {
 	return func(o *selectOptions) {
+		sq := rdb.SafeQuery(query, args)
 		o.where = append(
 			o.where,
-			&rdb.QueryWithArgs{
-				Query: query,
-				Args:  args,
-			},
+			&sq,
 		)
 	}
 }
 
 func SelectWhereOr(query string, args ...any) SelectOption {
 	return func(o *selectOptions) {
+		sq := rdb.SafeQuery(query, args)
 		o.whereOr = append(
 			o.whereOr,
-			&rdb.QueryWithArgs{
-				Query: query,
-				Args:  args,
-			},
+			&sq,
 		)
 	}
 }
 
-func SelectColumns(cols ...string) SelectOption {
+func SelectColumns(columns ...string) SelectOption {
 	return func(o *selectOptions) {
-		o.cols = append(o.cols, cols...)
+		o.columns = append(o.columns, columns...)
+	}
+}
+
+func SelectOrders(orders ...string) SelectOption {
+	return func(o *selectOptions) {
+		o.orders = append(o.orders, orders...)
+	}
+}
+
+func SelectApplyQuery(queryFunc func(*rdb.SelectQuery) *rdb.SelectQuery) SelectOption {
+	return func(o *selectOptions) {
+		o.queryFunc = queryFunc
 	}
 }

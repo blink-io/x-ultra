@@ -40,3 +40,11 @@ func In(slice interface{}) schema.QueryAppender {
 func NullZero(value interface{}) schema.QueryAppender {
 	return schema.NullZero(value)
 }
+
+func SafeQuery(query string, args []any) schema.QueryWithArgs {
+	return schema.SafeQuery(query, args)
+}
+
+func SafeQueryWithSep(query string, args []any, sep string) schema.QueryWithSep {
+	return schema.SafeQueryWithSep(query, args, sep)
+}

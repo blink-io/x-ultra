@@ -2,7 +2,6 @@ package x
 
 import (
 	"context"
-
 	rdb "github.com/blink-io/x/sql/db"
 )
 
@@ -119,6 +118,20 @@ func handleInsertOptions(op Operation, q *rdb.InsertQuery, o *insertOptions) {
 	} else {
 		q.Returning("NULL")
 	}
+	if o.ignore {
+		q.Ignore()
+	}
+	if len(o.columns) > 0 {
+		q.Column(o.columns...)
+	}
+	if len(o.columnExprs) > 0 {
+		for _, c := range o.columnExprs {
+			q.ColumnExpr(c.Query, c.Args...)
+		}
+	}
+	if len(o.excludeColumns) > 0 {
+		q.ExcludeColumn(o.excludeColumns...)
+	}
 }
 
 func handleUpdateOptions(op Operation, q *rdb.UpdateQuery, o *updateOptions) {
@@ -133,13 +146,16 @@ func handleUpdateOptions(op Operation, q *rdb.UpdateQuery, o *updateOptions) {
 	} else {
 		q.Returning("NULL")
 	}
+	if o.bulk {
+		q.Bulk()
+	}
 }
 
 func handleDeleteOptions(op Operation, q *rdb.DeleteQuery, o *deleteOptions) {
 	if q == nil || o == nil {
 		return
 	}
-	if o.force {
+	if o.forceDelete {
 		q.ForceDelete()
 	}
 	if r := o.returning; r != nil {
@@ -147,18 +163,59 @@ func handleDeleteOptions(op Operation, q *rdb.DeleteQuery, o *deleteOptions) {
 	} else {
 		q.Returning("NULL")
 	}
+	if o.where != nil {
+		for _, w := range o.where {
+			q.Where(w.Query, w.Args...)
+		}
+	}
+	if o.whereOr != nil {
+		for _, w := range o.where {
+			q.WhereOr(w.Query, w.Args...)
+		}
+	}
 }
 
 func handleSelectOptions(op Operation, q *rdb.SelectQuery, o *selectOptions) {
 	if q == nil || o == nil {
 		return
 	}
-	if len(o.cols) > 0 {
-		q.Column(o.cols...)
+
+	if len(o.columns) > 0 {
+		q.Column(o.columns...)
 	}
 	if len(o.where) > 0 {
 		for _, w := range o.where {
 			q.Where(w.Query, w.Args...)
+		}
+	}
+	if len(o.columns) > 0 {
+		q.Column(o.columns...)
+	}
+	if len(o.columnExprs) > 0 {
+		for _, c := range o.columnExprs {
+			q.ColumnExpr(c.Query, c.Args...)
+		}
+	}
+	if len(o.excludeColumns) > 0 {
+		q.ExcludeColumn(o.excludeColumns...)
+	}
+	if op == OperationSelectAll {
+		if o.queryFunc != nil {
+			q.Apply(o.queryFunc)
+		}
+		if o.distinct {
+			q.Distinct()
+		}
+		if len(o.distinctOn) > 0 {
+			for _, d := range o.distinctOn {
+				q.DistinctOn(d.Query, d.Args...)
+			}
+		}
+		if o.limit > 0 {
+			q.Limit(o.limit)
+		}
+		if o.offset > 0 {
+			q.Offset(o.offset)
 		}
 	}
 }
