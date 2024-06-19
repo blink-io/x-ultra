@@ -19,6 +19,8 @@ type (
 	Config = xsql.Config
 
 	ext interface {
+		RawDB() *RawDB
+
 		RegisterModel(m ...any)
 
 		Table(typ reflect.Type) *schema.Table
@@ -88,6 +90,10 @@ func (db *DB) Close() error {
 		return db.rdb.Close()
 	}
 	return nil
+}
+
+func (db *DB) RawDB() *RawDB {
+	return db.rdb
 }
 
 func (db *DB) Accessor() string {

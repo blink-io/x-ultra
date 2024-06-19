@@ -16,7 +16,7 @@ require (
 	github.com/frankban/quicktest v1.14.6 //test
 	github.com/fxamacker/cbor/v2 v2.6.0
 	github.com/getsentry/sentry-go v0.28.1
-	github.com/go-chi/chi/v5 v5.0.12
+	github.com/go-chi/chi/v5 v5.0.13
 	github.com/go-kratos/kratos/v2 v2.7.3
 	github.com/go-playground/validator/v10 v10.22.0
 	github.com/go-resty/resty/v2 v2.13.1

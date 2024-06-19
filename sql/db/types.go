@@ -22,7 +22,11 @@ type (
 
 	QueryWithArgs = schema.QueryWithArgs
 
-	Ident = bun.Ident
+	Ident = schema.Ident
+
+	Name = schema.Name
+
+	Safe = schema.Safe
 
 	InsertQuery = bun.InsertQuery
 
