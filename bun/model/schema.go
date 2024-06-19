@@ -1,10 +1,12 @@
 package model
 
-type Schema[T any, C any] struct {
-	Type        *T
-	PK          string
-	Label       string
-	Alias       string
-	TableName   string
-	ColumnNames C
+type Schema[M any, C any] struct {
+	PK      string
+	Label   string
+	Alias   string
+	Table   string
+	Model   *M
+	Columns C
 }
+
+type Column string
