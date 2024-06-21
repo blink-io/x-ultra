@@ -105,6 +105,7 @@ require (
 	github.com/avast/retry-go/v4 v4.6.0
 	github.com/beevik/guid v1.0.0
 	github.com/bits-and-blooms/bloom/v3 v3.7.0
+	github.com/blockloop/scan/v2 v2.5.0
 	github.com/bmatcuk/doublestar/v4 v4.6.1
 	github.com/brianvoe/gofakeit/v6 v6.28.0
 	github.com/bwmarrin/snowflake v0.3.0
@@ -120,7 +121,7 @@ require (
 	github.com/exaring/otelpgx v0.6.1
 	github.com/expr-lang/expr v1.16.9
 	github.com/gabriel-vasile/mimetype v1.4.4
-	github.com/go-co-op/gocron/v2 v2.5.0
+	github.com/go-co-op/gocron/v2 v2.6.0
 	github.com/go-crypt/crypt v0.2.24
 	github.com/go-faster/city v1.0.1
 	github.com/go-faster/xor v1.0.0

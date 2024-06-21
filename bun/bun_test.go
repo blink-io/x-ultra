@@ -1,9 +1,10 @@
-package db
+package bun
 
 import (
+	"testing"
+
 	"github.com/stretchr/testify/require"
 	"github.com/uptrace/bun/schema"
-	"testing"
 )
 
 func TestSafeQuery_1(t *testing.T) {

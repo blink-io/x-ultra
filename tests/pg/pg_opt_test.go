@@ -3,8 +3,9 @@ package pg
 import (
 	"database/sql"
 
+	xdb "github.com/blink-io/x/bun"
+
 	xsql "github.com/blink-io/x/sql"
-	xdb "github.com/blink-io/x/sql/db"
 )
 
 func getPgSqlDB() *sql.DB {
@@ -18,7 +19,7 @@ func getPgSqlDB() *sql.DB {
 }
 
 func getPgDB() *xdb.DB {
-	db, err1 := xdb.New(pgCfg(), dbOpts()...)
+	db, err1 := xdb.NewDB(pgCfg(), dbOpts()...)
 	if err1 != nil {
 		panic(err1)
 	}

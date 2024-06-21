@@ -1,4 +1,4 @@
-package dbz
+package bob
 
 import (
 	"testing"

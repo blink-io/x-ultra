@@ -2,15 +2,16 @@ package x
 
 import (
 	"context"
+	"database/sql"
 
-	rdb "github.com/blink-io/x/sql/db"
+	xbun "github.com/blink-io/x/bun"
 )
 
 type (
-	rtx = rdb.RawTx
+	rtx = xbun.RawTx
 
-	Tx[M Model, I ID] interface {
-		rdb.RawIDB
+	Tx[M ModelType, I IDType] interface {
+		xbun.RawIDB
 
 		base[M, I]
 		// Commit the transaction
@@ -19,19 +20,19 @@ type (
 		Rollback() error
 	}
 
-	tx[M Model, I ID] struct {
+	tx[M ModelType, I IDType] struct {
 		rtx
 	}
 )
 
-var _ Tx[Model, IDType] = (*tx[Model, IDType])(nil)
+var _ Tx[ModelType, int] = (*tx[ModelType, int])(nil)
 
-func NewTx[M Model, I ID](itx rdb.RawTx) Tx[M, I] {
+func NewTx[M ModelType, I IDType](itx xbun.RawTx) Tx[M, I] {
 	return &tx[M, I]{itx}
 }
 
-func NewTxWithDB[M Model, I ID](db rdb.IDB) (Tx[M, I], error) {
-	itx, err := db.BeginTx(context.Background(), nil)
+func NewTxWithDB[M ModelType, I IDType](ctx context.Context, db xbun.IDB, opts *sql.TxOptions) (Tx[M, I], error) {
+	itx, err := db.BeginTx(ctx, opts)
 	if err != nil {
 		return nil, err
 	}
@@ -42,7 +43,7 @@ func (x *tx[M, I]) Insert(ctx context.Context, m *M, ops ...InsertOption) error 
 	return Insert[M](ctx, x.rtx, m, ops...)
 }
 
-func (x *tx[M, I]) BulkInsert(ctx context.Context, ms []*M, ops ...InsertOption) error {
+func (x *tx[M, I]) BulkInsert(ctx context.Context, ms ModelSlice[M], ops ...InsertOption) error {
 	return BulkInsert[M](ctx, x.rtx, ms, ops...)
 }
 
@@ -54,7 +55,7 @@ func (x *tx[M, I]) Delete(ctx context.Context, ID I, ops ...DeleteOption) error 
 	return Delete[M](ctx, x.rtx, ID, IDField, ops...)
 }
 
-func (x *tx[M, I]) BulkDelete(ctx context.Context, IDs []I, ops ...DeleteOption) error {
+func (x *tx[M, I]) BulkDelete(ctx context.Context, IDs IDSlice[I], ops ...DeleteOption) error {
 	return BulkDelete[M, I](ctx, x.rtx, IDs, IDField, ops...)
 }
 
@@ -66,7 +67,7 @@ func (x *tx[M, I]) One(ctx context.Context, ops ...SelectOption) (*M, error) {
 	return One[M](ctx, x.rtx, ops...)
 }
 
-func (x *tx[M, I]) All(ctx context.Context, ops ...SelectOption) ([]*M, error) {
+func (x *tx[M, I]) All(ctx context.Context, ops ...SelectOption) (ModelSlice[M], error) {
 	return All[M](ctx, x.rtx, ops...)
 }
 

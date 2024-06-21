@@ -7,8 +7,9 @@ import (
 	"testing"
 	"time"
 
+	xdb "github.com/blink-io/x/bun"
+
 	xsql "github.com/blink-io/x/sql"
-	xdb "github.com/blink-io/x/sql/db"
 	"github.com/samber/do/v2"
 	"github.com/stretchr/testify/require"
 )
@@ -82,7 +83,7 @@ func TestDo_3(t *testing.T) {
 }
 
 func NewDB(i do.Injector) (*xdb.DB, error) {
-	return xdb.New(do.MustInvoke[*xsql.Config](i))
+	return xdb.NewDB(do.MustInvoke[*xsql.Config](i))
 }
 
 func NewConfig(i do.Injector) (*xsql.Config, error) {

@@ -1,10 +1,10 @@
 package x
 
 import (
-	"github.com/stretchr/testify/require"
 	"testing"
 
-	rdb "github.com/blink-io/x/sql/db"
+	rdb "github.com/blink-io/x/bun"
+	"github.com/stretchr/testify/require"
 )
 
 func TestGenDB_1(t *testing.T) {

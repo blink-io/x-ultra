@@ -1,6 +1,6 @@
 //go:build !nosqlite
 
-package db
+package bun
 
 import (
 	"context"

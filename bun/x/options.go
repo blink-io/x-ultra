@@ -2,7 +2,8 @@ package x
 
 import (
 	"context"
-	rdb "github.com/blink-io/x/sql/db"
+
+	rdb "github.com/blink-io/x/bun"
 )
 
 type (
@@ -83,10 +84,7 @@ func InsertIgnore() InsertOption {
 
 func InsertReturning(query string, args ...any) InsertOption {
 	return func(o *insertOptions) {
-		o.returning = &rdb.QueryWithArgs{
-			Query: query,
-			Args:  args,
-		}
+		o.returning = safeQuery(query, args...)
 	}
 }
 
@@ -106,10 +104,7 @@ func UpdateOmitZero() UpdateOption {
 
 func UpdateReturning(query string, args ...any) UpdateOption {
 	return func(o *updateOptions) {
-		o.returning = &rdb.QueryWithArgs{
-			Query: query,
-			Args:  args,
-		}
+		o.returning = safeQuery(query, args...)
 	}
 }
 
@@ -129,29 +124,24 @@ func DeleteForce() DeleteOption {
 
 func DeleteReturning(query string, args ...any) DeleteOption {
 	return func(o *deleteOptions) {
-		o.returning = &rdb.QueryWithArgs{
-			Query: query,
-			Args:  args,
-		}
+		o.returning = safeQuery(query, args...)
 	}
 }
 
 func DeleteWhere(query string, args ...any) DeleteOption {
 	return func(o *deleteOptions) {
-		sq := rdb.SafeQuery(query, args)
 		o.where = append(
 			o.where,
-			&sq,
+			safeQuery(query, args...),
 		)
 	}
 }
 
 func DeleteWhereOr(query string, args ...any) DeleteOption {
 	return func(o *deleteOptions) {
-		sq := rdb.SafeQuery(query, args)
 		o.whereOr = append(
 			o.whereOr,
-			&sq,
+			safeQuery(query, args...),
 		)
 	}
 }
@@ -164,22 +154,32 @@ func applySelectOptions(ops ...SelectOption) *selectOptions {
 	return opts
 }
 
+func SelectLimit(limit int) SelectOption {
+	return func(o *selectOptions) {
+		o.limit = limit
+	}
+}
+
+func SelectOffset(offset int) SelectOption {
+	return func(o *selectOptions) {
+		o.offset = offset
+	}
+}
+
 func SelectWhere(query string, args ...any) SelectOption {
 	return func(o *selectOptions) {
-		sq := rdb.SafeQuery(query, args)
 		o.where = append(
 			o.where,
-			&sq,
+			safeQuery(query, args...),
 		)
 	}
 }
 
 func SelectWhereOr(query string, args ...any) SelectOption {
 	return func(o *selectOptions) {
-		sq := rdb.SafeQuery(query, args)
 		o.whereOr = append(
 			o.whereOr,
-			&sq,
+			safeQuery(query, args...),
 		)
 	}
 }
@@ -200,4 +200,9 @@ func SelectApplyQuery(queryFunc func(*rdb.SelectQuery) *rdb.SelectQuery) SelectO
 	return func(o *selectOptions) {
 		o.queryFunc = queryFunc
 	}
+}
+
+func safeQuery(query string, args ...any) *rdb.QueryWithArgs {
+	sq := rdb.SafeQuery(query, args)
+	return &sq
 }

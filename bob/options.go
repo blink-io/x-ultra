@@ -1,13 +1,11 @@
-package db
+package bob
 
 import (
-	"github.com/uptrace/bun"
+	"github.com/life4/genesis/slices"
 )
 
-type QueryHook = bun.QueryHook
-
 type options struct {
-	queryHooks []QueryHook
+	wrappers []ExecWrapper
 }
 
 type Option func(*options)
@@ -20,8 +18,8 @@ func applyOptions(ops ...Option) *options {
 	return opts
 }
 
-func WithQueryHooks(hooks ...QueryHook) Option {
+func ExecWrappers(ws ...ExecWrapper) Option {
 	return func(o *options) {
-		o.queryHooks = append(o.queryHooks, hooks...)
+		o.wrappers = slices.Concat(o.wrappers, ws)
 	}
 }

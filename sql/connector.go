@@ -12,10 +12,10 @@ type dsnConnector struct {
 	driver driver.Driver
 }
 
-func (t *dsnConnector) Connect(_ context.Context) (driver.Conn, error) {
-	return t.driver.Open(t.dsn)
+func (c *dsnConnector) Connect(_ context.Context) (driver.Conn, error) {
+	return c.driver.Open(c.dsn)
 }
 
-func (t *dsnConnector) Driver() driver.Driver {
-	return t.driver
+func (c *dsnConnector) Driver() driver.Driver {
+	return c.driver
 }

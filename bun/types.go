@@ -1,4 +1,4 @@
-package db
+package bun
 
 import (
 	"github.com/uptrace/bun"
@@ -17,6 +17,8 @@ type (
 	RawIDB = bun.IDB
 
 	RawTx = bun.Tx
+
+	BaseModel = bun.BaseModel
 
 	TableType = schema.Table
 

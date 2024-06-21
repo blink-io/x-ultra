@@ -5,12 +5,13 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/blink-io/x/bun"
+
 	xsql "github.com/blink-io/x/sql"
-	"github.com/blink-io/x/sql/db"
 )
 
-func dbOpts() []db.Option {
-	opts := []db.Option{}
+func dbOpts() []bun.Option {
+	opts := []bun.Option{}
 	return opts
 }
 

@@ -1,4 +1,4 @@
-package db
+package bob
 
 import (
 	xsql "github.com/blink-io/x/sql"

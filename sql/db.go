@@ -42,6 +42,14 @@ type (
 		QueryRowContext(ctx context.Context, query string, args ...any) *sql.Row
 	}
 
+	IDBExt interface {
+		WithSqlDB
+
+		WithDBInfo
+
+		HealthChecker
+	}
+
 	WithSqlDB interface {
 		SqlDB() *sql.DB
 	}

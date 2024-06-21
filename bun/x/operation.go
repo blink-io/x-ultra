@@ -2,7 +2,8 @@ package x
 
 import (
 	"context"
-	rdb "github.com/blink-io/x/sql/db"
+
+	rdb "github.com/blink-io/x/bun"
 )
 
 type Operation int
@@ -20,7 +21,16 @@ const (
 	OperationExists
 )
 
-func Insert[M Model](ctx context.Context, db rdb.RawIDB, m *M, ops ...InsertOption) error {
+type IDSlice[I IDType] []I
+
+type ModelSlice[M ModelType] []*M
+
+func (s ModelSlice[I]) Emtpy() bool {
+	return len(s) == 0
+}
+
+// Insert executes insert by a given model.
+func Insert[M ModelType](ctx context.Context, db rdb.RawIDB, m *M, ops ...InsertOption) error {
 	q := db.NewInsert()
 	opts := applyInsertOptions(ops...)
 	handleInsertOptions(OperationInsert, q, opts)
@@ -28,7 +38,8 @@ func Insert[M Model](ctx context.Context, db rdb.RawIDB, m *M, ops ...InsertOpti
 	return err
 }
 
-func BulkInsert[M Model](ctx context.Context, db rdb.RawIDB, ms []*M, ops ...InsertOption) error {
+// BulkInsert executes bulk insert by given model slice.
+func BulkInsert[M ModelType](ctx context.Context, db rdb.RawIDB, ms ModelSlice[M], ops ...InsertOption) error {
 	q := db.NewInsert()
 	o := applyInsertOptions(ops...)
 	handleInsertOptions(OperationBulkInsert, q, o)
@@ -36,7 +47,8 @@ func BulkInsert[M Model](ctx context.Context, db rdb.RawIDB, ms []*M, ops ...Ins
 	return err
 }
 
-func Update[M Model](ctx context.Context, db rdb.RawIDB, m *M, ops ...UpdateOption) error {
+// Update updates a record by a given model with PK.
+func Update[M ModelType](ctx context.Context, db rdb.RawIDB, m *M, ops ...UpdateOption) error {
 	q := db.NewUpdate()
 	o := applyUpdateOptions(ops...)
 	handleUpdateOptions(OperationUpdate, q, o)
@@ -46,63 +58,69 @@ func Update[M Model](ctx context.Context, db rdb.RawIDB, m *M, ops ...UpdateOpti
 	return err
 }
 
-func Delete[M Model, I ID](ctx context.Context, db rdb.RawIDB, ID I, field string, ops ...DeleteOption) error {
+// Delete deletes a record by a given model with a specified column.
+func Delete[M ModelType, I IDType](ctx context.Context, db rdb.RawIDB, ID I, column string, ops ...DeleteOption) error {
 	q := db.NewDelete()
 	o := applyDeleteOptions(ops...)
 	handleDeleteOptions(OperationDelete, q, o)
 	_, err := q.Model((*M)(nil)).
-		Where("? = ?", rdb.Ident(field), ID).
+		Where("? = ?", rdb.Ident(column), ID).
 		Exec(ctx)
 	return err
 }
 
-func BulkDelete[M Model, I ID](ctx context.Context, db rdb.RawIDB, IDs []I, field string, ops ...DeleteOption) error {
+// BulkDelete deletes records by a given model with a specified column.
+func BulkDelete[M ModelType, I IDType](ctx context.Context, db rdb.RawIDB, IDs IDSlice[I], column string, ops ...DeleteOption) error {
 	q := db.NewDelete()
 	o := applyDeleteOptions(ops...)
 	handleDeleteOptions(OperationBulkDelete, q, o)
 	_, err := q.Model((*M)(nil)).
-		Where("? IN (?)", rdb.Ident(field), rdb.In(IDs)).
+		Where("? IN (?)", rdb.Ident(column), rdb.In(IDs)).
 		Exec(ctx)
 	return err
 }
 
-func Get[M Model, I ID](ctx context.Context, db rdb.RawIDB, ID I, field string, ops ...SelectOption) (*M, error) {
+// Get gets a record by a given model with a specified column and ID value.
+func Get[M ModelType, I IDType](ctx context.Context, db rdb.RawIDB, ID I, column string, ops ...SelectOption) (*M, error) {
 	var m = new(M)
 	q := db.NewSelect()
 	o := applySelectOptions(ops...)
 	handleSelectOptions(OperationSelectByPK, q, o)
 	err := q.Model(m).
-		Where("? = ?", rdb.Ident(field), ID).Limit(1).Scan(ctx, m)
+		Where("? = ?", rdb.Ident(column), ID).Limit(1).
+		Scan(ctx, m)
 	return m, err
 }
 
-func One[M Model](ctx context.Context, db rdb.RawIDB, ops ...SelectOption) (*M, error) {
-	var m = new(M)
+func One[M ModelType](ctx context.Context, db rdb.RawIDB, ops ...SelectOption) (*M, error) {
+	m := new(M)
 	q := db.NewSelect()
 	o := applySelectOptions(ops...)
 	handleSelectOptions(OperationSelectOne, q, o)
 	err := q.Model(m).
-		Limit(1).Scan(ctx, m)
+		Limit(1).
+		Scan(ctx, m)
 	return m, err
 }
 
-func All[M Model](ctx context.Context, db rdb.RawIDB, ops ...SelectOption) ([]*M, error) {
-	var ms []*M
+func All[M ModelType](ctx context.Context, db rdb.RawIDB, ops ...SelectOption) (ModelSlice[M], error) {
+	var ms ModelSlice[M]
 	q := db.NewSelect()
 	o := applySelectOptions(ops...)
 	handleSelectOptions(OperationSelectAll, q, o)
-	err := q.Model(&ms).Scan(ctx)
+	err := q.Model(&ms).
+		Scan(ctx)
 	return ms, err
 }
 
-func Count[M Model](ctx context.Context, db rdb.RawIDB, ops ...SelectOption) (int, error) {
+func Count[M ModelType](ctx context.Context, db rdb.RawIDB, ops ...SelectOption) (int, error) {
 	q := db.NewSelect()
 	o := applySelectOptions(ops...)
 	handleSelectOptions(OperationCount, q, o)
 	return q.Model((*M)(nil)).Count(ctx)
 }
 
-func Exists[M Model](ctx context.Context, db rdb.RawIDB, ops ...SelectOption) (bool, error) {
+func Exists[M ModelType](ctx context.Context, db rdb.RawIDB, ops ...SelectOption) (bool, error) {
 	q := db.NewSelect()
 	o := applySelectOptions(ops...)
 	handleSelectOptions(OperationExists, q, o)

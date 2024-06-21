@@ -3,8 +3,9 @@ package sqlite
 import (
 	"database/sql"
 
+	xdb "github.com/blink-io/x/bun"
+
 	xsql "github.com/blink-io/x/sql"
-	xdb "github.com/blink-io/x/sql/db"
 	"github.com/doug-martin/goqu/v9"
 	"github.com/doug-martin/goqu/v9/dialect/sqlite3"
 )
@@ -26,7 +27,7 @@ func getSqliteSqlDB() *sql.DB {
 }
 
 func getSqliteDB() *xdb.DB {
-	db, err := xdb.New(sqliteCfg(), dbOpts()...)
+	db, err := xdb.NewDB(sqliteCfg(), dbOpts()...)
 
 	if err != nil {
 		panic(err)

@@ -7,9 +7,10 @@ import (
 	"path/filepath"
 	"time"
 
+	xdb "github.com/blink-io/x/bun"
+
 	"github.com/blink-io/x/bun/extra/timing"
 	xsql "github.com/blink-io/x/sql"
-	xdb "github.com/blink-io/x/sql/db"
 	"github.com/blink-io/x/sql/driver/hooks"
 	logginghook "github.com/blink-io/x/sql/driver/hooks/logging"
 )

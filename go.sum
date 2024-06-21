@@ -66,6 +66,8 @@ github.com/bits-and-blooms/bloom/v3 v3.7.0 h1:VfknkqV4xI+PsaDIsoHueyxVDZrfvMn56j
 github.com/bits-and-blooms/bloom/v3 v3.7.0/go.mod h1:VKlUSvp0lFIYqxJjzdnSsZEw4iHb1kOL2tfHTgyJBHg=
 github.com/blink-io/glob v0.0.0-20231227024915-2e8bc4bf1fee h1:d1U6fZMNgt1ugbOG+1lW4npaGWaXYEwf2qMQifqw7Ls=
 github.com/blink-io/glob v0.0.0-20231227024915-2e8bc4bf1fee/go.mod h1:ejZdOOhaEXgqwN+Cog2U1FBt/5jsIX40H2qMaQKM3Hw=
+github.com/blockloop/scan/v2 v2.5.0 h1:/yNcCwftYn3wf5BJsJFO9E9P48l45wThdUnM3WcDF+o=
+github.com/blockloop/scan/v2 v2.5.0/go.mod h1:OFYyMocUdRW3DUWehPI/fSsnpNMUNiyUaYXRMY5NMIY=
 github.com/bmatcuk/doublestar/v4 v4.6.1 h1:FH9SifrbvJhnlQpztAx++wlkk70QBf0iBWDwNy7PA4I=
 github.com/bmatcuk/doublestar/v4 v4.6.1/go.mod h1:xBQ8jztBU6kakFMg+8WGxn0c6z1fTSPVIjEY1Wr7jzc=
 github.com/brianvoe/gofakeit/v6 v6.28.0 h1:Xib46XXuQfmlLS2EXRuJpqcw8St6qSZz75OUo0tgAW4=
@@ -164,8 +166,8 @@ github.com/getsentry/sentry-go v0.28.1 h1:zzaSm/vHmGllRM6Tpx1492r0YDzauArdBfkJRt
 github.com/getsentry/sentry-go v0.28.1/go.mod h1:1fQZ+7l7eeJ3wYi82q5Hg8GqAPgefRq+FP/QhafYVgg=
 github.com/go-chi/chi/v5 v5.0.13 h1:JlH2F2M8qnwl0N1+JFFzlX9TlKJYas3aPXdiuTmJL+w=
 github.com/go-chi/chi/v5 v5.0.13/go.mod h1:DslCQbL2OYiznFReuXYUmQ2hGd1aDpCnlMNITLSKoi8=
-github.com/go-co-op/gocron/v2 v2.5.0 h1:ff/TJX9GdTJBDL1il9cyd/Sj3WnS+BB7ZzwHKSNL5p8=
-github.com/go-co-op/gocron/v2 v2.5.0/go.mod h1:ckPQw96ZuZLRUGu88vVpd9a6d9HakI14KWahFZtGvNw=
+github.com/go-co-op/gocron/v2 v2.6.0 h1:aSka6+B8i/pnFGlJvdZmoK8Tx/kbe7EWFN3gbNmYBGA=
+github.com/go-co-op/gocron/v2 v2.6.0/go.mod h1:ckPQw96ZuZLRUGu88vVpd9a6d9HakI14KWahFZtGvNw=
 github.com/go-crypt/crypt v0.2.24 h1:i1myoujXB5D0JorhEfmx7T/AIWMB0NDFkkEtXpqlCA8=
 github.com/go-crypt/crypt v0.2.24/go.mod h1:mQ6QI5zs5E6fcBmR3CH+7eRQbH90zN4LdpdLpRckRRM=
 github.com/go-crypt/x v0.2.17 h1:DVhqSy929ycjO8C/dB1UmrE6RmRQb6SgaL+Ek9o4rMg=
