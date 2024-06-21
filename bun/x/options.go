@@ -76,13 +76,13 @@ func applyInsertOptions(ops ...InsertOption) *insertOptions {
 	return opts
 }
 
-func InsertIgnore() InsertOption {
+func WithInsertIgnore() InsertOption {
 	return func(o *insertOptions) {
 		o.ignore = true
 	}
 }
 
-func InsertReturning(query string, args ...any) InsertOption {
+func WithInsertReturning(query string, args ...any) InsertOption {
 	return func(o *insertOptions) {
 		o.returning = safeQuery(query, args...)
 	}
@@ -96,13 +96,13 @@ func applyUpdateOptions(ops ...UpdateOption) *updateOptions {
 	return opts
 }
 
-func UpdateOmitZero() UpdateOption {
+func WithUpdateOmitZero() UpdateOption {
 	return func(o *updateOptions) {
 		o.omitZero = true
 	}
 }
 
-func UpdateReturning(query string, args ...any) UpdateOption {
+func WithUpdateReturning(query string, args ...any) UpdateOption {
 	return func(o *updateOptions) {
 		o.returning = safeQuery(query, args...)
 	}
@@ -116,19 +116,19 @@ func applyDeleteOptions(ops ...DeleteOption) *deleteOptions {
 	return opts
 }
 
-func DeleteForce() DeleteOption {
+func WithDeleteForce() DeleteOption {
 	return func(o *deleteOptions) {
 		o.forceDelete = true
 	}
 }
 
-func DeleteReturning(query string, args ...any) DeleteOption {
+func WithDeleteReturning(query string, args ...any) DeleteOption {
 	return func(o *deleteOptions) {
 		o.returning = safeQuery(query, args...)
 	}
 }
 
-func DeleteWhere(query string, args ...any) DeleteOption {
+func WithDeleteWhere(query string, args ...any) DeleteOption {
 	return func(o *deleteOptions) {
 		o.where = append(
 			o.where,
@@ -137,7 +137,7 @@ func DeleteWhere(query string, args ...any) DeleteOption {
 	}
 }
 
-func DeleteWhereOr(query string, args ...any) DeleteOption {
+func WithDeleteWhereOr(query string, args ...any) DeleteOption {
 	return func(o *deleteOptions) {
 		o.whereOr = append(
 			o.whereOr,
@@ -154,19 +154,19 @@ func applySelectOptions(ops ...SelectOption) *selectOptions {
 	return opts
 }
 
-func SelectLimit(limit int) SelectOption {
+func WithSelectLimit(limit int) SelectOption {
 	return func(o *selectOptions) {
 		o.limit = limit
 	}
 }
 
-func SelectOffset(offset int) SelectOption {
+func WithSelectOffset(offset int) SelectOption {
 	return func(o *selectOptions) {
 		o.offset = offset
 	}
 }
 
-func SelectWhere(query string, args ...any) SelectOption {
+func WithSelectWhere(query string, args ...any) SelectOption {
 	return func(o *selectOptions) {
 		o.where = append(
 			o.where,
@@ -175,7 +175,7 @@ func SelectWhere(query string, args ...any) SelectOption {
 	}
 }
 
-func SelectWhereOr(query string, args ...any) SelectOption {
+func WithSelectWhereOr(query string, args ...any) SelectOption {
 	return func(o *selectOptions) {
 		o.whereOr = append(
 			o.whereOr,
@@ -184,19 +184,19 @@ func SelectWhereOr(query string, args ...any) SelectOption {
 	}
 }
 
-func SelectColumns(columns ...string) SelectOption {
+func WithSelectColumns(columns ...string) SelectOption {
 	return func(o *selectOptions) {
 		o.columns = append(o.columns, columns...)
 	}
 }
 
-func SelectOrders(orders ...string) SelectOption {
+func WithSelectOrders(orders ...string) SelectOption {
 	return func(o *selectOptions) {
 		o.orders = append(o.orders, orders...)
 	}
 }
 
-func SelectApplyQuery(queryFunc func(*rdb.SelectQuery) *rdb.SelectQuery) SelectOption {
+func WithSelectApplyQuery(queryFunc func(*rdb.SelectQuery) *rdb.SelectQuery) SelectOption {
 	return func(o *selectOptions) {
 		o.queryFunc = queryFunc
 	}

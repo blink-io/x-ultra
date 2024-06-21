@@ -1,8 +1,11 @@
 package sqlite
 
 import (
+	"database/sql"
 	"fmt"
 	"testing"
+
+	"github.com/brianvoe/gofakeit/v6"
 
 	"github.com/stretchr/testify/assert"
 
@@ -40,9 +43,9 @@ func TestSqlite_Bun_RebuildTable_1(t *testing.T) {
 
 func TestSqlite_Bun_Delete_1(t *testing.T) {
 	db := getSqliteDB()
-	gdb := xbunx.NewDB[Application, string](db)
+	gdb := xbunx.NewDB[Application, int64](db)
 	//err := gdb.Delete(ctx, "123456")
-	err := gdb.BulkDelete(ctx, []string{"123456", "888888"})
+	err := gdb.BulkDelete(ctx, []int64{5})
 	require.NoError(t, err)
 }
 
@@ -52,7 +55,7 @@ func TestSqlite_Bun_Insert_1(t *testing.T) {
 
 	rdb := xbunx.NewDB[Application, string](db)
 
-	err1 := rdb.Insert(ctx, r1, xbunx.InsertReturning("id"))
+	err1 := rdb.Insert(ctx, r1, xbunx.WithInsertReturning("id"))
 	require.NoError(t, err1)
 }
 
@@ -84,6 +87,19 @@ func TestSqlite_Bun_Update_1(t *testing.T) {
 	require.NoError(t, err1)
 }
 
+func TestSqlite_Bun_Update_2(t *testing.T) {
+	db := getSqliteDB()
+	gdb := xbunx.NewDB[Application, int64](db)
+
+	r1, err := gdb.Get(ctx, 6)
+	require.NoError(t, err)
+
+	r1.Name = gofakeit.Name() + "-Updated"
+
+	err = gdb.Update(ctx, r1)
+	require.NoError(t, err)
+}
+
 func TestSqlite_Bun_Delete_All(t *testing.T) {
 	db := getSqliteDB()
 
@@ -110,6 +126,104 @@ func TestSqlite_Bun_InsertMap_1(t *testing.T) {
 	fmt.Println("sql: ", sql)
 }
 
+func TestSqlite_Bun_SelectCols_1(t *testing.T) {
+	db := getSqliteDB()
+
+	var ids []int64
+	var desc []*string
+	err := db.NewSelect().
+		Table("applications").
+		Column("id", "description").
+		Limit(5).
+		Scan(ctx, &ids, &desc)
+	require.NoError(t, err)
+}
+
+func TestSqlite_Bun_SelectTypeTuple2_1(t *testing.T) {
+	db := getSqliteDB()
+
+	ts, err := xbunx.TypeTuple2[int64, string](ctx, db,
+		"applications", "id", "description", xbunx.WithSelectLimit(5),
+	)
+	require.NoError(t, err)
+	require.NotNil(t, ts)
+}
+
+func TestSqlite_Bun_SelectTypeTuple3_1(t *testing.T) {
+	db := getSqliteDB()
+
+	ts, err := xbunx.TypeTuple3[int64, string, string](ctx, db,
+		"applications", "id", "name", "description", xbunx.WithSelectLimit(5),
+	)
+	require.NoError(t, err)
+	require.NotNil(t, ts)
+}
+
+func TestSqlite_Bun_SelectTypeTuple4_1(t *testing.T) {
+	db := getSqliteDB()
+
+	ts, err := xbunx.TypeTuple4[int64, string, string, string](ctx, db,
+		"applications", "id", "name", "code", "description", xbunx.WithSelectLimit(5),
+	)
+	require.NoError(t, err)
+	require.NotNil(t, ts)
+}
+
+func TestSqlite_Bun_SelectTypeTuple5_1(t *testing.T) {
+	db := getSqliteDB()
+
+	ts, err := xbunx.TypeTuple5[int64, string, string, string, string](ctx, db,
+		"applications", "id", "name", "status", "code", "description", xbunx.WithSelectLimit(5),
+	)
+	require.NoError(t, err)
+	require.NotNil(t, ts)
+}
+
+func TestSqlite_Bun_SelectTypeTuple6_1(t *testing.T) {
+	db := getSqliteDB()
+
+	ts, err := xbunx.TypeTuple6[int64, sql.Null[int], string, string, string, sql.Null[string]](ctx, db,
+		"applications", "id", "level", "name", "status", "code", "description",
+		xbunx.WithSelectLimit(5),
+	)
+	require.NoError(t, err)
+	require.NotNil(t, ts)
+}
+
+func TestSqlite_Bun_SelectTypeTuple7_1(t *testing.T) {
+	db := getSqliteDB()
+
+	ts, err := xbunx.TypeTuple7[int64, string, sql.Null[int], string, string, string, sql.Null[string]](ctx, db,
+		"applications", "id", "guid", "level", "name", "status", "code", "description",
+		xbunx.WithSelectLimit(5),
+	)
+	require.NoError(t, err)
+	require.NotNil(t, ts)
+}
+
+func TestSqlite_Bun_SelectTypeTuple8_1(t *testing.T) {
+	db := getSqliteDB()
+
+	ts, err := xbunx.TypeTuple8[int64, int64, string, sql.Null[int], string, string, string, sql.Null[string]](ctx, db,
+		"applications", "id", "id", "guid", "level", "name", "status", "code", "description",
+		xbunx.WithSelectLimit(5),
+	)
+	require.NoError(t, err)
+	require.NotNil(t, ts)
+}
+
+func TestSqlite_Bun_SelectTypeTuple9_1(t *testing.T) {
+	db := getSqliteDB()
+
+	ts, err := xbunx.TypeTuple9[int64, int64, string, string, sql.Null[int], string, string, string, sql.Null[string]](ctx, db,
+		"applications", "id", "id", "guid", "guid", "level", "name", "status", "code", "description",
+		xbunx.WithSelectLimit(5),
+		xbunx.WithSelectWhere("id > ? and level is not null", 0),
+	)
+	require.NoError(t, err)
+	require.NotNil(t, ts)
+}
+
 func TestSqlite_Bun_SelectModel_1(t *testing.T) {
 	db := getSqliteDB()
 
@@ -132,7 +246,7 @@ func TestSqlite_Bun_SelectModel_2(t *testing.T) {
 
 func TestSqlite_Bun_One_1(t *testing.T) {
 	db := getSqliteDB()
-	m, err := xbunx.One[Application](ctx, db, xbunx.SelectWhere("id = ?", 6))
+	m, err := xbunx.One[Application](ctx, db, xbunx.WithSelectWhere("id = ?", 6))
 
 	require.NoError(t, err)
 	require.NotNil(t, m)
@@ -151,7 +265,7 @@ func TestSqlite_Bun_Get_1(t *testing.T) {
 func TestSqlite_Bun_All_Model_1(t *testing.T) {
 	db := getSqliteDB()
 	//var rs xbunx.ModelSlice[Application]
-	ms, err := xbunx.All[Application](ctx, db, xbunx.SelectApplyQuery(func(q *xbun.SelectQuery) *xbun.SelectQuery {
+	ms, err := xbunx.All[Application](ctx, db, xbunx.WithSelectApplyQuery(func(q *xbun.SelectQuery) *xbun.SelectQuery {
 		q.Limit(3)
 		return q
 	}))
@@ -164,7 +278,7 @@ func TestSqlite_Bun_All_Model_1(t *testing.T) {
 func TestSqlite_Bun_Type_All_1(t *testing.T) {
 	db := getSqliteDB()
 	ms, err := xbunx.Type[string](ctx, db, "applications", "guid",
-		xbunx.SelectApplyQuery(func(q *xbun.SelectQuery) *xbun.SelectQuery {
+		xbunx.WithSelectApplyQuery(func(q *xbun.SelectQuery) *xbun.SelectQuery {
 			q.Limit(3)
 			return q
 		}))
@@ -176,7 +290,7 @@ func TestSqlite_Bun_Type_All_1(t *testing.T) {
 
 func TestSqlite_Bun_All_Custom_1(t *testing.T) {
 	db := getSqliteDB()
-	ms, err := xbunx.All[IDAndName](ctx, db, xbunx.SelectApplyQuery(func(q *xbun.SelectQuery) *xbun.SelectQuery {
+	ms, err := xbunx.All[IDAndName](ctx, db, xbunx.WithSelectApplyQuery(func(q *xbun.SelectQuery) *xbun.SelectQuery {
 		q.ModelTableExpr("applications as a1")
 		q.Limit(3)
 		return q
