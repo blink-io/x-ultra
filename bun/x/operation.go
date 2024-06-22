@@ -221,6 +221,9 @@ func handleSelectOptions(op Operation, q *rdb.SelectQuery, o *selectOptions) {
 		if o.queryFunc != nil {
 			q.Apply(o.queryFunc)
 		}
+		if o.queryBuilder != nil {
+			q.ApplyQueryBuilder(o.queryBuilder)
+		}
 		if o.distinct {
 			q.Distinct()
 		}
@@ -234,6 +237,13 @@ func handleSelectOptions(op Operation, q *rdb.SelectQuery, o *selectOptions) {
 		}
 		if o.offset > 0 {
 			q.Offset(o.offset)
+		}
+	} else if op == OperationExists || op == OperationCount {
+		if o.queryFunc != nil {
+			q.Apply(o.queryFunc)
+		}
+		if o.queryBuilder != nil {
+			q.ApplyQueryBuilder(o.queryBuilder)
 		}
 	}
 }

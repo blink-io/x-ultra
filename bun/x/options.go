@@ -35,6 +35,7 @@ type (
 
 	selectOptions struct {
 		queryFunc      func(*rdb.SelectQuery) *rdb.SelectQuery
+		queryBuilder   func(rdb.QueryBuilder) rdb.QueryBuilder
 		distinct       bool
 		distinctOn     []*rdb.QueryWithArgs
 		limit          int
@@ -196,7 +197,7 @@ func WithSelectOrders(orders ...string) SelectOption {
 	}
 }
 
-func WithSelectApplyQuery(queryFunc func(*rdb.SelectQuery) *rdb.SelectQuery) SelectOption {
+func WithSelectQuery(queryFunc func(*rdb.SelectQuery) *rdb.SelectQuery) SelectOption {
 	return func(o *selectOptions) {
 		o.queryFunc = queryFunc
 	}

@@ -18,9 +18,9 @@ func newRandomRecordForApp(from string) *Application {
 	r.Status = "ok"
 	r.CreatedAt = tnow
 	r.UpdatedAt = tnow
-	r.CreatedBy = xsql.ValidString(gofakeit.Name())
-	r.UpdatedBy = xsql.ValidString(gofakeit.Name())
-	r.DeletedAt = xsql.ValidTime(tnow)
+	r.CreatedBy = xsql.ValidNull[string](gofakeit.Name())
+	r.UpdatedBy = xsql.ValidNull[string](gofakeit.Name())
+	r.DeletedAt = xsql.ValidNull[time.Time](tnow)
 	return r
 }
 

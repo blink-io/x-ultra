@@ -13,7 +13,7 @@ func TestGenDB_1(t *testing.T) {
 
 func TestSelectOptions(t *testing.T) {
 	ops := []SelectOption{
-		WithSelectApplyQuery(func(q *rdb.SelectQuery) *rdb.SelectQuery {
+		WithSelectQuery(func(q *rdb.SelectQuery) *rdb.SelectQuery {
 			return q
 		}),
 	}

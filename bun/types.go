@@ -37,6 +37,8 @@ type (
 	UpdateQuery = bun.UpdateQuery
 
 	SelectQuery = bun.SelectQuery
+
+	QueryBuilder = bun.QueryBuilder
 )
 
 func In(slice interface{}) schema.QueryAppender {
