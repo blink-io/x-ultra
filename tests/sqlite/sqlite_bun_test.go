@@ -5,14 +5,14 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/brianvoe/gofakeit/v6"
-
-	"github.com/stretchr/testify/assert"
+	"github.com/pborman/uuid"
 
 	xbun "github.com/blink-io/x/bun"
 	xbunx "github.com/blink-io/x/bun/x"
-
+	"github.com/brianvoe/gofakeit/v6"
+	guuid "github.com/google/uuid"
 	"github.com/sanity-io/litter"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -51,11 +51,16 @@ func TestSqlite_Bun_Delete_1(t *testing.T) {
 
 func TestSqlite_Bun_Insert_1(t *testing.T) {
 	db := getSqliteDB()
-	r1 := newRandomRecordForApp(xbun.Accessor)
+	rrLen := 10
+	rr := make([]*Application, rrLen)
+	for i := 0; i < rrLen; i++ {
+		r1 := newRandomRecordForApp(xbun.Accessor)
+		rr[i] = r1
+	}
 
 	rdb := xbunx.NewDB[Application, string](db)
 
-	err1 := rdb.Insert(ctx, r1, xbunx.WithInsertReturning("id"))
+	err1 := rdb.BulkInsert(ctx, rr, xbunx.WithInsertReturning("id"))
 	require.NoError(t, err1)
 }
 
@@ -204,7 +209,7 @@ func TestSqlite_Bun_SelectTypeTuple7_1(t *testing.T) {
 func TestSqlite_Bun_SelectTypeTuple8_1(t *testing.T) {
 	db := getSqliteDB()
 
-	ts, err := xbunx.TypeTuple8[int64, int64, string, sql.Null[int], string, string, string, sql.Null[string]](ctx, db,
+	ts, err := xbunx.TypeTuple8[int64, int64, guuid.UUID, sql.Null[int], string, string, string, sql.Null[string]](ctx, db,
 		"applications", "id", "id", "guid", "level", "name", "status", "code", "description",
 		xbunx.WithSelectLimit(5),
 	)
@@ -215,7 +220,7 @@ func TestSqlite_Bun_SelectTypeTuple8_1(t *testing.T) {
 func TestSqlite_Bun_SelectTypeTuple9_1(t *testing.T) {
 	db := getSqliteDB()
 
-	ts, err := xbunx.TypeTuple9[int64, int64, string, string, sql.Null[int], string, string, string, sql.Null[string]](ctx, db,
+	ts, err := xbunx.TypeTuple9[int64, int64, guuid.UUID, uuid.UUID, sql.Null[int], string, string, string, sql.Null[string]](ctx, db,
 		"applications", "id", "id", "guid", "guid", "level", "name", "status", "code", "description",
 		xbunx.WithSelectLimit(5),
 		xbunx.WithSelectWhere("id > ? and level is not null", 0),

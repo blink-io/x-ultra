@@ -2,34 +2,35 @@ package x
 
 import (
 	"context"
-	"database/sql"
 
 	rdb "github.com/blink-io/x/bun"
 )
 
-type ValueType interface {
-	string | ~bool |
-		~int | ~uint |
-		~int8 | ~uint8 |
-		~int16 | ~uint16 |
-		~int32 | ~uint32 |
-		~int64 | ~uint64 |
-		~float32 | ~float64 |
-		~*string | ~*bool |
-		~*int | ~*uint |
-		~*int8 | ~*uint8 |
-		~*int16 | ~*uint16 |
-		~*int32 | ~*uint32 |
-		~*int64 | ~*uint64 |
-		~*float32 | ~*float64 |
-		sql.Null[string] | sql.Null[bool] |
-		sql.Null[int] | sql.Null[uint] |
-		sql.Null[int8] | sql.Null[uint8] |
-		sql.Null[int16] | sql.Null[uint16] |
-		sql.Null[int32] | sql.Null[uint32] |
-		sql.Null[int64] | sql.Null[uint64] |
-		sql.Null[float32] | sql.Null[float64]
-}
+//type ValueType interface {
+//	any | ~string | ~bool |
+//		~int | ~uint |
+//		~int8 | ~uint8 |
+//		~int16 | ~uint16 |
+//		~int32 | ~uint32 |
+//		~int64 | ~uint64 |
+//		~float32 | ~float64 |
+//		~*string | ~*bool |
+//		~*int | ~*uint |
+//		~*int8 | ~*uint8 |
+//		~*int16 | ~*uint16 |
+//		~*int32 | ~*uint32 |
+//		~*int64 | ~*uint64 |
+//		~*float32 | ~*float64 |
+//		sql.Null[string] | sql.Null[bool] |
+//		sql.Null[int] | sql.Null[uint] |
+//		sql.Null[int8] | sql.Null[uint8] |
+//		sql.Null[int16] | sql.Null[uint16] |
+//		sql.Null[int32] | sql.Null[uint32] |
+//		sql.Null[int64] | sql.Null[uint64] |
+//		sql.Null[float32] | sql.Null[float64]
+//}
+
+type ValueType = any
 
 type TypeSlice[T ValueType] []T
 

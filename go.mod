@@ -121,7 +121,7 @@ require (
 	github.com/exaring/otelpgx v0.6.1
 	github.com/expr-lang/expr v1.16.9
 	github.com/gabriel-vasile/mimetype v1.4.4
-	github.com/go-co-op/gocron/v2 v2.6.0
+	github.com/go-co-op/gocron/v2 v2.7.0
 	github.com/go-crypt/crypt v0.2.24
 	github.com/go-faster/city v1.0.1
 	github.com/go-faster/xor v1.0.0

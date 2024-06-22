@@ -6,6 +6,9 @@ import (
 	"reflect"
 
 	xbun "github.com/blink-io/x/bun"
+
+	"github.com/gofrs/uuid/v5"
+	guuid "github.com/google/uuid"
 )
 
 const (
@@ -15,7 +18,7 @@ const (
 type (
 	// IDType defines the generic type for ID in repository
 	IDType interface {
-		string |
+		~string | uuid.UUID | guuid.UUID |
 			~int | ~uint |
 			~int8 | ~uint8 |
 			~int16 | ~uint16 |

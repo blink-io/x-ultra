@@ -11,7 +11,7 @@ import (
 func newRandomRecordForApp(from string) *Application {
 	tnow := time.Now().Local()
 	r := new(Application)
-	r.GUID = id.ShortUUID()
+	r.GUID = id.UUID()
 	r.Name = "from-" + from + "-" + gofakeit.Name()
 	r.Code = "code-" + gofakeit.Name()
 	r.Type = "type-001"

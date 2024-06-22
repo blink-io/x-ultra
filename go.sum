@@ -166,8 +166,8 @@ github.com/getsentry/sentry-go v0.28.1 h1:zzaSm/vHmGllRM6Tpx1492r0YDzauArdBfkJRt
 github.com/getsentry/sentry-go v0.28.1/go.mod h1:1fQZ+7l7eeJ3wYi82q5Hg8GqAPgefRq+FP/QhafYVgg=
 github.com/go-chi/chi/v5 v5.0.14 h1:PyEwo2Vudraa0x/Wl6eDRRW2NXBvekgfxyydcM0WGE0=
 github.com/go-chi/chi/v5 v5.0.14/go.mod h1:DslCQbL2OYiznFReuXYUmQ2hGd1aDpCnlMNITLSKoi8=
-github.com/go-co-op/gocron/v2 v2.6.0 h1:aSka6+B8i/pnFGlJvdZmoK8Tx/kbe7EWFN3gbNmYBGA=
-github.com/go-co-op/gocron/v2 v2.6.0/go.mod h1:ckPQw96ZuZLRUGu88vVpd9a6d9HakI14KWahFZtGvNw=
+github.com/go-co-op/gocron/v2 v2.7.0 h1:dFwVZx+M+7p3brj5JPrqmvmlt/X45DiQi6lFZ0xLIQc=
+github.com/go-co-op/gocron/v2 v2.7.0/go.mod h1:ckPQw96ZuZLRUGu88vVpd9a6d9HakI14KWahFZtGvNw=
 github.com/go-crypt/crypt v0.2.24 h1:i1myoujXB5D0JorhEfmx7T/AIWMB0NDFkkEtXpqlCA8=
 github.com/go-crypt/crypt v0.2.24/go.mod h1:mQ6QI5zs5E6fcBmR3CH+7eRQbH90zN4LdpdLpRckRRM=
 github.com/go-crypt/x v0.2.17 h1:DVhqSy929ycjO8C/dB1UmrE6RmRQb6SgaL+Ek9o4rMg=
