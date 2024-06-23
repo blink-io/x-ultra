@@ -4,13 +4,11 @@ import (
 	"database/sql"
 	"fmt"
 	"testing"
-	"time"
 
 	"github.com/brianvoe/gofakeit/v6"
 
 	xbun "github.com/blink-io/x/bun"
 	xbunx "github.com/blink-io/x/bun/x"
-	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 )
 
@@ -39,7 +37,7 @@ func TestSqlite_Bun_RebuildTable_1(t *testing.T) {
 	TestSqlite_Bun_CreateTable_1(t)
 }
 
-func TestSqlite_Bun_Update_Custom_1(t *testing.T) {
+func TestSqlite_Bun_Custom_Update_1(t *testing.T) {
 	db := getSqliteDB()
 
 	rdb := xbunx.NewDB[Application, string](db)
@@ -52,7 +50,80 @@ func TestSqlite_Bun_Update_Custom_1(t *testing.T) {
 	require.NoError(t, err1)
 }
 
-func TestSqlite_Bun_Update_Map_1(t *testing.T) {
+func TestSqlite_Bun_Custom_Update_2(t *testing.T) {
+	db := getSqliteDB()
+
+	rdb := xbunx.NewDB[Application, string](db)
+
+	cv1 := xbunx.NewColumnValue[int]("level", 888)
+	cv2 := xbunx.NewColumnValue[string]("description", "Column Description")
+	ds := rdb.NewUpdate().
+		Table("applications").
+		SetColumn(cv1.Column, "?", cv1.Value).
+		SetColumn(cv2.Column, "?", cv2.Value).
+		Where("id = ?", 25)
+	_, err1 := ds.Exec(ctx)
+	require.NoError(t, err1)
+}
+
+func TestSqlite_Bun_Custom_Update_Bulk_1(t *testing.T) {
+	db := getSqliteDB()
+
+	u1 := new(User)
+	u1.ID = 1
+	u1.Location = gofakeit.City()
+	u1.Profile = gofakeit.AppName()
+
+	u2 := new(User)
+	u2.ID = 2
+	u2.Location = gofakeit.City()
+	u2.Profile = gofakeit.AppName()
+
+	values := db.NewValues(&[]*User{u1, u2})
+
+	_, err := db.NewUpdate().
+		With("_data", values).
+		Model((*User)(nil)).
+		TableExpr("_data").
+		OmitZero().
+		Set("location = _data.location").
+		Set("profile = _data.profile").
+		Where("users.id = _data.id").
+		Exec(ctx)
+
+	require.NoError(t, err)
+}
+
+func TestSqlite_Bun_Custom_Update_Bulk_2(t *testing.T) {
+	db := getSqliteDB()
+
+	u1 := map[string]any{
+		"id":       1,
+		"location": gofakeit.City() + "Update-Bulk-By-Map",
+		"profile":  "Profile:" + "Update-Bulk-By-Map",
+	}
+
+	u2 := map[string]any{
+		"id":       2,
+		"location": gofakeit.City() + "Update-Bulk-By-Map",
+		"profile":  "Profile:" + "Update-Bulk-By-Map",
+	}
+	values := db.NewValues(&[]map[string]any{u1, u2})
+
+	_, err := db.NewUpdate().
+		With("_data", values).
+		Model((*User)(nil)).
+		TableExpr("_data").
+		OmitZero().
+		Set("location = _data.location").
+		Set("profile = _data.profile").
+		Where("users.id = _data.id").
+		Exec(ctx)
+
+	require.NoError(t, err)
+}
+
+func TestSqlite_Bun_Map_Update_1(t *testing.T) {
 	db := getSqliteDB()
 
 	value := map[string]interface{}{
@@ -67,7 +138,7 @@ func TestSqlite_Bun_Update_Map_1(t *testing.T) {
 	require.NoError(t, err)
 }
 
-func TestSqlite_Bun_Update_RawSQL_1(t *testing.T) {
+func TestSqlite_Bun_RawSQL_Update_1(t *testing.T) {
 	db := getSqliteDB()
 
 	_, err := db.NewUpdate().NewRaw(
@@ -80,17 +151,10 @@ func TestSqlite_Bun_Update_RawSQL_1(t *testing.T) {
 func TestSqlite_Bun_Map_Insert_1(t *testing.T) {
 	db := getSqliteDB()
 
-	values := map[string]any{
-		"guid":       uuid.NewString(),
-		"username":   gofakeit.Name(),
-		"location":   gofakeit.City(),
-		"level":      gofakeit.Int8(),
-		"profile":    gofakeit.AppName(),
-		"created_at": time.Now(),
-		"updated_at": time.Now(),
-	}
+	val := newRandomUserMap()
+
 	sqlstr := db.NewInsert().
-		Model(&values).
+		Model(&val).
 		Ignore().
 		TableExpr("users").
 		String()
@@ -100,7 +164,7 @@ func TestSqlite_Bun_Map_Insert_1(t *testing.T) {
 	require.NoError(t, err)
 }
 
-func TestSqlite_Bun_Select_Custom_1(t *testing.T) {
+func TestSqlite_Bun_Custom_Select_1(t *testing.T) {
 	db := getSqliteDB()
 
 	var ids []int64
@@ -113,7 +177,7 @@ func TestSqlite_Bun_Select_Custom_1(t *testing.T) {
 	require.NoError(t, err)
 }
 
-func TestSqlite_Bun_Select_RawSQL_1(t *testing.T) {
+func TestSqlite_Bun_RawSQL_Select_1(t *testing.T) {
 	db := getSqliteDB()
 
 	var users xbunx.ModelSlice[User]

@@ -34,6 +34,18 @@ type ValueType = any
 
 type TypeSlice[T ValueType] []T
 
+type ColumnValue[V ValueType] struct {
+	Column string
+	Value  V
+}
+
+func NewColumnValue[V ValueType](column string, value V) *ColumnValue[V] {
+	return &ColumnValue[V]{
+		Column: column,
+		Value:  value,
+	}
+}
+
 type Tuple2[T1 ValueType, T2 ValueType] struct {
 	T1 T1
 	T2 T2

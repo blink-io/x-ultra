@@ -35,6 +35,22 @@ func TestSqlite_Bun_Model_Delete_1(t *testing.T) {
 	require.NoError(t, err)
 }
 
+func TestSqlite_Bun_Model_Delete_Bulk_1(t *testing.T) {
+	db := getSqliteDB()
+	//
+	//u1 := new(User)
+	//u1.ID = 1
+	//
+	//u2 := new(User)
+	//u2.ID = 2
+	//
+	//users := xbunx.ModelSlice[User]{u1, u2}
+	xdb := xbunx.NewDB[User, int64](db)
+
+	err := xdb.BulkDelete(ctx, []int64{1, 2})
+	require.NoError(t, err)
+}
+
 func TestSqlite_Bun_Model_Delete_All(t *testing.T) {
 	db := getSqliteDB()
 

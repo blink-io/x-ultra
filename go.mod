@@ -54,7 +54,7 @@ require (
 	github.com/outcaste-io/ristretto v0.2.3
 	github.com/pelletier/go-toml/v2 v2.2.2
 	github.com/pierrec/lz4/v4 v4.1.21
-	github.com/quic-go/quic-go v0.45.0
+	github.com/quic-go/quic-go v0.45.1
 	github.com/redis/go-redis/extra/rediscmd/v9 v9.5.3
 	github.com/redis/go-redis/v9 v9.5.3
 	github.com/redis/rueidis v1.0.39
@@ -113,7 +113,7 @@ require (
 	github.com/carlmjohnson/requests v0.23.5
 	github.com/dchest/siphash v1.2.3
 	github.com/deckarep/golang-set/v2 v2.6.0
-	github.com/didip/tollbooth/v7 v7.0.1
+	github.com/didip/tollbooth/v7 v7.0.2
 	github.com/doug-martin/goqu/v9 v9.19.0
 	github.com/eapache/go-resiliency v1.6.0
 	github.com/eapache/queue/v2 v2.0.0-20230407133247-75960ed334e4
@@ -183,7 +183,7 @@ require (
 	github.com/vmihailenco/tagparser/v2 v2.0.0
 	github.com/wk8/go-ordered-map/v2 v2.1.8
 	github.com/xo/dburl v0.23.2
-	github.com/yuin/goldmark v1.7.2
+	github.com/yuin/goldmark v1.7.3
 	github.com/zitadel/passwap v0.5.0
 	go.opentelemetry.io/otel v1.27.0
 	go.opentelemetry.io/otel/metric v1.27.0
@@ -216,7 +216,7 @@ require (
 	github.com/go-logfmt/logfmt v0.6.0 // indirect
 	github.com/go-logr/logr v1.4.2 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
-	github.com/go-pkgz/expirable-cache v1.0.0 // indirect
+	github.com/go-pkgz/expirable-cache/v3 v3.0.0 // indirect
 	github.com/go-playground/form/v4 v4.2.1 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
@@ -225,7 +225,7 @@ require (
 	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
-	github.com/google/pprof v0.0.0-20240618054019-d3b898a103f8 // indirect
+	github.com/google/pprof v0.0.0-20240622144329-c177fd99eaa9 // indirect
 	github.com/gopherjs/gopherjs v1.17.2 // indirect
 	github.com/gorilla/css v1.0.1 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0 // indirect
