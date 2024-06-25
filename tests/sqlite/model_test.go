@@ -118,7 +118,14 @@ func ToAnySlice[T any](a []T) []any {
 }
 
 type IDAndName struct {
-	bun.BaseModel `bun:"table:applications,alias:a1"`
-	ID            int64  `bun:"id,type:bigint,pk"`
-	Name          string `bun:"name,type:text"`
+	//bun.BaseModel `bun:"table:applications,alias:a1"`
+	ID   int64  `bun:"id,type:bigint,pk"`
+	Name string `bun:"name,type:text"`
+}
+
+type IDAndProfile struct {
+	//bun.BaseModel `bun:"table:applications,alias:a1"`
+	ID      int64  `bun:"id,type:bigint,pk"`
+	GUID    string `bun:"guid,type:text"`
+	Profile string `bun:"profile,type:text"`
 }

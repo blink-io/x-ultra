@@ -164,6 +164,23 @@ func TestSqlite_Bun_Map_Insert_1(t *testing.T) {
 	require.NoError(t, err)
 }
 
+func TestSqlite_Bun_Map_Insert_2(t *testing.T) {
+	db := getSqliteDB()
+
+	vals := []map[string]any{
+		newRandomUserMap(),
+		newRandomUserMap(),
+	}
+
+	q := db.NewInsert().
+		Model(&vals).
+		Ignore().
+		Table("users")
+
+	_, err := q.Exec(ctx)
+	require.NoError(t, err)
+}
+
 func TestSqlite_Bun_Custom_Select_1(t *testing.T) {
 	db := getSqliteDB()
 

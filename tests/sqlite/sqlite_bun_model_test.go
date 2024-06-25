@@ -137,6 +137,24 @@ func TestSqlite_Bun_Model_Select_2(t *testing.T) {
 	require.NoError(t, err)
 }
 
+func TestSqlite_Bun_Model_Select_Custom_1(t *testing.T) {
+	db := getSqliteDB()
+	ms, err := xbunx.Struct[IDAndProfile](ctx, db, xbunx.WithSelectQuery(func(q *xbun.SelectQuery) *xbun.SelectQuery {
+		q.Table("users")
+		q.Limit(3)
+		return q
+	}))
+	require.NoError(t, err)
+	require.NotNil(t, ms)
+}
+
+func TestSqlite_Bun_Model_Select_Custom_2(t *testing.T) {
+	db := getSqliteDB()
+	ms, err := xbunx.StructSQL[IDAndProfile](ctx, db, "select * from users limit ?", 10)
+	require.NoError(t, err)
+	require.NotNil(t, ms)
+}
+
 func TestSqlite_Bun_Model_Count_1(t *testing.T) {
 	db := getSqliteDB()
 	c, err := xbunx.Count[Application](ctx, db)

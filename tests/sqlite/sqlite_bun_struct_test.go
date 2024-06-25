@@ -26,11 +26,26 @@ func TestSqlite_Bun_Type_All_1(t *testing.T) {
 	fmt.Println(ms)
 }
 
+func TestSqlite_Bun_Type_All_2(t *testing.T) {
+	db := getSqliteDB()
+	ms, err := xbunx.Type[int64](ctx, db, "", "",
+		xbunx.WithSelectQuery(func(q *xbun.SelectQuery) *xbun.SelectQuery {
+			q.Column("id")
+			q.Table("applications")
+			q.Limit(3)
+			return q
+		}))
+	require.NoError(t, err)
+	require.NotNil(t, ms)
+
+	fmt.Println(ms)
+}
+
 func TestSqlite_Bun_SelectTypeTuple2_1(t *testing.T) {
 	db := getSqliteDB()
 
 	ts, err := xbunx.TypeTuple2[int64, string](ctx, db,
-		"applications", "id", "description", xbunx.WithSelectLimit(5),
+		"applications", "id", "", xbunx.WithSelectLimit(5),
 	)
 	require.NoError(t, err)
 	require.NotNil(t, ts)
