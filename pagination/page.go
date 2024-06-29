@@ -1,12 +1,11 @@
 package pagination
 
 type PageBasedPagination[E any] struct {
-	PageNumber int  `json:"page_number"`
-	PageSize   int  `json:"page_size"`
-	TotalPages int  `json:"total_pages"`
-	Count      int  `json:"count"`
-	Items      []E  `json:"items"`
-	HasMore    bool `json:"has_more"`
+	Page    int  `json:"page"`
+	PerPage int  `json:"per_page"`
+	Total   int  `json:"total"`
+	Items   []E  `json:"items"`
+	HasMore bool `json:"has_more"`
 }
 
 type OffsetLimitPagination[E any] struct {
@@ -25,11 +24,10 @@ type CursorBasedPagination[C any, E any] struct {
 }
 
 type TokenBasedPagination[T any, E any] struct {
-	PreviousToken T    `json:"previous_token"`
-	NextToken     T    `json:"next_token"`
-	Size          int  `json:"size"`
-	Items         []E  `json:"items"`
-	HasMore       bool `json:"has_more"`
+	NextToken T    `json:"next_token"`
+	Size      int  `json:"size"`
+	Items     []E  `json:"items"`
+	HasMore   bool `json:"has_more"`
 }
 
 type TimeBasedPagination[E any] struct {
