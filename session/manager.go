@@ -75,6 +75,9 @@ type manager struct {
 	// store controls the session store where the session data is persisted.
 	store store.Store
 
+	// hashTokenInStore controls whether or not to store the session token or a hashed version in the store.
+	hashTokenInStore bool
+
 	// contextKey is the key used to set and retrieve the session data from a
 	// context.Context. It's automatically generated to ensure uniqueness.
 	contextKey contextKey
@@ -98,9 +101,7 @@ func newManager(ops ...Option) *manager {
 		tokenGen:    defaultTokenGen,
 	}
 
-	for _, o := range ops {
-		o(m)
-	}
+	applyOptions(m, ops...)
 
 	m.setDefaults()
 

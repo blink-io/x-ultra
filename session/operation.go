@@ -3,6 +3,7 @@ package session
 import (
 	"context"
 	"crypto/rand"
+	"crypto/sha256"
 	"encoding/base64"
 	"fmt"
 	"sort"
@@ -630,14 +631,23 @@ func generateContextKey() contextKey {
 }
 
 func (m *manager) doStoreDelete(ctx context.Context, token string) (err error) {
+	if m.hashTokenInStore {
+		token = hashToken(token)
+	}
 	return m.store.Delete(ctx, token)
 }
 
 func (m *manager) doStoreFind(ctx context.Context, token string) (b []byte, found bool, err error) {
+	if m.hashTokenInStore {
+		token = hashToken(token)
+	}
 	return m.store.Find(ctx, token)
 }
 
 func (m *manager) doStoreCommit(ctx context.Context, token string, b []byte, expiry time.Time) (err error) {
+	if m.hashTokenInStore {
+		token = hashToken(token)
+	}
 	return m.store.Commit(ctx, token, b, expiry)
 }
 
@@ -652,4 +662,9 @@ func defaultTokenGen() (string, error) {
 		return "", err
 	}
 	return base64.RawURLEncoding.EncodeToString(b), nil
+}
+
+func hashToken(token string) string {
+	hash := sha256.Sum256([]byte(token))
+	return base64.RawURLEncoding.EncodeToString(hash[:])
 }

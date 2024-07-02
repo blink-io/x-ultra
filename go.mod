@@ -84,7 +84,7 @@ require (
 	go.uber.org/zap v1.27.0
 	golang.org/x/crypto v0.24.0
 	golang.org/x/text v0.16.0
-	google.golang.org/genproto/googleapis/api v0.0.0-20240624140628-dc46fd24d27d
+	google.golang.org/genproto/googleapis/api v0.0.0-20240701130421-f6361c86f094
 	google.golang.org/grpc v1.64.0
 	google.golang.org/protobuf v1.34.2
 	gopkg.in/yaml.v3 v3.0.1
@@ -168,13 +168,13 @@ require (
 	github.com/remychantenay/slog-otel v1.3.1
 	github.com/russross/blackfriday v1.6.0
 	github.com/samber/do/v2 v2.0.0-beta.7
-	github.com/samber/slog-common v0.16.0
+	github.com/samber/slog-common v0.17.0
 	github.com/samber/slog-multi v1.1.0
-	github.com/samber/slog-nats v0.2.0
-	github.com/samber/slog-sentry/v2 v2.5.0
+	github.com/samber/slog-nats v0.3.0
+	github.com/samber/slog-sentry/v2 v2.6.0
 	github.com/samber/slog-syslog v1.0.0
 	github.com/samber/slog-webhook v1.0.0
-	github.com/samber/slog-zap/v2 v2.4.0
+	github.com/samber/slog-zap/v2 v2.5.0
 	github.com/segmentio/encoding v0.4.0
 	github.com/segmentio/kafka-go v0.4.47
 	github.com/shopspring/decimal v1.4.0
@@ -298,7 +298,7 @@ require (
 	golang.org/x/term v0.21.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
 	golang.org/x/tools v0.22.0 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20240624140628-dc46fd24d27d // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20240701130421-f6361c86f094 // indirect
 	modernc.org/gc/v3 v3.0.0-20240304020402-f0dba7c97c2b // indirect
 	modernc.org/libc v1.54.0 // indirect
 	modernc.org/mathutil v1.6.0 // indirect
