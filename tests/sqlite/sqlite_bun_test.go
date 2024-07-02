@@ -1,10 +1,10 @@
 package sqlite
 
 import (
-	"database/sql"
 	"fmt"
 	"testing"
 
+	"github.com/aarondl/opt/omitnull"
 	"github.com/brianvoe/gofakeit/v6"
 
 	xbun "github.com/blink-io/x/bun"
@@ -185,7 +185,7 @@ func TestSqlite_Bun_Custom_Select_1(t *testing.T) {
 	db := getSqliteDB()
 
 	var ids []int64
-	var descs []sql.Null[string]
+	var descs []omitnull.Val[string]
 	err := db.NewSelect().
 		Table("applications").
 		Column("id", "description").

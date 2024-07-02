@@ -98,6 +98,7 @@ require (
 	github.com/IBM/sarama v1.43.2
 	github.com/VictoriaMetrics/fastcache v1.12.2
 	github.com/XSAM/otelsql v0.31.0
+	github.com/aarondl/opt v0.0.0-20240623220848-083f18ab9536
 	github.com/ahmetb/go-linq/v3 v3.2.0
 	github.com/alicebob/miniredis/v2 v2.33.0
 	github.com/allegro/bigcache/v3 v3.1.0
@@ -201,6 +202,7 @@ require (
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/ProtonMail/go-crypto v1.0.0 // indirect
 	github.com/ProtonMail/go-mime v0.0.0-20230322103455-7d82a3887f2f // indirect
+	github.com/aarondl/json v0.0.0-20221020222930-8b0db17ef1bf // indirect
 	github.com/alicebob/gopher-json v0.0.0-20230218143504-906a9b012302 // indirect
 	github.com/armon/go-radix v1.0.0 // indirect
 	github.com/aymerick/douceur v0.2.0 // indirect

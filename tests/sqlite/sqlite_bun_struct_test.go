@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/aarondl/opt/omitnull"
 	xbun "github.com/blink-io/x/bun"
 
 	xbunx "github.com/blink-io/x/bun/x"
@@ -84,7 +85,7 @@ func TestSqlite_Bun_SelectTypeTuple5_1(t *testing.T) {
 func TestSqlite_Bun_SelectTypeTuple6_1(t *testing.T) {
 	db := getSqliteDB()
 
-	ts, err := xbunx.TypeTuple6[int64, sql.Null[int], string, string, string, sql.Null[string]](ctx, db,
+	ts, err := xbunx.TypeTuple6[int64, omitnull.Val[int], string, string, string, sql.Null[string]](ctx, db,
 		"applications", "id", "level", "name", "status", "code", "description",
 		xbunx.WithSelectLimit(5),
 	)
@@ -95,7 +96,7 @@ func TestSqlite_Bun_SelectTypeTuple6_1(t *testing.T) {
 func TestSqlite_Bun_SelectTypeTuple7_1(t *testing.T) {
 	db := getSqliteDB()
 
-	ts, err := xbunx.TypeTuple7[int64, string, sql.Null[int], string, string, string, sql.Null[string]](ctx, db,
+	ts, err := xbunx.TypeTuple7[int64, string, omitnull.Val[int], string, string, string, sql.Null[string]](ctx, db,
 		"applications", "id", "guid", "level", "name", "status", "code", "description",
 		xbunx.WithSelectLimit(5),
 	)
@@ -106,7 +107,7 @@ func TestSqlite_Bun_SelectTypeTuple7_1(t *testing.T) {
 func TestSqlite_Bun_SelectTypeTuple8_1(t *testing.T) {
 	db := getSqliteDB()
 
-	ts, err := xbunx.TypeTuple8[int64, int64, guuid.UUID, sql.Null[int], string, string, string, sql.Null[string]](ctx, db,
+	ts, err := xbunx.TypeTuple8[int64, int64, guuid.UUID, omitnull.Val[int], string, string, string, sql.Null[string]](ctx, db,
 		"applications", "id", "id", "guid", "level", "name", "status", "code", "description",
 		xbunx.WithSelectLimit(5),
 	)
@@ -117,7 +118,7 @@ func TestSqlite_Bun_SelectTypeTuple8_1(t *testing.T) {
 func TestSqlite_Bun_SelectTypeTuple9_1(t *testing.T) {
 	db := getSqliteDB()
 
-	ts, err := xbunx.TypeTuple9[int64, int64, guuid.UUID, uuid.UUID, sql.Null[int], string, string, string, sql.Null[string]](ctx, db,
+	ts, err := xbunx.TypeTuple9[int64, int64, guuid.UUID, uuid.UUID, omitnull.Val[int], string, string, string, sql.Null[string]](ctx, db,
 		"applications", "id", "id", "guid", "guid", "level", "name", "status", "code", "description",
 		xbunx.WithSelectLimit(5),
 		xbunx.WithSelectWhere("id > ? and level is not null", 0),
