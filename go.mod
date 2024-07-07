@@ -75,14 +75,14 @@ require (
 	github.com/vmihailenco/go-tinylfu v0.2.2
 	github.com/vmihailenco/msgpack/v5 v5.4.1
 	github.com/zeebo/xxh3 v1.0.2
-	gitlab.com/greyxor/slogor v1.2.9
+	gitlab.com/greyxor/slogor v1.2.10
 	go.etcd.io/bbolt v1.3.10
 	go.etcd.io/etcd/client/v3 v3.5.14
 	go.temporal.io/api v1.35.0
 	go.temporal.io/sdk v1.27.0
 	go.uber.org/multierr v1.11.0
 	go.uber.org/zap v1.27.0
-	golang.org/x/crypto v0.24.0
+	golang.org/x/crypto v0.25.0
 	golang.org/x/text v0.16.0
 	google.golang.org/genproto/googleapis/api v0.0.0-20240701130421-f6361c86f094
 	google.golang.org/grpc v1.65.0
@@ -97,7 +97,7 @@ require (
 	github.com/DATA-DOG/go-sqlmock v1.5.2
 	github.com/IBM/sarama v1.43.2
 	github.com/VictoriaMetrics/fastcache v1.12.2
-	github.com/XSAM/otelsql v0.31.0
+	github.com/XSAM/otelsql v0.32.0
 	github.com/aarondl/opt v0.0.0-20240623220848-083f18ab9536
 	github.com/ahmetb/go-linq/v3 v3.2.0
 	github.com/alicebob/miniredis/v2 v2.33.0
@@ -125,8 +125,8 @@ require (
 	github.com/exaring/otelpgx v0.6.2
 	github.com/expr-lang/expr v1.16.9
 	github.com/gabriel-vasile/mimetype v1.4.4
-	github.com/go-co-op/gocron/v2 v2.7.1
-	github.com/go-crypt/crypt v0.2.24
+	github.com/go-co-op/gocron/v2 v2.8.0
+	github.com/go-crypt/crypt v0.2.25
 	github.com/go-faster/city v1.0.1
 	github.com/go-faster/xor v1.0.0
 	github.com/go-kit/log v0.2.1
@@ -155,7 +155,7 @@ require (
 	github.com/mattn/go-sqlite3 v1.14.22
 	github.com/matttproud/golang_protobuf_extensions/v2 v2.0.0
 	github.com/mholt/acmez v1.2.0
-	github.com/microcosm-cc/bluemonday v1.0.26
+	github.com/microcosm-cc/bluemonday v1.0.27
 	github.com/mileusna/useragent v1.3.4
 	github.com/montanaflynn/stats v0.7.1
 	github.com/orcaman/concurrent-map/v2 v2.0.1
@@ -193,8 +193,8 @@ require (
 	go.opentelemetry.io/otel v1.28.0
 	go.opentelemetry.io/otel/metric v1.28.0
 	go.opentelemetry.io/otel/trace v1.28.0
-	golang.org/x/net v0.26.0
-	golang.org/x/sys v0.21.0
+	golang.org/x/net v0.27.0
+	golang.org/x/sys v0.22.0
 )
 
 require (
@@ -220,7 +220,7 @@ require (
 	github.com/eapache/queue v1.1.0 // indirect
 	github.com/facebookgo/clock v0.0.0-20150410010913-600d898af40a // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
-	github.com/go-crypt/x v0.2.17 // indirect
+	github.com/go-crypt/x v0.2.18 // indirect
 	github.com/go-logfmt/logfmt v0.6.0 // indirect
 	github.com/go-logr/logr v1.4.2 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
@@ -270,7 +270,7 @@ require (
 	github.com/qdm12/reprint v0.0.0-20200326205758-722754a53494 // indirect
 	github.com/quic-go/qpack v0.4.0 // indirect
 	github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475 // indirect
-	github.com/refraction-networking/utls v1.6.6 // indirect
+	github.com/refraction-networking/utls v1.6.7 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/robfig/cron v1.2.0 // indirect
@@ -293,9 +293,9 @@ require (
 	go.uber.org/atomic v1.11.0 // indirect
 	go.uber.org/mock v0.4.0 // indirect
 	golang.org/x/exp v0.0.0-20240613232115-7f521ea00fb8 // indirect
-	golang.org/x/mod v0.18.0 // indirect
+	golang.org/x/mod v0.19.0 // indirect
 	golang.org/x/sync v0.7.0 // indirect
-	golang.org/x/term v0.21.0 // indirect
+	golang.org/x/term v0.22.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
 	golang.org/x/tools v0.22.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240701130421-f6361c86f094 // indirect
