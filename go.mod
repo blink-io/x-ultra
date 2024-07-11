@@ -57,7 +57,7 @@ require (
 	github.com/quic-go/quic-go v0.45.1
 	github.com/redis/go-redis/extra/rediscmd/v9 v9.5.3
 	github.com/redis/go-redis/v9 v9.5.3
-	github.com/redis/rueidis v1.0.40
+	github.com/redis/rueidis v1.0.41
 	github.com/rs/xid v1.5.0
 	github.com/sanity-io/litter v1.5.5
 	github.com/segmentio/ksuid v1.0.4
@@ -84,7 +84,7 @@ require (
 	go.uber.org/zap v1.27.0
 	golang.org/x/crypto v0.25.0
 	golang.org/x/text v0.16.0
-	google.golang.org/genproto/googleapis/api v0.0.0-20240701130421-f6361c86f094
+	google.golang.org/genproto/googleapis/api v0.0.0-20240709173604-40e1e62336c5
 	google.golang.org/grpc v1.65.0
 	google.golang.org/protobuf v1.34.2
 	gopkg.in/yaml.v3 v3.0.1
@@ -125,7 +125,7 @@ require (
 	github.com/exaring/otelpgx v0.6.2
 	github.com/expr-lang/expr v1.16.9
 	github.com/gabriel-vasile/mimetype v1.4.4
-	github.com/go-co-op/gocron/v2 v2.8.0
+	github.com/go-co-op/gocron/v2 v2.9.0
 	github.com/go-crypt/crypt v0.2.25
 	github.com/go-faster/city v1.0.1
 	github.com/go-faster/xor v1.0.0
@@ -164,17 +164,17 @@ require (
 	github.com/philhofer/fwd v1.1.2
 	github.com/proullon/ramsql v0.1.3
 	github.com/qustavo/dotsql v1.2.0
-	github.com/redis/rueidis/rueidishook v1.0.40
-	github.com/remychantenay/slog-otel v1.3.1
+	github.com/redis/rueidis/rueidishook v1.0.41
+	github.com/remychantenay/slog-otel v1.3.2
 	github.com/russross/blackfriday v1.6.0
 	github.com/samber/do/v2 v2.0.0-beta.7
-	github.com/samber/slog-common v0.17.0
-	github.com/samber/slog-multi v1.1.0
-	github.com/samber/slog-nats v0.3.0
-	github.com/samber/slog-sentry/v2 v2.6.0
+	github.com/samber/slog-common v0.17.1
+	github.com/samber/slog-multi v1.2.0
+	github.com/samber/slog-nats v0.4.0
+	github.com/samber/slog-sentry/v2 v2.7.0
 	github.com/samber/slog-syslog v1.0.0
 	github.com/samber/slog-webhook v1.0.0
-	github.com/samber/slog-zap/v2 v2.5.0
+	github.com/samber/slog-zap/v2 v2.6.0
 	github.com/segmentio/encoding v0.4.0
 	github.com/segmentio/kafka-go v0.4.47
 	github.com/shopspring/decimal v1.4.0
@@ -292,15 +292,15 @@ require (
 	go.opentelemetry.io/otel/sdk v1.28.0 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
 	go.uber.org/mock v0.4.0 // indirect
-	golang.org/x/exp v0.0.0-20240613232115-7f521ea00fb8 // indirect
+	golang.org/x/exp v0.0.0-20240707233637-46b078467d37 // indirect
 	golang.org/x/mod v0.19.0 // indirect
 	golang.org/x/sync v0.7.0 // indirect
 	golang.org/x/term v0.22.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
-	golang.org/x/tools v0.22.0 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20240701130421-f6361c86f094 // indirect
+	golang.org/x/tools v0.23.0 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20240709173604-40e1e62336c5 // indirect
 	modernc.org/gc/v3 v3.0.0-20240304020402-f0dba7c97c2b // indirect
-	modernc.org/libc v1.54.2 // indirect
+	modernc.org/libc v1.54.4 // indirect
 	modernc.org/mathutil v1.6.0 // indirect
 	modernc.org/memory v1.8.0 // indirect
 	modernc.org/strutil v1.2.0 // indirect
