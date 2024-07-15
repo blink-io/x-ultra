@@ -52,11 +52,11 @@ func TestHijacker(t *testing.T) {
 
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("/get", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/get", func(w http.ResponseWriter, r *http.Request) {
 		_, ok := w.(http.Hijacker)
 
 		fmt.Fprint(w, ok)
-	}))
+	})
 
 	ts := newTestServer(t, sh.Handle(mux))
 	defer ts.Close()
