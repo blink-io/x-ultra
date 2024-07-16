@@ -277,7 +277,7 @@ require (
 	github.com/robfig/cron/v3 v3.0.1 // indirect
 	github.com/rogpeppe/go-internal v1.12.0 // indirect
 	github.com/samber/go-type-to-string v1.7.0 // indirect
-	github.com/samber/lo v1.45.0 // indirect
+	github.com/samber/lo v1.46.0 // indirect
 	github.com/segmentio/asm v1.2.0 // indirect
 	github.com/smarty/assertions v1.16.0 // indirect
 	github.com/stretchr/objx v0.5.2 // indirect

@@ -528,8 +528,8 @@ github.com/samber/do/v2 v2.0.0-beta.7 h1:tmdLOVSCbTA6uGWLU5poi/nZvMRh5QxXFJ9vHyt
 github.com/samber/do/v2 v2.0.0-beta.7/go.mod h1:+LpV3vu4L81Q1JMZNSkMvSkW9lt4e5eJoXoZHkeBS4c=
 github.com/samber/go-type-to-string v1.7.0 h1:FiSstaAikHMUSLt5bhVlsvCnD7bbQzC8L0UkkGS3Bj8=
 github.com/samber/go-type-to-string v1.7.0/go.mod h1:jpU77vIDoIxkahknKDoEx9C8bQ1ADnh2sotZ8I4QqBU=
-github.com/samber/lo v1.45.0 h1:TPK85Y30Lv9Jh8s3TrJeA94u1hwcbFA9JObx/vT6lYU=
-github.com/samber/lo v1.45.0/go.mod h1:RmDH9Ct32Qy3gduHQuKJ3gW1fMHAnE/fAzQuf6He5cU=
+github.com/samber/lo v1.46.0 h1:w8G+oaCPgz1PoCJztqymCFaKwXt+5cCXn51uPxExFfQ=
+github.com/samber/lo v1.46.0/go.mod h1:RmDH9Ct32Qy3gduHQuKJ3gW1fMHAnE/fAzQuf6He5cU=
 github.com/samber/slog-common v0.17.1 h1:jTqqLBgoJshpoxlPSGiypyOanjH6tY+i9bwyYmIbjhI=
 github.com/samber/slog-common v0.17.1/go.mod h1:mZSJhinB4aqHziR0SKPqpVZjJ0JO35JfH+dDIWqaCBk=
 github.com/samber/slog-multi v1.2.0 h1:JIebVdmeGkCMd5/ticlmU+aDYl4tdAZBmp5uLaSzr0k=
