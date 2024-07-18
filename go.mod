@@ -125,7 +125,7 @@ require (
 	github.com/exaring/otelpgx v0.6.2
 	github.com/expr-lang/expr v1.16.9
 	github.com/gabriel-vasile/mimetype v1.4.4
-	github.com/go-co-op/gocron/v2 v2.10.0
+	github.com/go-co-op/gocron/v2 v2.10.1
 	github.com/go-crypt/crypt v0.2.25
 	github.com/go-faster/city v1.0.1
 	github.com/go-faster/xor v1.0.0
@@ -292,7 +292,7 @@ require (
 	go.opentelemetry.io/otel/sdk v1.28.0 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
 	go.uber.org/mock v0.4.0 // indirect
-	golang.org/x/exp v0.0.0-20240707233637-46b078467d37 // indirect
+	golang.org/x/exp v0.0.0-20240716175740-e3f259677ff7 // indirect
 	golang.org/x/mod v0.19.0 // indirect
 	golang.org/x/sync v0.7.0 // indirect
 	golang.org/x/term v0.22.0 // indirect
