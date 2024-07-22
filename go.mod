@@ -12,12 +12,12 @@ require (
 	github.com/cenkalti/backoff/v4 v4.3.0
 	github.com/cespare/xxhash/v2 v2.3.0
 	github.com/creasty/defaults v1.7.0
-	github.com/disgoorg/snowflake/v2 v2.0.1
+	github.com/disgoorg/snowflake/v2 v2.0.3
 	github.com/frankban/quicktest v1.14.6 //test
 	github.com/fxamacker/cbor/v2 v2.7.0
 	github.com/getsentry/sentry-go v0.28.1
 	github.com/go-chi/chi/v5 v5.1.0
-	github.com/go-kratos/kratos/v2 v2.7.3
+	github.com/go-kratos/kratos/v2 v2.8.0
 	github.com/go-playground/validator/v10 v10.22.0
 	github.com/go-resty/resty/v2 v2.13.1
 	github.com/go-sql-driver/mysql v1.8.1
@@ -56,7 +56,7 @@ require (
 	github.com/pierrec/lz4/v4 v4.1.21
 	github.com/quic-go/quic-go v0.45.1
 	github.com/redis/go-redis/extra/rediscmd/v9 v9.5.3
-	github.com/redis/go-redis/v9 v9.5.4
+	github.com/redis/go-redis/v9 v9.6.0
 	github.com/redis/rueidis v1.0.41
 	github.com/rs/xid v1.5.0
 	github.com/sanity-io/litter v1.5.5
@@ -77,7 +77,7 @@ require (
 	github.com/zeebo/xxh3 v1.0.2
 	gitlab.com/greyxor/slogor v1.2.10
 	go.etcd.io/bbolt v1.3.10
-	go.etcd.io/etcd/client/v3 v3.5.14
+	go.etcd.io/etcd/client/v3 v3.5.15
 	go.temporal.io/api v1.36.0
 	go.temporal.io/sdk v1.27.0
 	go.uber.org/multierr v1.11.0
@@ -88,7 +88,7 @@ require (
 	google.golang.org/grpc v1.65.0
 	google.golang.org/protobuf v1.34.2
 	gopkg.in/yaml.v3 v3.0.1
-	modernc.org/sqlite v1.30.2
+	modernc.org/sqlite v1.31.1
 )
 
 require (
@@ -119,13 +119,13 @@ require (
 	github.com/deckarep/golang-set/v2 v2.6.0
 	github.com/didip/tollbooth/v7 v7.0.2
 	github.com/doug-martin/goqu/v9 v9.19.0
-	github.com/eapache/go-resiliency v1.6.0
+	github.com/eapache/go-resiliency v1.7.0
 	github.com/eapache/queue/v2 v2.0.0-20230407133247-75960ed334e4
 	github.com/emicklei/proto v1.13.2
 	github.com/exaring/otelpgx v0.6.2
 	github.com/expr-lang/expr v1.16.9
 	github.com/gabriel-vasile/mimetype v1.4.4
-	github.com/go-co-op/gocron/v2 v2.10.1
+	github.com/go-co-op/gocron/v2 v2.11.0
 	github.com/go-crypt/crypt v0.2.25
 	github.com/go-faster/city v1.0.1
 	github.com/go-faster/xor v1.0.0
@@ -151,7 +151,7 @@ require (
 	github.com/lib/pq v1.10.9
 	github.com/life4/genesis v1.10.3
 	github.com/matryer/is v1.4.1
-	github.com/mattn/go-runewidth v0.0.15
+	github.com/mattn/go-runewidth v0.0.16
 	github.com/mattn/go-sqlite3 v1.14.22
 	github.com/matttproud/golang_protobuf_extensions/v2 v2.0.0
 	github.com/mholt/acmez v1.2.0
@@ -233,7 +233,7 @@ require (
 	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
-	github.com/google/pprof v0.0.0-20240711041743-f6c9dda6c6da // indirect
+	github.com/google/pprof v0.0.0-20240721033354-7089f98c1d14 // indirect
 	github.com/gopherjs/gopherjs v1.17.2 // indirect
 	github.com/gorilla/css v1.0.1 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0 // indirect
@@ -286,13 +286,13 @@ require (
 	github.com/valyala/fasttemplate v1.2.2 // indirect
 	github.com/x448/float16 v0.8.4 // indirect
 	github.com/yuin/gopher-lua v1.1.1 // indirect
-	go.etcd.io/etcd/api/v3 v3.5.14 // indirect
-	go.etcd.io/etcd/client/pkg/v3 v3.5.14 // indirect
+	go.etcd.io/etcd/api/v3 v3.5.15 // indirect
+	go.etcd.io/etcd/client/pkg/v3 v3.5.15 // indirect
 	go.opentelemetry.io/otel/log v0.4.0 // indirect
 	go.opentelemetry.io/otel/sdk v1.28.0 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
 	go.uber.org/mock v0.4.0 // indirect
-	golang.org/x/exp v0.0.0-20240716175740-e3f259677ff7 // indirect
+	golang.org/x/exp v0.0.0-20240719175910-8a7402abbf56 // indirect
 	golang.org/x/mod v0.19.0 // indirect
 	golang.org/x/sync v0.7.0 // indirect
 	golang.org/x/term v0.22.0 // indirect
@@ -300,7 +300,7 @@ require (
 	golang.org/x/tools v0.23.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240711142825-46eb208f015d // indirect
 	modernc.org/gc/v3 v3.0.0-20240304020402-f0dba7c97c2b // indirect
-	modernc.org/libc v1.55.2 // indirect
+	modernc.org/libc v1.55.3 // indirect
 	modernc.org/mathutil v1.6.0 // indirect
 	modernc.org/memory v1.8.0 // indirect
 	modernc.org/strutil v1.2.0 // indirect
