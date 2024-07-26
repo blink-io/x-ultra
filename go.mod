@@ -49,7 +49,7 @@ require (
 	github.com/nicksnyder/go-i18n/v2 v2.4.0
 	github.com/npillmayer/nestext v0.1.3
 	github.com/oklog/ulid/v2 v2.1.0
-	github.com/onsi/ginkgo/v2 v2.19.0
+	github.com/onsi/ginkgo/v2 v2.19.1
 	github.com/onsi/gomega v1.34.0
 	github.com/outcaste-io/ristretto v0.2.3
 	github.com/pelletier/go-toml/v2 v2.2.2
@@ -124,7 +124,7 @@ require (
 	github.com/emicklei/proto v1.13.2
 	github.com/exaring/otelpgx v0.6.2
 	github.com/expr-lang/expr v1.16.9
-	github.com/gabriel-vasile/mimetype v1.4.4
+	github.com/gabriel-vasile/mimetype v1.4.5
 	github.com/go-co-op/gocron/v2 v2.11.0
 	github.com/go-crypt/crypt v0.2.25
 	github.com/go-faster/city v1.0.1
@@ -138,7 +138,7 @@ require (
 	github.com/gorilla/mux v1.8.1
 	github.com/gorilla/websocket v1.5.3
 	github.com/h2non/filetype v1.1.3
-	github.com/huandu/go-sqlbuilder v1.27.3
+	github.com/huandu/go-sqlbuilder v1.28.0
 	github.com/imroc/req/v3 v3.43.7
 	github.com/jackc/chunkreader/v2 v2.0.1
 	github.com/jackc/puddle/v2 v2.2.1
