@@ -1,4 +1,4 @@
-package g
+package registrar
 
 import (
 	"context"
@@ -41,52 +41,52 @@ type ServiceRegistrar interface {
 
 type RegistrarFunc[S any] func(ServiceRegistrar, S)
 
+type RegistrarFuncWithErr[S any] func(ServiceRegistrar, S) error
+
 type CtxRegistrarFunc[S any] func(context.Context, ServiceRegistrar, S)
 
-type RegistrarErrFunc[S any] func(ServiceRegistrar, S) error
+type CtxRegistrarFuncWithErr[S any] func(context.Context, ServiceRegistrar, S) error
 
-type CtxRegistrarErrFunc[S any] func(context.Context, ServiceRegistrar, S) error
-
-type Handler interface {
-	HandleNATS(context.Context, ServiceRegistrar) error
+type Registrar interface {
+	RegisterToNATS(context.Context, ServiceRegistrar) error
 }
 
-type handler[S any] struct {
+type registrar[S any] struct {
 	s S
-	f CtxRegistrarErrFunc[S]
+	f CtxRegistrarFuncWithErr[S]
 }
 
-var _ Handler = (*handler[any])(nil)
+var _ Registrar = (*registrar[any])(nil)
 
-func (h handler[S]) HandleNATS(ctx context.Context, r ServiceRegistrar) error {
+func (h *registrar[S]) RegisterToNATS(ctx context.Context, r ServiceRegistrar) error {
 	return h.f(ctx, r, h.s)
 }
 
-func NewHandler[S any](s S, f RegistrarFunc[S]) Handler {
+func New[S any](s S, f RegistrarFunc[S]) Registrar {
 	cf := func(ctx context.Context, r ServiceRegistrar, s S) error {
 		f(r, s)
 		return nil
 	}
-	return NewCtxErrHandler(s, cf)
+	return NewCtxWithErr(s, cf)
 }
 
-func NewCtxHandler[S any](s S, f CtxRegistrarFunc[S]) Handler {
+func NewCtx[S any](s S, f CtxRegistrarFunc[S]) Registrar {
 	cf := func(ctx context.Context, r ServiceRegistrar, s S) error {
 		f(ctx, r, s)
 		return nil
 	}
-	return NewCtxErrHandler(s, cf)
+	return NewCtxWithErr(s, cf)
 }
 
-func NewErrHandler[S any](s S, f RegistrarErrFunc[S]) Handler {
+func NewWithErr[S any](s S, f RegistrarFuncWithErr[S]) Registrar {
 	cf := func(ctx context.Context, r ServiceRegistrar, s S) error {
 		return f(r, s)
 	}
-	return NewCtxErrHandler(s, cf)
+	return NewCtxWithErr(s, cf)
 }
 
-func NewCtxErrHandler[S any](s S, f CtxRegistrarErrFunc[S]) Handler {
-	h := &handler[S]{
+func NewCtxWithErr[S any](s S, f CtxRegistrarFuncWithErr[S]) Registrar {
+	h := &registrar[S]{
 		s: s,
 		f: f,
 	}
