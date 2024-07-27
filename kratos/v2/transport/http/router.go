@@ -93,47 +93,47 @@ func (r *router) doHandle(pathPrefix bool, method, relativePath string, h Handle
 	}
 }
 
-// GET registers a new GET route for a path with matching handler in the router.
+// GET registers a new GET route for a path with matching registrar in the router.
 func (r *router) GET(path string, h HandlerFunc, m ...FilterFunc) {
 	r.Handle(http.MethodGet, path, h, m...)
 }
 
-// HEAD registers a new HEAD route for a path with matching handler in the router.
+// HEAD registers a new HEAD route for a path with matching registrar in the router.
 func (r *router) HEAD(path string, h HandlerFunc, m ...FilterFunc) {
 	r.Handle(http.MethodHead, path, h, m...)
 }
 
-// POST registers a new POST route for a path with matching handler in the router.
+// POST registers a new POST route for a path with matching registrar in the router.
 func (r *router) POST(path string, h HandlerFunc, m ...FilterFunc) {
 	r.Handle(http.MethodPost, path, h, m...)
 }
 
-// PUT registers a new PUT route for a path with matching handler in the router.
+// PUT registers a new PUT route for a path with matching registrar in the router.
 func (r *router) PUT(path string, h HandlerFunc, m ...FilterFunc) {
 	r.Handle(http.MethodPut, path, h, m...)
 }
 
-// PATCH registers a new PATCH route for a path with matching handler in the router.
+// PATCH registers a new PATCH route for a path with matching registrar in the router.
 func (r *router) PATCH(path string, h HandlerFunc, m ...FilterFunc) {
 	r.Handle(http.MethodPatch, path, h, m...)
 }
 
-// DELETE registers a new DELETE route for a path with matching handler in the router.
+// DELETE registers a new DELETE route for a path with matching registrar in the router.
 func (r *router) DELETE(path string, h HandlerFunc, m ...FilterFunc) {
 	r.Handle(http.MethodDelete, path, h, m...)
 }
 
-// CONNECT registers a new CONNECT route for a path with matching handler in the router.
+// CONNECT registers a new CONNECT route for a path with matching registrar in the router.
 func (r *router) CONNECT(path string, h HandlerFunc, m ...FilterFunc) {
 	r.Handle(http.MethodConnect, path, h, m...)
 }
 
-// OPTIONS registers a new OPTIONS route for a path with matching handler in the router.
+// OPTIONS registers a new OPTIONS route for a path with matching registrar in the router.
 func (r *router) OPTIONS(path string, h HandlerFunc, m ...FilterFunc) {
 	r.Handle(http.MethodOptions, path, h, m...)
 }
 
-// TRACE registers a new TRACE route for a path with matching handler in the router.
+// TRACE registers a new TRACE route for a path with matching registrar in the router.
 func (r *router) TRACE(path string, h HandlerFunc, m ...FilterFunc) {
 	r.Handle(http.MethodTrace, path, h, m...)
 }
