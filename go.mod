@@ -57,7 +57,7 @@ require (
 	github.com/quic-go/quic-go v0.45.1
 	github.com/redis/go-redis/extra/rediscmd/v9 v9.5.3
 	github.com/redis/go-redis/v9 v9.6.1
-	github.com/redis/rueidis v1.0.41
+	github.com/redis/rueidis v1.0.43
 	github.com/rs/xid v1.5.0
 	github.com/sanity-io/litter v1.5.5
 	github.com/segmentio/ksuid v1.0.4
@@ -164,7 +164,7 @@ require (
 	github.com/philhofer/fwd v1.1.2
 	github.com/proullon/ramsql v0.1.4
 	github.com/qustavo/dotsql v1.2.0
-	github.com/redis/rueidis/rueidishook v1.0.41
+	github.com/redis/rueidis/rueidishook v1.0.43
 	github.com/remychantenay/slog-otel v1.3.2
 	github.com/russross/blackfriday v1.6.0
 	github.com/samber/do/v2 v2.0.0-beta.7
