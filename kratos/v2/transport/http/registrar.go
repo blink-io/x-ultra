@@ -8,6 +8,10 @@ type WithRegistrar interface {
 	HTTPRegistrar() Registrar
 }
 
+type WithRegistrarFunc interface {
+	RegisterToHTTPFunc() func(context.Context, ServerRouter) error
+}
+
 type RegistrarFunc[S any] func(ServerRouter, S)
 
 type RegistrarFuncWithErr[S any] func(ServerRouter, S) error

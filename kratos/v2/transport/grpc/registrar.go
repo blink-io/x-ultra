@@ -4,6 +4,14 @@ import (
 	"context"
 )
 
+type WithRegistrar interface {
+	GRPCRegistrar() Registrar
+}
+
+type WithRegistrarFunc interface {
+	RegisterToGRPCFunc() func(context.Context, ServiceRegistrar) error
+}
+
 type RegistrarFunc[S any] func(ServiceRegistrar, S)
 
 type RegistrarFuncWithErr[S any] func(ServiceRegistrar, S) error
