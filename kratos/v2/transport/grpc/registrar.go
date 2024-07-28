@@ -4,12 +4,10 @@ import (
 	"context"
 )
 
-type WithRegistrar interface {
-	GRPCRegistrar() Registrar
-}
+type RegisterToGRPCFunc func(context.Context, ServiceRegistrar) error
 
-type WithRegistrarFunc interface {
-	RegisterToGRPCFunc() func(context.Context, ServiceRegistrar) error
+type WithRegistrar interface {
+	RegisterToGRPC() RegisterToGRPCFunc
 }
 
 type RegistrarFunc[S any] func(ServiceRegistrar, S)

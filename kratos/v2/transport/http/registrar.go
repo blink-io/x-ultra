@@ -4,12 +4,10 @@ import (
 	"context"
 )
 
-type WithRegistrar interface {
-	HTTPRegistrar() Registrar
-}
+type RegisterToHTTPFunc func(context.Context, ServerRouter) error
 
-type WithRegistrarFunc interface {
-	RegisterToHTTPFunc() func(context.Context, ServerRouter) error
+type WithRegistrar interface {
+	HTTPRegistrar() RegisterToHTTPFunc
 }
 
 type RegistrarFunc[S any] func(ServerRouter, S)
