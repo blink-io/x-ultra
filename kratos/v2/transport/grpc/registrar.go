@@ -7,7 +7,7 @@ import (
 type RegisterToGRPCFunc func(context.Context, ServiceRegistrar) error
 
 type WithRegistrar interface {
-	GRPCRegistrar() RegisterToGRPCFunc
+	GRPCRegistrar(context.Context) RegisterToGRPCFunc
 }
 
 type RegistrarFunc[S any] func(ServiceRegistrar, S)

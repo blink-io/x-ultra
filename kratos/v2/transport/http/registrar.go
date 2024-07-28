@@ -7,7 +7,7 @@ import (
 type RegisterToHTTPFunc func(context.Context, ServerRouter) error
 
 type WithRegistrar interface {
-	HTTPRegistrar() RegisterToHTTPFunc
+	HTTPRegistrar(context.Context) RegisterToHTTPFunc
 }
 
 type RegistrarFunc[S any] func(ServerRouter, S)
