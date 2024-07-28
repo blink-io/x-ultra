@@ -9,7 +9,7 @@ import (
 
 	kgrpc "github.com/blink-io/x/kratos/v2/transport/grpc"
 	khttp "github.com/blink-io/x/kratos/v2/transport/http"
-	khttpdo "github.com/blink-io/x/kratos/v2/transport/http/do"
+	khttpopt "github.com/blink-io/x/kratos/v2/transport/http/opt"
 
 	"connectrpc.com/grpchealth"
 	"connectrpc.com/grpcreflect"
@@ -67,8 +67,8 @@ func TestHandler_GRPC_Server_1(t *testing.T) {
 		),
 	)
 
-	mh.RegisterToGRPC(context.Background(), gsrv)
-	hh.RegisterToGRPC(context.Background(), gsrv)
+	require.NoError(t, mh.RegisterToGRPC(context.Background(), gsrv))
+	require.NoError(t, hh.RegisterToGRPC(context.Background(), gsrv))
 
 	err2 := profilingsvc.Init(&profilingsvc.ProfilingConfig{
 		Enabled: true,
@@ -104,7 +104,7 @@ func TestHandler_HTTP_Server_1(t *testing.T) {
 		khttp.Address(":9996"),
 	)
 
-	h.RegisterToHTTP(context.Background(), hsrv)
+	require.NoError(t, h.RegisterToHTTP(context.Background(), hsrv))
 
 	require.NoError(t, hsrv.Start(context.Background()))
 
@@ -120,7 +120,7 @@ func TestHandler_HTTP_Server_2(t *testing.T) {
 		khttp.Address(":9996"),
 	)
 
-	s.HTTPRegistrar().RegisterToHTTP(context.Background(), hsrv)
+	require.NoError(t, s.HTTPRegistrar(context.Background())(context.Background(), hsrv))
 
 	require.NoError(t, hsrv.Start(context.Background()))
 
@@ -152,12 +152,12 @@ type compose struct {
 	ghdlr
 }
 
-func (c *compose) HandleHTTP(ctx context.Context, r khttp.ServerRouter) {
-	c.hhdlr.RegisterToHTTP(ctx, r)
+func (c *compose) RegisterToHTTP(ctx context.Context, r khttp.ServerRouter) error {
+	return c.hhdlr.RegisterToHTTP(ctx, r)
 }
 
-func (c *compose) HandleGRPC(ctx context.Context, r kgrpc.ServiceRegistrar) {
-	c.ghdlr.RegisterToGRPC(ctx, r)
+func (c *compose) RegisterToGRPC(ctx context.Context, r kgrpc.ServiceRegistrar) error {
+	return c.ghdlr.RegisterToGRPC(ctx, r)
 }
 
 var _ khttp.WithRegistrar = (*MyTimeSvc)(nil)
@@ -165,8 +165,8 @@ var _ khttp.WithRegistrar = (*MyTimeSvc)(nil)
 type MyTimeSvc struct {
 }
 
-func (h *MyTimeSvc) HTTPRegistrar() khttp.Registrar {
-	return khttp.NewRegistrar(h, RegisterMyTimeSvc)
+func (h *MyTimeSvc) HTTPRegistrar(context.Context) khttp.RegisterToHTTPFunc {
+	return khttp.NewRegistrar(h, RegisterMyTimeSvc).RegisterToHTTP
 }
 
 type Req struct {
@@ -192,12 +192,12 @@ func handleMyTime(ctx context.Context, r *Req) (*Res, error) {
 }
 
 func (h *MyTimeSvc) GetMyTime() khttp.HandlerFunc {
-	f := khttpdo.GET[Req, Res]("get/do-my-time", handleMyTime)
+	f := khttpopt.GET[Req, Res]("get/do-my-time", handleMyTime)
 	return f
 }
 
 func (h *MyTimeSvc) PostMyTime() khttp.HandlerFunc {
-	f := khttpdo.POST[Req, Res]("post/do-my-time", handleMyTime)
+	f := khttpopt.POST[Req, Res]("post/do-my-time", handleMyTime)
 	return f
 }
 
@@ -205,7 +205,7 @@ func RegisterMyTimeSvc(r khttp.ServerRouter, h *MyTimeSvc) {
 	sr := r.Route("/MyTimeSvc")
 	sr.POST("/do-my-time", h.PostMyTime())
 	sr.GET("/do-my-time", h.GetMyTime())
-	sr.GET("/do-my-time/v2", khttpdo.Func[Req, Res](handleMyTime).Do(http.MethodGet, "get:do-my-time/v2"))
+	sr.GET("/do-my-time/v2", khttpopt.Func[Req, Res](handleMyTime).Do(http.MethodGet, "get:do-my-time/v2"))
 
 	checker := grpchealth.NewStaticChecker(
 		"acme.user.v1.UserService",
@@ -248,8 +248,8 @@ func TestRegistrar_Compose_1(t *testing.T) {
 	hsrv := khttp.NewServer()
 	gsrv := kgrpc.NewServer()
 
-	co.HandleHTTP(ctx, hsrv)
-	co.HandleGRPC(ctx, gsrv)
+	co.RegisterToHTTP(ctx, hsrv)
+	co.RegisterToGRPC(ctx, gsrv)
 
 	fmt.Println("done")
 }
