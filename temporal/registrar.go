@@ -1,10 +1,16 @@
-package registrar
+package temporal
 
 import (
 	"context"
 
 	"go.temporal.io/sdk/client"
 )
+
+type RegisterToTemporalFunc func(context.Context, ServiceRegistrar) error
+
+type WithRegistrar interface {
+	TemporalRegistrar(context.Context) RegisterToTemporalFunc
+}
 
 type ServiceRegistrar interface {
 	client.Client
@@ -34,31 +40,31 @@ func (h *registrar[S]) RegisterToTemporal(ctx context.Context, r ServiceRegistra
 	return h.f(ctx, r, h.s)
 }
 
-func New[S any](s S, f RegistrarFunc[S]) Registrar {
+func NewRegistrar[S any](s S, f RegistrarFunc[S]) Registrar {
 	cf := func(ctx context.Context, r ServiceRegistrar, s S) error {
 		f(r, s)
 		return nil
 	}
-	return NewCtxWithErr(s, cf)
+	return NewCtxRegistrarWithErr(s, cf)
 }
 
-func NewCtx[S any](s S, f CtxRegistrarFunc[S]) Registrar {
+func NewRegistrarWithErr[S any](s S, f RegistrarFunc[S]) Registrar {
+	cf := func(ctx context.Context, r ServiceRegistrar, s S) error {
+		f(r, s)
+		return nil
+	}
+	return NewCtxRegistrarWithErr(s, cf)
+}
+
+func NewCtxRegistrar[S any](s S, f CtxRegistrarFunc[S]) Registrar {
 	cf := func(ctx context.Context, r ServiceRegistrar, s S) error {
 		f(ctx, r, s)
 		return nil
 	}
-	return NewCtxWithErr(s, cf)
+	return NewCtxRegistrarWithErr(s, cf)
 }
 
-func NewWithErr[S any](s S, f RegistrarFunc[S]) Registrar {
-	cf := func(ctx context.Context, r ServiceRegistrar, s S) error {
-		f(r, s)
-		return nil
-	}
-	return NewCtxWithErr(s, cf)
-}
-
-func NewCtxWithErr[S any](s S, f CtxRegistrarFuncWithErr[S]) Registrar {
+func NewCtxRegistrarWithErr[S any](s S, f CtxRegistrarFuncWithErr[S]) Registrar {
 	h := &registrar[S]{
 		s: s,
 		f: f,

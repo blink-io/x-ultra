@@ -1,4 +1,4 @@
-package registrar
+package nats
 
 import (
 	"context"
@@ -6,6 +6,12 @@ import (
 
 	"github.com/nats-io/nats.go"
 )
+
+type RegisterToNATSFunc func(context.Context, ServiceRegistrar) error
+
+type WithRegistrar interface {
+	NATSRegistrar(context.Context) RegisterToNATSFunc
+}
 
 type ServiceRegistrar interface {
 	RequestMsgWithContext(ctx context.Context, msg *nats.Msg) (*nats.Msg, error)
@@ -62,30 +68,30 @@ func (h *registrar[S]) RegisterToNATS(ctx context.Context, r ServiceRegistrar) e
 	return h.f(ctx, r, h.s)
 }
 
-func New[S any](s S, f RegistrarFunc[S]) Registrar {
+func NewRegistrar[S any](s S, f RegistrarFunc[S]) Registrar {
 	cf := func(ctx context.Context, r ServiceRegistrar, s S) error {
 		f(r, s)
 		return nil
 	}
-	return NewCtxWithErr(s, cf)
+	return NewCtxRegistrarWithErr(s, cf)
 }
 
-func NewCtx[S any](s S, f CtxRegistrarFunc[S]) Registrar {
+func NewRegistrarWithErr[S any](s S, f RegistrarFuncWithErr[S]) Registrar {
+	cf := func(ctx context.Context, r ServiceRegistrar, s S) error {
+		return f(r, s)
+	}
+	return NewCtxRegistrarWithErr(s, cf)
+}
+
+func NewCtxRegistrar[S any](s S, f CtxRegistrarFunc[S]) Registrar {
 	cf := func(ctx context.Context, r ServiceRegistrar, s S) error {
 		f(ctx, r, s)
 		return nil
 	}
-	return NewCtxWithErr(s, cf)
+	return NewCtxRegistrarWithErr(s, cf)
 }
 
-func NewWithErr[S any](s S, f RegistrarFuncWithErr[S]) Registrar {
-	cf := func(ctx context.Context, r ServiceRegistrar, s S) error {
-		return f(r, s)
-	}
-	return NewCtxWithErr(s, cf)
-}
-
-func NewCtxWithErr[S any](s S, f CtxRegistrarFuncWithErr[S]) Registrar {
+func NewCtxRegistrarWithErr[S any](s S, f CtxRegistrarFuncWithErr[S]) Registrar {
 	h := &registrar[S]{
 		s: s,
 		f: f,
