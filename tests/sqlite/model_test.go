@@ -3,6 +3,7 @@ package sqlite
 import (
 	"fmt"
 	"testing"
+	"time"
 
 	"github.com/aarondl/opt/omitnull"
 
@@ -44,9 +45,17 @@ func (Model8) TableName() string {
 	return "models"
 }
 
+type UserWithDevices struct {
+	bun.BaseModel `bun:"users,alias:u_1" db:"-" json:"-" toml:"-" yaml:"-" msgpack:"-"`
+	model.IDModel
+	Username string `bun:"username,type:varchar(60),notnull" db:"username" json:"username,omitempty" toml:"username,omitempty" yaml:"username,omitempty" msgpack:"username,omitempty"`
+
+	Devices []*UserDevice `bun:"ref:has-many, join:id=user_id"`
+}
+
 // User represents iOS/Android/Windows/OSX/Linux application
 type User struct {
-	bun.BaseModel `bun:"users,alias:users" db:"-" json:"-" toml:"-" yaml:"-" msgpack:"-"`
+	bun.BaseModel `bun:"users,alias:u_1" db:"-" json:"-" toml:"-" yaml:"-" msgpack:"-"`
 	model.IDModel
 	Username    string               `bun:"username,type:varchar(60),notnull" db:"username" json:"username,omitempty" toml:"username,omitempty" yaml:"username,omitempty" msgpack:"username,omitempty"`
 	Location    string               `bun:"location,type:varchar(60),notnull" db:"location" json:"location,omitempty" toml:"location,omitempty" yaml:"location,omitempty" msgpack:"location,omitempty"`
@@ -62,6 +71,24 @@ func (User) TableName() string {
 
 func (User) Table() string {
 	return "users"
+}
+
+// UserDevice represents user's devices
+type UserDevice struct {
+	bun.BaseModel `bun:"user_devices,alias:ud_1" db:"-" json:"-" toml:"-" yaml:"-" msgpack:"-"`
+	model.IDModel
+	Name        string               `bun:"name,type:varchar(60),notnull" db:"name" json:"name,omitempty" toml:"name,omitempty" yaml:"name,omitempty" msgpack:"name,omitempty"`
+	Description omitnull.Val[string] `bun:"description,type:text" db:"description" json:"description,omitempty" toml:"description,omitempty" yaml:"description,omitempty" msgpack:"description,omitempty"`
+	CreatedAt   time.Time            `bun:"created_at,notnull,skipupdate" db:"created_at" json:"created_at,omitempty" toml:"created_at,omitempty" yaml:"created_at,omitempty" msgpack:"created_at,omitempty"`
+	UpdatedAt   time.Time            `bun:"updated_at,notnull" db:"updated_at" json:"updated_at,omitempty" toml:"updated_at,omitempty" yaml:"updated_at,omitempty" msgpack:"updated_at,omitempty"`
+}
+
+func (UserDevice) TableName() string {
+	return "user_devices"
+}
+
+func (UserDevice) Table() string {
+	return "user_devices"
 }
 
 // Application represents iOS/Android/Windows/OSX/Linux application
@@ -119,9 +146,10 @@ func ToAnySlice[T any](a []T) []any {
 }
 
 type IDAndName struct {
-	//bun.BaseModel `bun:"table:applications,alias:a1"`
-	ID   int64  `bun:"id,type:bigint,pk"`
-	Name string `bun:"name,type:text"`
+	// BaseModel is needed for applying table name
+	bun.BaseModel `bun:"table:applications,alias:a1"`
+	ID            int64  `bun:"id,type:bigint,pk"`
+	Name          string `bun:"name,type:text"`
 }
 
 type IDAndProfile struct {

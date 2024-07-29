@@ -59,6 +59,14 @@ func TestSqlite_Bun_Model_Delete_All(t *testing.T) {
 	require.NoError(t, err)
 }
 
+func TestSqlite_Bun_Model_Select_All_HasMany(t *testing.T) {
+	db := getSqliteDB()
+
+	records, err := bunx.DoAll[UserWithDevices](ctx, db)
+	require.NoError(t, err)
+	require.NotNil(t, records)
+}
+
 func TestSqlite_Bun_Model_BulkInsert_1(t *testing.T) {
 	db := getSqliteDB()
 
@@ -87,6 +95,21 @@ func TestSqlite_Bun_Model_Insert_1(t *testing.T) {
 	}
 
 	xdb := bunx.NewGenericDB[Application, int64](db)
+
+	err1 := xdb.BulkInsert(ctx, rr, bunx.DoWithInsertReturning("id"))
+	require.NoError(t, err1)
+}
+
+func TestSqlite_Bun_Model_UserDevice_Insert_1(t *testing.T) {
+	db := getSqliteDB()
+	rrLen := 10
+	rr := make([]*UserDevice, rrLen)
+	for i := 0; i < rrLen; i++ {
+		r1 := newRandomRecordForUserDevice(bunx.Accessor)
+		rr[i] = r1
+	}
+
+	xdb := bunx.NewGenericDB[UserDevice, int64](db)
 
 	err1 := xdb.BulkInsert(ctx, rr, bunx.DoWithInsertReturning("id"))
 	require.NoError(t, err1)
