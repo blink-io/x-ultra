@@ -7,8 +7,7 @@ import (
 	"github.com/aarondl/opt/omitnull"
 	"github.com/brianvoe/gofakeit/v6"
 
-	xbun "github.com/blink-io/x/bun"
-	xbunx "github.com/blink-io/x/bun/x"
+	bunx "github.com/blink-io/x/bun"
 	"github.com/stretchr/testify/require"
 )
 
@@ -40,7 +39,7 @@ func TestSqlite_Bun_RebuildTable_1(t *testing.T) {
 func TestSqlite_Bun_Custom_Update_1(t *testing.T) {
 	db := getSqliteDB()
 
-	rdb := xbunx.NewDB[Application, string](db)
+	rdb := bunx.NewGenericDB[Application, string](db)
 
 	ds := rdb.NewUpdate().
 		Table("applications").
@@ -53,10 +52,10 @@ func TestSqlite_Bun_Custom_Update_1(t *testing.T) {
 func TestSqlite_Bun_Custom_Update_2(t *testing.T) {
 	db := getSqliteDB()
 
-	rdb := xbunx.NewDB[Application, string](db)
+	rdb := bunx.NewGenericDB[Application, string](db)
 
-	cv1 := xbunx.NewColumnValue[int]("level", 888)
-	cv2 := xbunx.NewColumnValue[string]("description", "Column Description")
+	cv1 := bunx.NewColumnValue[int]("level", 888)
+	cv2 := bunx.NewColumnValue[string]("description", "Column Description")
 	ds := rdb.NewUpdate().
 		Table("applications").
 		SetColumn(cv1.Column, "?", cv1.Value).
@@ -99,14 +98,14 @@ func TestSqlite_Bun_Custom_Update_Bulk_2(t *testing.T) {
 
 	u1 := map[string]any{
 		"id":       1,
-		"location": gofakeit.City() + "Update-Bulk-By-Map",
-		"profile":  "Profile:" + "Update-Bulk-By-Map",
+		"location": gofakeit.City() + "DoUpdate-Bulk-By-Map",
+		"profile":  "Profile:" + "DoUpdate-Bulk-By-Map",
 	}
 
 	u2 := map[string]any{
 		"id":       2,
-		"location": gofakeit.City() + "Update-Bulk-By-Map",
-		"profile":  "Profile:" + "Update-Bulk-By-Map",
+		"location": gofakeit.City() + "DoUpdate-Bulk-By-Map",
+		"profile":  "Profile:" + "DoUpdate-Bulk-By-Map",
 	}
 	values := db.NewValues(&[]map[string]any{u1, u2})
 
@@ -197,14 +196,14 @@ func TestSqlite_Bun_Custom_Select_1(t *testing.T) {
 func TestSqlite_Bun_RawSQL_Select_1(t *testing.T) {
 	db := getSqliteDB()
 
-	var users xbunx.ModelSlice[User]
+	var users bunx.ModelSlice[User]
 	err := db.NewRaw("select * from users").Scan(ctx, &users)
 	require.NoError(t, err)
 }
 
 func TestSqlite_Bun_All_Custom_1(t *testing.T) {
 	db := getSqliteDB()
-	ms, err := xbunx.All[IDAndName](ctx, db, xbunx.WithSelectQuery(func(q *xbun.SelectQuery) *xbun.SelectQuery {
+	ms, err := bunx.DoAll[IDAndName](ctx, db, bunx.DoWithSelectQuery(func(q *bunx.SelectQuery) *bunx.SelectQuery {
 		q.ModelTableExpr("applications as a1")
 		q.Limit(3)
 		return q

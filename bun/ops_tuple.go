@@ -1,9 +1,7 @@
-package x
+package bun
 
 import (
 	"context"
-
-	rdb "github.com/blink-io/x/bun"
 )
 
 //type ValueType interface {
@@ -116,22 +114,22 @@ type Tuple9[T1 ValueType, T2 ValueType, T3 ValueType, T4 ValueType, T5 ValueType
 	T9 T9
 }
 
-func Type[T ValueType](ctx context.Context, db rdb.RawIDB,
-	table string, column string, ops ...SelectOption) (TypeSlice[T], error) {
+func Type[T ValueType](ctx context.Context, db RawIDB,
+	table string, column string, ops ...DoSelectOption) (TypeSlice[T], error) {
 	var ts TypeSlice[T]
 	q := db.NewSelect()
-	o := applySelectOptions(ops...)
-	handleSelectOptions(OperationSelectAll, q, o)
+	o := applyDoSelectOptions(ops...)
+	handleDoSelectOptions(OperationSelectAll, q, o)
 	afterSelectOptions(q, table, column)
 	err := q.Scan(ctx, &ts)
 	return ts, err
 }
 
-func TypeTuple2[T1 ValueType, T2 ValueType](ctx context.Context, db rdb.RawIDB,
-	table string, col1, col2 string, ops ...SelectOption) ([]*Tuple2[T1, T2], error) {
+func TypeTuple2[T1 ValueType, T2 ValueType](ctx context.Context, db RawIDB,
+	table string, col1, col2 string, ops ...DoSelectOption) ([]*Tuple2[T1, T2], error) {
 	q := db.NewSelect()
-	o := applySelectOptions(ops...)
-	handleSelectOptions(OperationSelectAll, q, o)
+	o := applyDoSelectOptions(ops...)
+	handleDoSelectOptions(OperationSelectAll, q, o)
 	afterSelectOptions(q, table, col1, col2)
 
 	var v1s []T1
@@ -143,7 +141,7 @@ func TypeTuple2[T1 ValueType, T2 ValueType](ctx context.Context, db rdb.RawIDB,
 	return handleTuple2Values(v1s, v2s), nil
 }
 
-func TypeTuple2SQL[T1 ValueType, T2 ValueType](ctx context.Context, db rdb.RawIDB, query string, args ...any) ([]*Tuple2[T1, T2], error) {
+func TypeTuple2SQL[T1 ValueType, T2 ValueType](ctx context.Context, db RawIDB, query string, args ...any) ([]*Tuple2[T1, T2], error) {
 	var v1s []T1
 	var v2s []T2
 	err := db.NewRaw(query, args...).Scan(ctx, &v1s, &v2s)
@@ -170,11 +168,11 @@ func handleTuple2Values[T1 ValueType, T2 ValueType](v1s []T1, v2s []T2) []*Tuple
 	return ts
 }
 
-func TypeTuple3[T1 ValueType, T2 ValueType, T3 ValueType](ctx context.Context, db rdb.RawIDB,
-	table string, col1, col2, col3 string, ops ...SelectOption) ([]*Tuple3[T1, T2, T3], error) {
+func TypeTuple3[T1 ValueType, T2 ValueType, T3 ValueType](ctx context.Context, db RawIDB,
+	table string, col1, col2, col3 string, ops ...DoSelectOption) ([]*Tuple3[T1, T2, T3], error) {
 	q := db.NewSelect()
-	o := applySelectOptions(ops...)
-	handleSelectOptions(OperationSelectAll, q, o)
+	o := applyDoSelectOptions(ops...)
+	handleDoSelectOptions(OperationSelectAll, q, o)
 	afterSelectOptions(q, table, col1, col2, col3)
 
 	var v1s []T1
@@ -186,7 +184,7 @@ func TypeTuple3[T1 ValueType, T2 ValueType, T3 ValueType](ctx context.Context, d
 	return handleTuple3Values(v1s, v2s, v3s), nil
 }
 
-func TypeTuple3SQL[T1 ValueType, T2 ValueType, T3 ValueType](ctx context.Context, db rdb.RawIDB, query string, args ...any) ([]*Tuple3[T1, T2, T3], error) {
+func TypeTuple3SQL[T1 ValueType, T2 ValueType, T3 ValueType](ctx context.Context, db RawIDB, query string, args ...any) ([]*Tuple3[T1, T2, T3], error) {
 	var v1s []T1
 	var v2s []T2
 	var v3s []T3
@@ -218,11 +216,11 @@ func handleTuple3Values[T1 ValueType, T2 ValueType, T3 ValueType](v1s []T1, v2s 
 	return ts
 }
 
-func TypeTuple4[T1 ValueType, T2 ValueType, T3 ValueType, T4 ValueType](ctx context.Context, db rdb.RawIDB,
-	table string, col1, col2, col3, col4 string, ops ...SelectOption) ([]*Tuple4[T1, T2, T3, T4], error) {
+func TypeTuple4[T1 ValueType, T2 ValueType, T3 ValueType, T4 ValueType](ctx context.Context, db RawIDB,
+	table string, col1, col2, col3, col4 string, ops ...DoSelectOption) ([]*Tuple4[T1, T2, T3, T4], error) {
 	q := db.NewSelect()
-	o := applySelectOptions(ops...)
-	handleSelectOptions(OperationSelectAll, q, o)
+	o := applyDoSelectOptions(ops...)
+	handleDoSelectOptions(OperationSelectAll, q, o)
 	afterSelectOptions(q, table, col1, col2, col3, col4)
 
 	var v1s []T1
@@ -238,7 +236,7 @@ func TypeTuple4[T1 ValueType, T2 ValueType, T3 ValueType, T4 ValueType](ctx cont
 }
 
 func TypeTuple4SQL[T1 ValueType, T2 ValueType, T3 ValueType, T4 ValueType](
-	ctx context.Context, db rdb.RawIDB, query string, args ...any) ([]*Tuple4[T1, T2, T3, T4], error) {
+	ctx context.Context, db RawIDB, query string, args ...any) ([]*Tuple4[T1, T2, T3, T4], error) {
 	var v1s []T1
 	var v2s []T2
 	var v3s []T3
@@ -273,11 +271,11 @@ func handleTuple4Values[T1 ValueType, T2 ValueType, T3 ValueType, T4 ValueType](
 }
 
 func TypeTuple5[T1 ValueType, T2 ValueType, T3 ValueType, T4 ValueType, T5 ValueType](
-	ctx context.Context, db rdb.RawIDB,
-	table string, col1, col2, col3, col4, col5 string, ops ...SelectOption) ([]*Tuple5[T1, T2, T3, T4, T5], error) {
+	ctx context.Context, db RawIDB,
+	table string, col1, col2, col3, col4, col5 string, ops ...DoSelectOption) ([]*Tuple5[T1, T2, T3, T4, T5], error) {
 	q := db.NewSelect()
-	o := applySelectOptions(ops...)
-	handleSelectOptions(OperationSelectAll, q, o)
+	o := applyDoSelectOptions(ops...)
+	handleDoSelectOptions(OperationSelectAll, q, o)
 	afterSelectOptions(q, table, col1, col2, col3, col4, col5)
 
 	var v1s []T1
@@ -294,7 +292,7 @@ func TypeTuple5[T1 ValueType, T2 ValueType, T3 ValueType, T4 ValueType, T5 Value
 }
 
 func TypeTuple5SQL[T1 ValueType, T2 ValueType, T3 ValueType, T4 ValueType, T5 ValueType](
-	ctx context.Context, db rdb.RawIDB, query string, args ...any) ([]*Tuple5[T1, T2, T3, T4, T5], error) {
+	ctx context.Context, db RawIDB, query string, args ...any) ([]*Tuple5[T1, T2, T3, T4, T5], error) {
 	var v1s []T1
 	var v2s []T2
 	var v3s []T3
@@ -338,12 +336,12 @@ func handleTuple5Values[T1 ValueType, T2 ValueType, T3 ValueType, T4 ValueType, 
 }
 
 func TypeTuple6[T1 ValueType, T2 ValueType, T3 ValueType, T4 ValueType, T5 ValueType, T6 ValueType](
-	ctx context.Context, db rdb.RawIDB,
+	ctx context.Context, db RawIDB,
 	table string, col1, col2, col3, col4, col5, col6 string,
-	ops ...SelectOption) ([]*Tuple6[T1, T2, T3, T4, T5, T6], error) {
+	ops ...DoSelectOption) ([]*Tuple6[T1, T2, T3, T4, T5, T6], error) {
 	q := db.NewSelect()
-	o := applySelectOptions(ops...)
-	handleSelectOptions(OperationSelectAll, q, o)
+	o := applyDoSelectOptions(ops...)
+	handleDoSelectOptions(OperationSelectAll, q, o)
 	afterSelectOptions(q, table, col1, col2, col3, col4, col5, col6)
 
 	var v1s []T1
@@ -361,7 +359,7 @@ func TypeTuple6[T1 ValueType, T2 ValueType, T3 ValueType, T4 ValueType, T5 Value
 }
 
 func TypeTuple6SQL[T1 ValueType, T2 ValueType, T3 ValueType, T4 ValueType, T5 ValueType, T6 ValueType](
-	ctx context.Context, db rdb.RawIDB, query string, args ...any) ([]*Tuple6[T1, T2, T3, T4, T5, T6], error) {
+	ctx context.Context, db RawIDB, query string, args ...any) ([]*Tuple6[T1, T2, T3, T4, T5, T6], error) {
 	var v1s []T1
 	var v2s []T2
 	var v3s []T3
@@ -410,12 +408,12 @@ func handleTuple6Values[T1 ValueType, T2 ValueType, T3 ValueType, T4 ValueType, 
 }
 
 func TypeTuple7[T1 ValueType, T2 ValueType, T3 ValueType, T4 ValueType, T5 ValueType, T6 ValueType, T7 ValueType](
-	ctx context.Context, db rdb.RawIDB,
+	ctx context.Context, db RawIDB,
 	table string, col1, col2, col3, col4, col5, col6, col7 string,
-	ops ...SelectOption) ([]*Tuple7[T1, T2, T3, T4, T5, T6, T7], error) {
+	ops ...DoSelectOption) ([]*Tuple7[T1, T2, T3, T4, T5, T6, T7], error) {
 	q := db.NewSelect()
-	o := applySelectOptions(ops...)
-	handleSelectOptions(OperationSelectAll, q, o)
+	o := applyDoSelectOptions(ops...)
+	handleDoSelectOptions(OperationSelectAll, q, o)
 	afterSelectOptions(q, table, col1, col2, col3, col4, col5, col6, col7)
 
 	var v1s []T1
@@ -434,7 +432,7 @@ func TypeTuple7[T1 ValueType, T2 ValueType, T3 ValueType, T4 ValueType, T5 Value
 }
 
 func TypeTuple7SQL[T1 ValueType, T2 ValueType, T3 ValueType, T4 ValueType, T5 ValueType, T6 ValueType, T7 ValueType](
-	ctx context.Context, db rdb.RawIDB, query string, args ...any) ([]*Tuple7[T1, T2, T3, T4, T5, T6, T7], error) {
+	ctx context.Context, db RawIDB, query string, args ...any) ([]*Tuple7[T1, T2, T3, T4, T5, T6, T7], error) {
 	var v1s []T1
 	var v2s []T2
 	var v3s []T3
@@ -489,12 +487,12 @@ func handleTuple7Values[T1 ValueType, T2 ValueType, T3 ValueType, T4 ValueType, 
 }
 
 func TypeTuple8[T1 ValueType, T2 ValueType, T3 ValueType, T4 ValueType, T5 ValueType, T6 ValueType, T7 ValueType, T8 ValueType](
-	ctx context.Context, db rdb.RawIDB,
+	ctx context.Context, db RawIDB,
 	table string, col1, col2, col3, col4, col5, col6, col7, col8 string,
-	ops ...SelectOption) ([]*Tuple8[T1, T2, T3, T4, T5, T6, T7, T8], error) {
+	ops ...DoSelectOption) ([]*Tuple8[T1, T2, T3, T4, T5, T6, T7, T8], error) {
 	q := db.NewSelect()
-	o := applySelectOptions(ops...)
-	handleSelectOptions(OperationSelectAll, q, o)
+	o := applyDoSelectOptions(ops...)
+	handleDoSelectOptions(OperationSelectAll, q, o)
 	afterSelectOptions(q, table, col1, col2, col3, col4, col5, col6, col7, col8)
 
 	var v1s []T1
@@ -514,7 +512,7 @@ func TypeTuple8[T1 ValueType, T2 ValueType, T3 ValueType, T4 ValueType, T5 Value
 }
 
 func TypeTuple8SQL[T1 ValueType, T2 ValueType, T3 ValueType, T4 ValueType, T5 ValueType, T6 ValueType, T7 ValueType, T8 ValueType](
-	ctx context.Context, db rdb.RawIDB,
+	ctx context.Context, db RawIDB,
 	query string, args ...any) ([]*Tuple8[T1, T2, T3, T4, T5, T6, T7, T8], error) {
 	var v1s []T1
 	var v2s []T2
@@ -574,12 +572,12 @@ func handleTuple8Values[T1 ValueType, T2 ValueType, T3 ValueType, T4 ValueType, 
 }
 
 func TypeTuple9[T1 ValueType, T2 ValueType, T3 ValueType, T4 ValueType, T5 ValueType, T6 ValueType, T7 ValueType, T8 ValueType, T9 ValueType](
-	ctx context.Context, db rdb.RawIDB,
+	ctx context.Context, db RawIDB,
 	table string, col1, col2, col3, col4, col5, col6, col7, col8, col9 string,
-	ops ...SelectOption) ([]*Tuple9[T1, T2, T3, T4, T5, T6, T7, T8, T9], error) {
+	ops ...DoSelectOption) ([]*Tuple9[T1, T2, T3, T4, T5, T6, T7, T8, T9], error) {
 	q := db.NewSelect()
-	o := applySelectOptions(ops...)
-	handleSelectOptions(OperationSelectAll, q, o)
+	o := applyDoSelectOptions(ops...)
+	handleDoSelectOptions(OperationSelectAll, q, o)
 	afterSelectOptions(q, table, col1, col2, col3, col4, col5, col6, col7, col8, col9)
 
 	var v1s []T1
@@ -600,7 +598,7 @@ func TypeTuple9[T1 ValueType, T2 ValueType, T3 ValueType, T4 ValueType, T5 Value
 }
 
 func TypeTuple9SQL[T1 ValueType, T2 ValueType, T3 ValueType, T4 ValueType, T5 ValueType, T6 ValueType, T7 ValueType, T8 ValueType, T9 ValueType](
-	ctx context.Context, db rdb.RawIDB, query string, args ...any) ([]*Tuple9[T1, T2, T3, T4, T5, T6, T7, T8, T9], error) {
+	ctx context.Context, db RawIDB, query string, args ...any) ([]*Tuple9[T1, T2, T3, T4, T5, T6, T7, T8, T9], error) {
 	var v1s []T1
 	var v2s []T2
 	var v3s []T3
@@ -663,13 +661,13 @@ func handleTuple9Values[T1 ValueType, T2 ValueType, T3 ValueType, T4 ValueType, 
 	return ts
 }
 
-func setTableForSelectQuery(q *rdb.SelectQuery, table string) {
+func setTableForSelectQuery(q *SelectQuery, table string) {
 	if len(table) > 0 {
 		q.Table(table)
 	}
 }
 
-func setColumnForSelectQuery(q *rdb.SelectQuery, columns ...string) {
+func setColumnForSelectQuery(q *SelectQuery, columns ...string) {
 	for _, column := range columns {
 		if len(column) > 0 {
 			q.Column(column)
@@ -677,7 +675,7 @@ func setColumnForSelectQuery(q *rdb.SelectQuery, columns ...string) {
 	}
 }
 
-func afterSelectOptions(q *rdb.SelectQuery, table string, columns ...string) {
+func afterSelectOptions(q *SelectQuery, table string, columns ...string) {
 	setTableForSelectQuery(q, table)
 	setColumnForSelectQuery(q, columns...)
 }

@@ -3,7 +3,7 @@ package pg
 import (
 	"testing"
 
-	"github.com/blink-io/x/bun/x"
+	bunx "github.com/blink-io/x/bun"
 
 	"github.com/stretchr/testify/require"
 )
@@ -12,7 +12,7 @@ func TestPg_DB_Insert_1(t *testing.T) {
 	db := getPgDB()
 	r1 := newRandomRecordForApp("bun")
 	r2 := newRandomRecordForApp("bun")
-	txdb, err := x.NewDB[Application, string](db).Tx()
+	txdb, err := bunx.NewGenericDB[Application, string](db).Tx(ctx, nil)
 	require.NoError(t, err)
 
 	err1 := txdb.BulkInsert(ctx, []*Application{r1, r2})

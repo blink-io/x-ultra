@@ -1,11 +1,10 @@
 package sqlite
 
 import (
+	xbunx "github.com/blink-io/x/bun"
 	"testing"
 
 	"github.com/stretchr/testify/require"
-
-	xbunx "github.com/blink-io/x/bun/x"
 )
 
 func TestSqlite_Bun_Tuple2SQL_1(t *testing.T) {

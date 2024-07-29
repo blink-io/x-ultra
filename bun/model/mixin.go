@@ -78,7 +78,7 @@ func (m *MixinModel) GUIDGen(g Generator) {
 	m.gg = g
 }
 
-// GUIDGen sets global ID generator for all models
+// GUIDGen sets global I generator for all models
 func GUIDGen(g Generator) {
 	if g != nil {
 		guidMux.Lock()
