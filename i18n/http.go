@@ -19,11 +19,10 @@ func NewHTTPLoader(url string, ops ...HTTPOption) Loader {
 
 func (h *httpLoader) Load(b Bundler) error {
 	c := h.opts.httpClient
-	rf := h.opts.requestFunc
 
 	var res *http.Response
 	var err error
-	if rf != nil {
+	if rf := h.opts.requestFunc; rf != nil {
 		if req, rerr := h.opts.requestFunc(c, h.url); rerr != nil {
 			return rerr
 		} else {
