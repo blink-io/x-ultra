@@ -121,8 +121,8 @@ func (b *Bundle) LoadFromFS(fs fs.FS, root string) error {
 	return NewFSLoader(fs, root).Load(b)
 }
 
-func (b *Bundle) LoadFromHTTP(url string, extract func(string) string) error {
-	return NewHTTPLoader(url, extract, DefaultTimeout).Load(b)
+func (b *Bundle) LoadFromHTTP(url string, ops ...HTTPOption) error {
+	return NewHTTPLoader(url, ops...).Load(b)
 }
 
 func (b *Bundle) LoadFromBytes(path string, data []byte) error {
@@ -163,8 +163,8 @@ func LoadFromFS(fs fs.FS, root string) error {
 	return NewFSLoader(fs, root).Load(bb)
 }
 
-func LoadFromHTTP(url string, extract func(string) string) error {
-	return NewHTTPLoader(url, extract, DefaultTimeout).Load(bb)
+func LoadFromHTTP(url string, ops ...HTTPOption) error {
+	return NewHTTPLoader(url, ops...).Load(bb)
 }
 
 func LoadFromBytes(path string, data []byte) error {

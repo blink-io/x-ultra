@@ -11,7 +11,7 @@ import (
 	i18nthrift "github.com/blink-io/x/i18n/thrift"
 )
 
-type TOptions struct {
+type thriftOptions struct {
 	protocol   i18nthrift.Protocol
 	useHTTP    bool
 	framed     bool
@@ -20,43 +20,43 @@ type TOptions struct {
 	tlsConfig  *tls.Config
 }
 
-func applyTOptions(ops ...TOption) *TOptions {
-	opt := new(TOptions)
+func applyTOptions(ops ...ThriftOption) *thriftOptions {
+	opt := new(thriftOptions)
 	for _, o := range ops {
 		o(opt)
 	}
 	return opt
 }
 
-type TOption func(*TOptions)
+type ThriftOption func(*thriftOptions)
 
-func WithTProtocol(protocol i18nthrift.Protocol) TOption {
-	return func(o *TOptions) {
+func WithTProtocol(protocol i18nthrift.Protocol) ThriftOption {
+	return func(o *thriftOptions) {
 		o.protocol = protocol
 	}
 }
 
-func WithTFramed(framed bool) TOption {
-	return func(o *TOptions) {
+func WithTFramed(framed bool) ThriftOption {
+	return func(o *thriftOptions) {
 		o.framed = framed
 	}
 }
 
-func WithUseHTTP() TOption {
-	return func(o *TOptions) {
+func WithUseHTTP() ThriftOption {
+	return func(o *thriftOptions) {
 		o.useHTTP = true
 	}
 }
 
-func WithBuffered(bufferSize int) TOption {
-	return func(o *TOptions) {
+func WithBuffered(bufferSize int) ThriftOption {
+	return func(o *thriftOptions) {
 		o.buffered = true
 		o.bufferSize = bufferSize
 	}
 }
 
-func WithTLSConfig(tlsConfig *tls.Config) TOption {
-	return func(o *TOptions) {
+func WithTLSConfig(tlsConfig *tls.Config) ThriftOption {
+	return func(o *thriftOptions) {
 		o.tlsConfig = tlsConfig
 	}
 }
@@ -67,7 +67,7 @@ type thriftLoader struct {
 	endpoint  string
 }
 
-func NewThriftLoader(addr string, languages []string, ops ...TOption) (Loader, error) {
+func NewThriftLoader(addr string, languages []string, ops ...ThriftOption) (Loader, error) {
 	opt := applyTOptions(ops...)
 	framed := opt.framed
 	useHTTP := opt.useHTTP
@@ -165,7 +165,7 @@ func (l *thriftLoader) Load(b Bundler) error {
 	return nil
 }
 
-func (b *Bundle) LoadFromThrift(addr string, languages []string, ops ...TOption) error {
+func (b *Bundle) LoadFromThrift(addr string, languages []string, ops ...ThriftOption) error {
 	ld, err := NewThriftLoader(addr, languages, ops...)
 	if err != nil {
 		return err
@@ -173,7 +173,7 @@ func (b *Bundle) LoadFromThrift(addr string, languages []string, ops ...TOption)
 	return ld.Load(b)
 }
 
-func LoadFromThrift(addr string, languages []string, ops ...TOption) error {
+func LoadFromThrift(addr string, languages []string, ops ...ThriftOption) error {
 	ld, err := NewThriftLoader(addr, languages, ops...)
 	if err != nil {
 		return err
@@ -217,7 +217,7 @@ func (s *ThriftHandler) ListLanguages(ctx context.Context, req *i18nthrift.ListL
 	return res, nil
 }
 
-func NewTBinaryServer(addr string, h EntryHandler, ops ...TOption) (*thrift.TSimpleServer, error) {
+func NewTBinaryServer(addr string, h EntryHandler, ops ...ThriftOption) (*thrift.TSimpleServer, error) {
 	opt := applyTOptions(ops...)
 
 	var err error
