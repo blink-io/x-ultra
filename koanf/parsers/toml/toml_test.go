@@ -1,4 +1,4 @@
-package btoml
+package toml
 
 import (
 	"testing"

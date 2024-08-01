@@ -1,5 +1,5 @@
 // Package btoml implements a koanf.Parser that parses TOML bytes as conf maps.
-package btoml
+package toml
 
 import (
 	"github.com/BurntSushi/toml"

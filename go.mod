@@ -146,7 +146,6 @@ require (
 	github.com/jhump/protoreflect v1.16.0
 	github.com/jonboulle/clockwork v0.4.0
 	github.com/k0kubun/pp/v3 v3.2.0
-	github.com/kardianos/osext v0.0.0-20190222173326-2bc1f35cddc0
 	github.com/leonelquinteros/gotext v1.6.1
 	github.com/lesismal/nbio v1.5.9
 	github.com/lib/pq v1.10.9
