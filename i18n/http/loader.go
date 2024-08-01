@@ -1,40 +1,41 @@
 package http
 
 import (
-	"github.com/blink-io/x/i18n"
 	"io"
 	"net/http"
+
+	"github.com/blink-io/x/i18n"
 )
 
-// httpLoader loads by http GET requests
+// loader loads by http GET requests
 // URLVar should be like: https://xxx.com/languages/zh_Hans.toml
-type httpLoader struct {
+type loader struct {
 	url  string
 	opts *options
 }
 
-func NewHTTPLoader(url string, ops ...Option) i18n.Loader {
-	opts := applyHTTPOptions(ops...)
-	return &httpLoader{url: url, opts: opts}
+func NewLoader(url string, ops ...Option) i18n.Loader {
+	opts := applyOptions(ops...)
+	return &loader{url: url, opts: opts}
 }
 
 func LoadFromHTTP(url string, ops ...Option) error {
-	return NewHTTPLoader(url, ops...).Load(i18n.Default())
+	return NewLoader(url, ops...).Load(i18n.Default())
 }
 
-func (h *httpLoader) Load(b i18n.Bundler) error {
-	c := h.opts.client
+func (l *loader) Load(b i18n.Bundler) error {
+	c := l.opts.client
 
 	var res *http.Response
 	var err error
-	if rf := h.opts.requestFunc; rf != nil {
-		if req, rerr := h.opts.requestFunc(c, h.url); rerr != nil {
+	if rf := l.opts.requestFunc; rf != nil {
+		if req, rerr := l.opts.requestFunc(c, l.url); rerr != nil {
 			return rerr
 		} else {
 			res, err = c.Do(req)
 		}
 	} else {
-		res, err = c.Get(h.url)
+		res, err = c.Get(l.url)
 	}
 	if err != nil {
 		return err
@@ -48,13 +49,13 @@ func (h *httpLoader) Load(b i18n.Bundler) error {
 	}
 
 	var path string
-	if ef := h.opts.extractFunc; ef != nil {
-		path = ef(h.url)
+	if ef := l.opts.extractFunc; ef != nil {
+		path = ef(l.url)
 	} else {
-		path = h.url
+		path = l.url
 	}
 	if _, err := b.LoadMessageFileBytes(buf, path); err != nil {
-		i18n.GetLogger()("[WARN] unable to load message from URL: %s", h.url)
+		i18n.GetLogger()("[WARN] unable to load message from URL: %s", l.url)
 	}
 	return nil
 }

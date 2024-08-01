@@ -2,7 +2,6 @@ package thrift
 
 import (
 	"context"
-	"crypto/tls"
 	"net/http"
 	"time"
 
@@ -11,64 +10,14 @@ import (
 	"github.com/apache/thrift/lib/go/thrift"
 )
 
-type thriftOptions struct {
-	protocol   Protocol
-	useHTTP    bool
-	framed     bool
-	buffered   bool
-	bufferSize int
-	tlsConfig  *tls.Config
-}
-
-func applyTOptions(ops ...ThriftOption) *thriftOptions {
-	opt := new(thriftOptions)
-	for _, o := range ops {
-		o(opt)
-	}
-	return opt
-}
-
-type ThriftOption func(*thriftOptions)
-
-func WithTProtocol(protocol Protocol) ThriftOption {
-	return func(o *thriftOptions) {
-		o.protocol = protocol
-	}
-}
-
-func WithTFramed(framed bool) ThriftOption {
-	return func(o *thriftOptions) {
-		o.framed = framed
-	}
-}
-
-func WithUseHTTP() ThriftOption {
-	return func(o *thriftOptions) {
-		o.useHTTP = true
-	}
-}
-
-func WithBuffered(bufferSize int) ThriftOption {
-	return func(o *thriftOptions) {
-		o.buffered = true
-		o.bufferSize = bufferSize
-	}
-}
-
-func WithTLSConfig(tlsConfig *tls.Config) ThriftOption {
-	return func(o *thriftOptions) {
-		o.tlsConfig = tlsConfig
-	}
-}
-
-type thriftLoader struct {
+type loader struct {
 	client    *I18NClient
 	languages []string
 	endpoint  string
 }
 
-func NewThriftLoader(addr string, languages []string, ops ...ThriftOption) (i18n.Loader, error) {
-	opt := applyTOptions(ops...)
+func NewLoader(addr string, languages []string, ops ...Option) (i18n.Loader, error) {
+	opt := applyOptions(ops...)
 	framed := opt.framed
 	useHTTP := opt.useHTTP
 	protocolType := opt.protocol
@@ -141,11 +90,11 @@ func NewThriftLoader(addr string, languages []string, ops ...ThriftOption) (i18n
 	inproto := protocolFactory.GetProtocol(transport)
 	outproto := protocolFactory.GetProtocol(transport)
 	client := NewI18NClient(thrift.NewTStandardClient(inproto, outproto))
-	ld := &thriftLoader{client: client, languages: languages}
+	ld := &loader{client: client, languages: languages}
 	return ld, nil
 }
 
-func (l *thriftLoader) Load(b i18n.Bundler) error {
+func (l *loader) Load(b i18n.Bundler) error {
 	req := NewListLanguagesRequest()
 	req.Languages = l.languages
 
@@ -165,25 +114,25 @@ func (l *thriftLoader) Load(b i18n.Bundler) error {
 	return nil
 }
 
-func LoadFromThrift(addr string, languages []string, ops ...ThriftOption) error {
-	ld, err := NewThriftLoader(addr, languages, ops...)
+func LoadFromThrift(addr string, languages []string, ops ...Option) error {
+	ld, err := NewLoader(addr, languages, ops...)
 	if err != nil {
 		return err
 	}
 	return ld.Load(i18n.Default())
 }
 
-var _ I18N = (*ThriftHandler)(nil)
+var _ I18N = (*Handler)(nil)
 
-type ThriftHandler struct {
+type Handler struct {
 	h i18n.EntryHandler
 }
 
-func NewThriftHandler(h i18n.EntryHandler) *ThriftHandler {
-	return &ThriftHandler{h: h}
+func NewHandler(h i18n.EntryHandler) *Handler {
+	return &Handler{h: h}
 }
 
-func (s *ThriftHandler) ListLanguages(ctx context.Context, req *ListLanguagesRequest) (*ListLanguagesResponse, error) {
+func (s *Handler) ListLanguages(ctx context.Context, req *ListLanguagesRequest) (*ListLanguagesResponse, error) {
 	langs := req.Languages
 
 	entries := make(map[string]*LanguageEntry)
@@ -209,8 +158,8 @@ func (s *ThriftHandler) ListLanguages(ctx context.Context, req *ListLanguagesReq
 	return res, nil
 }
 
-func NewTBinaryServer(addr string, eh i18n.EntryHandler, ops ...ThriftOption) (*thrift.TSimpleServer, error) {
-	opt := applyTOptions(ops...)
+func NewTBinaryServer(addr string, eh i18n.EntryHandler, ops ...Option) (*thrift.TSimpleServer, error) {
+	opt := applyOptions(ops...)
 
 	var err error
 	var serverTransport thrift.TServerTransport
@@ -230,7 +179,7 @@ func NewTBinaryServer(addr string, eh i18n.EntryHandler, ops ...ThriftOption) (*
 	transportFactory := thrift.NewTTransportFactory()
 	protocolFactory := thrift.NewTBinaryProtocolFactoryConf(cfg)
 
-	processor := NewI18NProcessor(NewThriftHandler(eh))
+	processor := NewI18NProcessor(NewHandler(eh))
 	server := thrift.NewTSimpleServer4(processor, serverTransport, transportFactory, protocolFactory)
 	return server, nil
 }

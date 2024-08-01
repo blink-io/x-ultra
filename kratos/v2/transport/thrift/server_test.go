@@ -2,11 +2,12 @@ package thrift
 
 import (
 	"context"
-	"github.com/blink-io/x/i18n/grpc"
 	"os"
 	"os/signal"
 	"syscall"
 	"testing"
+
+	"github.com/blink-io/x/i18n/grpc"
 
 	i18nthrift "github.com/blink-io/x/i18n/thrift"
 )
@@ -41,7 +42,7 @@ func TestServer(t *testing.T) {
 		},
 	}
 
-	th := i18nthrift.NewThriftHandler(grpc.Entries(entries))
+	th := i18nthrift.NewHandler(grpc.Entries(entries))
 	srv := NewServer(
 		WithAddress(":7700"),
 		WithProcessor(i18nthrift.NewI18NProcessor(th)),

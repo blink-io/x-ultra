@@ -9,23 +9,23 @@ import (
 	"google.golang.org/grpc"
 )
 
-// grpcLoader loads by GRPC services
-type grpcLoader struct {
+// loader loads by GRPC services
+type loader struct {
 	client    I18NClient
 	endpoint  string
 	languages []string
 }
 
-func NewGRPCLoader(cc grpc.ClientConnInterface, languages []string) i18n.Loader {
+func NewLoader(cc grpc.ClientConnInterface, languages []string) i18n.Loader {
 	client := NewI18NClient(cc)
-	return &grpcLoader{client: client, languages: languages}
+	return &loader{client: client, languages: languages}
 }
 
 func LoadFromGRPC(cc grpc.ClientConnInterface, languages []string) error {
-	return NewGRPCLoader(cc, languages).Load(i18n.Default())
+	return NewLoader(cc, languages).Load(i18n.Default())
 }
 
-func (l *grpcLoader) Load(b i18n.Bundler) error {
+func (l *loader) Load(b i18n.Bundler) error {
 	req := &ListLanguagesRequest{
 		Languages: l.languages,
 	}
@@ -50,7 +50,7 @@ type grpcServer struct {
 	h i18n.EntryHandler
 }
 
-func newGrpcServer(h i18n.EntryHandler) *grpcServer {
+func newGRPCServer(h i18n.EntryHandler) *grpcServer {
 	gsrv := &grpcServer{h: h}
 	return gsrv
 }
@@ -84,12 +84,12 @@ func (s *grpcServer) ListLanguages(ctx context.Context, req *ListLanguagesReques
 	return res, nil
 }
 
-func RegisterEntryHandler(gsrv *grpc.Server, h i18n.EntryHandler) {
-	ss := newGrpcServer(h)
+func RegisterEntryHandler(gsrv *grpc.Server, eh i18n.EntryHandler) {
+	ss := newGRPCServer(eh)
 	RegisterI18NServer(gsrv, ss)
 }
 
-func RegisterEntryHandlerFunc(gsrv *grpc.Server, f i18n.EntryHandlerFunc) {
-	ss := newGrpcServer(f)
+func RegisterEntryHandlerFunc(gsrv *grpc.Server, ehf i18n.EntryHandlerFunc) {
+	ss := newGRPCServer(ehf)
 	RegisterI18NServer(gsrv, ss)
 }

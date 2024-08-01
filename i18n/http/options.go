@@ -1,8 +1,9 @@
 package http
 
 import (
-	"github.com/blink-io/x/i18n"
 	"net/http"
+
+	"github.com/blink-io/x/i18n"
 )
 
 type options struct {
@@ -15,7 +16,7 @@ type options struct {
 
 type Option func(*options)
 
-func applyHTTPOptions(ops ...Option) *options {
+func applyOptions(ops ...Option) *options {
 	opts := &options{
 		client: &http.Client{Timeout: i18n.DefaultTimeout},
 		extractFunc: func(s string) string {

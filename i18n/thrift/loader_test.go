@@ -5,14 +5,15 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/apache/thrift/lib/go/thrift"
 	"github.com/blink-io/x/i18n"
+
+	"github.com/apache/thrift/lib/go/thrift"
 	"github.com/stretchr/testify/require"
 )
 
 func TestThriftLoader_1(t *testing.T) {
 	langs := []string{"zh-Hans"}
-	ld, err := NewThriftLoader("localhost:19099", langs)
+	ld, err := NewLoader("localhost:19099", langs)
 	require.NoError(t, err)
 
 	require.NoError(t, ld.Load(i18n.Default()))
@@ -20,7 +21,7 @@ func TestThriftLoader_1(t *testing.T) {
 
 func TestThriftLoader_HTTP_1(t *testing.T) {
 	langs := []string{"zh-Hans"}
-	ld, err := NewThriftLoader("http://localhost:19099", langs, WithUseHTTP())
+	ld, err := NewLoader("http://localhost:19099", langs, WithUseHTTP())
 	require.NoError(t, err)
 
 	require.NoError(t, ld.Load(i18n.Default()))
@@ -85,7 +86,7 @@ func TestThriftServer_1(t *testing.T) {
 	addr := "localhost:19099"
 	useHTTP := true
 
-	p := NewI18NProcessor(&ThriftHandler{h: ff})
+	p := NewI18NProcessor(&Handler{h: ff})
 
 	trans, err := thrift.NewTServerSocket(addr)
 	require.NoError(t, err)
