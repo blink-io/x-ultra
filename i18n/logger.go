@@ -9,3 +9,7 @@ func SetLogger(l Logger) {
 		log = l
 	}
 }
+
+func GetLogger() Logger {
+	return log
+}

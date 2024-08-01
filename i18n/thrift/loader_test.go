@@ -1,12 +1,14 @@
-package i18n
+package thrift
 
 import (
 	"context"
 	"fmt"
 	"testing"
 
+	"github.com/blink-io/x/i18n"
+	"github.com/blink-io/x/i18n/grpc"
+
 	"github.com/apache/thrift/lib/go/thrift"
-	i18nthrift "github.com/blink-io/x/i18n/thrift"
 	"github.com/stretchr/testify/require"
 )
 
@@ -15,7 +17,7 @@ func TestThriftLoader_1(t *testing.T) {
 	ld, err := NewThriftLoader("localhost:19099", langs)
 	require.NoError(t, err)
 
-	require.NoError(t, ld.Load(bb))
+	require.NoError(t, ld.Load(i18n.Default()))
 }
 
 func TestThriftLoader_HTTP_1(t *testing.T) {
@@ -23,15 +25,15 @@ func TestThriftLoader_HTTP_1(t *testing.T) {
 	ld, err := NewThriftLoader("http://localhost:19099", langs, WithUseHTTP())
 	require.NoError(t, err)
 
-	require.NoError(t, ld.Load(bb))
+	require.NoError(t, ld.Load(i18n.Default()))
 }
 
 func TestThriftClient_1(t *testing.T) {
 	addr := "localhost:19099"
 
 	var cfg = &thrift.TConfiguration{
-		SocketTimeout:  DefaultTimeout,
-		ConnectTimeout: DefaultTimeout,
+		SocketTimeout:  i18n.DefaultTimeout,
+		ConnectTimeout: i18n.DefaultTimeout,
 	}
 	transportFactory := thrift.NewTTransportFactory()
 	protocolFactory := thrift.NewTBinaryProtocolFactoryConf(cfg)
@@ -45,9 +47,9 @@ func TestThriftClient_1(t *testing.T) {
 
 	iprot := protocolFactory.GetProtocol(transport)
 	oprot := protocolFactory.GetProtocol(transport)
-	cc := i18nthrift.NewI18NClient(thrift.NewTStandardClient(iprot, oprot))
+	cc := NewI18NClient(thrift.NewTStandardClient(iprot, oprot))
 
-	res, err := cc.ListLanguages(context.Background(), &i18nthrift.ListLanguagesRequest{
+	res, err := cc.ListLanguages(context.Background(), &ListLanguagesRequest{
 		Languages: []string{"zh-Hans"},
 	})
 	require.NoError(t, err)
@@ -59,7 +61,7 @@ func TestThriftServer_1(t *testing.T) {
 	zhHansJSON := `{"name":"广州", "language":"简体中文"}`
 	enUSJSON := `{"name":"gz", "language":"American English"}`
 
-	entries := map[string]*Entry{
+	entries := map[string]*grpc.Entry{
 		"zh-Hans": {
 			Path:     "zh-Hans.json",
 			Language: "zh-Hans",
@@ -80,12 +82,12 @@ func TestThriftServer_1(t *testing.T) {
 		},
 	}
 
-	var ff = Entries(entries)
+	var ff = grpc.Entries(entries)
 
 	addr := "localhost:19099"
 	useHTTP := true
 
-	p := i18nthrift.NewI18NProcessor(&ThriftHandler{h: ff})
+	p := NewI18NProcessor(&ThriftHandler{h: ff})
 
 	trans, err := thrift.NewTServerSocket(addr)
 	require.NoError(t, err)
@@ -110,7 +112,7 @@ func TestThriftServer_2(t *testing.T) {
 	zhHansJSON := `{"name":"广州", "language":"简体中文"}`
 	enUSJSON := `{"name":"gz", "language":"American English"}`
 
-	entries := map[string]*Entry{
+	entries := map[string]*grpc.Entry{
 		"zh-Hans": {
 			Path:     "zh-Hans.json",
 			Language: "zh-Hans",
@@ -131,7 +133,7 @@ func TestThriftServer_2(t *testing.T) {
 		},
 	}
 
-	var ff = Entries(entries)
+	var ff = grpc.Entries(entries)
 
 	addr := "localhost:19099"
 

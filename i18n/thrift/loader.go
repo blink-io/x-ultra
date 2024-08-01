@@ -1,4 +1,4 @@
-package i18n
+package thrift
 
 import (
 	"context"
@@ -7,12 +7,13 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/blink-io/x/i18n"
+
 	"github.com/apache/thrift/lib/go/thrift"
-	i18nthrift "github.com/blink-io/x/i18n/thrift"
 )
 
 type thriftOptions struct {
-	protocol   i18nthrift.Protocol
+	protocol   Protocol
 	useHTTP    bool
 	framed     bool
 	buffered   bool
@@ -30,7 +31,7 @@ func applyTOptions(ops ...ThriftOption) *thriftOptions {
 
 type ThriftOption func(*thriftOptions)
 
-func WithTProtocol(protocol i18nthrift.Protocol) ThriftOption {
+func WithTProtocol(protocol Protocol) ThriftOption {
 	return func(o *thriftOptions) {
 		o.protocol = protocol
 	}
@@ -62,20 +63,20 @@ func WithTLSConfig(tlsConfig *tls.Config) ThriftOption {
 }
 
 type thriftLoader struct {
-	client    *i18nthrift.I18NClient
+	client    *I18NClient
 	languages []string
 	endpoint  string
 }
 
-func NewThriftLoader(addr string, languages []string, ops ...ThriftOption) (Loader, error) {
+func NewThriftLoader(addr string, languages []string, ops ...ThriftOption) (i18n.Loader, error) {
 	opt := applyTOptions(ops...)
 	framed := opt.framed
 	useHTTP := opt.useHTTP
 	protocolType := opt.protocol
 
 	var cfg = &thrift.TConfiguration{
-		ConnectTimeout: DefaultTimeout,
-		SocketTimeout:  DefaultTimeout,
+		ConnectTimeout: i18n.DefaultTimeout,
+		SocketTimeout:  i18n.DefaultTimeout,
 	}
 	var transport thrift.TTransport
 	var err error
@@ -83,7 +84,7 @@ func NewThriftLoader(addr string, languages []string, ops ...ThriftOption) (Load
 	if useHTTP {
 		transport, err = thrift.NewTHttpClientWithOptions(addr, thrift.THttpClientOptions{
 			Client: &http.Client{
-				Timeout: DefaultTimeout,
+				Timeout: i18n.DefaultTimeout,
 			},
 		})
 		if len(headers) > 0 {
@@ -122,16 +123,16 @@ func NewThriftLoader(addr string, languages []string, ops ...ThriftOption) (Load
 
 	var protocolFactory thrift.TProtocolFactory
 	switch protocolType {
-	case i18nthrift.Compact:
+	case Compact:
 		protocolFactory = thrift.NewTCompactProtocolFactoryConf(cfg)
 		break
-	case i18nthrift.SimpleJSON:
+	case SimpleJSON:
 		protocolFactory = thrift.NewTSimpleJSONProtocolFactoryConf(cfg)
 		break
-	case i18nthrift.JSON:
+	case JSON:
 		protocolFactory = thrift.NewTJSONProtocolFactory()
 		break
-	case i18nthrift.Binary:
+	case Binary:
 		protocolFactory = thrift.NewTBinaryProtocolFactoryConf(cfg)
 		break
 	default:
@@ -140,13 +141,13 @@ func NewThriftLoader(addr string, languages []string, ops ...ThriftOption) (Load
 	}
 	inproto := protocolFactory.GetProtocol(transport)
 	outproto := protocolFactory.GetProtocol(transport)
-	client := i18nthrift.NewI18NClient(thrift.NewTStandardClient(inproto, outproto))
+	client := NewI18NClient(thrift.NewTStandardClient(inproto, outproto))
 	ld := &thriftLoader{client: client, languages: languages}
 	return ld, nil
 }
 
-func (l *thriftLoader) Load(b Bundler) error {
-	req := i18nthrift.NewListLanguagesRequest()
+func (l *thriftLoader) Load(b i18n.Bundler) error {
+	req := NewListLanguagesRequest()
 	req.Languages = l.languages
 
 	res, err := l.client.ListLanguages(context.Background(), req)
@@ -159,18 +160,10 @@ func (l *thriftLoader) Load(b Bundler) error {
 			continue
 		}
 		if _, verr := b.LoadMessageFileBytes(v.Payload, v.Path); verr != nil {
-			log("[WARN] unable to load message from Thrift service: %s, endpoint: %s, reason: %s", v.Path, l.endpoint, verr.Error())
+			i18n.GetLogger()("[WARN] unable to load message from Thrift service: %s, endpoint: %s, reason: %s", v.Path, l.endpoint, verr.Error())
 		}
 	}
 	return nil
-}
-
-func (b *Bundle) LoadFromThrift(addr string, languages []string, ops ...ThriftOption) error {
-	ld, err := NewThriftLoader(addr, languages, ops...)
-	if err != nil {
-		return err
-	}
-	return ld.Load(b)
 }
 
 func LoadFromThrift(addr string, languages []string, ops ...ThriftOption) error {
@@ -178,27 +171,27 @@ func LoadFromThrift(addr string, languages []string, ops ...ThriftOption) error 
 	if err != nil {
 		return err
 	}
-	return ld.Load(bb)
+	return ld.Load(i18n.Default())
 }
 
-var _ i18nthrift.I18N = (*ThriftHandler)(nil)
+var _ I18N = (*ThriftHandler)(nil)
 
 type ThriftHandler struct {
-	h EntryHandler
+	h i18n.EntryHandler
 }
 
-func NewThriftHandler(h EntryHandler) *ThriftHandler {
+func NewThriftHandler(h i18n.EntryHandler) *ThriftHandler {
 	return &ThriftHandler{h: h}
 }
 
-func (s *ThriftHandler) ListLanguages(ctx context.Context, req *i18nthrift.ListLanguagesRequest) (*i18nthrift.ListLanguagesResponse, error) {
+func (s *ThriftHandler) ListLanguages(ctx context.Context, req *ListLanguagesRequest) (*ListLanguagesResponse, error) {
 	langs := req.Languages
 
-	entries := make(map[string]*i18nthrift.LanguageEntry)
+	entries := make(map[string]*LanguageEntry)
 	if s.h != nil {
 		em := s.h.Handle(ctx, langs)
 		for _, l := range langs {
-			le := i18nthrift.NewLanguageEntry()
+			le := NewLanguageEntry()
 			le.Language = l
 			if e := em[l]; e != nil {
 				le.Path = e.Path
@@ -211,13 +204,13 @@ func (s *ThriftHandler) ListLanguages(ctx context.Context, req *i18nthrift.ListL
 		}
 	}
 
-	res := i18nthrift.NewListLanguagesResponse()
+	res := NewListLanguagesResponse()
 	res.Timestamp = time.Now().Unix()
 	res.Entries = entries
 	return res, nil
 }
 
-func NewTBinaryServer(addr string, h EntryHandler, ops ...ThriftOption) (*thrift.TSimpleServer, error) {
+func NewTBinaryServer(addr string, h i18n.EntryHandler, ops ...ThriftOption) (*thrift.TSimpleServer, error) {
 	opt := applyTOptions(ops...)
 
 	var err error
@@ -232,13 +225,13 @@ func NewTBinaryServer(addr string, h EntryHandler, ops ...ThriftOption) (*thrift
 	}
 
 	cfg := &thrift.TConfiguration{
-		ConnectTimeout: DefaultTimeout,
-		SocketTimeout:  DefaultTimeout,
+		ConnectTimeout: i18n.DefaultTimeout,
+		SocketTimeout:  i18n.DefaultTimeout,
 	}
 	transportFactory := thrift.NewTTransportFactory()
 	protocolFactory := thrift.NewTBinaryProtocolFactoryConf(cfg)
 
-	processor := i18nthrift.NewI18NProcessor(NewThriftHandler(h))
+	processor := NewI18NProcessor(NewThriftHandler(h))
 	server := thrift.NewTSimpleServer4(processor, serverTransport, transportFactory, protocolFactory)
 	server.SetLogger(func(msg string) {
 		slog.Default().Info(msg)

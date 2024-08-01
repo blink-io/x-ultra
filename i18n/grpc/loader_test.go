@@ -1,6 +1,7 @@
-package i18n
+package grpc
 
 import (
+	"github.com/blink-io/x/i18n"
 	"log/slog"
 	"net"
 	"testing"
@@ -56,7 +57,7 @@ func TestGRPC_Server_1(t *testing.T) {
 func TestNewGRPCLoader_1(t *testing.T) {
 	cc := testutil.CreateGRPCClient(":9999", true)
 	ld := NewGRPCLoader(cc, []string{"zh-Hans"})
-	err := ld.Load(bb)
+	err := ld.Load(i18n.bb)
 
 	require.NoError(t, err)
 }

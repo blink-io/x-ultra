@@ -2,12 +2,12 @@ package thrift
 
 import (
 	"context"
+	"github.com/blink-io/x/i18n/grpc"
 	"os"
 	"os/signal"
 	"syscall"
 	"testing"
 
-	"github.com/blink-io/x/i18n"
 	i18nthrift "github.com/blink-io/x/i18n/thrift"
 )
 
@@ -20,7 +20,7 @@ func TestServer(t *testing.T) {
 	zhHansJSON := `{"name":"广州", "language":"简体中文", "from":"测试模式"}`
 	enUSJSON := `{"name":"gz", "language":"American English", "from":"TestMode"}`
 
-	entries := map[string]*i18n.Entry{
+	entries := map[string]*grpc.Entry{
 		"zh-Hans": {
 			Path:     "zh-Hans.json",
 			Language: "zh-Hans",
@@ -41,7 +41,7 @@ func TestServer(t *testing.T) {
 		},
 	}
 
-	th := i18n.NewThriftHandler(i18n.Entries(entries))
+	th := i18nthrift.NewThriftHandler(grpc.Entries(entries))
 	srv := NewServer(
 		WithAddress(":7700"),
 		WithProcessor(i18nthrift.NewI18NProcessor(th)),
