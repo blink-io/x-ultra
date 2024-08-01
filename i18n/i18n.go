@@ -48,6 +48,8 @@ var (
 		msg := fmt.Sprintf(format, args...)
 		slog.Info(msg)
 	}
+	// Compilation time type check
+	_ Bundler = (*Bundle)(nil)
 )
 
 func New(o *Options) *Bundle {

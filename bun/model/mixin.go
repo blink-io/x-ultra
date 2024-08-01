@@ -54,7 +54,6 @@ var _ bun.BeforeAppendModelHook = (*MixinModel)(nil)
 
 type MixinModel struct {
 	// ID generator for a single model
-	gg        Generator `bun:"-" db:"-" json:"-" toml:"-" yaml:"-" msgpack:"-"`
 	ID        int64     `bun:"id,pk,autoincrement" db:"id" json:"id,omitempty" toml:"id,omitempty" yaml:"id,omitempty" msgpack:"id,omitempty"`
 	GUID      string    `bun:"guid,notnull,unique,type:varchar(60)" db:"guid" json:"guid,omitempty" toml:"guid,omitempty" yaml:"guid,omitempty" msgpack:"guid,omitempty"`
 	CreatedAt time.Time `bun:"created_at,notnull,skipupdate" db:"created_at" json:"created_at,omitempty" toml:"created_at,omitempty" yaml:"created_at,omitempty" msgpack:"created_at,omitempty"`
@@ -68,14 +67,9 @@ type MixinModel struct {
 }
 
 func (m *MixinModel) BeforeAppendModel(ctx context.Context, query bun.Query) error {
-	handleTSZ(m, query)
-	handleGUID(m, query)
+	handleTSZ(m, ctx, query)
+	handleGUID(m, ctx, query)
 	return nil
-}
-
-// GUIDGen overrides the global generator for every model
-func (m *MixinModel) GUIDGen(g Generator) {
-	m.gg = g
 }
 
 // GUIDGen sets global I generator for all models
@@ -89,7 +83,7 @@ func GUIDGen(g Generator) {
 	}
 }
 
-func handleTSZ(m *MixinModel, query bun.Query) {
+func handleTSZ(m *MixinModel, ctx context.Context, query bun.Query) {
 	if m != nil {
 		switch query.(type) {
 		case *bun.InsertQuery:
@@ -104,12 +98,8 @@ func handleTSZ(m *MixinModel, query bun.Query) {
 	}
 }
 
-func handleGUID(m *MixinModel, query bun.Query) {
+func handleGUID(m *MixinModel, ctx context.Context, query bun.Query) {
 	if o := query.Operation(); o == "INSERT" && m != nil && len(m.GUID) == 0 {
-		var xg = gg
-		if m.gg != nil {
-			xg = m.gg
-		}
-		m.GUID = xg()
+		m.GUID = gg()
 	}
 }

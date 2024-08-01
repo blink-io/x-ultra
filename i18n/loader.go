@@ -1,9 +1,7 @@
 package i18n
 
 import (
-	"io"
 	"io/fs"
-	"net/http"
 	"path/filepath"
 	"time"
 )
@@ -80,47 +78,6 @@ func (l *fsLoader) Load(b Bundler) error {
 		}
 		return nil
 	})
-}
-
-// httpLoader loads by http GET requests
-// URLVar should be like: https://xxx.com/languages/zh_Hans.toml
-type httpLoader struct {
-	c       *http.Client
-	extract func(string) string
-	url     string
-}
-
-func NewHTTPLoader(url string, extract func(string) string, timeout time.Duration) Loader {
-	if timeout == 0 {
-		timeout = DefaultTimeout
-	}
-	c := &http.Client{Timeout: timeout}
-	return &httpLoader{c: c, extract: extract, url: url}
-}
-
-func (h *httpLoader) Load(b Bundler) error {
-	res, err := h.c.Get(h.url)
-	if err != nil {
-		return err
-	}
-
-	defer res.Body.Close()
-
-	buf, err := io.ReadAll(res.Body)
-	if err != nil {
-		return err
-	}
-
-	var path string
-	if h.extract != nil {
-		path = h.extract(h.url)
-	} else {
-		path = h.url
-	}
-	if _, err := b.LoadMessageFileBytes(buf, path); err != nil {
-		log("[WARN] unable to load message from URLVar: %s", h.url)
-	}
-	return nil
 }
 
 type bytesLoader struct {
