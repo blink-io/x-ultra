@@ -1,10 +1,10 @@
 package pg
 
 import (
+	"github.com/aarondl/opt/omitnull"
 	"time"
 
 	"github.com/blink-io/x/id"
-	xsql "github.com/blink-io/x/sql"
 	"github.com/brianvoe/gofakeit/v6"
 )
 
@@ -18,8 +18,8 @@ func newRandomRecordForApp(from string) *Application {
 	r.Status = "ok"
 	r.CreatedAt = tnow
 	r.UpdatedAt = tnow
-	r.CreatedBy = xsql.ValidNull[string](gofakeit.Name())
-	r.UpdatedBy = xsql.ValidNull[string](gofakeit.Name())
-	r.DeletedAt = xsql.ValidNull[time.Time](tnow)
+	r.CreatedBy = omitnull.From(gofakeit.Name())
+	r.UpdatedBy = omitnull.From(gofakeit.Name())
+	r.DeletedAt = omitnull.From(tnow)
 	return r
 }

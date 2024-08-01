@@ -1,8 +1,8 @@
-// Package tomlv2 implements a koanf.Parser that parses TOML bytes as conf maps.
-package tomlv2
+// Package btoml implements a koanf.Parser that parses TOML bytes as conf maps.
+package btoml
 
 import (
-	"github.com/pelletier/go-toml/v2"
+	"github.com/BurntSushi/toml"
 )
 
 // TOML implements a TOML parser.

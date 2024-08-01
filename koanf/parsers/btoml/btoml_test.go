@@ -1,4 +1,4 @@
-package tomlv2
+package btoml
 
 import (
 	"testing"
