@@ -5,7 +5,6 @@ import (
 	"io/fs"
 	"log/slog"
 	"sync"
-	"text/template"
 	"time"
 
 	"github.com/blink-io/x/locale"
@@ -13,6 +12,10 @@ import (
 	"github.com/jellydator/ttlcache/v3"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"golang.org/x/text/language"
+)
+
+const (
+	defaultTTL = 2 * time.Hour
 )
 
 type (
@@ -37,17 +40,11 @@ type (
 	}
 )
 
-const (
-	defaultTTL = 2 * time.Hour
-)
-
 var (
 	globalMux sync.Mutex
 	// bb is default bb
-	bb = New(DefaultOptions)
-
-	funcMap template.FuncMap
-	log     Logger = func(format string, args ...any) {
+	bb         = New(DefaultOptions)
+	log Logger = func(format string, args ...any) {
 		msg := fmt.Sprintf(format, args...)
 		slog.Info(msg)
 	}

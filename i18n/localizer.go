@@ -25,7 +25,7 @@ func Tr(loc *Localizer) T {
 	return fn
 }
 
-func PluralCount(pluralCount interface{}) LOption {
+func PluralCount(pluralCount any) LOption {
 	return func(config *LocalizeConfig) {
 		config.PluralCount = pluralCount
 	}
@@ -55,7 +55,7 @@ func SprigFuncs() LOption {
 	}
 }
 
-func D(d map[string]any) LOption {
+func D(d MD) LOption {
 	return func(c *LocalizeConfig) {
 		c.TemplateData = d
 	}
