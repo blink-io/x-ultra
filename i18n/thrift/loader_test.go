@@ -5,10 +5,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/blink-io/x/i18n"
-	"github.com/blink-io/x/i18n/grpc"
-
 	"github.com/apache/thrift/lib/go/thrift"
+	"github.com/blink-io/x/i18n"
 	"github.com/stretchr/testify/require"
 )
 
@@ -61,7 +59,7 @@ func TestThriftServer_1(t *testing.T) {
 	zhHansJSON := `{"name":"广州", "language":"简体中文"}`
 	enUSJSON := `{"name":"gz", "language":"American English"}`
 
-	entries := map[string]*grpc.Entry{
+	entries := map[string]*i18n.Entry{
 		"zh-Hans": {
 			Path:     "zh-Hans.json",
 			Language: "zh-Hans",
@@ -82,7 +80,7 @@ func TestThriftServer_1(t *testing.T) {
 		},
 	}
 
-	var ff = grpc.Entries(entries)
+	var ff = i18n.Entries(entries)
 
 	addr := "localhost:19099"
 	useHTTP := true
@@ -112,7 +110,7 @@ func TestThriftServer_2(t *testing.T) {
 	zhHansJSON := `{"name":"广州", "language":"简体中文"}`
 	enUSJSON := `{"name":"gz", "language":"American English"}`
 
-	entries := map[string]*grpc.Entry{
+	entries := map[string]*i18n.Entry{
 		"zh-Hans": {
 			Path:     "zh-Hans.json",
 			Language: "zh-Hans",
@@ -133,7 +131,7 @@ func TestThriftServer_2(t *testing.T) {
 		},
 	}
 
-	var ff = grpc.Entries(entries)
+	var ff = i18n.Entries(entries)
 
 	addr := "localhost:19099"
 

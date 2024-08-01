@@ -3,7 +3,6 @@ package thrift
 import (
 	"context"
 	"crypto/tls"
-	"log/slog"
 	"net/http"
 	"time"
 
@@ -210,7 +209,7 @@ func (s *ThriftHandler) ListLanguages(ctx context.Context, req *ListLanguagesReq
 	return res, nil
 }
 
-func NewTBinaryServer(addr string, h i18n.EntryHandler, ops ...ThriftOption) (*thrift.TSimpleServer, error) {
+func NewTBinaryServer(addr string, eh i18n.EntryHandler, ops ...ThriftOption) (*thrift.TSimpleServer, error) {
 	opt := applyTOptions(ops...)
 
 	var err error
@@ -231,10 +230,7 @@ func NewTBinaryServer(addr string, h i18n.EntryHandler, ops ...ThriftOption) (*t
 	transportFactory := thrift.NewTTransportFactory()
 	protocolFactory := thrift.NewTBinaryProtocolFactoryConf(cfg)
 
-	processor := NewI18NProcessor(NewThriftHandler(h))
+	processor := NewI18NProcessor(NewThriftHandler(eh))
 	server := thrift.NewTSimpleServer4(processor, serverTransport, transportFactory, protocolFactory)
-	server.SetLogger(func(msg string) {
-		slog.Default().Info(msg)
-	})
 	return server, nil
 }

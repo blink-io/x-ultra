@@ -23,7 +23,7 @@ func TestGRPC_Server_1(t *testing.T) {
 	zhHansJSON := `{"name":"广州", "language":"简体中文"}`
 	enUSJSON := `{"name":"gz", "language":"American English"}`
 
-	entries := map[string]*Entry{
+	entries := map[string]*i18n.Entry{
 		"zh-Hans": {
 			Path:     "zh-Hans.json",
 			Language: "zh-Hans",
@@ -44,7 +44,7 @@ func TestGRPC_Server_1(t *testing.T) {
 		},
 	}
 
-	var ff = Entries(entries)
+	var ff = i18n.Entries(entries)
 
 	RegisterEntryHandler(gsrv, ff)
 
@@ -57,7 +57,7 @@ func TestGRPC_Server_1(t *testing.T) {
 func TestNewGRPCLoader_1(t *testing.T) {
 	cc := testutil.CreateGRPCClient(":9999", true)
 	ld := NewGRPCLoader(cc, []string{"zh-Hans"})
-	err := ld.Load(i18n.bb)
+	err := ld.Load(i18n.Default())
 
 	require.NoError(t, err)
 }
