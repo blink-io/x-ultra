@@ -10,7 +10,7 @@ import (
 	"github.com/blink-io/x/kratos/v2/internal/endpoint"
 	"github.com/blink-io/x/kratos/v2/internal/host"
 	"github.com/blink-io/x/kratos/v2/transport"
-	xa "github.com/blink-io/x/kratos/v2/transport/http/adapter"
+	ha "github.com/blink-io/x/kratos/v2/transport/http/adapter"
 	"github.com/blink-io/x/log"
 
 	"github.com/quic-go/quic-go"
@@ -20,7 +20,7 @@ import (
 type (
 	server = http3.Server
 
-	Options = xa.Options
+	Options = ha.Options
 
 	ExtraOption func(*adapter)
 )
@@ -41,9 +41,9 @@ type adapter struct {
 	srv      *server
 	network  string
 	address  string
+	ln       http3.QUICEarlyListener
 	tlsConf  *tls.Config
 	endpoint *url.URL
-	ln       http3.QUICEarlyListener
 	qconf    *quic.Config
 }
 
@@ -52,11 +52,11 @@ var DefaultOptions = Options{
 	Address: ":0",
 }
 
-func NewDefault() xa.Adapter {
+func NewDefault() ha.Adapter {
 	return NewAdapter(DefaultOptions)
 }
 
-func NewAdapter(opts Options, eops ...ExtraOption) xa.Adapter {
+func NewAdapter(opts Options, eops ...ExtraOption) ha.Adapter {
 	a := new(adapter)
 	a.Init(context.Background(), opts)
 	a.ApplyExtraOptions(eops...)
@@ -136,7 +136,7 @@ func (s *adapter) Endpoint() (*url.URL, error) {
 	return s.endpoint, nil
 }
 
-func (s *adapter) Listener() xa.Listener {
+func (s *adapter) Listener() ha.Listener {
 	return s.ln
 }
 

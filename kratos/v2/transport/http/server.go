@@ -67,7 +67,7 @@ type (
 	}
 )
 
-type rserver interface {
+type rServer interface {
 	ServerCodec
 
 	ServerRouter

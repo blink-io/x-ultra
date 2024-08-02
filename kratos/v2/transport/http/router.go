@@ -23,19 +23,19 @@ type Router interface {
 	Prefix() string
 	Filters() []FilterFunc
 
-	server() rserver
+	server() rServer
 }
 
 // Router is an HTTP router.
 type router struct {
 	prefix  string
-	srv     rserver
+	srv     rServer
 	filters []FilterFunc
 }
 
 var _ Router = (*router)(nil)
 
-func newRouter(prefix string, srv rserver, filters ...FilterFunc) Router {
+func newRouter(prefix string, srv rServer, filters ...FilterFunc) Router {
 	r := &router{
 		prefix:  prefix,
 		srv:     srv,
@@ -54,7 +54,7 @@ func (r *router) Prefix() string {
 	return r.prefix
 }
 
-func (r *router) server() rserver {
+func (r *router) server() rServer {
 	return r.srv
 }
 
