@@ -53,12 +53,13 @@ func (h Func[Request, Response]) HEAD(operation string, ops ...DoOption) khttp.H
 }
 
 func Do[Request Req, Response Req](
-	method, operation string,
+	method string,
+	operation string,
 	handle func(context.Context, *Request) (*Response, error),
 	ops ...DoOption,
 ) khttp.HandlerFunc {
 	return func(kctx khttp.Context) error {
-		opts := applyOptions(ops...)
+		opts := applyDoOptions(ops...)
 		var in Request
 
 		if !opts.skipQuery {

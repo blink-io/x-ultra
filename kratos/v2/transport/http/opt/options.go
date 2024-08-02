@@ -22,7 +22,7 @@ type options struct {
 
 type DoOption func(*options)
 
-func applyOptions(ops ...DoOption) *options {
+func applyDoOptions(ops ...DoOption) *options {
 	opt := &options{
 		ahs: make([]*keyValue, 0),
 		shs: make(map[string]string),

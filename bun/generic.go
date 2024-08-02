@@ -27,7 +27,7 @@ type (
 	// ModelType defines the generic type for ModelType in repository
 	ModelType = any
 
-	GenericsBase[M ModelType, I IDType] interface {
+	GenericBase[M ModelType, I IDType] interface {
 		// Insert a new record.
 		Insert(context.Context, *M, ...DoInsertOption) error
 		// BulkInsert inserts more than one record
@@ -53,7 +53,7 @@ type (
 	Generic[M ModelType, I IDType] interface {
 		IDB
 
-		GenericsBase[M, I]
+		GenericBase[M, I]
 
 		// DB .
 		DB() IDB
